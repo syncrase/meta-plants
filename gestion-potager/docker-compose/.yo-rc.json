@@ -1,0 +1,15 @@
+{
+  "generator-jhipster": {
+    "deploymentType": "docker-compose",
+    "gatewayType": "zuul",
+    "monitoring": "elk",
+    "directoryPath": "../",
+    "appsFolders": ["gateway", "microservice"],
+    "clusteredDbApps": [],
+    "consoleOptions": ["zipkin"],
+    "serviceDiscoveryType": "eureka",
+    "dockerRepositoryName": "dockerRepo",
+    "dockerPushCommand": "docker push",
+    "jwtSecretKey": "NDVjNWIyZjlmZjZmZGQzY2M1Njc5NjdmNjRjNWE0YTA1ZTkwOTM0MWQ5N2M4YWNkYzkzZTVlNTUzYzA4MDIxOWE4OTUyYjgxN2U3NmJjOWRkMjFmMmYwOGU1NGM2ZWE0YTkwMw=="
+  }
+}
