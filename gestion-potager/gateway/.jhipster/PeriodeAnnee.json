@@ -1,0 +1,36 @@
+{
+  "name": "PeriodeAnnee",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "mois",
+      "otherEntityRelationshipName": "periodeAnnee",
+      "relationshipValidateRules": "required",
+      "relationshipName": "debut",
+      "otherEntityField": "nom",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "mois",
+      "otherEntityRelationshipName": "periodeAnnee",
+      "relationshipValidateRules": "required",
+      "relationshipName": "fin",
+      "otherEntityField": "nom",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20210302085309",
+  "entityTableName": "periode_annee",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice"
+}

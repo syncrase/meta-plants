@@ -1,0 +1,26 @@
+{
+  "gatewayApp": {
+    "microserviceRaunkier": {
+      "home": {
+        "title": "Raunkiers",
+        "createLabel": "Raunkier erstellen",
+        "createOrEditLabel": "Raunkier erstellen oder bearbeiten",
+        "notFound": "No Raunkiers found"
+      },
+      "delete": {
+        "question": "Soll Raunkier {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Raunkier"
+      },
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRaunkier": {
+      "created": "Raunkier erstellt mit ID {{ param }}",
+      "updated": "Raunkier aktualisiert mit ID {{ param }}",
+      "deleted": "Raunkier gelöscht mit ID {{ param }}"
+    }
+  }
+}

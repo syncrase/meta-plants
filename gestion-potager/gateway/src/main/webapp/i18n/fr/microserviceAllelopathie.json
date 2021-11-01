@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceAllelopathie": {
+      "home": {
+        "title": "Allelopathies",
+        "createLabel": "Créer un nouveau Allelopathie",
+        "createOrEditLabel": "Créer ou éditer un Allelopathie",
+        "notFound": "Aucun Allelopathie trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Allelopathie {{ id }} ?"
+      },
+      "detail": {
+        "title": "Allelopathie"
+      },
+      "type": "Type",
+      "description": "Description",
+      "cible": "Cible",
+      "origine": "Origine",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAllelopathie": {
+      "created": "Un nouveau Allelopathie a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Allelopathie avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Allelopathie avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

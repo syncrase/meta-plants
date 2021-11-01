@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceMois": {
+      "home": {
+        "title": "Mois",
+        "createLabel": "Создать новый Mois",
+        "createOrEditLabel": "Создать или отредактировать Mois",
+        "notFound": "No Mois found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Mois {{ id }}?"
+      },
+      "detail": {
+        "title": "Mois"
+      },
+      "numero": "Numero",
+      "nom": "Nom"
+    }
+  },
+  "microserviceApp": {
+    "microserviceMois": {
+      "created": "Новый Mois создан с идентификатором {{ param }}",
+      "updated": "Mois обновлен с идентификатором {{ param }}",
+      "deleted": "Mois удален с идентификатором {{ param }}"
+    }
+  }
+}

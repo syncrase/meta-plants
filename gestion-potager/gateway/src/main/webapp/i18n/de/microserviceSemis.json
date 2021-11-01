@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceSemis": {
+      "home": {
+        "title": "Semis",
+        "createLabel": "Semis erstellen",
+        "createOrEditLabel": "Semis erstellen oder bearbeiten",
+        "notFound": "No Semis found"
+      },
+      "delete": {
+        "question": "Soll Semis {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Semis"
+      },
+      "semisPleineTerre": "Semis Pleine Terre",
+      "semisSousAbris": "Semis Sous Abris",
+      "typeSemis": "Type Semis",
+      "germination": "Germination"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSemis": {
+      "created": "Semis erstellt mit ID {{ param }}",
+      "updated": "Semis aktualisiert mit ID {{ param }}",
+      "deleted": "Semis gelöscht mit ID {{ param }}"
+    }
+  }
+}

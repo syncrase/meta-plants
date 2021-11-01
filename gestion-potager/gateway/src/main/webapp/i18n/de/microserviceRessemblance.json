@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceRessemblance": {
+      "home": {
+        "title": "Ressemblances",
+        "createLabel": "Ressemblance erstellen",
+        "createOrEditLabel": "Ressemblance erstellen oder bearbeiten",
+        "notFound": "No Ressemblances found"
+      },
+      "delete": {
+        "question": "Soll Ressemblance {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Ressemblance"
+      },
+      "description": "Description",
+      "confusion": "Confusion"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRessemblance": {
+      "created": "Ressemblance erstellt mit ID {{ param }}",
+      "updated": "Ressemblance aktualisiert mit ID {{ param }}",
+      "deleted": "Ressemblance gelöscht mit ID {{ param }}"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceSemis": {
+      "home": {
+        "title": "Semis",
+        "createLabel": "Créer un nouveau Semis",
+        "createOrEditLabel": "Créer ou éditer un Semis",
+        "notFound": "Aucun Semis trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Semis {{ id }} ?"
+      },
+      "detail": {
+        "title": "Semis"
+      },
+      "semisPleineTerre": "Semis Pleine Terre",
+      "semisSousAbris": "Semis Sous Abris",
+      "typeSemis": "Type Semis",
+      "germination": "Germination"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSemis": {
+      "created": "Un nouveau Semis a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Semis avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Semis avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

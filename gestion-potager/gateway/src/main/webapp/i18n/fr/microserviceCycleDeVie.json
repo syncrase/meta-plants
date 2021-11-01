@@ -1,0 +1,34 @@
+{
+  "gatewayApp": {
+    "microserviceCycleDeVie": {
+      "home": {
+        "title": "CycleDeVies",
+        "createLabel": "Créer un nouveau Cycle De Vie",
+        "createOrEditLabel": "Créer ou éditer un Cycle De Vie",
+        "notFound": "Aucun Cycle De Vie trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Cycle De Vie {{ id }} ?"
+      },
+      "detail": {
+        "title": "Cycle De Vie"
+      },
+      "vitesseDeCroissance": "Vitesse De Croissance",
+      "semis": "Semis",
+      "apparitionFeuilles": "Apparition Feuilles",
+      "floraison": "Floraison",
+      "recolte": "Recolte",
+      "croissance": "Croissance",
+      "maturite": "Maturite",
+      "plantation": "Plantation",
+      "rempotage": "Rempotage"
+    }
+  },
+  "microserviceApp": {
+    "microserviceCycleDeVie": {
+      "created": "Un nouveau Cycle De Vie a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Cycle De Vie avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Cycle De Vie avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

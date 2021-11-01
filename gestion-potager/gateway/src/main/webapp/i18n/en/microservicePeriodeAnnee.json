@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microservicePeriodeAnnee": {
+      "home": {
+        "title": "Periode Annees",
+        "createLabel": "Create a new Periode Annee",
+        "createOrEditLabel": "Create or edit a Periode Annee",
+        "notFound": "No Periode Annees found"
+      },
+      "delete": {
+        "question": "Are you sure you want to delete Periode Annee {{ id }}?"
+      },
+      "detail": {
+        "title": "Periode Annee"
+      },
+      "debut": "Debut",
+      "fin": "Fin"
+    }
+  },
+  "microserviceApp": {
+    "microservicePeriodeAnnee": {
+      "created": "A new Periode Annee is created with identifier {{ param }}",
+      "updated": "A Periode Annee is updated with identifier {{ param }}",
+      "deleted": "A Periode Annee is deleted with identifier {{ param }}"
+    }
+  }
+}

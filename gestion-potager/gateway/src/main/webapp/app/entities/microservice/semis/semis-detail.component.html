@@ -1,0 +1,50 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="semis">
+            <h2><span jhiTranslate="gatewayApp.microserviceSemis.detail.title">Semis</span> {{ semis.id }}</h2>
+
+            <hr>
+
+            <gp-alert-error></gp-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gatewayApp.microserviceSemis.semisPleineTerre">Semis Pleine Terre</span></dt>
+                <dd>
+                    <div *ngIf="semis.semisPleineTerreId">
+                        <a [routerLink]="['/periode-annee', semis.semisPleineTerreId, 'view']">{{ semis.semisPleineTerreId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceSemis.semisSousAbris">Semis Sous Abris</span></dt>
+                <dd>
+                    <div *ngIf="semis.semisSousAbrisId">
+                        <a [routerLink]="['/periode-annee', semis.semisSousAbrisId, 'view']">{{ semis.semisSousAbrisId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceSemis.typeSemis">Type Semis</span></dt>
+                <dd>
+                    <div *ngIf="semis.typeSemisId">
+                        <a [routerLink]="['/type-semis', semis.typeSemisId, 'view']">{{ semis.typeSemisId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceSemis.germination">Germination</span></dt>
+                <dd>
+                    <div *ngIf="semis.germinationId">
+                        <a [routerLink]="['/germination', semis.germinationId, 'view']">{{ semis.germinationId }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/semis', semis.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity CycleDeVie.
+    -->
+    <changeSet id="20210302090609-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="semis_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_semis_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="semis"/>
+
+        <addForeignKeyConstraint baseColumnNames="apparition_feuilles_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_apparition_feuilles_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="periode_annee"/>
+
+        <addForeignKeyConstraint baseColumnNames="floraison_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_floraison_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="periode_annee"/>
+
+        <addForeignKeyConstraint baseColumnNames="recolte_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_recolte_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="periode_annee"/>
+
+        <addForeignKeyConstraint baseColumnNames="croissance_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_croissance_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="periode_annee"/>
+
+        <addForeignKeyConstraint baseColumnNames="maturite_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_maturite_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="periode_annee"/>
+
+        <addForeignKeyConstraint baseColumnNames="plantation_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_plantation_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="periode_annee"/>
+
+        <addForeignKeyConstraint baseColumnNames="rempotage_id"
+                                 baseTableName="cycle_de_vie"
+                                 constraintName="fk_cycle_de_vie_rempotage_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="periode_annee"/>
+
+    </changeSet>
+</databaseChangeLog>

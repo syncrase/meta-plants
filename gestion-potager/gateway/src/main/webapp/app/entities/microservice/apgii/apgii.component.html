@@ -1,0 +1,73 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="gatewayApp.microserviceAPgii.home.title">APGIIS</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-apgii" [routerLink]="['/apgii/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="gatewayApp.microserviceAPgii.home.createLabel">
+            Create a new APGII
+            </span>
+        </button>
+    </h2>
+
+    <gp-alert-error></gp-alert-error>
+
+    <gp-alert></gp-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="aPGIIS?.length === 0">
+        <span jhiTranslate="gatewayApp.microserviceAPgii.home.notFound">No aPGIIS found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="aPGIIS && aPGIIS.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="ordre"><span jhiTranslate="gatewayApp.microserviceAPgii.ordre">Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="famille"><span jhiTranslate="gatewayApp.microserviceAPgii.famille">Famille</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let aPGII of aPGIIS ;trackBy: trackId">
+                    <td><a [routerLink]="['/apgii', aPGII.id, 'view']">{{ aPGII.id }}</a></td>
+                    <td>{{ aPGII.ordre }}</td>
+                    <td>{{ aPGII.famille }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/apgii', aPGII.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/apgii', aPGII.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(aPGII)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="aPGIIS && aPGIIS.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+</div>

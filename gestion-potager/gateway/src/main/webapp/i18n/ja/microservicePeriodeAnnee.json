@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microservicePeriodeAnnee": {
+      "home": {
+        "title": "PeriodeAnnees",
+        "createLabel": "Periode Annee を追加",
+        "createOrEditLabel": "Periode Anneeを追加または編集",
+        "notFound": "No Periode Annees found"
+      },
+      "delete": {
+        "question": "Periode Annee {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Periode Annee"
+      },
+      "debut": "Debut",
+      "fin": "Fin"
+    }
+  },
+  "microserviceApp": {
+    "microservicePeriodeAnnee": {
+      "created": "A new Periode Annee is created with identifier {{ param }}",
+      "updated": "A Periode Annee is updated with identifier {{ param }}",
+      "deleted": "A Periode Annee is deleted with identifier {{ param }}"
+    }
+  }
+}

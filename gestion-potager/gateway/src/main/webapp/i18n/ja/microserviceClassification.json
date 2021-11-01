@@ -1,0 +1,31 @@
+{
+  "gatewayApp": {
+    "microserviceClassification": {
+      "home": {
+        "title": "Classifications",
+        "createLabel": "Classification を追加",
+        "createOrEditLabel": "Classificationを追加または編集",
+        "notFound": "No Classifications found"
+      },
+      "delete": {
+        "question": "Classification {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Classification"
+      },
+      "raunkier": "Raunkier",
+      "cronquist": "Cronquist",
+      "apg1": "Apg 1",
+      "apg2": "Apg 2",
+      "apg3": "Apg 3",
+      "apg4": "Apg 4"
+    }
+  },
+  "microserviceApp": {
+    "microserviceClassification": {
+      "created": "A new Classification is created with identifier {{ param }}",
+      "updated": "A Classification is updated with identifier {{ param }}",
+      "deleted": "A Classification is deleted with identifier {{ param }}"
+    }
+  }
+}

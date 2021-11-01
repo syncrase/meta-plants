@@ -1,0 +1,26 @@
+{
+  "gatewayApp": {
+    "microserviceRaunkier": {
+      "home": {
+        "title": "Raunkiers",
+        "createLabel": "建立一筆新的 Raunkier",
+        "createOrEditLabel": "建立或編輯 Raunkier",
+        "notFound": "No Raunkiers found"
+      },
+      "delete": {
+        "question": "您確定要刪除 Raunkier {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Raunkier"
+      },
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRaunkier": {
+      "created": "新的 Raunkier 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Raunkier 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Raunkier 刪除成功"
+    }
+  }
+}

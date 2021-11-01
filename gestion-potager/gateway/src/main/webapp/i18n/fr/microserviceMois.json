@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceMois": {
+      "home": {
+        "title": "Mois",
+        "createLabel": "Créer un nouveau Mois",
+        "createOrEditLabel": "Créer ou éditer un Mois",
+        "notFound": "Aucun Mois trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Mois {{ id }} ?"
+      },
+      "detail": {
+        "title": "Mois"
+      },
+      "numero": "Numero",
+      "nom": "Nom"
+    }
+  },
+  "microserviceApp": {
+    "microserviceMois": {
+      "created": "Un nouveau Mois a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Mois avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Mois avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

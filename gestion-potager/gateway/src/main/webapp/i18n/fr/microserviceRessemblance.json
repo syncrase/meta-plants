@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceRessemblance": {
+      "home": {
+        "title": "Ressemblances",
+        "createLabel": "Créer un nouveau Ressemblance",
+        "createOrEditLabel": "Créer ou éditer un Ressemblance",
+        "notFound": "Aucun Ressemblance trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Ressemblance {{ id }} ?"
+      },
+      "detail": {
+        "title": "Ressemblance"
+      },
+      "description": "Description",
+      "confusion": "Confusion"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRessemblance": {
+      "created": "Un nouveau Ressemblance a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Ressemblance avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Ressemblance avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

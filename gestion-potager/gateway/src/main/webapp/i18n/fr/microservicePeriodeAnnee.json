@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microservicePeriodeAnnee": {
+      "home": {
+        "title": "PeriodeAnnees",
+        "createLabel": "Créer un nouveau Periode Annee",
+        "createOrEditLabel": "Créer ou éditer un Periode Annee",
+        "notFound": "Aucun Periode Annee trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Periode Annee {{ id }} ?"
+      },
+      "detail": {
+        "title": "Periode Annee"
+      },
+      "debut": "Debut",
+      "fin": "Fin"
+    }
+  },
+  "microserviceApp": {
+    "microservicePeriodeAnnee": {
+      "created": "Un nouveau Periode Annee a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Periode Annee avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Periode Annee avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

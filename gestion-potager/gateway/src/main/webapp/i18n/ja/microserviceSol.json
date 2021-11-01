@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceSol": {
+      "home": {
+        "title": "Sols",
+        "createLabel": "Sol を追加",
+        "createOrEditLabel": "Solを追加または編集",
+        "notFound": "No Sols found"
+      },
+      "delete": {
+        "question": "Sol {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Sol"
+      },
+      "acidite": "Acidite",
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSol": {
+      "created": "A new Sol is created with identifier {{ param }}",
+      "updated": "A Sol is updated with identifier {{ param }}",
+      "deleted": "A Sol is deleted with identifier {{ param }}"
+    }
+  }
+}

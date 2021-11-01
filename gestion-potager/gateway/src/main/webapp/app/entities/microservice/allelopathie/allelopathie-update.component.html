@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="gp-allelopathie-heading" jhiTranslate="gatewayApp.microserviceAllelopathie.home.createOrEditLabel">Create or edit a Allelopathie</h2>
+
+            <div>
+                <gp-alert-error></gp-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceAllelopathie.type" for="field_type">Type</label>
+                    <input type="text" class="form-control" name="type" id="field_type"
+                           formControlName="type"/>
+                    <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('type')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceAllelopathie.description" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                           formControlName="description"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceAllelopathie.cible" for="field_cible">Cible</label>
+                    <select class="form-control" id="field_cible" name="cible" formControlName="cibleId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="planteOption.id" *ngFor="let planteOption of cibles; trackBy: trackById">{{ planteOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceAllelopathie.origine" for="field_origine">Origine</label>
+                    <select class="form-control" id="field_origine" name="origine" formControlName="origineId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="planteOption.id" *ngFor="let planteOption of origines; trackBy: trackById">{{ planteOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceAllelopathie.plante" for="field_plante">Plante</label>
+                    <select class="form-control" id="field_plante" name="plante" formControlName="planteId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="planteOption.id" *ngFor="let planteOption of plantes; trackBy: trackById">{{ planteOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

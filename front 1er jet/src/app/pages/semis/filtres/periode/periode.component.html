@@ -1,0 +1,14 @@
+<span> Période : </span>
+<form [formGroup]="filtrePeriode">
+
+    <label for="debut">Début:</label>
+    <select name="debut" id="debutPeriode" formControlName="debut">
+        <option *ngFor="let m of mois" value="{{ m.nom }}">{{ m.nom }}</option>
+    </select>
+
+    <label for="fin">Fin:</label>
+    <select name="fin" id="finPeriode" formControlName="fin">
+        <option *ngFor="let m of mois" value="{{ m.nom }}">{{ m.nom }}</option>
+    </select>
+
+</form>

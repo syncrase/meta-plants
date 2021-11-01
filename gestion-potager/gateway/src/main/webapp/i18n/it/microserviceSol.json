@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceSol": {
+      "home": {
+        "title": "Sols",
+        "createLabel": "Genera un nuovo Sol",
+        "createOrEditLabel": "Genera o modifica un Sol",
+        "notFound": "No Sols found"
+      },
+      "delete": {
+        "question": "Sei sicuro di volere eliminare Sol {{ id }}?"
+      },
+      "detail": {
+        "title": "Sol"
+      },
+      "acidite": "Acidite",
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSol": {
+      "created": "&Egrave; stato generato un nuovo Sol con identificatore { param }}",
+      "updated": "&Egrave; stato aggiornato Sol identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato Sol con identificatore {{ param }}"
+    }
+  }
+}

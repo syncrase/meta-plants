@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceMois": {
+      "home": {
+        "title": "Mois",
+        "createLabel": "Genera un nuovo Mois",
+        "createOrEditLabel": "Genera o modifica un Mois",
+        "notFound": "No Mois found"
+      },
+      "delete": {
+        "question": "Sei sicuro di volere eliminare Mois {{ id }}?"
+      },
+      "detail": {
+        "title": "Mois"
+      },
+      "numero": "Numero",
+      "nom": "Nom"
+    }
+  },
+  "microserviceApp": {
+    "microserviceMois": {
+      "created": "&Egrave; stato generato un nuovo Mois con identificatore { param }}",
+      "updated": "&Egrave; stato aggiornato Mois identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato Mois con identificatore {{ param }}"
+    }
+  }
+}

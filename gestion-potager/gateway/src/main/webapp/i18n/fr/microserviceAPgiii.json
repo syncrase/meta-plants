@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgiii": {
+      "home": {
+        "title": "APGIIIS",
+        "createLabel": "Créer un nouveau APGIII",
+        "createOrEditLabel": "Créer ou éditer un APGIII",
+        "notFound": "Aucun APGIII trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le APGIII {{ id }} ?"
+      },
+      "detail": {
+        "title": "APGIII"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgiii": {
+      "created": "Un nouveau APGIII a été créé avec l'identifiant {{ param }}",
+      "updated": "Le APGIII avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le APGIII avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceAllelopathie": {
+      "home": {
+        "title": "Allelopathies",
+        "createLabel": "Allelopathie erstellen",
+        "createOrEditLabel": "Allelopathie erstellen oder bearbeiten",
+        "notFound": "No Allelopathies found"
+      },
+      "delete": {
+        "question": "Soll Allelopathie {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Allelopathie"
+      },
+      "type": "Type",
+      "description": "Description",
+      "cible": "Cible",
+      "origine": "Origine",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAllelopathie": {
+      "created": "Allelopathie erstellt mit ID {{ param }}",
+      "updated": "Allelopathie aktualisiert mit ID {{ param }}",
+      "deleted": "Allelopathie gelöscht mit ID {{ param }}"
+    }
+  }
+}

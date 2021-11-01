@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceSemis": {
+      "home": {
+        "title": "Semis",
+        "createLabel": "Semis を追加",
+        "createOrEditLabel": "Semisを追加または編集",
+        "notFound": "No Semis found"
+      },
+      "delete": {
+        "question": "Semis {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Semis"
+      },
+      "semisPleineTerre": "Semis Pleine Terre",
+      "semisSousAbris": "Semis Sous Abris",
+      "typeSemis": "Type Semis",
+      "germination": "Germination"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSemis": {
+      "created": "A new Semis is created with identifier {{ param }}",
+      "updated": "A Semis is updated with identifier {{ param }}",
+      "deleted": "A Semis is deleted with identifier {{ param }}"
+    }
+  }
+}

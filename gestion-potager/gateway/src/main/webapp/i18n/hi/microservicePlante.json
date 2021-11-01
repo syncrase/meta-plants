@@ -1,0 +1,37 @@
+{
+  "gatewayApp": {
+    "microservicePlante": {
+      "home": {
+        "title": "Plantes",
+        "createLabel": "नया Plante बनाएँ",
+        "createOrEditLabel": "Plante बनाएँ या संपादित करें",
+        "notFound": "No Plantes found"
+      },
+      "delete": {
+        "question": "Plante [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Plante"
+      },
+      "nomLatin": "Nom Latin",
+      "entretien": "Entretien",
+      "histoire": "Histoire",
+      "exposition": "Exposition",
+      "rusticite": "Rusticite",
+      "cycleDeVie": "Cycle De Vie",
+      "classification": "Classification",
+      "confusions": "Confusions",
+      "interactions": "Interactions",
+      "nomsVernaculaires": "Noms Vernaculaires",
+      "allelopathieRecue": "Allelopathie Recue",
+      "allelopathieProduite": "Allelopathie Produite"
+    }
+  },
+  "microserviceApp": {
+    "microservicePlante": {
+      "created": "एक नया Plante [identifier: {{ param }}] तैयार है",
+      "updated": "एक Plante [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Plante [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

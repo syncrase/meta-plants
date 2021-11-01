@@ -1,0 +1,26 @@
+{
+  "gatewayApp": {
+    "microserviceRaunkier": {
+      "home": {
+        "title": "Raunkiers",
+        "createLabel": "Создать новый Raunkier",
+        "createOrEditLabel": "Создать или отредактировать Raunkier",
+        "notFound": "No Raunkiers found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Raunkier {{ id }}?"
+      },
+      "detail": {
+        "title": "Raunkier"
+      },
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRaunkier": {
+      "created": "Новый Raunkier создан с идентификатором {{ param }}",
+      "updated": "Raunkier обновлен с идентификатором {{ param }}",
+      "deleted": "Raunkier удален с идентификатором {{ param }}"
+    }
+  }
+}

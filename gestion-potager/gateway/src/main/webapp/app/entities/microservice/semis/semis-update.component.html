@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="gp-semis-heading" jhiTranslate="gatewayApp.microserviceSemis.home.createOrEditLabel">Create or edit a Semis</h2>
+
+            <div>
+                <gp-alert-error></gp-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceSemis.semisPleineTerre" for="field_semisPleineTerre">Semis Pleine Terre</label>
+                    <select class="form-control" id="field_semisPleineTerre" name="semisPleineTerre" formControlName="semisPleineTerreId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="periodeAnneeOption.id" *ngFor="let periodeAnneeOption of semispleineterres; trackBy: trackById">{{ periodeAnneeOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceSemis.semisSousAbris" for="field_semisSousAbris">Semis Sous Abris</label>
+                    <select class="form-control" id="field_semisSousAbris" name="semisSousAbris" formControlName="semisSousAbrisId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="periodeAnneeOption.id" *ngFor="let periodeAnneeOption of semissousabrises; trackBy: trackById">{{ periodeAnneeOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceSemis.typeSemis" for="field_typeSemis">Type Semis</label>
+                    <select class="form-control" id="field_typeSemis" name="typeSemis" formControlName="typeSemisId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="typeSemisOption.id" *ngFor="let typeSemisOption of typesemis; trackBy: trackById">{{ typeSemisOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microserviceSemis.germination" for="field_germination">Germination</label>
+                    <select class="form-control" id="field_germination" name="germination" formControlName="germinationId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="germinationOption.id" *ngFor="let germinationOption of germinations; trackBy: trackById">{{ germinationOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

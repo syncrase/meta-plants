@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceSemis": {
+      "home": {
+        "title": "Semis",
+        "createLabel": "Создать новый Semis",
+        "createOrEditLabel": "Создать или отредактировать Semis",
+        "notFound": "No Semis found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Semis {{ id }}?"
+      },
+      "detail": {
+        "title": "Semis"
+      },
+      "semisPleineTerre": "Semis Pleine Terre",
+      "semisSousAbris": "Semis Sous Abris",
+      "typeSemis": "Type Semis",
+      "germination": "Germination"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSemis": {
+      "created": "Новый Semis создан с идентификатором {{ param }}",
+      "updated": "Semis обновлен с идентификатором {{ param }}",
+      "deleted": "Semis удален с идентификатором {{ param }}"
+    }
+  }
+}

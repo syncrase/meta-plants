@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceAllelopathie": {
+      "home": {
+        "title": "Allelopathies",
+        "createLabel": "नया Allelopathie बनाएँ",
+        "createOrEditLabel": "Allelopathie बनाएँ या संपादित करें",
+        "notFound": "No Allelopathies found"
+      },
+      "delete": {
+        "question": "Allelopathie [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Allelopathie"
+      },
+      "type": "Type",
+      "description": "Description",
+      "cible": "Cible",
+      "origine": "Origine",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAllelopathie": {
+      "created": "एक नया Allelopathie [identifier: {{ param }}] तैयार है",
+      "updated": "एक Allelopathie [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Allelopathie [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

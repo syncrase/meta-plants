@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceSol": {
+      "home": {
+        "title": "Sols",
+        "createLabel": "Δημιουργήστε ένα νέο Sol",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Sol",
+        "notFound": "No Sols found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Sol {{ id }};"
+      },
+      "detail": {
+        "title": "Sol"
+      },
+      "acidite": "Acidite",
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSol": {
+      "created": "Ένα νέο Sol έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Sol έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Sol έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

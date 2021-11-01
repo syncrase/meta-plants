@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceRessemblance": {
+      "home": {
+        "title": "Ressemblances",
+        "createLabel": "नया Ressemblance बनाएँ",
+        "createOrEditLabel": "Ressemblance बनाएँ या संपादित करें",
+        "notFound": "No Ressemblances found"
+      },
+      "delete": {
+        "question": "Ressemblance [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Ressemblance"
+      },
+      "description": "Description",
+      "confusion": "Confusion"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRessemblance": {
+      "created": "एक नया Ressemblance [identifier: {{ param }}] तैयार है",
+      "updated": "एक Ressemblance [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Ressemblance [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

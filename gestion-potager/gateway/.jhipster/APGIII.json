@@ -1,0 +1,28 @@
+{
+  "name": "APGIII",
+  "fields": [
+    {
+      "fieldName": "ordre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "famille",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20210302090209",
+  "entityTableName": "apgiii",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice"
+}

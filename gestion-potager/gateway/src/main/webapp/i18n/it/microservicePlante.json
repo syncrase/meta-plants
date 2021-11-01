@@ -1,0 +1,37 @@
+{
+  "gatewayApp": {
+    "microservicePlante": {
+      "home": {
+        "title": "Plantes",
+        "createLabel": "Genera un nuovo Plante",
+        "createOrEditLabel": "Genera o modifica un Plante",
+        "notFound": "No Plantes found"
+      },
+      "delete": {
+        "question": "Sei sicuro di volere eliminare Plante {{ id }}?"
+      },
+      "detail": {
+        "title": "Plante"
+      },
+      "nomLatin": "Nom Latin",
+      "entretien": "Entretien",
+      "histoire": "Histoire",
+      "exposition": "Exposition",
+      "rusticite": "Rusticite",
+      "cycleDeVie": "Cycle De Vie",
+      "classification": "Classification",
+      "confusions": "Confusions",
+      "interactions": "Interactions",
+      "nomsVernaculaires": "Noms Vernaculaires",
+      "allelopathieRecue": "Allelopathie Recue",
+      "allelopathieProduite": "Allelopathie Produite"
+    }
+  },
+  "microserviceApp": {
+    "microservicePlante": {
+      "created": "&Egrave; stato generato un nuovo Plante con identificatore { param }}",
+      "updated": "&Egrave; stato aggiornato Plante identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato Plante con identificatore {{ param }}"
+    }
+  }
+}

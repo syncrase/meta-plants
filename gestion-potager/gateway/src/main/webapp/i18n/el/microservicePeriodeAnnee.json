@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microservicePeriodeAnnee": {
+      "home": {
+        "title": "Periode Annees",
+        "createLabel": "Δημιουργήστε ένα νέο Periode Annee",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Periode Annee",
+        "notFound": "No Periode Annees found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Periode Annee {{ id }};"
+      },
+      "detail": {
+        "title": "Periode Annee"
+      },
+      "debut": "Debut",
+      "fin": "Fin"
+    }
+  },
+  "microserviceApp": {
+    "microservicePeriodeAnnee": {
+      "created": "Ένα νέο Periode Annee έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Periode Annee έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Periode Annee έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

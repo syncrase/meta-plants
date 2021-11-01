@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgiv": {
+      "home": {
+        "title": "APGIVS",
+        "createLabel": "Créer un nouveau APGIV",
+        "createOrEditLabel": "Créer ou éditer un APGIV",
+        "notFound": "Aucun APGIV trouvé"
+      },
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le APGIV {{ id }} ?"
+      },
+      "detail": {
+        "title": "APGIV"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgiv": {
+      "created": "Un nouveau APGIV a été créé avec l'identifiant {{ param }}",
+      "updated": "Le APGIV avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le APGIV avec l'identifiant {{ param }} a été supprimé"
+    }
+  }
+}

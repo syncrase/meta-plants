@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgiv": {
+      "home": {
+        "title": "APGIVS",
+        "createLabel": "नया APGIV बनाएँ",
+        "createOrEditLabel": "APGIV बनाएँ या संपादित करें",
+        "notFound": "No APGIVS found"
+      },
+      "delete": {
+        "question": "APGIV [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "APGIV"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgiv": {
+      "created": "एक नया APGIV [identifier: {{ param }}] तैयार है",
+      "updated": "एक APGIV [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "APGIV [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

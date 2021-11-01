@@ -1,0 +1,28 @@
+{
+  "gatewayApp": {
+    "microserviceNomVernaculaire": {
+      "home": {
+        "title": "Nom Vernaculaires",
+        "createLabel": "Δημιουργήστε ένα νέο Nom Vernaculaire",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Nom Vernaculaire",
+        "notFound": "No Nom Vernaculaires found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Nom Vernaculaire {{ id }};"
+      },
+      "detail": {
+        "title": "Nom Vernaculaire"
+      },
+      "nom": "Nom",
+      "description": "Description",
+      "plantes": "Plantes"
+    }
+  },
+  "microserviceApp": {
+    "microserviceNomVernaculaire": {
+      "created": "Ένα νέο Nom Vernaculaire έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Nom Vernaculaire έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Nom Vernaculaire έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

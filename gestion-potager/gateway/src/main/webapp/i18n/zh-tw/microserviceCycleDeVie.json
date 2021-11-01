@@ -1,0 +1,34 @@
+{
+  "gatewayApp": {
+    "microserviceCycleDeVie": {
+      "home": {
+        "title": "Cycle De Vies",
+        "createLabel": "建立一筆新的 Cycle De Vie",
+        "createOrEditLabel": "建立或編輯 Cycle De Vie",
+        "notFound": "No Cycle De Vies found"
+      },
+      "delete": {
+        "question": "您確定要刪除 Cycle De Vie {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Cycle De Vie"
+      },
+      "vitesseDeCroissance": "Vitesse De Croissance",
+      "semis": "Semis",
+      "apparitionFeuilles": "Apparition Feuilles",
+      "floraison": "Floraison",
+      "recolte": "Recolte",
+      "croissance": "Croissance",
+      "maturite": "Maturite",
+      "plantation": "Plantation",
+      "rempotage": "Rempotage"
+    }
+  },
+  "microserviceApp": {
+    "microserviceCycleDeVie": {
+      "created": "新的 Cycle De Vie 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Cycle De Vie 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Cycle De Vie 刪除成功"
+    }
+  }
+}

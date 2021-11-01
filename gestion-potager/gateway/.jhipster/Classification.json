@@ -1,0 +1,66 @@
+{
+  "name": "Classification",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "raunkier",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "raunkier",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "cronquist",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "cronquist",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "aPGI",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg1",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "aPGII",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg2",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "aPGIII",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg3",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "aPGIV",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg4",
+      "otherEntityField": "id",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20210302085709",
+  "entityTableName": "classification",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice"
+}

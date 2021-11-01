@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgi": {
+      "home": {
+        "title": "APGIS",
+        "createLabel": "APGI erstellen",
+        "createOrEditLabel": "APGI erstellen oder bearbeiten",
+        "notFound": "No APGIS found"
+      },
+      "delete": {
+        "question": "Soll APGI {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "APGI"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgi": {
+      "created": "APGI erstellt mit ID {{ param }}",
+      "updated": "APGI aktualisiert mit ID {{ param }}",
+      "deleted": "APGI gelöscht mit ID {{ param }}"
+    }
+  }
+}

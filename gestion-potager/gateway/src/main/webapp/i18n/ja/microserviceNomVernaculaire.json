@@ -1,0 +1,28 @@
+{
+  "gatewayApp": {
+    "microserviceNomVernaculaire": {
+      "home": {
+        "title": "NomVernaculaires",
+        "createLabel": "Nom Vernaculaire を追加",
+        "createOrEditLabel": "Nom Vernaculaireを追加または編集",
+        "notFound": "No Nom Vernaculaires found"
+      },
+      "delete": {
+        "question": "Nom Vernaculaire {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Nom Vernaculaire"
+      },
+      "nom": "Nom",
+      "description": "Description",
+      "plantes": "Plantes"
+    }
+  },
+  "microserviceApp": {
+    "microserviceNomVernaculaire": {
+      "created": "A new Nom Vernaculaire is created with identifier {{ param }}",
+      "updated": "A Nom Vernaculaire is updated with identifier {{ param }}",
+      "deleted": "A Nom Vernaculaire is deleted with identifier {{ param }}"
+    }
+  }
+}

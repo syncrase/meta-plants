@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceGermination": {
+      "home": {
+        "title": "Germinations",
+        "createLabel": "Genera un nuovo Germination",
+        "createOrEditLabel": "Genera o modifica un Germination",
+        "notFound": "No Germinations found"
+      },
+      "delete": {
+        "question": "Sei sicuro di volere eliminare Germination {{ id }}?"
+      },
+      "detail": {
+        "title": "Germination"
+      },
+      "tempsDeGermination": "Temps De Germination",
+      "conditionDeGermination": "Condition De Germination"
+    }
+  },
+  "microserviceApp": {
+    "microserviceGermination": {
+      "created": "&Egrave; stato generato un nuovo Germination con identificatore { param }}",
+      "updated": "&Egrave; stato aggiornato Germination identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato Germination con identificatore {{ param }}"
+    }
+  }
+}

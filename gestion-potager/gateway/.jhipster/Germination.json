@@ -1,0 +1,26 @@
+{
+  "name": "Germination",
+  "fields": [
+    {
+      "fieldName": "tempsDeGermination",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "conditionDeGermination",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20210302090709",
+  "entityTableName": "germination",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice"
+}

@@ -1,0 +1,26 @@
+{
+  "gatewayApp": {
+    "microserviceTypeSemis": {
+      "home": {
+        "title": "Type Semis",
+        "createLabel": "Δημιουργήστε ένα νέο Type Semis",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Type Semis",
+        "notFound": "No Type Semis found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Type Semis {{ id }};"
+      },
+      "detail": {
+        "title": "Type Semis"
+      },
+      "description": "Description"
+    }
+  },
+  "microserviceApp": {
+    "microserviceTypeSemis": {
+      "created": "Ένα νέο Type Semis έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Type Semis έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Type Semis έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

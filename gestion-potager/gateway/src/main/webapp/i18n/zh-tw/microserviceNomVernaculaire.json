@@ -1,0 +1,28 @@
+{
+  "gatewayApp": {
+    "microserviceNomVernaculaire": {
+      "home": {
+        "title": "Nom Vernaculaires",
+        "createLabel": "建立一筆新的 Nom Vernaculaire",
+        "createOrEditLabel": "建立或編輯 Nom Vernaculaire",
+        "notFound": "No Nom Vernaculaires found"
+      },
+      "delete": {
+        "question": "您確定要刪除 Nom Vernaculaire {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Nom Vernaculaire"
+      },
+      "nom": "Nom",
+      "description": "Description",
+      "plantes": "Plantes"
+    }
+  },
+  "microserviceApp": {
+    "microserviceNomVernaculaire": {
+      "created": "新的 Nom Vernaculaire 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Nom Vernaculaire 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Nom Vernaculaire 刪除成功"
+    }
+  }
+}

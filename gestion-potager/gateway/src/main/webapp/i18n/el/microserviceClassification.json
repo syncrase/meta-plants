@@ -1,0 +1,31 @@
+{
+  "gatewayApp": {
+    "microserviceClassification": {
+      "home": {
+        "title": "Classifications",
+        "createLabel": "Δημιουργήστε ένα νέο Classification",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Classification",
+        "notFound": "No Classifications found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Classification {{ id }};"
+      },
+      "detail": {
+        "title": "Classification"
+      },
+      "raunkier": "Raunkier",
+      "cronquist": "Cronquist",
+      "apg1": "Apg 1",
+      "apg2": "Apg 2",
+      "apg3": "Apg 3",
+      "apg4": "Apg 4"
+    }
+  },
+  "microserviceApp": {
+    "microserviceClassification": {
+      "created": "Ένα νέο Classification έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Classification έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Classification έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgii": {
+      "home": {
+        "title": "APGIIS",
+        "createLabel": "Genera un nuovo APGII",
+        "createOrEditLabel": "Genera o modifica un APGII",
+        "notFound": "No APGIIS found"
+      },
+      "delete": {
+        "question": "Sei sicuro di volere eliminare APGII {{ id }}?"
+      },
+      "detail": {
+        "title": "APGII"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgii": {
+      "created": "&Egrave; stato generato un nuovo APGII con identificatore { param }}",
+      "updated": "&Egrave; stato aggiornato APGII identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato APGII con identificatore {{ param }}"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Allelopathie",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "allelopathieRecue",
+      "relationshipName": "cible",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "allelopathieProduite",
+      "relationshipName": "origine",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "interactions",
+      "relationshipName": "plante",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210302090809",
+  "entityTableName": "allelopathie",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice"
+}

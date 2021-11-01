@@ -1,0 +1,26 @@
+{
+  "gatewayApp": {
+    "microserviceRaunkier": {
+      "home": {
+        "title": "Raunkiers",
+        "createLabel": "Δημιουργήστε ένα νέο Raunkier",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Raunkier",
+        "notFound": "No Raunkiers found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Raunkier {{ id }};"
+      },
+      "detail": {
+        "title": "Raunkier"
+      },
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRaunkier": {
+      "created": "Ένα νέο Raunkier έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Raunkier έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Raunkier έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

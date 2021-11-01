@@ -1,0 +1,26 @@
+{
+  "gatewayApp": {
+    "microserviceTypeSemis": {
+      "home": {
+        "title": "Type Semis",
+        "createLabel": "Создать новый Type Semis",
+        "createOrEditLabel": "Создать или отредактировать Type Semis",
+        "notFound": "No Type Semis found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Type Semis {{ id }}?"
+      },
+      "detail": {
+        "title": "Type Semis"
+      },
+      "description": "Description"
+    }
+  },
+  "microserviceApp": {
+    "microserviceTypeSemis": {
+      "created": "Новый Type Semis создан с идентификатором {{ param }}",
+      "updated": "Type Semis обновлен с идентификатором {{ param }}",
+      "deleted": "Type Semis удален с идентификатором {{ param }}"
+    }
+  }
+}

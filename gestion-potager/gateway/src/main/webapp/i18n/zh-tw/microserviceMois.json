@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceMois": {
+      "home": {
+        "title": "Mois",
+        "createLabel": "建立一筆新的 Mois",
+        "createOrEditLabel": "建立或編輯 Mois",
+        "notFound": "No Mois found"
+      },
+      "delete": {
+        "question": "您確定要刪除 Mois {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Mois"
+      },
+      "numero": "Numero",
+      "nom": "Nom"
+    }
+  },
+  "microserviceApp": {
+    "microserviceMois": {
+      "created": "新的 Mois 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Mois 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Mois 刪除成功"
+    }
+  }
+}

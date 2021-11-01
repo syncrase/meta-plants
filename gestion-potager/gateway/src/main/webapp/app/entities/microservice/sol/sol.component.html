@@ -1,0 +1,73 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="gatewayApp.microserviceSol.home.title">Sols</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-sol" [routerLink]="['/sol/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="gatewayApp.microserviceSol.home.createLabel">
+            Create a new Sol
+            </span>
+        </button>
+    </h2>
+
+    <gp-alert-error></gp-alert-error>
+
+    <gp-alert></gp-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="sols?.length === 0">
+        <span jhiTranslate="gatewayApp.microserviceSol.home.notFound">No sols found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="sols && sols.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="acidite"><span jhiTranslate="gatewayApp.microserviceSol.acidite">Acidite</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="type"><span jhiTranslate="gatewayApp.microserviceSol.type">Type</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sol of sols ;trackBy: trackId">
+                    <td><a [routerLink]="['/sol', sol.id, 'view']">{{ sol.id }}</a></td>
+                    <td>{{ sol.acidite }}</td>
+                    <td>{{ sol.type }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/sol', sol.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/sol', sol.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(sol)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="sols && sols.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+</div>

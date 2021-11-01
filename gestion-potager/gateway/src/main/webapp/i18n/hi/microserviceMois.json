@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceMois": {
+      "home": {
+        "title": "Mois",
+        "createLabel": "नया Mois बनाएँ",
+        "createOrEditLabel": "Mois बनाएँ या संपादित करें",
+        "notFound": "No Mois found"
+      },
+      "delete": {
+        "question": "Mois [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Mois"
+      },
+      "numero": "Numero",
+      "nom": "Nom"
+    }
+  },
+  "microserviceApp": {
+    "microserviceMois": {
+      "created": "एक नया Mois [identifier: {{ param }}] तैयार है",
+      "updated": "एक Mois [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Mois [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

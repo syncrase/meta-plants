@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceRessemblance": {
+      "home": {
+        "title": "Ressemblances",
+        "createLabel": "Создать новый Ressemblance",
+        "createOrEditLabel": "Создать или отредактировать Ressemblance",
+        "notFound": "No Ressemblances found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Ressemblance {{ id }}?"
+      },
+      "detail": {
+        "title": "Ressemblance"
+      },
+      "description": "Description",
+      "confusion": "Confusion"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRessemblance": {
+      "created": "Новый Ressemblance создан с идентификатором {{ param }}",
+      "updated": "Ressemblance обновлен с идентификатором {{ param }}",
+      "deleted": "Ressemblance удален с идентификатором {{ param }}"
+    }
+  }
+}

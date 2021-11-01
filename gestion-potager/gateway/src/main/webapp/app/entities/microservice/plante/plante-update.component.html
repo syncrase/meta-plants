@@ -1,0 +1,85 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="gp-plante-heading" jhiTranslate="gatewayApp.microservicePlante.home.createOrEditLabel">Create or edit a Plante</h2>
+
+            <div>
+                <gp-alert-error></gp-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microservicePlante.nomLatin" for="field_nomLatin">Nom Latin</label>
+                    <input type="text" class="form-control" name="nomLatin" id="field_nomLatin"
+                           formControlName="nomLatin"/>
+                    <div *ngIf="editForm.get('nomLatin')!.invalid && (editForm.get('nomLatin')!.dirty || editForm.get('nomLatin')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('nomLatin')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microservicePlante.entretien" for="field_entretien">Entretien</label>
+                    <input type="text" class="form-control" name="entretien" id="field_entretien"
+                           formControlName="entretien"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microservicePlante.histoire" for="field_histoire">Histoire</label>
+                    <input type="text" class="form-control" name="histoire" id="field_histoire"
+                           formControlName="histoire"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microservicePlante.exposition" for="field_exposition">Exposition</label>
+                    <input type="text" class="form-control" name="exposition" id="field_exposition"
+                           formControlName="exposition"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microservicePlante.rusticite" for="field_rusticite">Rusticite</label>
+                    <input type="text" class="form-control" name="rusticite" id="field_rusticite"
+                           formControlName="rusticite"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microservicePlante.cycleDeVie" for="field_cycleDeVie">Cycle De Vie</label>
+                    <select class="form-control" id="field_cycleDeVie" name="cycleDeVie" formControlName="cycleDeVieId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="cycleDeVieOption.id" *ngFor="let cycleDeVieOption of cycledevies; trackBy: trackById">{{ cycleDeVieOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.microservicePlante.classification" for="field_classification">Classification</label>
+                    <select class="form-control" id="field_classification" name="classification" formControlName="classificationId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="classificationOption.id" *ngFor="let classificationOption of classifications; trackBy: trackById">{{ classificationOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label jhiTranslate="gatewayApp.microservicePlante.nomsVernaculaires" for="field_nomsVernaculaires">Noms Vernaculaires</label>
+                    <select class="form-control" id="field_nomsVernaculaires" multiple name="nomsVernaculaires" formControlName="nomsVernaculaires">
+                        <option [ngValue]="getSelected(editForm.get('nomsVernaculaires')!.value, nomVernaculaireOption)" *ngFor="let nomVernaculaireOption of nomvernaculaires; trackBy: trackById">{{ nomVernaculaireOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

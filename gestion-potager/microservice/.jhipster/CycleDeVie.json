@@ -1,0 +1,87 @@
+{
+  "name": "CycleDeVie",
+  "fields": [
+    {
+      "fieldName": "vitesseDeCroissance",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "semis",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "semis",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "periodeAnnee",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "apparitionFeuilles",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "periodeAnnee",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "floraison",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "periodeAnnee",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "recolte",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "periodeAnnee",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "croissance",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "periodeAnnee",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "maturite",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "periodeAnnee",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "plantation",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "periodeAnnee",
+      "otherEntityRelationshipName": "cycleDeVie",
+      "relationshipName": "rempotage",
+      "otherEntityField": "id",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20210302090609",
+  "entityTableName": "cycle_de_vie",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice"
+}

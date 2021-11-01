@@ -1,0 +1,28 @@
+{
+  "gatewayApp": {
+    "microserviceNomVernaculaire": {
+      "home": {
+        "title": "Nom Vernaculaires",
+        "createLabel": "Создать новый Nom Vernaculaire",
+        "createOrEditLabel": "Создать или отредактировать Nom Vernaculaire",
+        "notFound": "No Nom Vernaculaires found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Nom Vernaculaire {{ id }}?"
+      },
+      "detail": {
+        "title": "Nom Vernaculaire"
+      },
+      "nom": "Nom",
+      "description": "Description",
+      "plantes": "Plantes"
+    }
+  },
+  "microserviceApp": {
+    "microserviceNomVernaculaire": {
+      "created": "Новый Nom Vernaculaire создан с идентификатором {{ param }}",
+      "updated": "Nom Vernaculaire обновлен с идентификатором {{ param }}",
+      "deleted": "Nom Vernaculaire удален с идентификатором {{ param }}"
+    }
+  }
+}

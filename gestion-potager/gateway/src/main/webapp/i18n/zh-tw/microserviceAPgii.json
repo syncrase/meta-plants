@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgii": {
+      "home": {
+        "title": "APGIIS",
+        "createLabel": "建立一筆新的 APGII",
+        "createOrEditLabel": "建立或編輯 APGII",
+        "notFound": "No APGIIS found"
+      },
+      "delete": {
+        "question": "您確定要刪除 APGII {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "APGII"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgii": {
+      "created": "新的 APGII 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 APGII 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 APGII 刪除成功"
+    }
+  }
+}

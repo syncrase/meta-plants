@@ -1,0 +1,78 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="cycleDeVie">
+            <h2><span jhiTranslate="gatewayApp.microserviceCycleDeVie.detail.title">Cycle De Vie</span> {{ cycleDeVie.id }}</h2>
+
+            <hr>
+
+            <gp-alert-error></gp-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.vitesseDeCroissance">Vitesse De Croissance</span></dt>
+                <dd>
+                    <span>{{ cycleDeVie.vitesseDeCroissance }}</span>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.semis">Semis</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.semisId">
+                        <a [routerLink]="['/semis', cycleDeVie.semisId, 'view']">{{ cycleDeVie.semisId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.apparitionFeuilles">Apparition Feuilles</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.apparitionFeuillesId">
+                        <a [routerLink]="['/periode-annee', cycleDeVie.apparitionFeuillesId, 'view']">{{ cycleDeVie.apparitionFeuillesId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.floraison">Floraison</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.floraisonId">
+                        <a [routerLink]="['/periode-annee', cycleDeVie.floraisonId, 'view']">{{ cycleDeVie.floraisonId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.recolte">Recolte</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.recolteId">
+                        <a [routerLink]="['/periode-annee', cycleDeVie.recolteId, 'view']">{{ cycleDeVie.recolteId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.croissance">Croissance</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.croissanceId">
+                        <a [routerLink]="['/periode-annee', cycleDeVie.croissanceId, 'view']">{{ cycleDeVie.croissanceId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.maturite">Maturite</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.maturiteId">
+                        <a [routerLink]="['/periode-annee', cycleDeVie.maturiteId, 'view']">{{ cycleDeVie.maturiteId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.plantation">Plantation</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.plantationId">
+                        <a [routerLink]="['/periode-annee', cycleDeVie.plantationId, 'view']">{{ cycleDeVie.plantationId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceCycleDeVie.rempotage">Rempotage</span></dt>
+                <dd>
+                    <div *ngIf="cycleDeVie.rempotageId">
+                        <a [routerLink]="['/periode-annee', cycleDeVie.rempotageId, 'view']">{{ cycleDeVie.rempotageId }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/cycle-de-vie', cycleDeVie.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

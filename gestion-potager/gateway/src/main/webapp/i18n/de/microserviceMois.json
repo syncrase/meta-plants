@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceMois": {
+      "home": {
+        "title": "Mois",
+        "createLabel": "Mois erstellen",
+        "createOrEditLabel": "Mois erstellen oder bearbeiten",
+        "notFound": "No Mois found"
+      },
+      "delete": {
+        "question": "Soll Mois {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Mois"
+      },
+      "numero": "Numero",
+      "nom": "Nom"
+    }
+  },
+  "microserviceApp": {
+    "microserviceMois": {
+      "created": "Mois erstellt mit ID {{ param }}",
+      "updated": "Mois aktualisiert mit ID {{ param }}",
+      "deleted": "Mois gelöscht mit ID {{ param }}"
+    }
+  }
+}

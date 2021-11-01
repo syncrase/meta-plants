@@ -1,0 +1,33 @@
+{
+  "gatewayApp": {
+    "microserviceCronquist": {
+      "home": {
+        "title": "Cronquists",
+        "createLabel": "Создать новый Cronquist",
+        "createOrEditLabel": "Создать или отредактировать Cronquist",
+        "notFound": "No Cronquists found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Cronquist {{ id }}?"
+      },
+      "detail": {
+        "title": "Cronquist"
+      },
+      "regne": "Regne",
+      "sousRegne": "Sous Regne",
+      "division": "Division",
+      "classe": "Classe",
+      "sousClasse": "Sous Classe",
+      "ordre": "Ordre",
+      "famille": "Famille",
+      "genre": "Genre"
+    }
+  },
+  "microserviceApp": {
+    "microserviceCronquist": {
+      "created": "Новый Cronquist создан с идентификатором {{ param }}",
+      "updated": "Cronquist обновлен с идентификатором {{ param }}",
+      "deleted": "Cronquist удален с идентификатором {{ param }}"
+    }
+  }
+}

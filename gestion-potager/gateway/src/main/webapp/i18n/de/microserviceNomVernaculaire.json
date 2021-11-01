@@ -1,0 +1,28 @@
+{
+  "gatewayApp": {
+    "microserviceNomVernaculaire": {
+      "home": {
+        "title": "Nom Vernaculaires",
+        "createLabel": "Nom Vernaculaire erstellen",
+        "createOrEditLabel": "Nom Vernaculaire erstellen oder bearbeiten",
+        "notFound": "No Nom Vernaculaires found"
+      },
+      "delete": {
+        "question": "Soll Nom Vernaculaire {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Nom Vernaculaire"
+      },
+      "nom": "Nom",
+      "description": "Description",
+      "plantes": "Plantes"
+    }
+  },
+  "microserviceApp": {
+    "microserviceNomVernaculaire": {
+      "created": "Nom Vernaculaire erstellt mit ID {{ param }}",
+      "updated": "Nom Vernaculaire aktualisiert mit ID {{ param }}",
+      "deleted": "Nom Vernaculaire gelöscht mit ID {{ param }}"
+    }
+  }
+}

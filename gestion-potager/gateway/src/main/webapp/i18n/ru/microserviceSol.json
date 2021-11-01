@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceSol": {
+      "home": {
+        "title": "Sols",
+        "createLabel": "Создать новый Sol",
+        "createOrEditLabel": "Создать или отредактировать Sol",
+        "notFound": "No Sols found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Sol {{ id }}?"
+      },
+      "detail": {
+        "title": "Sol"
+      },
+      "acidite": "Acidite",
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSol": {
+      "created": "Новый Sol создан с идентификатором {{ param }}",
+      "updated": "Sol обновлен с идентификатором {{ param }}",
+      "deleted": "Sol удален с идентификатором {{ param }}"
+    }
+  }
+}

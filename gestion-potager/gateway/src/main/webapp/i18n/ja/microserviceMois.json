@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceMois": {
+      "home": {
+        "title": "Mois",
+        "createLabel": "Mois を追加",
+        "createOrEditLabel": "Moisを追加または編集",
+        "notFound": "No Mois found"
+      },
+      "delete": {
+        "question": "Mois {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Mois"
+      },
+      "numero": "Numero",
+      "nom": "Nom"
+    }
+  },
+  "microserviceApp": {
+    "microserviceMois": {
+      "created": "A new Mois is created with identifier {{ param }}",
+      "updated": "A Mois is updated with identifier {{ param }}",
+      "deleted": "A Mois is deleted with identifier {{ param }}"
+    }
+  }
+}

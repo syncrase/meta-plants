@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgi": {
+      "home": {
+        "title": "APGIS",
+        "createLabel": "建立一筆新的 APGI",
+        "createOrEditLabel": "建立或編輯 APGI",
+        "notFound": "No APGIS found"
+      },
+      "delete": {
+        "question": "您確定要刪除 APGI {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "APGI"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgi": {
+      "created": "新的 APGI 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 APGI 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 APGI 刪除成功"
+    }
+  }
+}

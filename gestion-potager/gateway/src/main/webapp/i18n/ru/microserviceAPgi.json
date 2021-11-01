@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgi": {
+      "home": {
+        "title": "APGIS",
+        "createLabel": "Создать новый APGI",
+        "createOrEditLabel": "Создать или отредактировать APGI",
+        "notFound": "No APGIS found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить APGI {{ id }}?"
+      },
+      "detail": {
+        "title": "APGI"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgi": {
+      "created": "Новый APGI создан с идентификатором {{ param }}",
+      "updated": "APGI обновлен с идентификатором {{ param }}",
+      "deleted": "APGI удален с идентификатором {{ param }}"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "gatewayApp": {
+    "microserviceTypeSemis": {
+      "home": {
+        "title": "Type Semis",
+        "createLabel": "Type Semis erstellen",
+        "createOrEditLabel": "Type Semis erstellen oder bearbeiten",
+        "notFound": "No Type Semis found"
+      },
+      "delete": {
+        "question": "Soll Type Semis {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Type Semis"
+      },
+      "description": "Description"
+    }
+  },
+  "microserviceApp": {
+    "microserviceTypeSemis": {
+      "created": "Type Semis erstellt mit ID {{ param }}",
+      "updated": "Type Semis aktualisiert mit ID {{ param }}",
+      "deleted": "Type Semis gelöscht mit ID {{ param }}"
+    }
+  }
+}

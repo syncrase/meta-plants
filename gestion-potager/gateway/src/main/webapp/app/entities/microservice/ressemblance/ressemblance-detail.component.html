@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="ressemblance">
+            <h2><span jhiTranslate="gatewayApp.microserviceRessemblance.detail.title">Ressemblance</span> {{ ressemblance.id }}</h2>
+
+            <hr>
+
+            <gp-alert-error></gp-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gatewayApp.microserviceRessemblance.description">Description</span></dt>
+                <dd>
+                    <span>{{ ressemblance.description }}</span>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.microserviceRessemblance.confusion">Confusion</span></dt>
+                <dd>
+                    <div *ngIf="ressemblance.confusionId">
+                        <a [routerLink]="['/plante', ressemblance.confusionId, 'view']">{{ ressemblance.confusionId }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/ressemblance', ressemblance.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

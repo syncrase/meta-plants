@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgiv": {
+      "home": {
+        "title": "APGIVS",
+        "createLabel": "APGIV erstellen",
+        "createOrEditLabel": "APGIV erstellen oder bearbeiten",
+        "notFound": "No APGIVS found"
+      },
+      "delete": {
+        "question": "Soll APGIV {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "APGIV"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgiv": {
+      "created": "APGIV erstellt mit ID {{ param }}",
+      "updated": "APGIV aktualisiert mit ID {{ param }}",
+      "deleted": "APGIV gelöscht mit ID {{ param }}"
+    }
+  }
+}

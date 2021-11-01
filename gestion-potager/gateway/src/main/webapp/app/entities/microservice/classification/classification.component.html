@@ -1,0 +1,105 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="gatewayApp.microserviceClassification.home.title">Classifications</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-classification" [routerLink]="['/classification/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="gatewayApp.microserviceClassification.home.createLabel">
+            Create a new Classification
+            </span>
+        </button>
+    </h2>
+
+    <gp-alert-error></gp-alert-error>
+
+    <gp-alert></gp-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="classifications?.length === 0">
+        <span jhiTranslate="gatewayApp.microserviceClassification.home.notFound">No classifications found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="classifications && classifications.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="raunkierId"><span jhiTranslate="gatewayApp.microserviceClassification.raunkier">Raunkier</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="cronquistId"><span jhiTranslate="gatewayApp.microserviceClassification.cronquist">Cronquist</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="apg1Id"><span jhiTranslate="gatewayApp.microserviceClassification.apg1">Apg 1</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="apg2Id"><span jhiTranslate="gatewayApp.microserviceClassification.apg2">Apg 2</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="apg3Id"><span jhiTranslate="gatewayApp.microserviceClassification.apg3">Apg 3</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="apg4Id"><span jhiTranslate="gatewayApp.microserviceClassification.apg4">Apg 4</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let classification of classifications ;trackBy: trackId">
+                    <td><a [routerLink]="['/classification', classification.id, 'view']">{{ classification.id }}</a></td>
+                    <td>
+                        <div *ngIf="classification.raunkierId">
+                            <a [routerLink]="['/raunkier', classification.raunkierId , 'view']" >{{ classification.raunkierId }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="classification.cronquistId">
+                            <a [routerLink]="['/cronquist', classification.cronquistId , 'view']" >{{ classification.cronquistId }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="classification.apg1Id">
+                            <a [routerLink]="['/apgi', classification.apg1Id , 'view']" >{{ classification.apg1Id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="classification.apg2Id">
+                            <a [routerLink]="['/apgii', classification.apg2Id , 'view']" >{{ classification.apg2Id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="classification.apg3Id">
+                            <a [routerLink]="['/apgiii', classification.apg3Id , 'view']" >{{ classification.apg3Id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="classification.apg4Id">
+                            <a [routerLink]="['/apgiv', classification.apg4Id , 'view']" >{{ classification.apg4Id }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/classification', classification.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/classification', classification.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(classification)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="classifications && classifications.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgii": {
+      "home": {
+        "title": "APGIIS",
+        "createLabel": "नया APGII बनाएँ",
+        "createOrEditLabel": "APGII बनाएँ या संपादित करें",
+        "notFound": "No APGIIS found"
+      },
+      "delete": {
+        "question": "APGII [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "APGII"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgii": {
+      "created": "एक नया APGII [identifier: {{ param }}] तैयार है",
+      "updated": "एक APGII [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "APGII [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "gatewayApp": {
+    "microserviceCycleDeVie": {
+      "home": {
+        "title": "CycleDeVies",
+        "createLabel": "Cycle De Vie を追加",
+        "createOrEditLabel": "Cycle De Vieを追加または編集",
+        "notFound": "No Cycle De Vies found"
+      },
+      "delete": {
+        "question": "Cycle De Vie {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Cycle De Vie"
+      },
+      "vitesseDeCroissance": "Vitesse De Croissance",
+      "semis": "Semis",
+      "apparitionFeuilles": "Apparition Feuilles",
+      "floraison": "Floraison",
+      "recolte": "Recolte",
+      "croissance": "Croissance",
+      "maturite": "Maturite",
+      "plantation": "Plantation",
+      "rempotage": "Rempotage"
+    }
+  },
+  "microserviceApp": {
+    "microserviceCycleDeVie": {
+      "created": "A new Cycle De Vie is created with identifier {{ param }}",
+      "updated": "A Cycle De Vie is updated with identifier {{ param }}",
+      "deleted": "A Cycle De Vie is deleted with identifier {{ param }}"
+    }
+  }
+}

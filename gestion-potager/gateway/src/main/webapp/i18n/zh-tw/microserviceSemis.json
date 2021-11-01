@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceSemis": {
+      "home": {
+        "title": "Semis",
+        "createLabel": "建立一筆新的 Semis",
+        "createOrEditLabel": "建立或編輯 Semis",
+        "notFound": "No Semis found"
+      },
+      "delete": {
+        "question": "您確定要刪除 Semis {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Semis"
+      },
+      "semisPleineTerre": "Semis Pleine Terre",
+      "semisSousAbris": "Semis Sous Abris",
+      "typeSemis": "Type Semis",
+      "germination": "Germination"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSemis": {
+      "created": "新的 Semis 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Semis 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Semis 刪除成功"
+    }
+  }
+}

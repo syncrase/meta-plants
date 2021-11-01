@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceGermination": {
+      "home": {
+        "title": "Germinations",
+        "createLabel": "Germination を追加",
+        "createOrEditLabel": "Germinationを追加または編集",
+        "notFound": "No Germinations found"
+      },
+      "delete": {
+        "question": "Germination {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Germination"
+      },
+      "tempsDeGermination": "Temps De Germination",
+      "conditionDeGermination": "Condition De Germination"
+    }
+  },
+  "microserviceApp": {
+    "microserviceGermination": {
+      "created": "A new Germination is created with identifier {{ param }}",
+      "updated": "A Germination is updated with identifier {{ param }}",
+      "deleted": "A Germination is deleted with identifier {{ param }}"
+    }
+  }
+}

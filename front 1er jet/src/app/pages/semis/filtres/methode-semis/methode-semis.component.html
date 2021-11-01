@@ -1,0 +1,11 @@
+<span> Semis : </span>
+<form [formGroup]="filtreMethodeSemis">
+    <div class="btn-group btn-group-toggle" class="col-xl-12">
+        <label class="btn-primary" class="col-xl-12" ngbButtonLabel>
+            <input type="checkbox" formControlName="pleineTerre" ngbButton> Semis en pleine terre
+        </label>
+        <label class="btn-primary" class="col-xl-12" ngbButtonLabel>
+            <input type="checkbox" formControlName="sousAbris" ngbButton> Semis sous abris
+        </label>
+    </div>
+</form>

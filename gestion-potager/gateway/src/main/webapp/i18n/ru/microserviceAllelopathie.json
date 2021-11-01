@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceAllelopathie": {
+      "home": {
+        "title": "Allelopathies",
+        "createLabel": "Создать новый Allelopathie",
+        "createOrEditLabel": "Создать или отредактировать Allelopathie",
+        "notFound": "No Allelopathies found"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Allelopathie {{ id }}?"
+      },
+      "detail": {
+        "title": "Allelopathie"
+      },
+      "type": "Type",
+      "description": "Description",
+      "cible": "Cible",
+      "origine": "Origine",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAllelopathie": {
+      "created": "Новый Allelopathie создан с идентификатором {{ param }}",
+      "updated": "Allelopathie обновлен с идентификатором {{ param }}",
+      "deleted": "Allelopathie удален с идентификатором {{ param }}"
+    }
+  }
+}

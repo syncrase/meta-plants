@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceSol": {
+      "home": {
+        "title": "Sols",
+        "createLabel": "नया Sol बनाएँ",
+        "createOrEditLabel": "Sol बनाएँ या संपादित करें",
+        "notFound": "No Sols found"
+      },
+      "delete": {
+        "question": "Sol [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Sol"
+      },
+      "acidite": "Acidite",
+      "type": "Type"
+    }
+  },
+  "microserviceApp": {
+    "microserviceSol": {
+      "created": "एक नया Sol [identifier: {{ param }}] तैयार है",
+      "updated": "एक Sol [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Sol [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

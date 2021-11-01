@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "microserviceAPgi": {
+      "home": {
+        "title": "APGIS",
+        "createLabel": "नया APGI बनाएँ",
+        "createOrEditLabel": "APGI बनाएँ या संपादित करें",
+        "notFound": "No APGIS found"
+      },
+      "delete": {
+        "question": "APGI [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "APGI"
+      },
+      "ordre": "Ordre",
+      "famille": "Famille"
+    }
+  },
+  "microserviceApp": {
+    "microserviceAPgi": {
+      "created": "एक नया APGI [identifier: {{ param }}] तैयार है",
+      "updated": "एक APGI [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "APGI [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

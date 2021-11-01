@@ -1,0 +1,34 @@
+{
+  "gatewayApp": {
+    "microserviceCycleDeVie": {
+      "home": {
+        "title": "Cycle De Vies",
+        "createLabel": "Cycle De Vie erstellen",
+        "createOrEditLabel": "Cycle De Vie erstellen oder bearbeiten",
+        "notFound": "No Cycle De Vies found"
+      },
+      "delete": {
+        "question": "Soll Cycle De Vie {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Cycle De Vie"
+      },
+      "vitesseDeCroissance": "Vitesse De Croissance",
+      "semis": "Semis",
+      "apparitionFeuilles": "Apparition Feuilles",
+      "floraison": "Floraison",
+      "recolte": "Recolte",
+      "croissance": "Croissance",
+      "maturite": "Maturite",
+      "plantation": "Plantation",
+      "rempotage": "Rempotage"
+    }
+  },
+  "microserviceApp": {
+    "microserviceCycleDeVie": {
+      "created": "Cycle De Vie erstellt mit ID {{ param }}",
+      "updated": "Cycle De Vie aktualisiert mit ID {{ param }}",
+      "deleted": "Cycle De Vie gelöscht mit ID {{ param }}"
+    }
+  }
+}

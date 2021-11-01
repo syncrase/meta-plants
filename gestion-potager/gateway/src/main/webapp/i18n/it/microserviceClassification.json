@@ -1,0 +1,31 @@
+{
+  "gatewayApp": {
+    "microserviceClassification": {
+      "home": {
+        "title": "Classifications",
+        "createLabel": "Genera un nuovo Classification",
+        "createOrEditLabel": "Genera o modifica un Classification",
+        "notFound": "No Classifications found"
+      },
+      "delete": {
+        "question": "Sei sicuro di volere eliminare Classification {{ id }}?"
+      },
+      "detail": {
+        "title": "Classification"
+      },
+      "raunkier": "Raunkier",
+      "cronquist": "Cronquist",
+      "apg1": "Apg 1",
+      "apg2": "Apg 2",
+      "apg3": "Apg 3",
+      "apg4": "Apg 4"
+    }
+  },
+  "microserviceApp": {
+    "microserviceClassification": {
+      "created": "&Egrave; stato generato un nuovo Classification con identificatore { param }}",
+      "updated": "&Egrave; stato aggiornato Classification identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato Classification con identificatore {{ param }}"
+    }
+  }
+}

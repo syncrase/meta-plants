@@ -1,0 +1,120 @@
+package fr.syncrase.perma.service.dto;
+
+import java.io.Serializable;
+import java.util.Objects;
+import io.github.jhipster.service.Criteria;
+import io.github.jhipster.service.filter.BooleanFilter;
+import io.github.jhipster.service.filter.DoubleFilter;
+import io.github.jhipster.service.filter.Filter;
+import io.github.jhipster.service.filter.FloatFilter;
+import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LongFilter;
+import io.github.jhipster.service.filter.StringFilter;
+
+/**
+ * Criteria class for the {@link fr.syncrase.perma.domain.NomVernaculaire} entity. This class is used
+ * in {@link fr.syncrase.perma.web.rest.NomVernaculaireResource} to receive all the possible filtering options from
+ * the Http GET request parameters.
+ * For example the following could be a valid request:
+ * {@code /nom-vernaculaires?id.greaterThan=5&attr1.contains=something&attr2.specified=false}
+ * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
+ * fix type specific filters.
+ */
+public class NomVernaculaireCriteria implements Serializable, Criteria {
+
+    private static final long serialVersionUID = 1L;
+
+    private LongFilter id;
+
+    private StringFilter nom;
+
+    private StringFilter description;
+
+    private LongFilter plantesId;
+
+    public NomVernaculaireCriteria() {
+    }
+
+    public NomVernaculaireCriteria(NomVernaculaireCriteria other) {
+        this.id = other.id == null ? null : other.id.copy();
+        this.nom = other.nom == null ? null : other.nom.copy();
+        this.description = other.description == null ? null : other.description.copy();
+        this.plantesId = other.plantesId == null ? null : other.plantesId.copy();
+    }
+
+    @Override
+    public NomVernaculaireCriteria copy() {
+        return new NomVernaculaireCriteria(this);
+    }
+
+    public LongFilter getId() {
+        return id;
+    }
+
+    public void setId(LongFilter id) {
+        this.id = id;
+    }
+
+    public StringFilter getNom() {
+        return nom;
+    }
+
+    public void setNom(StringFilter nom) {
+        this.nom = nom;
+    }
+
+    public StringFilter getDescription() {
+        return description;
+    }
+
+    public void setDescription(StringFilter description) {
+        this.description = description;
+    }
+
+    public LongFilter getPlantesId() {
+        return plantesId;
+    }
+
+    public void setPlantesId(LongFilter plantesId) {
+        this.plantesId = plantesId;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final NomVernaculaireCriteria that = (NomVernaculaireCriteria) o;
+        return
+            Objects.equals(id, that.id) &&
+            Objects.equals(nom, that.nom) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(plantesId, that.plantesId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+        id,
+        nom,
+        description,
+        plantesId
+        );
+    }
+
+    // prettier-ignore
+    @Override
+    public String toString() {
+        return "NomVernaculaireCriteria{" +
+                (id != null ? "id=" + id + ", " : "") +
+                (nom != null ? "nom=" + nom + ", " : "") +
+                (description != null ? "description=" + description + ", " : "") +
+                (plantesId != null ? "plantesId=" + plantesId + ", " : "") +
+            "}";
+    }
+
+}

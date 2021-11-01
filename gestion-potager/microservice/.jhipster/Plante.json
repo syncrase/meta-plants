@@ -1,0 +1,90 @@
+{
+  "name": "Plante",
+  "fields": [
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "entretien",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "histoire",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "exposition",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "rusticite",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "cycleDeVie",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "cycleDeVie",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "classification",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "classification",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "ressemblance",
+      "otherEntityRelationshipName": "confusion",
+      "relationshipName": "confusions"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "allelopathie",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "interactions"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "nomVernaculaire",
+      "otherEntityRelationshipName": "plantes",
+      "relationshipName": "nomsVernaculaires",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "allelopathie",
+      "otherEntityRelationshipName": "cible",
+      "relationshipName": "allelopathieRecue",
+      "ownerSide": false
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "allelopathie",
+      "otherEntityRelationshipName": "origine",
+      "relationshipName": "allelopathieProduite",
+      "ownerSide": false
+    }
+  ],
+  "changelogDate": "20210302085409",
+  "entityTableName": "plante",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice"
+}
