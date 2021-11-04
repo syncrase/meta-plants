@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.Ressemblance;
+import fr.syncrase.perma.repository.RessemblanceRepository;
+import fr.syncrase.perma.service.criteria.RessemblanceCriteria;
+import fr.syncrase.perma.service.dto.RessemblanceDTO;
+import fr.syncrase.perma.service.mapper.RessemblanceMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.Ressemblance;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.RessemblanceRepository;
-import fr.syncrase.perma.service.dto.RessemblanceCriteria;
-import fr.syncrase.perma.service.dto.RessemblanceDTO;
-import fr.syncrase.perma.service.mapper.RessemblanceMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Ressemblance} entities in the database.
@@ -64,8 +60,7 @@ public class RessemblanceQueryService extends QueryService<Ressemblance> {
     public Page<RessemblanceDTO> findByCriteria(RessemblanceCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Ressemblance> specification = createSpecification(criteria);
-        return ressemblanceRepository.findAll(specification, page)
-            .map(ressemblanceMapper::toDto);
+        return ressemblanceRepository.findAll(specification, page).map(ressemblanceMapper::toDto);
     }
 
     /**
@@ -88,6 +83,10 @@ public class RessemblanceQueryService extends QueryService<Ressemblance> {
     protected Specification<Ressemblance> createSpecification(RessemblanceCriteria criteria) {
         Specification<Ressemblance> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Ressemblance_.id));
             }
@@ -95,8 +94,13 @@ public class RessemblanceQueryService extends QueryService<Ressemblance> {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Ressemblance_.description));
             }
             if (criteria.getConfusionId() != null) {
-                specification = specification.and(buildSpecification(criteria.getConfusionId(),
-                    root -> root.join(Ressemblance_.confusion, JoinType.LEFT).get(Plante_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getConfusionId(),
+                            root -> root.join(Ressemblance_.confusion, JoinType.LEFT).get(Plante_.id)
+                        )
+                    );
             }
         }
         return specification;

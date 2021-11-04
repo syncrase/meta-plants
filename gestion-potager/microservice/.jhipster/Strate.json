@@ -1,0 +1,30 @@
+{
+  "name": "Strate",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "strate",
+      "relationshipName": "plante"
+    }
+  ],
+  "entityTableName": "strate",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104121054"
+}

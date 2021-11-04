@@ -3,6 +3,7 @@
     "microserviceClassification": {
       "home": {
         "title": "Classifications",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Δημιουργήστε ένα νέο Classification",
         "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Classification",
         "notFound": "No Classifications found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Classification"
       },
+      "id": "ID",
       "raunkier": "Raunkier",
       "cronquist": "Cronquist",
       "apg1": "Apg 1",

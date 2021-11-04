@@ -7,7 +7,6 @@
       "otherEntityName": "raunkier",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "raunkier",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -15,7 +14,6 @@
       "otherEntityName": "cronquist",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "cronquist",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -23,7 +21,6 @@
       "otherEntityName": "aPGI",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg1",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -31,7 +28,6 @@
       "otherEntityName": "aPGII",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg2",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -39,7 +35,6 @@
       "otherEntityName": "aPGIII",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg3",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -47,11 +42,9 @@
       "otherEntityName": "aPGIV",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg4",
-      "otherEntityField": "id",
       "ownerSide": true
     }
   ],
-  "changelogDate": "20210302085709",
   "entityTableName": "classification",
   "dto": "mapstruct",
   "pagination": "pagination",
@@ -60,7 +53,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104121654"
 }

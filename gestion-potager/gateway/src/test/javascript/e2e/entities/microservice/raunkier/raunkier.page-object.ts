@@ -20,7 +20,7 @@ export class RaunkierComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,10 +29,19 @@ export class RaunkierUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   typeInput = element(by.id('field_type'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setTypeInput(type: string): Promise<void> {
@@ -61,7 +70,7 @@ export class RaunkierDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-raunkier'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

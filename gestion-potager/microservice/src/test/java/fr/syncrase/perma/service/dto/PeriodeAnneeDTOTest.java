@@ -1,13 +1,14 @@
 package fr.syncrase.perma.service.dto;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import fr.syncrase.perma.web.rest.TestUtil;
 
-public class PeriodeAnneeDTOTest {
+import fr.syncrase.perma.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class PeriodeAnneeDTOTest {
 
     @Test
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(PeriodeAnneeDTO.class);
         PeriodeAnneeDTO periodeAnneeDTO1 = new PeriodeAnneeDTO();
         periodeAnneeDTO1.setId(1L);

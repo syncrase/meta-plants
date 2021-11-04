@@ -3,9 +3,10 @@
     "microserviceAllelopathie": {
       "home": {
         "title": "Allelopathies",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Allelopathie erstellen",
         "createOrEditLabel": "Allelopathie erstellen oder bearbeiten",
-        "notFound": "No Allelopathies found"
+        "notFound": "Keine Allelopathies gefunden"
       },
       "delete": {
         "question": "Soll Allelopathie {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,11 +14,12 @@
       "detail": {
         "title": "Allelopathie"
       },
+      "id": "ID",
       "type": "Type",
       "description": "Description",
       "cible": "Cible",
       "origine": "Origine",
-      "plante": "Plante"
+      "interaction": "Interaction"
     }
   },
   "microserviceApp": {

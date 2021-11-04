@@ -21,16 +21,17 @@
       "ownerSide": true
     }
   ],
-  "changelogDate": "20210302085309",
   "entityTableName": "periode_annee",
   "dto": "mapstruct",
   "pagination": "pagination",
   "service": "serviceImpl",
-  "jpaMetamodelFiltering": true,
+  "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104121354"
 }

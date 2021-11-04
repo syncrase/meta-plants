@@ -3,9 +3,10 @@
     "microserviceNomVernaculaire": {
       "home": {
         "title": "Nom Vernaculaires",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Nom Vernaculaire erstellen",
         "createOrEditLabel": "Nom Vernaculaire erstellen oder bearbeiten",
-        "notFound": "No Nom Vernaculaires found"
+        "notFound": "Keine Nom Vernaculaires gefunden"
       },
       "delete": {
         "question": "Soll Nom Vernaculaire {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Nom Vernaculaire"
       },
+      "id": "ID",
       "nom": "Nom",
       "description": "Description",
       "plantes": "Plantes"

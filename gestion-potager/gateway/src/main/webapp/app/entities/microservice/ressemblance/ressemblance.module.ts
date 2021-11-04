@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { RessemblanceComponent } from './ressemblance.component';
-import { RessemblanceDetailComponent } from './ressemblance-detail.component';
-import { RessemblanceUpdateComponent } from './ressemblance-update.component';
-import { RessemblanceDeleteDialogComponent } from './ressemblance-delete-dialog.component';
-import { ressemblanceRoute } from './ressemblance.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { RessemblanceComponent } from './list/ressemblance.component';
+import { RessemblanceDetailComponent } from './detail/ressemblance-detail.component';
+import { RessemblanceUpdateComponent } from './update/ressemblance-update.component';
+import { RessemblanceDeleteDialogComponent } from './delete/ressemblance-delete-dialog.component';
+import { RessemblanceRoutingModule } from './route/ressemblance-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(ressemblanceRoute)],
+  imports: [SharedModule, RessemblanceRoutingModule],
   declarations: [RessemblanceComponent, RessemblanceDetailComponent, RessemblanceUpdateComponent, RessemblanceDeleteDialogComponent],
   entryComponents: [RessemblanceDeleteDialogComponent],
 })

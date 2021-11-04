@@ -1,13 +1,14 @@
 package fr.syncrase.perma.service.dto;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import fr.syncrase.perma.web.rest.TestUtil;
 
-public class APGIDTOTest {
+import fr.syncrase.perma.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class APGIDTOTest {
 
     @Test
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(APGIDTO.class);
         APGIDTO aPGIDTO1 = new APGIDTO();
         aPGIDTO1.setId(1L);

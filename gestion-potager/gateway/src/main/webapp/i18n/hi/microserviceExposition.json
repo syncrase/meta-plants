@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceExposition": {
+      "home": {
+        "title": "Expositions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "नया Exposition बनाएँ",
+        "createOrEditLabel": "Exposition बनाएँ या संपादित करें",
+        "notFound": "No Expositions found"
+      },
+      "delete": {
+        "question": "Exposition [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Exposition"
+      },
+      "id": "ID",
+      "valeur": "Valeur",
+      "ensoleilement": "Ensoleilement",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceExposition": {
+      "created": "एक नया Exposition [identifier: {{ param }}] तैयार है",
+      "updated": "एक Exposition [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Exposition [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

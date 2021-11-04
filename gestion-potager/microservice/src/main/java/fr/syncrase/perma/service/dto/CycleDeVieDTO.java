@@ -1,33 +1,33 @@
 package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.CycleDeVie} entity.
  */
 public class CycleDeVieDTO implements Serializable {
-    
+
     private Long id;
 
-    private String vitesseDeCroissance;
+    private SemisDTO semis;
 
+    private PeriodeAnneeDTO apparitionFeuilles;
 
-    private Long semisId;
+    private PeriodeAnneeDTO floraison;
 
-    private Long apparitionFeuillesId;
+    private PeriodeAnneeDTO recolte;
 
-    private Long floraisonId;
+    private PeriodeAnneeDTO croissance;
 
-    private Long recolteId;
+    private PeriodeAnneeDTO maturite;
 
-    private Long croissanceId;
+    private PeriodeAnneeDTO plantation;
 
-    private Long maturiteId;
+    private PeriodeAnneeDTO rempotage;
 
-    private Long plantationId;
+    private ReproductionDTO reproduction;
 
-    private Long rempotageId;
-    
     public Long getId() {
         return id;
     }
@@ -36,76 +36,76 @@ public class CycleDeVieDTO implements Serializable {
         this.id = id;
     }
 
-    public String getVitesseDeCroissance() {
-        return vitesseDeCroissance;
+    public SemisDTO getSemis() {
+        return semis;
     }
 
-    public void setVitesseDeCroissance(String vitesseDeCroissance) {
-        this.vitesseDeCroissance = vitesseDeCroissance;
+    public void setSemis(SemisDTO semis) {
+        this.semis = semis;
     }
 
-    public Long getSemisId() {
-        return semisId;
+    public PeriodeAnneeDTO getApparitionFeuilles() {
+        return apparitionFeuilles;
     }
 
-    public void setSemisId(Long semisId) {
-        this.semisId = semisId;
+    public void setApparitionFeuilles(PeriodeAnneeDTO apparitionFeuilles) {
+        this.apparitionFeuilles = apparitionFeuilles;
     }
 
-    public Long getApparitionFeuillesId() {
-        return apparitionFeuillesId;
+    public PeriodeAnneeDTO getFloraison() {
+        return floraison;
     }
 
-    public void setApparitionFeuillesId(Long periodeAnneeId) {
-        this.apparitionFeuillesId = periodeAnneeId;
+    public void setFloraison(PeriodeAnneeDTO floraison) {
+        this.floraison = floraison;
     }
 
-    public Long getFloraisonId() {
-        return floraisonId;
+    public PeriodeAnneeDTO getRecolte() {
+        return recolte;
     }
 
-    public void setFloraisonId(Long periodeAnneeId) {
-        this.floraisonId = periodeAnneeId;
+    public void setRecolte(PeriodeAnneeDTO recolte) {
+        this.recolte = recolte;
     }
 
-    public Long getRecolteId() {
-        return recolteId;
+    public PeriodeAnneeDTO getCroissance() {
+        return croissance;
     }
 
-    public void setRecolteId(Long periodeAnneeId) {
-        this.recolteId = periodeAnneeId;
+    public void setCroissance(PeriodeAnneeDTO croissance) {
+        this.croissance = croissance;
     }
 
-    public Long getCroissanceId() {
-        return croissanceId;
+    public PeriodeAnneeDTO getMaturite() {
+        return maturite;
     }
 
-    public void setCroissanceId(Long periodeAnneeId) {
-        this.croissanceId = periodeAnneeId;
+    public void setMaturite(PeriodeAnneeDTO maturite) {
+        this.maturite = maturite;
     }
 
-    public Long getMaturiteId() {
-        return maturiteId;
+    public PeriodeAnneeDTO getPlantation() {
+        return plantation;
     }
 
-    public void setMaturiteId(Long periodeAnneeId) {
-        this.maturiteId = periodeAnneeId;
+    public void setPlantation(PeriodeAnneeDTO plantation) {
+        this.plantation = plantation;
     }
 
-    public Long getPlantationId() {
-        return plantationId;
+    public PeriodeAnneeDTO getRempotage() {
+        return rempotage;
     }
 
-    public void setPlantationId(Long periodeAnneeId) {
-        this.plantationId = periodeAnneeId;
+    public void setRempotage(PeriodeAnneeDTO rempotage) {
+        this.rempotage = rempotage;
     }
 
-    public Long getRempotageId() {
-        return rempotageId;
+    public ReproductionDTO getReproduction() {
+        return reproduction;
     }
 
-    public void setRempotageId(Long periodeAnneeId) {
-        this.rempotageId = periodeAnneeId;
+    public void setReproduction(ReproductionDTO reproduction) {
+        this.reproduction = reproduction;
     }
 
     @Override
@@ -117,12 +117,16 @@ public class CycleDeVieDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((CycleDeVieDTO) o).id);
+        CycleDeVieDTO cycleDeVieDTO = (CycleDeVieDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, cycleDeVieDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -130,15 +134,15 @@ public class CycleDeVieDTO implements Serializable {
     public String toString() {
         return "CycleDeVieDTO{" +
             "id=" + getId() +
-            ", vitesseDeCroissance='" + getVitesseDeCroissance() + "'" +
-            ", semisId=" + getSemisId() +
-            ", apparitionFeuillesId=" + getApparitionFeuillesId() +
-            ", floraisonId=" + getFloraisonId() +
-            ", recolteId=" + getRecolteId() +
-            ", croissanceId=" + getCroissanceId() +
-            ", maturiteId=" + getMaturiteId() +
-            ", plantationId=" + getPlantationId() +
-            ", rempotageId=" + getRempotageId() +
+            ", semis=" + getSemis() +
+            ", apparitionFeuilles=" + getApparitionFeuilles() +
+            ", floraison=" + getFloraison() +
+            ", recolte=" + getRecolte() +
+            ", croissance=" + getCroissance() +
+            ", maturite=" + getMaturite() +
+            ", plantation=" + getPlantation() +
+            ", rempotage=" + getRempotage() +
+            ", reproduction=" + getReproduction() +
             "}";
     }
 }

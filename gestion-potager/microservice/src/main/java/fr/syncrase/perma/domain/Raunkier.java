@@ -1,12 +1,10 @@
 package fr.syncrase.perma.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Raunkier.
@@ -21,6 +19,7 @@ public class Raunkier implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -28,8 +27,14 @@ public class Raunkier implements Serializable {
     private String type;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Raunkier id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -37,17 +42,18 @@ public class Raunkier implements Serializable {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public Raunkier type(String type) {
-        this.type = type;
+        this.setType(type);
         return this;
     }
 
     public void setType(String type) {
         this.type = type;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -63,7 +69,8 @@ public class Raunkier implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

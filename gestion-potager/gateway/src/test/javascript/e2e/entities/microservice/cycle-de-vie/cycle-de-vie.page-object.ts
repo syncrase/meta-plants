@@ -20,7 +20,7 @@ export class CycleDeVieComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,7 +29,7 @@ export class CycleDeVieUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
-  vitesseDeCroissanceInput = element(by.id('field_vitesseDeCroissance'));
+  idInput = element(by.id('field_id'));
 
   semisSelect = element(by.id('field_semis'));
   apparitionFeuillesSelect = element(by.id('field_apparitionFeuilles'));
@@ -39,17 +39,18 @@ export class CycleDeVieUpdatePage {
   maturiteSelect = element(by.id('field_maturite'));
   plantationSelect = element(by.id('field_plantation'));
   rempotageSelect = element(by.id('field_rempotage'));
+  reproductionSelect = element(by.id('field_reproduction'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
   }
 
-  async setVitesseDeCroissanceInput(vitesseDeCroissance: string): Promise<void> {
-    await this.vitesseDeCroissanceInput.sendKeys(vitesseDeCroissance);
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
   }
 
-  async getVitesseDeCroissanceInput(): Promise<string> {
-    return await this.vitesseDeCroissanceInput.getAttribute('value');
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async semisSelectLastOption(): Promise<void> {
@@ -180,6 +181,22 @@ export class CycleDeVieUpdatePage {
     return await this.rempotageSelect.element(by.css('option:checked')).getText();
   }
 
+  async reproductionSelectLastOption(): Promise<void> {
+    await this.reproductionSelect.all(by.tagName('option')).last().click();
+  }
+
+  async reproductionSelectOption(option: string): Promise<void> {
+    await this.reproductionSelect.sendKeys(option);
+  }
+
+  getReproductionSelect(): ElementFinder {
+    return this.reproductionSelect;
+  }
+
+  async getReproductionSelectedOption(): Promise<string> {
+    return await this.reproductionSelect.element(by.css('option:checked')).getText();
+  }
+
   async save(): Promise<void> {
     await this.saveButton.click();
   }
@@ -198,7 +215,7 @@ export class CycleDeVieDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-cycleDeVie'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

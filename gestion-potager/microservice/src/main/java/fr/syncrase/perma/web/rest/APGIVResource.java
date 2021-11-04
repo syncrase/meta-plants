@@ -1,14 +1,18 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.APGIVService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.APGIVDTO;
-import fr.syncrase.perma.service.dto.APGIVCriteria;
+import fr.syncrase.perma.repository.APGIVRepository;
 import fr.syncrase.perma.service.APGIVQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.APGIVService;
+import fr.syncrase.perma.service.criteria.APGIVCriteria;
+import fr.syncrase.perma.service.dto.APGIVDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.APGIV}.
@@ -42,10 +43,13 @@ public class APGIVResource {
 
     private final APGIVService aPGIVService;
 
+    private final APGIVRepository aPGIVRepository;
+
     private final APGIVQueryService aPGIVQueryService;
 
-    public APGIVResource(APGIVService aPGIVService, APGIVQueryService aPGIVQueryService) {
+    public APGIVResource(APGIVService aPGIVService, APGIVRepository aPGIVRepository, APGIVQueryService aPGIVQueryService) {
         this.aPGIVService = aPGIVService;
+        this.aPGIVRepository = aPGIVRepository;
         this.aPGIVQueryService = aPGIVQueryService;
     }
 
@@ -63,30 +67,80 @@ public class APGIVResource {
             throw new BadRequestAlertException("A new aPGIV cannot already have an ID", ENTITY_NAME, "idexists");
         }
         APGIVDTO result = aPGIVService.save(aPGIVDTO);
-        return ResponseEntity.created(new URI("/api/apgivs/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/apgivs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /apgivs} : Updates an existing aPGIV.
+     * {@code PUT  /apgivs/:id} : Updates an existing aPGIV.
      *
+     * @param id the id of the aPGIVDTO to save.
      * @param aPGIVDTO the aPGIVDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated aPGIVDTO,
      * or with status {@code 400 (Bad Request)} if the aPGIVDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the aPGIVDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/apgivs")
-    public ResponseEntity<APGIVDTO> updateAPGIV(@Valid @RequestBody APGIVDTO aPGIVDTO) throws URISyntaxException {
-        log.debug("REST request to update APGIV : {}", aPGIVDTO);
+    @PutMapping("/apgivs/{id}")
+    public ResponseEntity<APGIVDTO> updateAPGIV(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody APGIVDTO aPGIVDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update APGIV : {}, {}", id, aPGIVDTO);
         if (aPGIVDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, aPGIVDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!aPGIVRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         APGIVDTO result = aPGIVService.save(aPGIVDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, aPGIVDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /apgivs/:id} : Partial updates given fields of an existing aPGIV, field will ignore if it is null
+     *
+     * @param id the id of the aPGIVDTO to save.
+     * @param aPGIVDTO the aPGIVDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated aPGIVDTO,
+     * or with status {@code 400 (Bad Request)} if the aPGIVDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the aPGIVDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the aPGIVDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/apgivs/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<APGIVDTO> partialUpdateAPGIV(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody APGIVDTO aPGIVDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update APGIV partially : {}, {}", id, aPGIVDTO);
+        if (aPGIVDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, aPGIVDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!aPGIVRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<APGIVDTO> result = aPGIVService.partialUpdate(aPGIVDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, aPGIVDTO.getId().toString())
+        );
     }
 
     /**
@@ -139,6 +193,9 @@ public class APGIVResource {
     public ResponseEntity<Void> deleteAPGIV(@PathVariable Long id) {
         log.debug("REST request to delete APGIV : {}", id);
         aPGIVService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

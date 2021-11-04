@@ -1,11 +1,9 @@
 package fr.syncrase.perma.domain;
 
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A TypeSemis.
@@ -20,14 +18,21 @@ public class TypeSemis implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "description")
     private String description;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public TypeSemis id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -35,17 +40,18 @@ public class TypeSemis implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public TypeSemis description(String description) {
-        this.description = description;
+        this.setDescription(description);
         return this;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -61,7 +67,8 @@ public class TypeSemis implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

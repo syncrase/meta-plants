@@ -3,9 +3,10 @@
     "microserviceTypeSemis": {
       "home": {
         "title": "Type Semis",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Type Semis erstellen",
         "createOrEditLabel": "Type Semis erstellen oder bearbeiten",
-        "notFound": "No Type Semis found"
+        "notFound": "Keine Type Semis gefunden"
       },
       "delete": {
         "question": "Soll Type Semis {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Type Semis"
       },
+      "id": "ID",
       "description": "Description"
     }
   },

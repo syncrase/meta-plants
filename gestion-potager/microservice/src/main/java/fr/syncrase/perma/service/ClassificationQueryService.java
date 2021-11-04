@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.Classification;
+import fr.syncrase.perma.repository.ClassificationRepository;
+import fr.syncrase.perma.service.criteria.ClassificationCriteria;
+import fr.syncrase.perma.service.dto.ClassificationDTO;
+import fr.syncrase.perma.service.mapper.ClassificationMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.Classification;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.ClassificationRepository;
-import fr.syncrase.perma.service.dto.ClassificationCriteria;
-import fr.syncrase.perma.service.dto.ClassificationDTO;
-import fr.syncrase.perma.service.mapper.ClassificationMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Classification} entities in the database.
@@ -64,8 +60,7 @@ public class ClassificationQueryService extends QueryService<Classification> {
     public Page<ClassificationDTO> findByCriteria(ClassificationCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Classification> specification = createSpecification(criteria);
-        return classificationRepository.findAll(specification, page)
-            .map(classificationMapper::toDto);
+        return classificationRepository.findAll(specification, page).map(classificationMapper::toDto);
     }
 
     /**
@@ -88,32 +83,54 @@ public class ClassificationQueryService extends QueryService<Classification> {
     protected Specification<Classification> createSpecification(ClassificationCriteria criteria) {
         Specification<Classification> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Classification_.id));
             }
             if (criteria.getRaunkierId() != null) {
-                specification = specification.and(buildSpecification(criteria.getRaunkierId(),
-                    root -> root.join(Classification_.raunkier, JoinType.LEFT).get(Raunkier_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getRaunkierId(),
+                            root -> root.join(Classification_.raunkier, JoinType.LEFT).get(Raunkier_.id)
+                        )
+                    );
             }
             if (criteria.getCronquistId() != null) {
-                specification = specification.and(buildSpecification(criteria.getCronquistId(),
-                    root -> root.join(Classification_.cronquist, JoinType.LEFT).get(Cronquist_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getCronquistId(),
+                            root -> root.join(Classification_.cronquist, JoinType.LEFT).get(Cronquist_.id)
+                        )
+                    );
             }
             if (criteria.getApg1Id() != null) {
-                specification = specification.and(buildSpecification(criteria.getApg1Id(),
-                    root -> root.join(Classification_.apg1, JoinType.LEFT).get(APGI_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getApg1Id(), root -> root.join(Classification_.apg1, JoinType.LEFT).get(APGI_.id))
+                    );
             }
             if (criteria.getApg2Id() != null) {
-                specification = specification.and(buildSpecification(criteria.getApg2Id(),
-                    root -> root.join(Classification_.apg2, JoinType.LEFT).get(APGII_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getApg2Id(), root -> root.join(Classification_.apg2, JoinType.LEFT).get(APGII_.id))
+                    );
             }
             if (criteria.getApg3Id() != null) {
-                specification = specification.and(buildSpecification(criteria.getApg3Id(),
-                    root -> root.join(Classification_.apg3, JoinType.LEFT).get(APGIII_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getApg3Id(), root -> root.join(Classification_.apg3, JoinType.LEFT).get(APGIII_.id))
+                    );
             }
             if (criteria.getApg4Id() != null) {
-                specification = specification.and(buildSpecification(criteria.getApg4Id(),
-                    root -> root.join(Classification_.apg4, JoinType.LEFT).get(APGIV_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getApg4Id(), root -> root.join(Classification_.apg4, JoinType.LEFT).get(APGIV_.id))
+                    );
             }
         }
         return specification;

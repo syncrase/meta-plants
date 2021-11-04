@@ -1,14 +1,18 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.APGIService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.APGIDTO;
-import fr.syncrase.perma.service.dto.APGICriteria;
+import fr.syncrase.perma.repository.APGIRepository;
 import fr.syncrase.perma.service.APGIQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.APGIService;
+import fr.syncrase.perma.service.criteria.APGICriteria;
+import fr.syncrase.perma.service.dto.APGIDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.APGI}.
@@ -42,10 +43,13 @@ public class APGIResource {
 
     private final APGIService aPGIService;
 
+    private final APGIRepository aPGIRepository;
+
     private final APGIQueryService aPGIQueryService;
 
-    public APGIResource(APGIService aPGIService, APGIQueryService aPGIQueryService) {
+    public APGIResource(APGIService aPGIService, APGIRepository aPGIRepository, APGIQueryService aPGIQueryService) {
         this.aPGIService = aPGIService;
+        this.aPGIRepository = aPGIRepository;
         this.aPGIQueryService = aPGIQueryService;
     }
 
@@ -63,30 +67,80 @@ public class APGIResource {
             throw new BadRequestAlertException("A new aPGI cannot already have an ID", ENTITY_NAME, "idexists");
         }
         APGIDTO result = aPGIService.save(aPGIDTO);
-        return ResponseEntity.created(new URI("/api/apgis/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/apgis/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /apgis} : Updates an existing aPGI.
+     * {@code PUT  /apgis/:id} : Updates an existing aPGI.
      *
+     * @param id the id of the aPGIDTO to save.
      * @param aPGIDTO the aPGIDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated aPGIDTO,
      * or with status {@code 400 (Bad Request)} if the aPGIDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the aPGIDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/apgis")
-    public ResponseEntity<APGIDTO> updateAPGI(@Valid @RequestBody APGIDTO aPGIDTO) throws URISyntaxException {
-        log.debug("REST request to update APGI : {}", aPGIDTO);
+    @PutMapping("/apgis/{id}")
+    public ResponseEntity<APGIDTO> updateAPGI(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody APGIDTO aPGIDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update APGI : {}, {}", id, aPGIDTO);
         if (aPGIDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, aPGIDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!aPGIRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         APGIDTO result = aPGIService.save(aPGIDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, aPGIDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /apgis/:id} : Partial updates given fields of an existing aPGI, field will ignore if it is null
+     *
+     * @param id the id of the aPGIDTO to save.
+     * @param aPGIDTO the aPGIDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated aPGIDTO,
+     * or with status {@code 400 (Bad Request)} if the aPGIDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the aPGIDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the aPGIDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/apgis/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<APGIDTO> partialUpdateAPGI(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody APGIDTO aPGIDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update APGI partially : {}, {}", id, aPGIDTO);
+        if (aPGIDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, aPGIDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!aPGIRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<APGIDTO> result = aPGIService.partialUpdate(aPGIDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, aPGIDTO.getId().toString())
+        );
     }
 
     /**
@@ -139,6 +193,9 @@ public class APGIResource {
     public ResponseEntity<Void> deleteAPGI(@PathVariable Long id) {
         log.debug("REST request to delete APGI : {}", id);
         aPGIService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

@@ -3,9 +3,10 @@
     "microserviceRessemblance": {
       "home": {
         "title": "Ressemblances",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Ressemblance erstellen",
         "createOrEditLabel": "Ressemblance erstellen oder bearbeiten",
-        "notFound": "No Ressemblances found"
+        "notFound": "Keine Ressemblances gefunden"
       },
       "delete": {
         "question": "Soll Ressemblance {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Ressemblance"
       },
+      "id": "ID",
       "description": "Description",
       "confusion": "Confusion"
     }

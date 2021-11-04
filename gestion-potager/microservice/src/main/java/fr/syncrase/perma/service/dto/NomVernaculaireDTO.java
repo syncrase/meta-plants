@@ -1,13 +1,14 @@
 package fr.syncrase.perma.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.NomVernaculaire} entity.
  */
 public class NomVernaculaireDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -15,7 +16,6 @@ public class NomVernaculaireDTO implements Serializable {
 
     private String description;
 
-    
     public Long getId() {
         return id;
     }
@@ -49,12 +49,16 @@ public class NomVernaculaireDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((NomVernaculaireDTO) o).id);
+        NomVernaculaireDTO nomVernaculaireDTO = (NomVernaculaireDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, nomVernaculaireDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore

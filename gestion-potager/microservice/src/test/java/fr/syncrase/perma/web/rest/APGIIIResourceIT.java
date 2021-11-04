@@ -1,40 +1,37 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.MicroserviceApp;
-import fr.syncrase.perma.config.TestSecurityConfiguration;
-import fr.syncrase.perma.domain.APGIII;
-import fr.syncrase.perma.repository.APGIIIRepository;
-import fr.syncrase.perma.service.APGIIIService;
-import fr.syncrase.perma.service.dto.APGIIIDTO;
-import fr.syncrase.perma.service.mapper.APGIIIMapper;
-import fr.syncrase.perma.service.dto.APGIIICriteria;
-import fr.syncrase.perma.service.APGIIIQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.syncrase.perma.IntegrationTest;
+import fr.syncrase.perma.domain.APGIII;
+import fr.syncrase.perma.repository.APGIIIRepository;
+import fr.syncrase.perma.service.criteria.APGIIICriteria;
+import fr.syncrase.perma.service.dto.APGIIIDTO;
+import fr.syncrase.perma.service.mapper.APGIIIMapper;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link APGIIIResource} REST controller.
  */
-@SpringBootTest(classes = { MicroserviceApp.class, TestSecurityConfiguration.class })
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class APGIIIResourceIT {
+class APGIIIResourceIT {
 
     private static final String DEFAULT_ORDRE = "AAAAAAAAAA";
     private static final String UPDATED_ORDRE = "BBBBBBBBBB";
@@ -42,17 +39,17 @@ public class APGIIIResourceIT {
     private static final String DEFAULT_FAMILLE = "AAAAAAAAAA";
     private static final String UPDATED_FAMILLE = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/apgiiis";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private APGIIIRepository aPGIIIRepository;
 
     @Autowired
     private APGIIIMapper aPGIIIMapper;
-
-    @Autowired
-    private APGIIIService aPGIIIService;
-
-    @Autowired
-    private APGIIIQueryService aPGIIIQueryService;
 
     @Autowired
     private EntityManager em;
@@ -69,11 +66,10 @@ public class APGIIIResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static APGIII createEntity(EntityManager em) {
-        APGIII aPGIII = new APGIII()
-            .ordre(DEFAULT_ORDRE)
-            .famille(DEFAULT_FAMILLE);
+        APGIII aPGIII = new APGIII().ordre(DEFAULT_ORDRE).famille(DEFAULT_FAMILLE);
         return aPGIII;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -81,9 +77,7 @@ public class APGIIIResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static APGIII createUpdatedEntity(EntityManager em) {
-        APGIII aPGIII = new APGIII()
-            .ordre(UPDATED_ORDRE)
-            .famille(UPDATED_FAMILLE);
+        APGIII aPGIII = new APGIII().ordre(UPDATED_ORDRE).famille(UPDATED_FAMILLE);
         return aPGIII;
     }
 
@@ -94,13 +88,17 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void createAPGIII() throws Exception {
+    void createAPGIII() throws Exception {
         int databaseSizeBeforeCreate = aPGIIIRepository.findAll().size();
         // Create the APGIII
         APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
-        restAPGIIIMockMvc.perform(post("/api/apgiiis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO)))
+        restAPGIIIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the APGIII in the database
@@ -113,17 +111,21 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void createAPGIIIWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = aPGIIIRepository.findAll().size();
-
+    void createAPGIIIWithExistingId() throws Exception {
         // Create the APGIII with an existing ID
         aPGIII.setId(1L);
         APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
 
+        int databaseSizeBeforeCreate = aPGIIIRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restAPGIIIMockMvc.perform(post("/api/apgiiis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO)))
+        restAPGIIIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the APGIII in the database
@@ -131,10 +133,9 @@ public class APGIIIResourceIT {
         assertThat(aPGIIIList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkOrdreIsRequired() throws Exception {
+    void checkOrdreIsRequired() throws Exception {
         int databaseSizeBeforeTest = aPGIIIRepository.findAll().size();
         // set the field null
         aPGIII.setOrdre(null);
@@ -142,10 +143,13 @@ public class APGIIIResourceIT {
         // Create the APGIII, which fails.
         APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
 
-
-        restAPGIIIMockMvc.perform(post("/api/apgiiis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO)))
+        restAPGIIIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
@@ -154,7 +158,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void checkFamilleIsRequired() throws Exception {
+    void checkFamilleIsRequired() throws Exception {
         int databaseSizeBeforeTest = aPGIIIRepository.findAll().size();
         // set the field null
         aPGIII.setFamille(null);
@@ -162,10 +166,13 @@ public class APGIIIResourceIT {
         // Create the APGIII, which fails.
         APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
 
-
-        restAPGIIIMockMvc.perform(post("/api/apgiiis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO)))
+        restAPGIIIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
@@ -174,27 +181,29 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIIS() throws Exception {
+    void getAllAPGIIIS() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
         // Get all the aPGIIIList
-        restAPGIIIMockMvc.perform(get("/api/apgiiis?sort=id,desc"))
+        restAPGIIIMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(aPGIII.getId().intValue())))
             .andExpect(jsonPath("$.[*].ordre").value(hasItem(DEFAULT_ORDRE)))
             .andExpect(jsonPath("$.[*].famille").value(hasItem(DEFAULT_FAMILLE)));
     }
-    
+
     @Test
     @Transactional
-    public void getAPGIII() throws Exception {
+    void getAPGIII() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
         // Get the aPGIII
-        restAPGIIIMockMvc.perform(get("/api/apgiiis/{id}", aPGIII.getId()))
+        restAPGIIIMockMvc
+            .perform(get(ENTITY_API_URL_ID, aPGIII.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(aPGIII.getId().intValue()))
@@ -202,10 +211,9 @@ public class APGIIIResourceIT {
             .andExpect(jsonPath("$.famille").value(DEFAULT_FAMILLE));
     }
 
-
     @Test
     @Transactional
-    public void getAPGIIISByIdFiltering() throws Exception {
+    void getAPGIIISByIdFiltering() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -221,10 +229,9 @@ public class APGIIIResourceIT {
         defaultAPGIIIShouldNotBeFound("id.lessThan=" + id);
     }
 
-
     @Test
     @Transactional
-    public void getAllAPGIIISByOrdreIsEqualToSomething() throws Exception {
+    void getAllAPGIIISByOrdreIsEqualToSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -237,7 +244,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByOrdreIsNotEqualToSomething() throws Exception {
+    void getAllAPGIIISByOrdreIsNotEqualToSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -250,7 +257,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByOrdreIsInShouldWork() throws Exception {
+    void getAllAPGIIISByOrdreIsInShouldWork() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -263,7 +270,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByOrdreIsNullOrNotNull() throws Exception {
+    void getAllAPGIIISByOrdreIsNullOrNotNull() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -273,9 +280,10 @@ public class APGIIIResourceIT {
         // Get all the aPGIIIList where ordre is null
         defaultAPGIIIShouldNotBeFound("ordre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllAPGIIISByOrdreContainsSomething() throws Exception {
+    void getAllAPGIIISByOrdreContainsSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -288,7 +296,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByOrdreNotContainsSomething() throws Exception {
+    void getAllAPGIIISByOrdreNotContainsSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -299,10 +307,9 @@ public class APGIIIResourceIT {
         defaultAPGIIIShouldBeFound("ordre.doesNotContain=" + UPDATED_ORDRE);
     }
 
-
     @Test
     @Transactional
-    public void getAllAPGIIISByFamilleIsEqualToSomething() throws Exception {
+    void getAllAPGIIISByFamilleIsEqualToSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -315,7 +322,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByFamilleIsNotEqualToSomething() throws Exception {
+    void getAllAPGIIISByFamilleIsNotEqualToSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -328,7 +335,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByFamilleIsInShouldWork() throws Exception {
+    void getAllAPGIIISByFamilleIsInShouldWork() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -341,7 +348,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByFamilleIsNullOrNotNull() throws Exception {
+    void getAllAPGIIISByFamilleIsNullOrNotNull() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -351,9 +358,10 @@ public class APGIIIResourceIT {
         // Get all the aPGIIIList where famille is null
         defaultAPGIIIShouldNotBeFound("famille.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllAPGIIISByFamilleContainsSomething() throws Exception {
+    void getAllAPGIIISByFamilleContainsSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -366,7 +374,7 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIIISByFamilleNotContainsSomething() throws Exception {
+    void getAllAPGIIISByFamilleNotContainsSomething() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -381,7 +389,8 @@ public class APGIIIResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultAPGIIIShouldBeFound(String filter) throws Exception {
-        restAPGIIIMockMvc.perform(get("/api/apgiiis?sort=id,desc&" + filter))
+        restAPGIIIMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(aPGIII.getId().intValue())))
@@ -389,7 +398,8 @@ public class APGIIIResourceIT {
             .andExpect(jsonPath("$.[*].famille").value(hasItem(DEFAULT_FAMILLE)));
 
         // Check, that the count call also returns 1
-        restAPGIIIMockMvc.perform(get("/api/apgiiis/count?sort=id,desc&" + filter))
+        restAPGIIIMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -399,14 +409,16 @@ public class APGIIIResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultAPGIIIShouldNotBeFound(String filter) throws Exception {
-        restAPGIIIMockMvc.perform(get("/api/apgiiis?sort=id,desc&" + filter))
+        restAPGIIIMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restAPGIIIMockMvc.perform(get("/api/apgiiis/count?sort=id,desc&" + filter))
+        restAPGIIIMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -414,15 +426,14 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingAPGIII() throws Exception {
+    void getNonExistingAPGIII() throws Exception {
         // Get the aPGIII
-        restAPGIIIMockMvc.perform(get("/api/apgiiis/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restAPGIIIMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateAPGIII() throws Exception {
+    void putNewAPGIII() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
@@ -432,14 +443,16 @@ public class APGIIIResourceIT {
         APGIII updatedAPGIII = aPGIIIRepository.findById(aPGIII.getId()).get();
         // Disconnect from session so that the updates on updatedAPGIII are not directly saved in db
         em.detach(updatedAPGIII);
-        updatedAPGIII
-            .ordre(UPDATED_ORDRE)
-            .famille(UPDATED_FAMILLE);
+        updatedAPGIII.ordre(UPDATED_ORDRE).famille(UPDATED_FAMILLE);
         APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(updatedAPGIII);
 
-        restAPGIIIMockMvc.perform(put("/api/apgiiis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO)))
+        restAPGIIIMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, aPGIIIDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the APGIII in the database
@@ -452,16 +465,21 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingAPGIII() throws Exception {
+    void putNonExistingAPGIII() throws Exception {
         int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+        aPGIII.setId(count.incrementAndGet());
 
         // Create the APGIII
         APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restAPGIIIMockMvc.perform(put("/api/apgiiis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO)))
+        restAPGIIIMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, aPGIIIDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the APGIII in the database
@@ -471,15 +489,195 @@ public class APGIIIResourceIT {
 
     @Test
     @Transactional
-    public void deleteAPGIII() throws Exception {
+    void putWithIdMismatchAPGIII() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+        aPGIII.setId(count.incrementAndGet());
+
+        // Create the APGIII
+        APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIIIMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the APGIII in the database
+        List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
+        assertThat(aPGIIIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamAPGIII() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+        aPGIII.setId(count.incrementAndGet());
+
+        // Create the APGIII
+        APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIIIMockMvc
+            .perform(
+                put(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the APGIII in the database
+        List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
+        assertThat(aPGIIIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateAPGIIIWithPatch() throws Exception {
+        // Initialize the database
+        aPGIIIRepository.saveAndFlush(aPGIII);
+
+        int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+
+        // Update the aPGIII using partial update
+        APGIII partialUpdatedAPGIII = new APGIII();
+        partialUpdatedAPGIII.setId(aPGIII.getId());
+
+        restAPGIIIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedAPGIII.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAPGIII))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the APGIII in the database
+        List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
+        assertThat(aPGIIIList).hasSize(databaseSizeBeforeUpdate);
+        APGIII testAPGIII = aPGIIIList.get(aPGIIIList.size() - 1);
+        assertThat(testAPGIII.getOrdre()).isEqualTo(DEFAULT_ORDRE);
+        assertThat(testAPGIII.getFamille()).isEqualTo(DEFAULT_FAMILLE);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateAPGIIIWithPatch() throws Exception {
+        // Initialize the database
+        aPGIIIRepository.saveAndFlush(aPGIII);
+
+        int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+
+        // Update the aPGIII using partial update
+        APGIII partialUpdatedAPGIII = new APGIII();
+        partialUpdatedAPGIII.setId(aPGIII.getId());
+
+        partialUpdatedAPGIII.ordre(UPDATED_ORDRE).famille(UPDATED_FAMILLE);
+
+        restAPGIIIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedAPGIII.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAPGIII))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the APGIII in the database
+        List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
+        assertThat(aPGIIIList).hasSize(databaseSizeBeforeUpdate);
+        APGIII testAPGIII = aPGIIIList.get(aPGIIIList.size() - 1);
+        assertThat(testAPGIII.getOrdre()).isEqualTo(UPDATED_ORDRE);
+        assertThat(testAPGIII.getFamille()).isEqualTo(UPDATED_FAMILLE);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingAPGIII() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+        aPGIII.setId(count.incrementAndGet());
+
+        // Create the APGIII
+        APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restAPGIIIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, aPGIIIDTO.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the APGIII in the database
+        List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
+        assertThat(aPGIIIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchAPGIII() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+        aPGIII.setId(count.incrementAndGet());
+
+        // Create the APGIII
+        APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIIIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the APGIII in the database
+        List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
+        assertThat(aPGIIIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamAPGIII() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIIIRepository.findAll().size();
+        aPGIII.setId(count.incrementAndGet());
+
+        // Create the APGIII
+        APGIIIDTO aPGIIIDTO = aPGIIIMapper.toDto(aPGIII);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIIIMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIIIDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the APGIII in the database
+        List<APGIII> aPGIIIList = aPGIIIRepository.findAll();
+        assertThat(aPGIIIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteAPGIII() throws Exception {
         // Initialize the database
         aPGIIIRepository.saveAndFlush(aPGIII);
 
         int databaseSizeBeforeDelete = aPGIIIRepository.findAll().size();
 
         // Delete the aPGIII
-        restAPGIIIMockMvc.perform(delete("/api/apgiiis/{id}", aPGIII.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restAPGIIIMockMvc
+            .perform(delete(ENTITY_API_URL_ID, aPGIII.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

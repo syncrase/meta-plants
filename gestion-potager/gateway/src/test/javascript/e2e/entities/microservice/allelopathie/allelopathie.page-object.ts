@@ -20,7 +20,7 @@ export class AllelopathieComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,15 +29,24 @@ export class AllelopathieUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   typeInput = element(by.id('field_type'));
   descriptionInput = element(by.id('field_description'));
 
   cibleSelect = element(by.id('field_cible'));
   origineSelect = element(by.id('field_origine'));
-  planteSelect = element(by.id('field_plante'));
+  interactionSelect = element(by.id('field_interaction'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setTypeInput(type: string): Promise<void> {
@@ -88,20 +97,20 @@ export class AllelopathieUpdatePage {
     return await this.origineSelect.element(by.css('option:checked')).getText();
   }
 
-  async planteSelectLastOption(): Promise<void> {
-    await this.planteSelect.all(by.tagName('option')).last().click();
+  async interactionSelectLastOption(): Promise<void> {
+    await this.interactionSelect.all(by.tagName('option')).last().click();
   }
 
-  async planteSelectOption(option: string): Promise<void> {
-    await this.planteSelect.sendKeys(option);
+  async interactionSelectOption(option: string): Promise<void> {
+    await this.interactionSelect.sendKeys(option);
   }
 
-  getPlanteSelect(): ElementFinder {
-    return this.planteSelect;
+  getInteractionSelect(): ElementFinder {
+    return this.interactionSelect;
   }
 
-  async getPlanteSelectedOption(): Promise<string> {
-    return await this.planteSelect.element(by.css('option:checked')).getText();
+  async getInteractionSelectedOption(): Promise<string> {
+    return await this.interactionSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {
@@ -122,7 +131,7 @@ export class AllelopathieDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-allelopathie'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

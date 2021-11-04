@@ -1,13 +1,14 @@
 package fr.syncrase.perma.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import fr.syncrase.perma.web.rest.TestUtil;
 
-public class PeriodeAnneeTest {
+import fr.syncrase.perma.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class PeriodeAnneeTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(PeriodeAnnee.class);
         PeriodeAnnee periodeAnnee1 = new PeriodeAnnee();
         periodeAnnee1.setId(1L);

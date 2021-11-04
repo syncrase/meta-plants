@@ -3,9 +3,10 @@
     "microserviceTypeSemis": {
       "home": {
         "title": "Type Semis",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Type Semis",
         "createOrEditLabel": "Создать или отредактировать Type Semis",
-        "notFound": "No Type Semis found"
+        "notFound": "Type Semis не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Type Semis {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Type Semis"
       },
+      "id": "ID",
       "description": "Description"
     }
   },

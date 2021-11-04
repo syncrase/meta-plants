@@ -1,12 +1,10 @@
 package fr.syncrase.perma.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A PeriodeAnnee.
@@ -21,6 +19,7 @@ public class PeriodeAnnee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @OneToOne(optional = false)
@@ -34,8 +33,14 @@ public class PeriodeAnnee implements Serializable {
     private Mois fin;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public PeriodeAnnee id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -43,30 +48,31 @@ public class PeriodeAnnee implements Serializable {
     }
 
     public Mois getDebut() {
-        return debut;
-    }
-
-    public PeriodeAnnee debut(Mois mois) {
-        this.debut = mois;
-        return this;
+        return this.debut;
     }
 
     public void setDebut(Mois mois) {
         this.debut = mois;
     }
 
-    public Mois getFin() {
-        return fin;
+    public PeriodeAnnee debut(Mois mois) {
+        this.setDebut(mois);
+        return this;
     }
 
-    public PeriodeAnnee fin(Mois mois) {
-        this.fin = mois;
-        return this;
+    public Mois getFin() {
+        return this.fin;
     }
 
     public void setFin(Mois mois) {
         this.fin = mois;
     }
+
+    public PeriodeAnnee fin(Mois mois) {
+        this.setFin(mois);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -82,7 +88,8 @@ public class PeriodeAnnee implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

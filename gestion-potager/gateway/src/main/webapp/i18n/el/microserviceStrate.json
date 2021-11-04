@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceStrate": {
+      "home": {
+        "title": "Strates",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Δημιουργήστε ένα νέο Strate",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Strate",
+        "notFound": "No Strates found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Strate {{ id }};"
+      },
+      "detail": {
+        "title": "Strate"
+      },
+      "id": "ID",
+      "type": "Type",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceStrate": {
+      "created": "Ένα νέο Strate έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Strate έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Strate έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

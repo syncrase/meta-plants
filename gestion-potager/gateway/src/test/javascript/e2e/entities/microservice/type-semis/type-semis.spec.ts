@@ -11,12 +11,14 @@ describe('TypeSemis e2e test', () => {
   let typeSemisComponentsPage: TypeSemisComponentsPage;
   let typeSemisUpdatePage: TypeSemisUpdatePage;
   let typeSemisDeleteDialog: TypeSemisDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -42,8 +44,6 @@ describe('TypeSemis e2e test', () => {
 
     await promise.all([typeSemisUpdatePage.setDescriptionInput('description')]);
 
-    expect(await typeSemisUpdatePage.getDescriptionInput()).to.eq('description', 'Expected Description value to be equals to description');
-
     await typeSemisUpdatePage.save();
     expect(await typeSemisUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -57,6 +57,7 @@ describe('TypeSemis e2e test', () => {
     typeSemisDeleteDialog = new TypeSemisDeleteDialog();
     expect(await typeSemisDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceTypeSemis.delete.question');
     await typeSemisDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(typeSemisComponentsPage.title), 5000);
 
     expect(await typeSemisComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

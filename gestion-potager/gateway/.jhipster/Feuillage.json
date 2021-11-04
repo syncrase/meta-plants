@@ -1,0 +1,30 @@
+{
+  "name": "Feuillage",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "feuillage",
+      "relationshipName": "plante"
+    }
+  ],
+  "entityTableName": "feuillage",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["microservice", "gateway"],
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104115954"
+}

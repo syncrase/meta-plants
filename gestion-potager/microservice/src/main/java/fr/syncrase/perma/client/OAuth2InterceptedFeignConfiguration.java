@@ -1,10 +1,8 @@
 package fr.syncrase.perma.client;
 
-import org.springframework.context.annotation.Bean;
-
 import feign.RequestInterceptor;
-
 import fr.syncrase.perma.security.oauth2.AuthorizationHeaderUtil;
+import org.springframework.context.annotation.Bean;
 
 public class OAuth2InterceptedFeignConfiguration {
 

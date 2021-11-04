@@ -11,12 +11,14 @@ describe('Plante e2e test', () => {
   let planteComponentsPage: PlanteComponentsPage;
   let planteUpdatePage: PlanteUpdatePage;
   let planteDeleteDialog: PlanteDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -44,18 +46,15 @@ describe('Plante e2e test', () => {
       planteUpdatePage.setNomLatinInput('nomLatin'),
       planteUpdatePage.setEntretienInput('entretien'),
       planteUpdatePage.setHistoireInput('histoire'),
-      planteUpdatePage.setExpositionInput('exposition'),
-      planteUpdatePage.setRusticiteInput('rusticite'),
+      planteUpdatePage.setVitesseInput('vitesse'),
       planteUpdatePage.cycleDeVieSelectLastOption(),
       planteUpdatePage.classificationSelectLastOption(),
       // planteUpdatePage.nomsVernaculairesSelectLastOption(),
+      planteUpdatePage.temperatureSelectLastOption(),
+      planteUpdatePage.racineSelectLastOption(),
+      planteUpdatePage.strateSelectLastOption(),
+      planteUpdatePage.feuillageSelectLastOption(),
     ]);
-
-    expect(await planteUpdatePage.getNomLatinInput()).to.eq('nomLatin', 'Expected NomLatin value to be equals to nomLatin');
-    expect(await planteUpdatePage.getEntretienInput()).to.eq('entretien', 'Expected Entretien value to be equals to entretien');
-    expect(await planteUpdatePage.getHistoireInput()).to.eq('histoire', 'Expected Histoire value to be equals to histoire');
-    expect(await planteUpdatePage.getExpositionInput()).to.eq('exposition', 'Expected Exposition value to be equals to exposition');
-    expect(await planteUpdatePage.getRusticiteInput()).to.eq('rusticite', 'Expected Rusticite value to be equals to rusticite');
 
     await planteUpdatePage.save();
     expect(await planteUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
@@ -70,6 +69,7 @@ describe('Plante e2e test', () => {
     planteDeleteDialog = new PlanteDeleteDialog();
     expect(await planteDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microservicePlante.delete.question');
     await planteDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(planteComponentsPage.title), 5000);
 
     expect(await planteComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

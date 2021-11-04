@@ -1,23 +1,23 @@
 package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Semis} entity.
  */
 public class SemisDTO implements Serializable {
-    
+
     private Long id;
 
+    private PeriodeAnneeDTO semisPleineTerre;
 
-    private Long semisPleineTerreId;
+    private PeriodeAnneeDTO semisSousAbris;
 
-    private Long semisSousAbrisId;
+    private TypeSemisDTO typeSemis;
 
-    private Long typeSemisId;
+    private GerminationDTO germination;
 
-    private Long germinationId;
-    
     public Long getId() {
         return id;
     }
@@ -26,36 +26,36 @@ public class SemisDTO implements Serializable {
         this.id = id;
     }
 
-    public Long getSemisPleineTerreId() {
-        return semisPleineTerreId;
+    public PeriodeAnneeDTO getSemisPleineTerre() {
+        return semisPleineTerre;
     }
 
-    public void setSemisPleineTerreId(Long periodeAnneeId) {
-        this.semisPleineTerreId = periodeAnneeId;
+    public void setSemisPleineTerre(PeriodeAnneeDTO semisPleineTerre) {
+        this.semisPleineTerre = semisPleineTerre;
     }
 
-    public Long getSemisSousAbrisId() {
-        return semisSousAbrisId;
+    public PeriodeAnneeDTO getSemisSousAbris() {
+        return semisSousAbris;
     }
 
-    public void setSemisSousAbrisId(Long periodeAnneeId) {
-        this.semisSousAbrisId = periodeAnneeId;
+    public void setSemisSousAbris(PeriodeAnneeDTO semisSousAbris) {
+        this.semisSousAbris = semisSousAbris;
     }
 
-    public Long getTypeSemisId() {
-        return typeSemisId;
+    public TypeSemisDTO getTypeSemis() {
+        return typeSemis;
     }
 
-    public void setTypeSemisId(Long typeSemisId) {
-        this.typeSemisId = typeSemisId;
+    public void setTypeSemis(TypeSemisDTO typeSemis) {
+        this.typeSemis = typeSemis;
     }
 
-    public Long getGerminationId() {
-        return germinationId;
+    public GerminationDTO getGermination() {
+        return germination;
     }
 
-    public void setGerminationId(Long germinationId) {
-        this.germinationId = germinationId;
+    public void setGermination(GerminationDTO germination) {
+        this.germination = germination;
     }
 
     @Override
@@ -67,12 +67,16 @@ public class SemisDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((SemisDTO) o).id);
+        SemisDTO semisDTO = (SemisDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, semisDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -80,10 +84,10 @@ public class SemisDTO implements Serializable {
     public String toString() {
         return "SemisDTO{" +
             "id=" + getId() +
-            ", semisPleineTerreId=" + getSemisPleineTerreId() +
-            ", semisSousAbrisId=" + getSemisSousAbrisId() +
-            ", typeSemisId=" + getTypeSemisId() +
-            ", germinationId=" + getGerminationId() +
+            ", semisPleineTerre=" + getSemisPleineTerre() +
+            ", semisSousAbris=" + getSemisSousAbris() +
+            ", typeSemis=" + getTypeSemis() +
+            ", germination=" + getGermination() +
             "}";
     }
 }

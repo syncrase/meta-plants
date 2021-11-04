@@ -3,9 +3,10 @@
     "microservicePeriodeAnnee": {
       "home": {
         "title": "Periode Annees",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Periode Annee",
         "createOrEditLabel": "Создать или отредактировать Periode Annee",
-        "notFound": "No Periode Annees found"
+        "notFound": "Periode Annees не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Periode Annee {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Periode Annee"
       },
+      "id": "ID",
       "debut": "Debut",
       "fin": "Fin"
     }

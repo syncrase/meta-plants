@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.Plante;
+import fr.syncrase.perma.repository.PlanteRepository;
+import fr.syncrase.perma.service.criteria.PlanteCriteria;
+import fr.syncrase.perma.service.dto.PlanteDTO;
+import fr.syncrase.perma.service.mapper.PlanteMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.Plante;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.PlanteRepository;
-import fr.syncrase.perma.service.dto.PlanteCriteria;
-import fr.syncrase.perma.service.dto.PlanteDTO;
-import fr.syncrase.perma.service.mapper.PlanteMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Plante} entities in the database.
@@ -64,8 +60,7 @@ public class PlanteQueryService extends QueryService<Plante> {
     public Page<PlanteDTO> findByCriteria(PlanteCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Plante> specification = createSpecification(criteria);
-        return planteRepository.findAll(specification, page)
-            .map(planteMapper::toDto);
+        return planteRepository.findAll(specification, page).map(planteMapper::toDto);
     }
 
     /**
@@ -88,6 +83,10 @@ public class PlanteQueryService extends QueryService<Plante> {
     protected Specification<Plante> createSpecification(PlanteCriteria criteria) {
         Specification<Plante> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Plante_.id));
             }
@@ -100,39 +99,98 @@ public class PlanteQueryService extends QueryService<Plante> {
             if (criteria.getHistoire() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getHistoire(), Plante_.histoire));
             }
-            if (criteria.getExposition() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getExposition(), Plante_.exposition));
-            }
-            if (criteria.getRusticite() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getRusticite(), Plante_.rusticite));
+            if (criteria.getVitesse() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getVitesse(), Plante_.vitesse));
             }
             if (criteria.getCycleDeVieId() != null) {
-                specification = specification.and(buildSpecification(criteria.getCycleDeVieId(),
-                    root -> root.join(Plante_.cycleDeVie, JoinType.LEFT).get(CycleDeVie_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getCycleDeVieId(),
+                            root -> root.join(Plante_.cycleDeVie, JoinType.LEFT).get(CycleDeVie_.id)
+                        )
+                    );
             }
             if (criteria.getClassificationId() != null) {
-                specification = specification.and(buildSpecification(criteria.getClassificationId(),
-                    root -> root.join(Plante_.classification, JoinType.LEFT).get(Classification_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getClassificationId(),
+                            root -> root.join(Plante_.classification, JoinType.LEFT).get(Classification_.id)
+                        )
+                    );
             }
             if (criteria.getConfusionsId() != null) {
-                specification = specification.and(buildSpecification(criteria.getConfusionsId(),
-                    root -> root.join(Plante_.confusions, JoinType.LEFT).get(Ressemblance_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getConfusionsId(),
+                            root -> root.join(Plante_.confusions, JoinType.LEFT).get(Ressemblance_.id)
+                        )
+                    );
             }
             if (criteria.getInteractionsId() != null) {
-                specification = specification.and(buildSpecification(criteria.getInteractionsId(),
-                    root -> root.join(Plante_.interactions, JoinType.LEFT).get(Allelopathie_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getInteractionsId(),
+                            root -> root.join(Plante_.interactions, JoinType.LEFT).get(Allelopathie_.id)
+                        )
+                    );
+            }
+            if (criteria.getExpositionsId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getExpositionsId(),
+                            root -> root.join(Plante_.expositions, JoinType.LEFT).get(Exposition_.id)
+                        )
+                    );
+            }
+            if (criteria.getSolsId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getSolsId(), root -> root.join(Plante_.sols, JoinType.LEFT).get(Sol_.id))
+                    );
             }
             if (criteria.getNomsVernaculairesId() != null) {
-                specification = specification.and(buildSpecification(criteria.getNomsVernaculairesId(),
-                    root -> root.join(Plante_.nomsVernaculaires, JoinType.LEFT).get(NomVernaculaire_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getNomsVernaculairesId(),
+                            root -> root.join(Plante_.nomsVernaculaires, JoinType.LEFT).get(NomVernaculaire_.id)
+                        )
+                    );
             }
-            if (criteria.getAllelopathieRecueId() != null) {
-                specification = specification.and(buildSpecification(criteria.getAllelopathieRecueId(),
-                    root -> root.join(Plante_.allelopathieRecue, JoinType.LEFT).get(Allelopathie_.id)));
+            if (criteria.getTemperatureId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getTemperatureId(),
+                            root -> root.join(Plante_.temperature, JoinType.LEFT).get(Temperature_.id)
+                        )
+                    );
             }
-            if (criteria.getAllelopathieProduiteId() != null) {
-                specification = specification.and(buildSpecification(criteria.getAllelopathieProduiteId(),
-                    root -> root.join(Plante_.allelopathieProduite, JoinType.LEFT).get(Allelopathie_.id)));
+            if (criteria.getRacineId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getRacineId(), root -> root.join(Plante_.racine, JoinType.LEFT).get(Racine_.id))
+                    );
+            }
+            if (criteria.getStrateId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getStrateId(), root -> root.join(Plante_.strate, JoinType.LEFT).get(Strate_.id))
+                    );
+            }
+            if (criteria.getFeuillageId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getFeuillageId(),
+                            root -> root.join(Plante_.feuillage, JoinType.LEFT).get(Feuillage_.id)
+                        )
+                    );
             }
         }
         return specification;

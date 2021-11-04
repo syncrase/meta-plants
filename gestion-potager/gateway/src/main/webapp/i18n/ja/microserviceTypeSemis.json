@@ -3,6 +3,7 @@
     "microserviceTypeSemis": {
       "home": {
         "title": "TypeSemis",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Type Semis を追加",
         "createOrEditLabel": "Type Semisを追加または編集",
         "notFound": "No Type Semis found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Type Semis"
       },
+      "id": "ID",
       "description": "Description"
     }
   },

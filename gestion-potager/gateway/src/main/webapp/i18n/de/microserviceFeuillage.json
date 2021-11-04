@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceFeuillage": {
+      "home": {
+        "title": "Feuillages",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Feuillage erstellen",
+        "createOrEditLabel": "Feuillage erstellen oder bearbeiten",
+        "notFound": "Keine Feuillages gefunden"
+      },
+      "delete": {
+        "question": "Soll Feuillage {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Feuillage"
+      },
+      "id": "ID",
+      "type": "Type",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceFeuillage": {
+      "created": "Feuillage erstellt mit ID {{ param }}",
+      "updated": "Feuillage aktualisiert mit ID {{ param }}",
+      "deleted": "Feuillage gelöscht mit ID {{ param }}"
+    }
+  }
+}

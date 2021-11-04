@@ -1,13 +1,14 @@
 package fr.syncrase.perma.service.dto;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import fr.syncrase.perma.web.rest.TestUtil;
 
-public class CronquistDTOTest {
+import fr.syncrase.perma.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class CronquistDTOTest {
 
     @Test
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(CronquistDTO.class);
         CronquistDTO cronquistDTO1 = new CronquistDTO();
         cronquistDTO1.setId(1L);

@@ -1,17 +1,14 @@
 package fr.syncrase.perma.service;
 
 import fr.syncrase.perma.service.dto.MoisDTO;
-
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * Service Interface for managing {@link fr.syncrase.perma.domain.Mois}.
  */
 public interface MoisService {
-
     /**
      * Save a mois.
      *
@@ -21,13 +18,20 @@ public interface MoisService {
     MoisDTO save(MoisDTO moisDTO);
 
     /**
+     * Partially updates a mois.
+     *
+     * @param moisDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<MoisDTO> partialUpdate(MoisDTO moisDTO);
+
+    /**
      * Get all the mois.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<MoisDTO> findAll(Pageable pageable);
-
 
     /**
      * Get the "id" mois.

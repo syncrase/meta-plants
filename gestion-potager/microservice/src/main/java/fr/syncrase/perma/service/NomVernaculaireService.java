@@ -1,17 +1,14 @@
 package fr.syncrase.perma.service;
 
 import fr.syncrase.perma.service.dto.NomVernaculaireDTO;
-
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * Service Interface for managing {@link fr.syncrase.perma.domain.NomVernaculaire}.
  */
 public interface NomVernaculaireService {
-
     /**
      * Save a nomVernaculaire.
      *
@@ -21,13 +18,20 @@ public interface NomVernaculaireService {
     NomVernaculaireDTO save(NomVernaculaireDTO nomVernaculaireDTO);
 
     /**
+     * Partially updates a nomVernaculaire.
+     *
+     * @param nomVernaculaireDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<NomVernaculaireDTO> partialUpdate(NomVernaculaireDTO nomVernaculaireDTO);
+
+    /**
      * Get all the nomVernaculaires.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<NomVernaculaireDTO> findAll(Pageable pageable);
-
 
     /**
      * Get the "id" nomVernaculaire.

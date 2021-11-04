@@ -15,12 +15,14 @@ describe('PeriodeAnnee e2e test', () => {
   let periodeAnneeComponentsPage: PeriodeAnneeComponentsPage;
   let periodeAnneeUpdatePage: PeriodeAnneeUpdatePage;
   /* let periodeAnneeDeleteDialog: PeriodeAnneeDeleteDialog; */
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -52,7 +54,6 @@ describe('PeriodeAnnee e2e test', () => {
             periodeAnneeUpdatePage.finSelectLastOption(),
         ]);
 
-
         await periodeAnneeUpdatePage.save();
         expect(await periodeAnneeUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -67,6 +68,7 @@ describe('PeriodeAnnee e2e test', () => {
         expect(await periodeAnneeDeleteDialog.getDialogTitle())
             .to.eq('gatewayApp.microservicePeriodeAnnee.delete.question');
         await periodeAnneeDeleteDialog.clickOnConfirmButton();
+        await browser.wait(ec.visibilityOf(periodeAnneeComponentsPage.title), 5000);
 
         expect(await periodeAnneeComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
     }); */

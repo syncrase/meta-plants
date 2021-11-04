@@ -3,9 +3,10 @@
     "microserviceSol": {
       "home": {
         "title": "Sols",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Sol erstellen",
         "createOrEditLabel": "Sol erstellen oder bearbeiten",
-        "notFound": "No Sols found"
+        "notFound": "Keine Sols gefunden"
       },
       "delete": {
         "question": "Soll Sol {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,8 +14,12 @@
       "detail": {
         "title": "Sol"
       },
-      "acidite": "Acidite",
-      "type": "Type"
+      "id": "ID",
+      "phMin": "Ph Min",
+      "phMax": "Ph Max",
+      "type": "Type",
+      "richesse": "Richesse",
+      "plante": "Plante"
     }
   },
   "microserviceApp": {

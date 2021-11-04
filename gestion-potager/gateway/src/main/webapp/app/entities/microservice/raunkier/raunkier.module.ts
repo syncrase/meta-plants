@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { RaunkierComponent } from './raunkier.component';
-import { RaunkierDetailComponent } from './raunkier-detail.component';
-import { RaunkierUpdateComponent } from './raunkier-update.component';
-import { RaunkierDeleteDialogComponent } from './raunkier-delete-dialog.component';
-import { raunkierRoute } from './raunkier.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { RaunkierComponent } from './list/raunkier.component';
+import { RaunkierDetailComponent } from './detail/raunkier-detail.component';
+import { RaunkierUpdateComponent } from './update/raunkier-update.component';
+import { RaunkierDeleteDialogComponent } from './delete/raunkier-delete-dialog.component';
+import { RaunkierRoutingModule } from './route/raunkier-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(raunkierRoute)],
+  imports: [SharedModule, RaunkierRoutingModule],
   declarations: [RaunkierComponent, RaunkierDetailComponent, RaunkierUpdateComponent, RaunkierDeleteDialogComponent],
   entryComponents: [RaunkierDeleteDialogComponent],
 })

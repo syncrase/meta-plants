@@ -3,9 +3,10 @@
     "microserviceMois": {
       "home": {
         "title": "Mois",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Mois",
         "createOrEditLabel": "Создать или отредактировать Mois",
-        "notFound": "No Mois found"
+        "notFound": "Mois не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Mois {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Mois"
       },
+      "id": "ID",
       "numero": "Numero",
       "nom": "Nom"
     }

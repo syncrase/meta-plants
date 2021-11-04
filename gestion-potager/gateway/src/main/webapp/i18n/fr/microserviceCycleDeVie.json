@@ -3,6 +3,7 @@
     "microserviceCycleDeVie": {
       "home": {
         "title": "CycleDeVies",
+        "refreshListLabel": "Actualiser la liste",
         "createLabel": "Créer un nouveau Cycle De Vie",
         "createOrEditLabel": "Créer ou éditer un Cycle De Vie",
         "notFound": "Aucun Cycle De Vie trouvé"
@@ -13,7 +14,7 @@
       "detail": {
         "title": "Cycle De Vie"
       },
-      "vitesseDeCroissance": "Vitesse De Croissance",
+      "id": "ID",
       "semis": "Semis",
       "apparitionFeuilles": "Apparition Feuilles",
       "floraison": "Floraison",
@@ -21,7 +22,8 @@
       "croissance": "Croissance",
       "maturite": "Maturite",
       "plantation": "Plantation",
-      "rempotage": "Rempotage"
+      "rempotage": "Rempotage",
+      "reproduction": "Reproduction"
     }
   },
   "microserviceApp": {

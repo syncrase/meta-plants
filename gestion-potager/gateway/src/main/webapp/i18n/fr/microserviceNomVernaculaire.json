@@ -3,6 +3,7 @@
     "microserviceNomVernaculaire": {
       "home": {
         "title": "NomVernaculaires",
+        "refreshListLabel": "Actualiser la liste",
         "createLabel": "Créer un nouveau Nom Vernaculaire",
         "createOrEditLabel": "Créer ou éditer un Nom Vernaculaire",
         "notFound": "Aucun Nom Vernaculaire trouvé"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Nom Vernaculaire"
       },
+      "id": "ID",
       "nom": "Nom",
       "description": "Description",
       "plantes": "Plantes"

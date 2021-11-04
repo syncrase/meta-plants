@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceReproduction": {
+      "home": {
+        "title": "Reproductions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Δημιουργήστε ένα νέο Reproduction",
+        "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Reproduction",
+        "notFound": "No Reproductions found"
+      },
+      "delete": {
+        "question": "Είστε βέβαιοι όταν θέλετε να διαγράψετε το ακόλουθο Reproduction {{ id }};"
+      },
+      "detail": {
+        "title": "Reproduction"
+      },
+      "id": "ID",
+      "vitesse": "Vitesse",
+      "type": "Type",
+      "cycleDeVie": "Cycle De Vie"
+    }
+  },
+  "microserviceApp": {
+    "microserviceReproduction": {
+      "created": "Ένα νέο Reproduction έχει δημιουργηθεί με αναγνωριστικό {{ param }}",
+      "updated": "Ένα Reproduction έχει ενημερωθεί με αναγνωριστικό {{ param }}",
+      "deleted": "Ένα Reproduction έχει διαγραφτεί με αναγνωριστικό {{ param }}"
+    }
+  }
+}

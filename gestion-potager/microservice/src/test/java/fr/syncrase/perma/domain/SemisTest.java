@@ -1,13 +1,14 @@
 package fr.syncrase.perma.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import fr.syncrase.perma.web.rest.TestUtil;
 
-public class SemisTest {
+import fr.syncrase.perma.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class SemisTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Semis.class);
         Semis semis1 = new Semis();
         semis1.setId(1L);

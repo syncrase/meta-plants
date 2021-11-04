@@ -1,40 +1,37 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.MicroserviceApp;
-import fr.syncrase.perma.config.TestSecurityConfiguration;
-import fr.syncrase.perma.domain.APGI;
-import fr.syncrase.perma.repository.APGIRepository;
-import fr.syncrase.perma.service.APGIService;
-import fr.syncrase.perma.service.dto.APGIDTO;
-import fr.syncrase.perma.service.mapper.APGIMapper;
-import fr.syncrase.perma.service.dto.APGICriteria;
-import fr.syncrase.perma.service.APGIQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.syncrase.perma.IntegrationTest;
+import fr.syncrase.perma.domain.APGI;
+import fr.syncrase.perma.repository.APGIRepository;
+import fr.syncrase.perma.service.criteria.APGICriteria;
+import fr.syncrase.perma.service.dto.APGIDTO;
+import fr.syncrase.perma.service.mapper.APGIMapper;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link APGIResource} REST controller.
  */
-@SpringBootTest(classes = { MicroserviceApp.class, TestSecurityConfiguration.class })
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class APGIResourceIT {
+class APGIResourceIT {
 
     private static final String DEFAULT_ORDRE = "AAAAAAAAAA";
     private static final String UPDATED_ORDRE = "BBBBBBBBBB";
@@ -42,17 +39,17 @@ public class APGIResourceIT {
     private static final String DEFAULT_FAMILLE = "AAAAAAAAAA";
     private static final String UPDATED_FAMILLE = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/apgis";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private APGIRepository aPGIRepository;
 
     @Autowired
     private APGIMapper aPGIMapper;
-
-    @Autowired
-    private APGIService aPGIService;
-
-    @Autowired
-    private APGIQueryService aPGIQueryService;
 
     @Autowired
     private EntityManager em;
@@ -69,11 +66,10 @@ public class APGIResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static APGI createEntity(EntityManager em) {
-        APGI aPGI = new APGI()
-            .ordre(DEFAULT_ORDRE)
-            .famille(DEFAULT_FAMILLE);
+        APGI aPGI = new APGI().ordre(DEFAULT_ORDRE).famille(DEFAULT_FAMILLE);
         return aPGI;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -81,9 +77,7 @@ public class APGIResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static APGI createUpdatedEntity(EntityManager em) {
-        APGI aPGI = new APGI()
-            .ordre(UPDATED_ORDRE)
-            .famille(UPDATED_FAMILLE);
+        APGI aPGI = new APGI().ordre(UPDATED_ORDRE).famille(UPDATED_FAMILLE);
         return aPGI;
     }
 
@@ -94,13 +88,17 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void createAPGI() throws Exception {
+    void createAPGI() throws Exception {
         int databaseSizeBeforeCreate = aPGIRepository.findAll().size();
         // Create the APGI
         APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
-        restAPGIMockMvc.perform(post("/api/apgis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIDTO)))
+        restAPGIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the APGI in the database
@@ -113,17 +111,21 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void createAPGIWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = aPGIRepository.findAll().size();
-
+    void createAPGIWithExistingId() throws Exception {
         // Create the APGI with an existing ID
         aPGI.setId(1L);
         APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
 
+        int databaseSizeBeforeCreate = aPGIRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restAPGIMockMvc.perform(post("/api/apgis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIDTO)))
+        restAPGIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the APGI in the database
@@ -131,10 +133,9 @@ public class APGIResourceIT {
         assertThat(aPGIList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkOrdreIsRequired() throws Exception {
+    void checkOrdreIsRequired() throws Exception {
         int databaseSizeBeforeTest = aPGIRepository.findAll().size();
         // set the field null
         aPGI.setOrdre(null);
@@ -142,10 +143,13 @@ public class APGIResourceIT {
         // Create the APGI, which fails.
         APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
 
-
-        restAPGIMockMvc.perform(post("/api/apgis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIDTO)))
+        restAPGIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<APGI> aPGIList = aPGIRepository.findAll();
@@ -154,7 +158,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void checkFamilleIsRequired() throws Exception {
+    void checkFamilleIsRequired() throws Exception {
         int databaseSizeBeforeTest = aPGIRepository.findAll().size();
         // set the field null
         aPGI.setFamille(null);
@@ -162,10 +166,13 @@ public class APGIResourceIT {
         // Create the APGI, which fails.
         APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
 
-
-        restAPGIMockMvc.perform(post("/api/apgis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIDTO)))
+        restAPGIMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<APGI> aPGIList = aPGIRepository.findAll();
@@ -174,27 +181,29 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGIS() throws Exception {
+    void getAllAPGIS() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
         // Get all the aPGIList
-        restAPGIMockMvc.perform(get("/api/apgis?sort=id,desc"))
+        restAPGIMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(aPGI.getId().intValue())))
             .andExpect(jsonPath("$.[*].ordre").value(hasItem(DEFAULT_ORDRE)))
             .andExpect(jsonPath("$.[*].famille").value(hasItem(DEFAULT_FAMILLE)));
     }
-    
+
     @Test
     @Transactional
-    public void getAPGI() throws Exception {
+    void getAPGI() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
         // Get the aPGI
-        restAPGIMockMvc.perform(get("/api/apgis/{id}", aPGI.getId()))
+        restAPGIMockMvc
+            .perform(get(ENTITY_API_URL_ID, aPGI.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(aPGI.getId().intValue()))
@@ -202,10 +211,9 @@ public class APGIResourceIT {
             .andExpect(jsonPath("$.famille").value(DEFAULT_FAMILLE));
     }
 
-
     @Test
     @Transactional
-    public void getAPGISByIdFiltering() throws Exception {
+    void getAPGISByIdFiltering() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -221,10 +229,9 @@ public class APGIResourceIT {
         defaultAPGIShouldNotBeFound("id.lessThan=" + id);
     }
 
-
     @Test
     @Transactional
-    public void getAllAPGISByOrdreIsEqualToSomething() throws Exception {
+    void getAllAPGISByOrdreIsEqualToSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -237,7 +244,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByOrdreIsNotEqualToSomething() throws Exception {
+    void getAllAPGISByOrdreIsNotEqualToSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -250,7 +257,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByOrdreIsInShouldWork() throws Exception {
+    void getAllAPGISByOrdreIsInShouldWork() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -263,7 +270,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByOrdreIsNullOrNotNull() throws Exception {
+    void getAllAPGISByOrdreIsNullOrNotNull() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -273,9 +280,10 @@ public class APGIResourceIT {
         // Get all the aPGIList where ordre is null
         defaultAPGIShouldNotBeFound("ordre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllAPGISByOrdreContainsSomething() throws Exception {
+    void getAllAPGISByOrdreContainsSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -288,7 +296,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByOrdreNotContainsSomething() throws Exception {
+    void getAllAPGISByOrdreNotContainsSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -299,10 +307,9 @@ public class APGIResourceIT {
         defaultAPGIShouldBeFound("ordre.doesNotContain=" + UPDATED_ORDRE);
     }
 
-
     @Test
     @Transactional
-    public void getAllAPGISByFamilleIsEqualToSomething() throws Exception {
+    void getAllAPGISByFamilleIsEqualToSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -315,7 +322,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByFamilleIsNotEqualToSomething() throws Exception {
+    void getAllAPGISByFamilleIsNotEqualToSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -328,7 +335,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByFamilleIsInShouldWork() throws Exception {
+    void getAllAPGISByFamilleIsInShouldWork() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -341,7 +348,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByFamilleIsNullOrNotNull() throws Exception {
+    void getAllAPGISByFamilleIsNullOrNotNull() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -351,9 +358,10 @@ public class APGIResourceIT {
         // Get all the aPGIList where famille is null
         defaultAPGIShouldNotBeFound("famille.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllAPGISByFamilleContainsSomething() throws Exception {
+    void getAllAPGISByFamilleContainsSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -366,7 +374,7 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getAllAPGISByFamilleNotContainsSomething() throws Exception {
+    void getAllAPGISByFamilleNotContainsSomething() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -381,7 +389,8 @@ public class APGIResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultAPGIShouldBeFound(String filter) throws Exception {
-        restAPGIMockMvc.perform(get("/api/apgis?sort=id,desc&" + filter))
+        restAPGIMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(aPGI.getId().intValue())))
@@ -389,7 +398,8 @@ public class APGIResourceIT {
             .andExpect(jsonPath("$.[*].famille").value(hasItem(DEFAULT_FAMILLE)));
 
         // Check, that the count call also returns 1
-        restAPGIMockMvc.perform(get("/api/apgis/count?sort=id,desc&" + filter))
+        restAPGIMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -399,14 +409,16 @@ public class APGIResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultAPGIShouldNotBeFound(String filter) throws Exception {
-        restAPGIMockMvc.perform(get("/api/apgis?sort=id,desc&" + filter))
+        restAPGIMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restAPGIMockMvc.perform(get("/api/apgis/count?sort=id,desc&" + filter))
+        restAPGIMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -414,15 +426,14 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingAPGI() throws Exception {
+    void getNonExistingAPGI() throws Exception {
         // Get the aPGI
-        restAPGIMockMvc.perform(get("/api/apgis/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restAPGIMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateAPGI() throws Exception {
+    void putNewAPGI() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
@@ -432,14 +443,16 @@ public class APGIResourceIT {
         APGI updatedAPGI = aPGIRepository.findById(aPGI.getId()).get();
         // Disconnect from session so that the updates on updatedAPGI are not directly saved in db
         em.detach(updatedAPGI);
-        updatedAPGI
-            .ordre(UPDATED_ORDRE)
-            .famille(UPDATED_FAMILLE);
+        updatedAPGI.ordre(UPDATED_ORDRE).famille(UPDATED_FAMILLE);
         APGIDTO aPGIDTO = aPGIMapper.toDto(updatedAPGI);
 
-        restAPGIMockMvc.perform(put("/api/apgis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIDTO)))
+        restAPGIMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, aPGIDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the APGI in the database
@@ -452,16 +465,21 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingAPGI() throws Exception {
+    void putNonExistingAPGI() throws Exception {
         int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+        aPGI.setId(count.incrementAndGet());
 
         // Create the APGI
         APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restAPGIMockMvc.perform(put("/api/apgis").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aPGIDTO)))
+        restAPGIMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, aPGIDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the APGI in the database
@@ -471,15 +489,194 @@ public class APGIResourceIT {
 
     @Test
     @Transactional
-    public void deleteAPGI() throws Exception {
+    void putWithIdMismatchAPGI() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+        aPGI.setId(count.incrementAndGet());
+
+        // Create the APGI
+        APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the APGI in the database
+        List<APGI> aPGIList = aPGIRepository.findAll();
+        assertThat(aPGIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamAPGI() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+        aPGI.setId(count.incrementAndGet());
+
+        // Create the APGI
+        APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIMockMvc
+            .perform(
+                put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the APGI in the database
+        List<APGI> aPGIList = aPGIRepository.findAll();
+        assertThat(aPGIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateAPGIWithPatch() throws Exception {
+        // Initialize the database
+        aPGIRepository.saveAndFlush(aPGI);
+
+        int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+
+        // Update the aPGI using partial update
+        APGI partialUpdatedAPGI = new APGI();
+        partialUpdatedAPGI.setId(aPGI.getId());
+
+        partialUpdatedAPGI.ordre(UPDATED_ORDRE).famille(UPDATED_FAMILLE);
+
+        restAPGIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedAPGI.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAPGI))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the APGI in the database
+        List<APGI> aPGIList = aPGIRepository.findAll();
+        assertThat(aPGIList).hasSize(databaseSizeBeforeUpdate);
+        APGI testAPGI = aPGIList.get(aPGIList.size() - 1);
+        assertThat(testAPGI.getOrdre()).isEqualTo(UPDATED_ORDRE);
+        assertThat(testAPGI.getFamille()).isEqualTo(UPDATED_FAMILLE);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateAPGIWithPatch() throws Exception {
+        // Initialize the database
+        aPGIRepository.saveAndFlush(aPGI);
+
+        int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+
+        // Update the aPGI using partial update
+        APGI partialUpdatedAPGI = new APGI();
+        partialUpdatedAPGI.setId(aPGI.getId());
+
+        partialUpdatedAPGI.ordre(UPDATED_ORDRE).famille(UPDATED_FAMILLE);
+
+        restAPGIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedAPGI.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAPGI))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the APGI in the database
+        List<APGI> aPGIList = aPGIRepository.findAll();
+        assertThat(aPGIList).hasSize(databaseSizeBeforeUpdate);
+        APGI testAPGI = aPGIList.get(aPGIList.size() - 1);
+        assertThat(testAPGI.getOrdre()).isEqualTo(UPDATED_ORDRE);
+        assertThat(testAPGI.getFamille()).isEqualTo(UPDATED_FAMILLE);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingAPGI() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+        aPGI.setId(count.incrementAndGet());
+
+        // Create the APGI
+        APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restAPGIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, aPGIDTO.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the APGI in the database
+        List<APGI> aPGIList = aPGIRepository.findAll();
+        assertThat(aPGIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchAPGI() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+        aPGI.setId(count.incrementAndGet());
+
+        // Create the APGI
+        APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the APGI in the database
+        List<APGI> aPGIList = aPGIRepository.findAll();
+        assertThat(aPGIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamAPGI() throws Exception {
+        int databaseSizeBeforeUpdate = aPGIRepository.findAll().size();
+        aPGI.setId(count.incrementAndGet());
+
+        // Create the APGI
+        APGIDTO aPGIDTO = aPGIMapper.toDto(aPGI);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAPGIMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aPGIDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the APGI in the database
+        List<APGI> aPGIList = aPGIRepository.findAll();
+        assertThat(aPGIList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteAPGI() throws Exception {
         // Initialize the database
         aPGIRepository.saveAndFlush(aPGI);
 
         int databaseSizeBeforeDelete = aPGIRepository.findAll().size();
 
         // Delete the aPGI
-        restAPGIMockMvc.perform(delete("/api/apgis/{id}", aPGI.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restAPGIMockMvc
+            .perform(delete(ENTITY_API_URL_ID, aPGI.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

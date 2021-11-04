@@ -1,7 +1,7 @@
 {
   "health": {
     "title": "स्वास्थ्य जाँच",
-    "refresh.button": "ताज़ा करें",
+    "refresh.button": "रिफ्रेश करें",
     "stacktrace": "Stacktrace",
     "details": {
       "details": "विवरण",
@@ -15,17 +15,19 @@
       "refreshScope": "Microservice Refresh Scope",
       "clientConfigServer": "Microservice Config Server",
       "hystrix": "Hystrix",
-      "diskSpace": "डिस्क स्थान",
-      "mail": "ईमेल",
+      "diskSpace": "डिस्क में जग़ह",
+      "mail": "ई-मेल",
+      "livenessState": "Liveness state",
+      "readinessState": "Readiness state",
       "ping": "Application",
-      "db": "Database"
+      "r2dbc": "Database"
     },
     "table": {
       "service": "सेवा का नाम",
       "status": "स्थिति"
     },
     "status": {
-      "UNKNOWN": "UNKNOWN",
+      "UNKNOWN": "अज्ञात स्थिति",
       "UP": "ऊपर",
       "DOWN": "नीचे"
     }

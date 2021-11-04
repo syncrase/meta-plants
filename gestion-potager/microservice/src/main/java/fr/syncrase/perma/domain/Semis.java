@@ -1,11 +1,10 @@
 package fr.syncrase.perma.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Semis.
@@ -20,12 +19,15 @@ public class Semis implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee semisPleineTerre;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee semisSousAbris;
@@ -39,8 +41,14 @@ public class Semis implements Serializable {
     private Germination germination;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Semis id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -48,56 +56,57 @@ public class Semis implements Serializable {
     }
 
     public PeriodeAnnee getSemisPleineTerre() {
-        return semisPleineTerre;
-    }
-
-    public Semis semisPleineTerre(PeriodeAnnee periodeAnnee) {
-        this.semisPleineTerre = periodeAnnee;
-        return this;
+        return this.semisPleineTerre;
     }
 
     public void setSemisPleineTerre(PeriodeAnnee periodeAnnee) {
         this.semisPleineTerre = periodeAnnee;
     }
 
-    public PeriodeAnnee getSemisSousAbris() {
-        return semisSousAbris;
+    public Semis semisPleineTerre(PeriodeAnnee periodeAnnee) {
+        this.setSemisPleineTerre(periodeAnnee);
+        return this;
     }
 
-    public Semis semisSousAbris(PeriodeAnnee periodeAnnee) {
-        this.semisSousAbris = periodeAnnee;
-        return this;
+    public PeriodeAnnee getSemisSousAbris() {
+        return this.semisSousAbris;
     }
 
     public void setSemisSousAbris(PeriodeAnnee periodeAnnee) {
         this.semisSousAbris = periodeAnnee;
     }
 
-    public TypeSemis getTypeSemis() {
-        return typeSemis;
+    public Semis semisSousAbris(PeriodeAnnee periodeAnnee) {
+        this.setSemisSousAbris(periodeAnnee);
+        return this;
     }
 
-    public Semis typeSemis(TypeSemis typeSemis) {
-        this.typeSemis = typeSemis;
-        return this;
+    public TypeSemis getTypeSemis() {
+        return this.typeSemis;
     }
 
     public void setTypeSemis(TypeSemis typeSemis) {
         this.typeSemis = typeSemis;
     }
 
-    public Germination getGermination() {
-        return germination;
+    public Semis typeSemis(TypeSemis typeSemis) {
+        this.setTypeSemis(typeSemis);
+        return this;
     }
 
-    public Semis germination(Germination germination) {
-        this.germination = germination;
-        return this;
+    public Germination getGermination() {
+        return this.germination;
     }
 
     public void setGermination(Germination germination) {
         this.germination = germination;
     }
+
+    public Semis germination(Germination germination) {
+        this.setGermination(germination);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -113,7 +122,8 @@ public class Semis implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

@@ -11,12 +11,14 @@ describe('CycleDeVie e2e test', () => {
   let cycleDeVieComponentsPage: CycleDeVieComponentsPage;
   let cycleDeVieUpdatePage: CycleDeVieUpdatePage;
   let cycleDeVieDeleteDialog: CycleDeVieDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -41,7 +43,6 @@ describe('CycleDeVie e2e test', () => {
     await cycleDeVieComponentsPage.clickOnCreateButton();
 
     await promise.all([
-      cycleDeVieUpdatePage.setVitesseDeCroissanceInput('vitesseDeCroissance'),
       cycleDeVieUpdatePage.semisSelectLastOption(),
       cycleDeVieUpdatePage.apparitionFeuillesSelectLastOption(),
       cycleDeVieUpdatePage.floraisonSelectLastOption(),
@@ -50,12 +51,8 @@ describe('CycleDeVie e2e test', () => {
       cycleDeVieUpdatePage.maturiteSelectLastOption(),
       cycleDeVieUpdatePage.plantationSelectLastOption(),
       cycleDeVieUpdatePage.rempotageSelectLastOption(),
+      cycleDeVieUpdatePage.reproductionSelectLastOption(),
     ]);
-
-    expect(await cycleDeVieUpdatePage.getVitesseDeCroissanceInput()).to.eq(
-      'vitesseDeCroissance',
-      'Expected VitesseDeCroissance value to be equals to vitesseDeCroissance'
-    );
 
     await cycleDeVieUpdatePage.save();
     expect(await cycleDeVieUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
@@ -70,6 +67,7 @@ describe('CycleDeVie e2e test', () => {
     cycleDeVieDeleteDialog = new CycleDeVieDeleteDialog();
     expect(await cycleDeVieDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceCycleDeVie.delete.question');
     await cycleDeVieDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(cycleDeVieComponentsPage.title), 5000);
 
     expect(await cycleDeVieComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

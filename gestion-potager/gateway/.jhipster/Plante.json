@@ -15,11 +15,7 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "exposition",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "rusticite",
+      "fieldName": "vitesse",
       "fieldType": "String"
     }
   ],
@@ -29,7 +25,6 @@
       "otherEntityName": "cycleDeVie",
       "otherEntityRelationshipName": "plante",
       "relationshipName": "cycleDeVie",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -37,7 +32,6 @@
       "otherEntityName": "classification",
       "otherEntityRelationshipName": "plante",
       "relationshipName": "classification",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -49,42 +43,64 @@
     {
       "relationshipType": "one-to-many",
       "otherEntityName": "allelopathie",
-      "otherEntityRelationshipName": "plante",
+      "otherEntityRelationshipName": "interaction",
       "relationshipName": "interactions"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "exposition",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "expositions"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sol",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "sols"
     },
     {
       "relationshipType": "many-to-many",
       "otherEntityName": "nomVernaculaire",
       "otherEntityRelationshipName": "plantes",
       "relationshipName": "nomsVernaculaires",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "allelopathie",
-      "otherEntityRelationshipName": "cible",
-      "relationshipName": "allelopathieRecue",
-      "ownerSide": false
+      "relationshipType": "many-to-one",
+      "otherEntityName": "temperature",
+      "otherEntityRelationshipName": "plantes",
+      "relationshipName": "temperature"
     },
     {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "allelopathie",
-      "otherEntityRelationshipName": "origine",
-      "relationshipName": "allelopathieProduite",
-      "ownerSide": false
+      "relationshipType": "many-to-one",
+      "otherEntityName": "racine",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "racine"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "strate",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "strate"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "feuillage",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "feuillage"
     }
   ],
-  "changelogDate": "20210302085409",
   "entityTableName": "plante",
   "dto": "mapstruct",
   "pagination": "pagination",
   "service": "serviceImpl",
-  "jpaMetamodelFiltering": true,
+  "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104120354"
 }

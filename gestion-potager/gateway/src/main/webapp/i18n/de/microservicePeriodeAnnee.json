@@ -3,9 +3,10 @@
     "microservicePeriodeAnnee": {
       "home": {
         "title": "Periode Annees",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Periode Annee erstellen",
         "createOrEditLabel": "Periode Annee erstellen oder bearbeiten",
-        "notFound": "No Periode Annees found"
+        "notFound": "Keine Periode Annees gefunden"
       },
       "delete": {
         "question": "Soll Periode Annee {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Periode Annee"
       },
+      "id": "ID",
       "debut": "Debut",
       "fin": "Fin"
     }

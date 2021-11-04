@@ -3,9 +3,10 @@
     "microserviceAPgii": {
       "home": {
         "title": "APGIIS",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый APGII",
         "createOrEditLabel": "Создать или отредактировать APGII",
-        "notFound": "No APGIIS found"
+        "notFound": "APGIIS не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить APGII {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGII"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

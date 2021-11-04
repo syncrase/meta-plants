@@ -1,12 +1,10 @@
 package fr.syncrase.perma.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A APGIV.
@@ -21,6 +19,7 @@ public class APGIV implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -32,8 +31,14 @@ public class APGIV implements Serializable {
     private String famille;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public APGIV id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -41,11 +46,11 @@ public class APGIV implements Serializable {
     }
 
     public String getOrdre() {
-        return ordre;
+        return this.ordre;
     }
 
     public APGIV ordre(String ordre) {
-        this.ordre = ordre;
+        this.setOrdre(ordre);
         return this;
     }
 
@@ -54,17 +59,18 @@ public class APGIV implements Serializable {
     }
 
     public String getFamille() {
-        return famille;
+        return this.famille;
     }
 
     public APGIV famille(String famille) {
-        this.famille = famille;
+        this.setFamille(famille);
         return this;
     }
 
     public void setFamille(String famille) {
         this.famille = famille;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -80,7 +86,8 @@ public class APGIV implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

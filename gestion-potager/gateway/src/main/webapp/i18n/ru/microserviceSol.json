@@ -3,9 +3,10 @@
     "microserviceSol": {
       "home": {
         "title": "Sols",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Sol",
         "createOrEditLabel": "Создать или отредактировать Sol",
-        "notFound": "No Sols found"
+        "notFound": "Sols не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Sol {{ id }}?"
@@ -13,8 +14,12 @@
       "detail": {
         "title": "Sol"
       },
-      "acidite": "Acidite",
-      "type": "Type"
+      "id": "ID",
+      "phMin": "Ph Min",
+      "phMax": "Ph Max",
+      "type": "Type",
+      "richesse": "Richesse",
+      "plante": "Plante"
     }
   },
   "microserviceApp": {

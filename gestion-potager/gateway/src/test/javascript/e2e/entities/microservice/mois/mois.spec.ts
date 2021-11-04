@@ -11,12 +11,14 @@ describe('Mois e2e test', () => {
   let moisComponentsPage: MoisComponentsPage;
   let moisUpdatePage: MoisUpdatePage;
   let moisDeleteDialog: MoisDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -42,9 +44,6 @@ describe('Mois e2e test', () => {
 
     await promise.all([moisUpdatePage.setNumeroInput('5'), moisUpdatePage.setNomInput('nom')]);
 
-    expect(await moisUpdatePage.getNumeroInput()).to.eq('5', 'Expected numero value to be equals to 5');
-    expect(await moisUpdatePage.getNomInput()).to.eq('nom', 'Expected Nom value to be equals to nom');
-
     await moisUpdatePage.save();
     expect(await moisUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -58,6 +57,7 @@ describe('Mois e2e test', () => {
     moisDeleteDialog = new MoisDeleteDialog();
     expect(await moisDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceMois.delete.question');
     await moisDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(moisComponentsPage.title), 5000);
 
     expect(await moisComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

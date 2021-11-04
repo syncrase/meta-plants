@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceExposition": {
+      "home": {
+        "title": "Expositions",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Exposition",
+        "createOrEditLabel": "Создать или отредактировать Exposition",
+        "notFound": "Expositions не найдено"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Exposition {{ id }}?"
+      },
+      "detail": {
+        "title": "Exposition"
+      },
+      "id": "ID",
+      "valeur": "Valeur",
+      "ensoleilement": "Ensoleilement",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceExposition": {
+      "created": "Новый Exposition создан с идентификатором {{ param }}",
+      "updated": "Exposition обновлен с идентификатором {{ param }}",
+      "deleted": "Exposition удален с идентификатором {{ param }}"
+    }
+  }
+}

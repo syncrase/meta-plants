@@ -11,12 +11,14 @@ describe('Ressemblance e2e test', () => {
   let ressemblanceComponentsPage: RessemblanceComponentsPage;
   let ressemblanceUpdatePage: RessemblanceUpdatePage;
   let ressemblanceDeleteDialog: RessemblanceDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -45,11 +47,6 @@ describe('Ressemblance e2e test', () => {
 
     await promise.all([ressemblanceUpdatePage.setDescriptionInput('description'), ressemblanceUpdatePage.confusionSelectLastOption()]);
 
-    expect(await ressemblanceUpdatePage.getDescriptionInput()).to.eq(
-      'description',
-      'Expected Description value to be equals to description'
-    );
-
     await ressemblanceUpdatePage.save();
     expect(await ressemblanceUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -63,6 +60,7 @@ describe('Ressemblance e2e test', () => {
     ressemblanceDeleteDialog = new RessemblanceDeleteDialog();
     expect(await ressemblanceDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceRessemblance.delete.question');
     await ressemblanceDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(ressemblanceComponentsPage.title), 5000);
 
     expect(await ressemblanceComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

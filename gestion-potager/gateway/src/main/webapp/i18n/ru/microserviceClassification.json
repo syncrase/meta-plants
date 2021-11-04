@@ -3,9 +3,10 @@
     "microserviceClassification": {
       "home": {
         "title": "Classifications",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Classification",
         "createOrEditLabel": "Создать или отредактировать Classification",
-        "notFound": "No Classifications found"
+        "notFound": "Classifications не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Classification {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Classification"
       },
+      "id": "ID",
       "raunkier": "Raunkier",
       "cronquist": "Cronquist",
       "apg1": "Apg 1",

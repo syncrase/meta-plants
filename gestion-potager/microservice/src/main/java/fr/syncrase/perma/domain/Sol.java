@@ -1,11 +1,10 @@
 package fr.syncrase.perma.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Sol.
@@ -20,48 +19,120 @@ public class Sol implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "acidite")
-    private Double acidite;
+    @Column(name = "ph_min")
+    private Double phMin;
+
+    @Column(name = "ph_max")
+    private Double phMax;
 
     @Column(name = "type")
     private String type;
 
+    @Column(name = "richesse")
+    private String richesse;
+
+    @ManyToOne
+    @JsonIgnoreProperties(
+        value = {
+            "cycleDeVie",
+            "classification",
+            "confusions",
+            "interactions",
+            "expositions",
+            "sols",
+            "nomsVernaculaires",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+        },
+        allowSetters = true
+    )
+    private Plante plante;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Sol id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Double getAcidite() {
-        return acidite;
+    public Double getPhMin() {
+        return this.phMin;
     }
 
-    public Sol acidite(Double acidite) {
-        this.acidite = acidite;
+    public Sol phMin(Double phMin) {
+        this.setPhMin(phMin);
         return this;
     }
 
-    public void setAcidite(Double acidite) {
-        this.acidite = acidite;
+    public void setPhMin(Double phMin) {
+        this.phMin = phMin;
+    }
+
+    public Double getPhMax() {
+        return this.phMax;
+    }
+
+    public Sol phMax(Double phMax) {
+        this.setPhMax(phMax);
+        return this;
+    }
+
+    public void setPhMax(Double phMax) {
+        this.phMax = phMax;
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public Sol type(String type) {
-        this.type = type;
+        this.setType(type);
         return this;
     }
 
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getRichesse() {
+        return this.richesse;
+    }
+
+    public Sol richesse(String richesse) {
+        this.setRichesse(richesse);
+        return this;
+    }
+
+    public void setRichesse(String richesse) {
+        this.richesse = richesse;
+    }
+
+    public Plante getPlante() {
+        return this.plante;
+    }
+
+    public void setPlante(Plante plante) {
+        this.plante = plante;
+    }
+
+    public Sol plante(Plante plante) {
+        this.setPlante(plante);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -77,7 +148,8 @@ public class Sol implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -85,8 +157,10 @@ public class Sol implements Serializable {
     public String toString() {
         return "Sol{" +
             "id=" + getId() +
-            ", acidite=" + getAcidite() +
+            ", phMin=" + getPhMin() +
+            ", phMax=" + getPhMax() +
             ", type='" + getType() + "'" +
+            ", richesse='" + getRichesse() + "'" +
             "}";
     }
 }

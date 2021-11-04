@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { CronquistComponent } from './cronquist.component';
-import { CronquistDetailComponent } from './cronquist-detail.component';
-import { CronquistUpdateComponent } from './cronquist-update.component';
-import { CronquistDeleteDialogComponent } from './cronquist-delete-dialog.component';
-import { cronquistRoute } from './cronquist.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { CronquistComponent } from './list/cronquist.component';
+import { CronquistDetailComponent } from './detail/cronquist-detail.component';
+import { CronquistUpdateComponent } from './update/cronquist-update.component';
+import { CronquistDeleteDialogComponent } from './delete/cronquist-delete-dialog.component';
+import { CronquistRoutingModule } from './route/cronquist-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(cronquistRoute)],
+  imports: [SharedModule, CronquistRoutingModule],
   declarations: [CronquistComponent, CronquistDetailComponent, CronquistUpdateComponent, CronquistDeleteDialogComponent],
   entryComponents: [CronquistDeleteDialogComponent],
 })

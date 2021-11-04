@@ -3,6 +3,7 @@
     "microserviceMois": {
       "home": {
         "title": "Mois",
+        "refreshListLabel": "Actualiser la liste",
         "createLabel": "Créer un nouveau Mois",
         "createOrEditLabel": "Créer ou éditer un Mois",
         "notFound": "Aucun Mois trouvé"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Mois"
       },
+      "id": "ID",
       "numero": "Numero",
       "nom": "Nom"
     }

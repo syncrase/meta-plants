@@ -3,9 +3,10 @@
     "microserviceCronquist": {
       "home": {
         "title": "Cronquists",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Cronquist erstellen",
         "createOrEditLabel": "Cronquist erstellen oder bearbeiten",
-        "notFound": "No Cronquists found"
+        "notFound": "Keine Cronquists gefunden"
       },
       "delete": {
         "question": "Soll Cronquist {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Cronquist"
       },
+      "id": "ID",
       "regne": "Regne",
       "sousRegne": "Sous Regne",
       "division": "Division",

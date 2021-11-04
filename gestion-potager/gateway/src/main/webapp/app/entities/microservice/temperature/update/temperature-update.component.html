@@ -1,0 +1,69 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="gp-temperature-heading"
+        data-cy="TemperatureCreateUpdateHeading"
+        gpTranslate="gatewayApp.microserviceTemperature.home.createOrEditLabel"
+      >
+        Create or edit a Temperature
+      </h2>
+
+      <div>
+        <gp-alert-error></gp-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" gpTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceTemperature.min" for="field_min">Min</label>
+          <input type="number" class="form-control" name="min" id="field_min" data-cy="min" formControlName="min" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceTemperature.max" for="field_max">Max</label>
+          <input type="number" class="form-control" name="max" id="field_max" data-cy="max" formControlName="max" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceTemperature.description" for="field_description"
+            >Description</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceTemperature.rusticite" for="field_rusticite"
+            >Rusticite</label
+          >
+          <input type="text" class="form-control" name="rusticite" id="field_rusticite" data-cy="rusticite" formControlName="rusticite" />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span gpTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span gpTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

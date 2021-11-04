@@ -3,6 +3,7 @@
     "microserviceTypeSemis": {
       "home": {
         "title": "TypeSemis",
+        "refreshListLabel": "Refresh list",
         "createLabel": "नया Type Semis बनाएँ",
         "createOrEditLabel": "Type Semis बनाएँ या संपादित करें",
         "notFound": "No Type Semis found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Type Semis"
       },
+      "id": "ID",
       "description": "Description"
     }
   },

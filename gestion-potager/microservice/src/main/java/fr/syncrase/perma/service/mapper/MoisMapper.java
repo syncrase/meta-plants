@@ -1,9 +1,7 @@
 package fr.syncrase.perma.service.mapper;
 
-
-import fr.syncrase.perma.domain.*;
+import fr.syncrase.perma.domain.Mois;
 import fr.syncrase.perma.service.dto.MoisDTO;
-
 import org.mapstruct.*;
 
 /**
@@ -11,15 +9,9 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface MoisMapper extends EntityMapper<MoisDTO, Mois> {
-
-
-
-    default Mois fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Mois mois = new Mois();
-        mois.setId(id);
-        return mois;
-    }
+    @Named("nom")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "nom", source = "nom")
+    MoisDTO toDtoNom(Mois mois);
 }

@@ -1,13 +1,11 @@
 package fr.syncrase.perma.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Allelopathie.
@@ -22,6 +20,7 @@ public class Allelopathie implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -31,21 +30,74 @@ public class Allelopathie implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnoreProperties(
+        value = {
+            "cycleDeVie",
+            "classification",
+            "confusions",
+            "interactions",
+            "expositions",
+            "sols",
+            "nomsVernaculaires",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+        },
+        allowSetters = true
+    )
     @OneToOne
     @JoinColumn(unique = true)
     private Plante cible;
 
+    @JsonIgnoreProperties(
+        value = {
+            "cycleDeVie",
+            "classification",
+            "confusions",
+            "interactions",
+            "expositions",
+            "sols",
+            "nomsVernaculaires",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+        },
+        allowSetters = true
+    )
     @OneToOne
     @JoinColumn(unique = true)
     private Plante origine;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "interactions", allowSetters = true)
-    private Plante plante;
+    @JsonIgnoreProperties(
+        value = {
+            "cycleDeVie",
+            "classification",
+            "confusions",
+            "interactions",
+            "expositions",
+            "sols",
+            "nomsVernaculaires",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+        },
+        allowSetters = true
+    )
+    private Plante interaction;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Allelopathie id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -53,11 +105,11 @@ public class Allelopathie implements Serializable {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public Allelopathie type(String type) {
-        this.type = type;
+        this.setType(type);
         return this;
     }
 
@@ -66,11 +118,11 @@ public class Allelopathie implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Allelopathie description(String description) {
-        this.description = description;
+        this.setDescription(description);
         return this;
     }
 
@@ -79,43 +131,44 @@ public class Allelopathie implements Serializable {
     }
 
     public Plante getCible() {
-        return cible;
-    }
-
-    public Allelopathie cible(Plante plante) {
-        this.cible = plante;
-        return this;
+        return this.cible;
     }
 
     public void setCible(Plante plante) {
         this.cible = plante;
     }
 
-    public Plante getOrigine() {
-        return origine;
+    public Allelopathie cible(Plante plante) {
+        this.setCible(plante);
+        return this;
     }
 
-    public Allelopathie origine(Plante plante) {
-        this.origine = plante;
-        return this;
+    public Plante getOrigine() {
+        return this.origine;
     }
 
     public void setOrigine(Plante plante) {
         this.origine = plante;
     }
 
-    public Plante getPlante() {
-        return plante;
-    }
-
-    public Allelopathie plante(Plante plante) {
-        this.plante = plante;
+    public Allelopathie origine(Plante plante) {
+        this.setOrigine(plante);
         return this;
     }
 
-    public void setPlante(Plante plante) {
-        this.plante = plante;
+    public Plante getInteraction() {
+        return this.interaction;
     }
+
+    public void setInteraction(Plante plante) {
+        this.interaction = plante;
+    }
+
+    public Allelopathie interaction(Plante plante) {
+        this.setInteraction(plante);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -131,7 +184,8 @@ public class Allelopathie implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

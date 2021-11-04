@@ -1,27 +1,27 @@
 package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Classification} entity.
  */
 public class ClassificationDTO implements Serializable {
-    
+
     private Long id;
 
+    private RaunkierDTO raunkier;
 
-    private Long raunkierId;
+    private CronquistDTO cronquist;
 
-    private Long cronquistId;
+    private APGIDTO apg1;
 
-    private Long apg1Id;
+    private APGIIDTO apg2;
 
-    private Long apg2Id;
+    private APGIIIDTO apg3;
 
-    private Long apg3Id;
+    private APGIVDTO apg4;
 
-    private Long apg4Id;
-    
     public Long getId() {
         return id;
     }
@@ -30,52 +30,52 @@ public class ClassificationDTO implements Serializable {
         this.id = id;
     }
 
-    public Long getRaunkierId() {
-        return raunkierId;
+    public RaunkierDTO getRaunkier() {
+        return raunkier;
     }
 
-    public void setRaunkierId(Long raunkierId) {
-        this.raunkierId = raunkierId;
+    public void setRaunkier(RaunkierDTO raunkier) {
+        this.raunkier = raunkier;
     }
 
-    public Long getCronquistId() {
-        return cronquistId;
+    public CronquistDTO getCronquist() {
+        return cronquist;
     }
 
-    public void setCronquistId(Long cronquistId) {
-        this.cronquistId = cronquistId;
+    public void setCronquist(CronquistDTO cronquist) {
+        this.cronquist = cronquist;
     }
 
-    public Long getApg1Id() {
-        return apg1Id;
+    public APGIDTO getApg1() {
+        return apg1;
     }
 
-    public void setApg1Id(Long aPGIId) {
-        this.apg1Id = aPGIId;
+    public void setApg1(APGIDTO apg1) {
+        this.apg1 = apg1;
     }
 
-    public Long getApg2Id() {
-        return apg2Id;
+    public APGIIDTO getApg2() {
+        return apg2;
     }
 
-    public void setApg2Id(Long aPGIIId) {
-        this.apg2Id = aPGIIId;
+    public void setApg2(APGIIDTO apg2) {
+        this.apg2 = apg2;
     }
 
-    public Long getApg3Id() {
-        return apg3Id;
+    public APGIIIDTO getApg3() {
+        return apg3;
     }
 
-    public void setApg3Id(Long aPGIIIId) {
-        this.apg3Id = aPGIIIId;
+    public void setApg3(APGIIIDTO apg3) {
+        this.apg3 = apg3;
     }
 
-    public Long getApg4Id() {
-        return apg4Id;
+    public APGIVDTO getApg4() {
+        return apg4;
     }
 
-    public void setApg4Id(Long aPGIVId) {
-        this.apg4Id = aPGIVId;
+    public void setApg4(APGIVDTO apg4) {
+        this.apg4 = apg4;
     }
 
     @Override
@@ -87,12 +87,16 @@ public class ClassificationDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((ClassificationDTO) o).id);
+        ClassificationDTO classificationDTO = (ClassificationDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, classificationDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -100,12 +104,12 @@ public class ClassificationDTO implements Serializable {
     public String toString() {
         return "ClassificationDTO{" +
             "id=" + getId() +
-            ", raunkierId=" + getRaunkierId() +
-            ", cronquistId=" + getCronquistId() +
-            ", apg1Id=" + getApg1Id() +
-            ", apg2Id=" + getApg2Id() +
-            ", apg3Id=" + getApg3Id() +
-            ", apg4Id=" + getApg4Id() +
+            ", raunkier=" + getRaunkier() +
+            ", cronquist=" + getCronquist() +
+            ", apg1=" + getApg1() +
+            ", apg2=" + getApg2() +
+            ", apg3=" + getApg3() +
+            ", apg4=" + getApg4() +
             "}";
     }
 }

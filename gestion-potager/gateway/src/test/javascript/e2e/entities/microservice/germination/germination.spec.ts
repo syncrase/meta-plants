@@ -11,12 +11,14 @@ describe('Germination e2e test', () => {
   let germinationComponentsPage: GerminationComponentsPage;
   let germinationUpdatePage: GerminationUpdatePage;
   let germinationDeleteDialog: GerminationDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -48,15 +50,6 @@ describe('Germination e2e test', () => {
       germinationUpdatePage.setConditionDeGerminationInput('conditionDeGermination'),
     ]);
 
-    expect(await germinationUpdatePage.getTempsDeGerminationInput()).to.eq(
-      'tempsDeGermination',
-      'Expected TempsDeGermination value to be equals to tempsDeGermination'
-    );
-    expect(await germinationUpdatePage.getConditionDeGerminationInput()).to.eq(
-      'conditionDeGermination',
-      'Expected ConditionDeGermination value to be equals to conditionDeGermination'
-    );
-
     await germinationUpdatePage.save();
     expect(await germinationUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -70,6 +63,7 @@ describe('Germination e2e test', () => {
     germinationDeleteDialog = new GerminationDeleteDialog();
     expect(await germinationDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceGermination.delete.question');
     await germinationDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(germinationComponentsPage.title), 5000);
 
     expect(await germinationComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

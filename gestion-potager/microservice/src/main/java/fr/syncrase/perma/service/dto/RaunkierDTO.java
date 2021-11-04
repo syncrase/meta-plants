@@ -1,19 +1,19 @@
 package fr.syncrase.perma.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Raunkier} entity.
  */
 public class RaunkierDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
     private String type;
 
-    
     public Long getId() {
         return id;
     }
@@ -39,12 +39,16 @@ public class RaunkierDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((RaunkierDTO) o).id);
+        RaunkierDTO raunkierDTO = (RaunkierDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, raunkierDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore

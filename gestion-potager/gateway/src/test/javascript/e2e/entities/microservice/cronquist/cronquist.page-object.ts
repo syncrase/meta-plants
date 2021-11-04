@@ -20,7 +20,7 @@ export class CronquistComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,6 +29,7 @@ export class CronquistUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   regneInput = element(by.id('field_regne'));
   sousRegneInput = element(by.id('field_sousRegne'));
   divisionInput = element(by.id('field_division'));
@@ -39,7 +40,15 @@ export class CronquistUpdatePage {
   genreInput = element(by.id('field_genre'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setRegneInput(regne: string): Promise<void> {
@@ -124,7 +133,7 @@ export class CronquistDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-cronquist'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

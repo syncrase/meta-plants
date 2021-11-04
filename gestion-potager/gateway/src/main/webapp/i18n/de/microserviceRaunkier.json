@@ -3,9 +3,10 @@
     "microserviceRaunkier": {
       "home": {
         "title": "Raunkiers",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Raunkier erstellen",
         "createOrEditLabel": "Raunkier erstellen oder bearbeiten",
-        "notFound": "No Raunkiers found"
+        "notFound": "Keine Raunkiers gefunden"
       },
       "delete": {
         "question": "Soll Raunkier {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Raunkier"
       },
+      "id": "ID",
       "type": "Type"
     }
   },

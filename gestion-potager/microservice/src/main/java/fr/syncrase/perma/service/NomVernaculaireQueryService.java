@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.NomVernaculaire;
+import fr.syncrase.perma.repository.NomVernaculaireRepository;
+import fr.syncrase.perma.service.criteria.NomVernaculaireCriteria;
+import fr.syncrase.perma.service.dto.NomVernaculaireDTO;
+import fr.syncrase.perma.service.mapper.NomVernaculaireMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.NomVernaculaire;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.NomVernaculaireRepository;
-import fr.syncrase.perma.service.dto.NomVernaculaireCriteria;
-import fr.syncrase.perma.service.dto.NomVernaculaireDTO;
-import fr.syncrase.perma.service.mapper.NomVernaculaireMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link NomVernaculaire} entities in the database.
@@ -64,8 +60,7 @@ public class NomVernaculaireQueryService extends QueryService<NomVernaculaire> {
     public Page<NomVernaculaireDTO> findByCriteria(NomVernaculaireCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<NomVernaculaire> specification = createSpecification(criteria);
-        return nomVernaculaireRepository.findAll(specification, page)
-            .map(nomVernaculaireMapper::toDto);
+        return nomVernaculaireRepository.findAll(specification, page).map(nomVernaculaireMapper::toDto);
     }
 
     /**
@@ -88,6 +83,10 @@ public class NomVernaculaireQueryService extends QueryService<NomVernaculaire> {
     protected Specification<NomVernaculaire> createSpecification(NomVernaculaireCriteria criteria) {
         Specification<NomVernaculaire> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), NomVernaculaire_.id));
             }
@@ -98,8 +97,13 @@ public class NomVernaculaireQueryService extends QueryService<NomVernaculaire> {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), NomVernaculaire_.description));
             }
             if (criteria.getPlantesId() != null) {
-                specification = specification.and(buildSpecification(criteria.getPlantesId(),
-                    root -> root.join(NomVernaculaire_.plantes, JoinType.LEFT).get(Plante_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getPlantesId(),
+                            root -> root.join(NomVernaculaire_.plantes, JoinType.LEFT).get(Plante_.id)
+                        )
+                    );
             }
         }
         return specification;

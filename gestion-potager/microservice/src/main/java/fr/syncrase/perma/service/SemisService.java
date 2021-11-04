@@ -1,17 +1,14 @@
 package fr.syncrase.perma.service;
 
 import fr.syncrase.perma.service.dto.SemisDTO;
-
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * Service Interface for managing {@link fr.syncrase.perma.domain.Semis}.
  */
 public interface SemisService {
-
     /**
      * Save a semis.
      *
@@ -21,13 +18,20 @@ public interface SemisService {
     SemisDTO save(SemisDTO semisDTO);
 
     /**
+     * Partially updates a semis.
+     *
+     * @param semisDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<SemisDTO> partialUpdate(SemisDTO semisDTO);
+
+    /**
      * Get all the semis.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<SemisDTO> findAll(Pageable pageable);
-
 
     /**
      * Get the "id" semis.

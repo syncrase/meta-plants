@@ -11,12 +11,14 @@ describe('Cronquist e2e test', () => {
   let cronquistComponentsPage: CronquistComponentsPage;
   let cronquistUpdatePage: CronquistUpdatePage;
   let cronquistDeleteDialog: CronquistDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -51,15 +53,6 @@ describe('Cronquist e2e test', () => {
       cronquistUpdatePage.setGenreInput('genre'),
     ]);
 
-    expect(await cronquistUpdatePage.getRegneInput()).to.eq('regne', 'Expected Regne value to be equals to regne');
-    expect(await cronquistUpdatePage.getSousRegneInput()).to.eq('sousRegne', 'Expected SousRegne value to be equals to sousRegne');
-    expect(await cronquistUpdatePage.getDivisionInput()).to.eq('division', 'Expected Division value to be equals to division');
-    expect(await cronquistUpdatePage.getClasseInput()).to.eq('classe', 'Expected Classe value to be equals to classe');
-    expect(await cronquistUpdatePage.getSousClasseInput()).to.eq('sousClasse', 'Expected SousClasse value to be equals to sousClasse');
-    expect(await cronquistUpdatePage.getOrdreInput()).to.eq('ordre', 'Expected Ordre value to be equals to ordre');
-    expect(await cronquistUpdatePage.getFamilleInput()).to.eq('famille', 'Expected Famille value to be equals to famille');
-    expect(await cronquistUpdatePage.getGenreInput()).to.eq('genre', 'Expected Genre value to be equals to genre');
-
     await cronquistUpdatePage.save();
     expect(await cronquistUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -73,6 +66,7 @@ describe('Cronquist e2e test', () => {
     cronquistDeleteDialog = new CronquistDeleteDialog();
     expect(await cronquistDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceCronquist.delete.question');
     await cronquistDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(cronquistComponentsPage.title), 5000);
 
     expect(await cronquistComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

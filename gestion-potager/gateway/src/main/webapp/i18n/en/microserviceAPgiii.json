@@ -3,6 +3,7 @@
     "microserviceAPgiii": {
       "home": {
         "title": "APGIIIS",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new APGIII",
         "createOrEditLabel": "Create or edit a APGIII",
         "notFound": "No APGIIIS found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGIII"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

@@ -3,9 +3,10 @@
     "microservicePlante": {
       "home": {
         "title": "Plantes",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Plante",
         "createOrEditLabel": "Создать или отредактировать Plante",
-        "notFound": "No Plantes found"
+        "notFound": "Plantes не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Plante {{ id }}?"
@@ -13,18 +14,22 @@
       "detail": {
         "title": "Plante"
       },
+      "id": "ID",
       "nomLatin": "Nom Latin",
       "entretien": "Entretien",
       "histoire": "Histoire",
-      "exposition": "Exposition",
-      "rusticite": "Rusticite",
+      "vitesse": "Vitesse",
       "cycleDeVie": "Cycle De Vie",
       "classification": "Classification",
       "confusions": "Confusions",
       "interactions": "Interactions",
+      "expositions": "Expositions",
+      "sols": "Sols",
       "nomsVernaculaires": "Noms Vernaculaires",
-      "allelopathieRecue": "Allelopathie Recue",
-      "allelopathieProduite": "Allelopathie Produite"
+      "temperature": "Temperature",
+      "racine": "Racine",
+      "strate": "Strate",
+      "feuillage": "Feuillage"
     }
   },
   "microserviceApp": {

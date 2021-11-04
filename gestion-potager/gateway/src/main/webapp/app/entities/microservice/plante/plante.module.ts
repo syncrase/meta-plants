@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { PlanteComponent } from './plante.component';
-import { PlanteDetailComponent } from './plante-detail.component';
-import { PlanteUpdateComponent } from './plante-update.component';
-import { PlanteDeleteDialogComponent } from './plante-delete-dialog.component';
-import { planteRoute } from './plante.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { PlanteComponent } from './list/plante.component';
+import { PlanteDetailComponent } from './detail/plante-detail.component';
+import { PlanteUpdateComponent } from './update/plante-update.component';
+import { PlanteDeleteDialogComponent } from './delete/plante-delete-dialog.component';
+import { PlanteRoutingModule } from './route/plante-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(planteRoute)],
+  imports: [SharedModule, PlanteRoutingModule],
   declarations: [PlanteComponent, PlanteDetailComponent, PlanteUpdateComponent, PlanteDeleteDialogComponent],
   entryComponents: [PlanteDeleteDialogComponent],
 })

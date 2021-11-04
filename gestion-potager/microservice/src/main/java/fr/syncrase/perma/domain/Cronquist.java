@@ -1,12 +1,10 @@
 package fr.syncrase.perma.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Cronquist.
@@ -21,6 +19,7 @@ public class Cronquist implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -56,8 +55,14 @@ public class Cronquist implements Serializable {
     private String genre;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Cronquist id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -65,11 +70,11 @@ public class Cronquist implements Serializable {
     }
 
     public String getRegne() {
-        return regne;
+        return this.regne;
     }
 
     public Cronquist regne(String regne) {
-        this.regne = regne;
+        this.setRegne(regne);
         return this;
     }
 
@@ -78,11 +83,11 @@ public class Cronquist implements Serializable {
     }
 
     public String getSousRegne() {
-        return sousRegne;
+        return this.sousRegne;
     }
 
     public Cronquist sousRegne(String sousRegne) {
-        this.sousRegne = sousRegne;
+        this.setSousRegne(sousRegne);
         return this;
     }
 
@@ -91,11 +96,11 @@ public class Cronquist implements Serializable {
     }
 
     public String getDivision() {
-        return division;
+        return this.division;
     }
 
     public Cronquist division(String division) {
-        this.division = division;
+        this.setDivision(division);
         return this;
     }
 
@@ -104,11 +109,11 @@ public class Cronquist implements Serializable {
     }
 
     public String getClasse() {
-        return classe;
+        return this.classe;
     }
 
     public Cronquist classe(String classe) {
-        this.classe = classe;
+        this.setClasse(classe);
         return this;
     }
 
@@ -117,11 +122,11 @@ public class Cronquist implements Serializable {
     }
 
     public String getSousClasse() {
-        return sousClasse;
+        return this.sousClasse;
     }
 
     public Cronquist sousClasse(String sousClasse) {
-        this.sousClasse = sousClasse;
+        this.setSousClasse(sousClasse);
         return this;
     }
 
@@ -130,11 +135,11 @@ public class Cronquist implements Serializable {
     }
 
     public String getOrdre() {
-        return ordre;
+        return this.ordre;
     }
 
     public Cronquist ordre(String ordre) {
-        this.ordre = ordre;
+        this.setOrdre(ordre);
         return this;
     }
 
@@ -143,11 +148,11 @@ public class Cronquist implements Serializable {
     }
 
     public String getFamille() {
-        return famille;
+        return this.famille;
     }
 
     public Cronquist famille(String famille) {
-        this.famille = famille;
+        this.setFamille(famille);
         return this;
     }
 
@@ -156,17 +161,18 @@ public class Cronquist implements Serializable {
     }
 
     public String getGenre() {
-        return genre;
+        return this.genre;
     }
 
     public Cronquist genre(String genre) {
-        this.genre = genre;
+        this.setGenre(genre);
         return this;
     }
 
     public void setGenre(String genre) {
         this.genre = genre;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -182,7 +188,8 @@ public class Cronquist implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

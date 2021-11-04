@@ -3,9 +3,10 @@
     "microserviceAPgi": {
       "home": {
         "title": "APGIS",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "APGI erstellen",
         "createOrEditLabel": "APGI erstellen oder bearbeiten",
-        "notFound": "No APGIS found"
+        "notFound": "Keine APGIS gefunden"
       },
       "delete": {
         "question": "Soll APGI {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGI"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

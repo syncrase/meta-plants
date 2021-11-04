@@ -1,15 +1,16 @@
 package fr.syncrase.perma.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Plante} entity.
  */
 public class PlanteDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -19,16 +20,22 @@ public class PlanteDTO implements Serializable {
 
     private String histoire;
 
-    private String exposition;
+    private String vitesse;
 
-    private String rusticite;
+    private CycleDeVieDTO cycleDeVie;
 
+    private ClassificationDTO classification;
 
-    private Long cycleDeVieId;
-
-    private Long classificationId;
     private Set<NomVernaculaireDTO> nomsVernaculaires = new HashSet<>();
-    
+
+    private TemperatureDTO temperature;
+
+    private RacineDTO racine;
+
+    private StrateDTO strate;
+
+    private FeuillageDTO feuillage;
+
     public Long getId() {
         return id;
     }
@@ -61,44 +68,68 @@ public class PlanteDTO implements Serializable {
         this.histoire = histoire;
     }
 
-    public String getExposition() {
-        return exposition;
+    public String getVitesse() {
+        return vitesse;
     }
 
-    public void setExposition(String exposition) {
-        this.exposition = exposition;
+    public void setVitesse(String vitesse) {
+        this.vitesse = vitesse;
     }
 
-    public String getRusticite() {
-        return rusticite;
+    public CycleDeVieDTO getCycleDeVie() {
+        return cycleDeVie;
     }
 
-    public void setRusticite(String rusticite) {
-        this.rusticite = rusticite;
+    public void setCycleDeVie(CycleDeVieDTO cycleDeVie) {
+        this.cycleDeVie = cycleDeVie;
     }
 
-    public Long getCycleDeVieId() {
-        return cycleDeVieId;
+    public ClassificationDTO getClassification() {
+        return classification;
     }
 
-    public void setCycleDeVieId(Long cycleDeVieId) {
-        this.cycleDeVieId = cycleDeVieId;
-    }
-
-    public Long getClassificationId() {
-        return classificationId;
-    }
-
-    public void setClassificationId(Long classificationId) {
-        this.classificationId = classificationId;
+    public void setClassification(ClassificationDTO classification) {
+        this.classification = classification;
     }
 
     public Set<NomVernaculaireDTO> getNomsVernaculaires() {
         return nomsVernaculaires;
     }
 
-    public void setNomsVernaculaires(Set<NomVernaculaireDTO> nomVernaculaires) {
-        this.nomsVernaculaires = nomVernaculaires;
+    public void setNomsVernaculaires(Set<NomVernaculaireDTO> nomsVernaculaires) {
+        this.nomsVernaculaires = nomsVernaculaires;
+    }
+
+    public TemperatureDTO getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(TemperatureDTO temperature) {
+        this.temperature = temperature;
+    }
+
+    public RacineDTO getRacine() {
+        return racine;
+    }
+
+    public void setRacine(RacineDTO racine) {
+        this.racine = racine;
+    }
+
+    public StrateDTO getStrate() {
+        return strate;
+    }
+
+    public void setStrate(StrateDTO strate) {
+        this.strate = strate;
+    }
+
+    public FeuillageDTO getFeuillage() {
+        return feuillage;
+    }
+
+    public void setFeuillage(FeuillageDTO feuillage) {
+        this.feuillage = feuillage;
     }
 
     @Override
@@ -110,12 +141,16 @@ public class PlanteDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((PlanteDTO) o).id);
+        PlanteDTO planteDTO = (PlanteDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, planteDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -126,11 +161,14 @@ public class PlanteDTO implements Serializable {
             ", nomLatin='" + getNomLatin() + "'" +
             ", entretien='" + getEntretien() + "'" +
             ", histoire='" + getHistoire() + "'" +
-            ", exposition='" + getExposition() + "'" +
-            ", rusticite='" + getRusticite() + "'" +
-            ", cycleDeVieId=" + getCycleDeVieId() +
-            ", classificationId=" + getClassificationId() +
-            ", nomsVernaculaires='" + getNomsVernaculaires() + "'" +
+            ", vitesse='" + getVitesse() + "'" +
+            ", cycleDeVie=" + getCycleDeVie() +
+            ", classification=" + getClassification() +
+            ", nomsVernaculaires=" + getNomsVernaculaires() +
+            ", temperature=" + getTemperature() +
+            ", racine=" + getRacine() +
+            ", strate=" + getStrate() +
+            ", feuillage=" + getFeuillage() +
             "}";
     }
 }

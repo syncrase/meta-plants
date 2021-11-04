@@ -1,19 +1,19 @@
 package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Ressemblance} entity.
  */
 public class RessemblanceDTO implements Serializable {
-    
+
     private Long id;
 
     private String description;
 
+    private PlanteDTO confusion;
 
-    private Long confusionId;
-    
     public Long getId() {
         return id;
     }
@@ -30,12 +30,12 @@ public class RessemblanceDTO implements Serializable {
         this.description = description;
     }
 
-    public Long getConfusionId() {
-        return confusionId;
+    public PlanteDTO getConfusion() {
+        return confusion;
     }
 
-    public void setConfusionId(Long planteId) {
-        this.confusionId = planteId;
+    public void setConfusion(PlanteDTO confusion) {
+        this.confusion = confusion;
     }
 
     @Override
@@ -47,12 +47,16 @@ public class RessemblanceDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((RessemblanceDTO) o).id);
+        RessemblanceDTO ressemblanceDTO = (RessemblanceDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, ressemblanceDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -61,7 +65,7 @@ public class RessemblanceDTO implements Serializable {
         return "RessemblanceDTO{" +
             "id=" + getId() +
             ", description='" + getDescription() + "'" +
-            ", confusionId=" + getConfusionId() +
+            ", confusion=" + getConfusion() +
             "}";
     }
 }

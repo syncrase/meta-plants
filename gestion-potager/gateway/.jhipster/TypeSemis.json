@@ -7,16 +7,17 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20210302090509",
   "entityTableName": "type_semis",
   "dto": "mapstruct",
   "pagination": "pagination",
   "service": "serviceImpl",
-  "jpaMetamodelFiltering": true,
+  "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104115854"
 }

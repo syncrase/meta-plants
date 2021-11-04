@@ -1,19 +1,25 @@
 package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Sol} entity.
  */
 public class SolDTO implements Serializable {
-    
+
     private Long id;
 
-    private Double acidite;
+    private Double phMin;
+
+    private Double phMax;
 
     private String type;
 
-    
+    private String richesse;
+
+    private PlanteDTO plante;
+
     public Long getId() {
         return id;
     }
@@ -22,12 +28,20 @@ public class SolDTO implements Serializable {
         this.id = id;
     }
 
-    public Double getAcidite() {
-        return acidite;
+    public Double getPhMin() {
+        return phMin;
     }
 
-    public void setAcidite(Double acidite) {
-        this.acidite = acidite;
+    public void setPhMin(Double phMin) {
+        this.phMin = phMin;
+    }
+
+    public Double getPhMax() {
+        return phMax;
+    }
+
+    public void setPhMax(Double phMax) {
+        this.phMax = phMax;
     }
 
     public String getType() {
@@ -36,6 +50,22 @@ public class SolDTO implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getRichesse() {
+        return richesse;
+    }
+
+    public void setRichesse(String richesse) {
+        this.richesse = richesse;
+    }
+
+    public PlanteDTO getPlante() {
+        return plante;
+    }
+
+    public void setPlante(PlanteDTO plante) {
+        this.plante = plante;
     }
 
     @Override
@@ -47,12 +77,16 @@ public class SolDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((SolDTO) o).id);
+        SolDTO solDTO = (SolDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, solDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -60,8 +94,11 @@ public class SolDTO implements Serializable {
     public String toString() {
         return "SolDTO{" +
             "id=" + getId() +
-            ", acidite=" + getAcidite() +
+            ", phMin=" + getPhMin() +
+            ", phMax=" + getPhMax() +
             ", type='" + getType() + "'" +
+            ", richesse='" + getRichesse() + "'" +
+            ", plante=" + getPlante() +
             "}";
     }
 }

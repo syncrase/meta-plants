@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { SolComponent } from './sol.component';
-import { SolDetailComponent } from './sol-detail.component';
-import { SolUpdateComponent } from './sol-update.component';
-import { SolDeleteDialogComponent } from './sol-delete-dialog.component';
-import { solRoute } from './sol.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { SolComponent } from './list/sol.component';
+import { SolDetailComponent } from './detail/sol-detail.component';
+import { SolUpdateComponent } from './update/sol-update.component';
+import { SolDeleteDialogComponent } from './delete/sol-delete-dialog.component';
+import { SolRoutingModule } from './route/sol-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(solRoute)],
+  imports: [SharedModule, SolRoutingModule],
   declarations: [SolComponent, SolDetailComponent, SolUpdateComponent, SolDeleteDialogComponent],
   entryComponents: [SolDeleteDialogComponent],
 })

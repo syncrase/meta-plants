@@ -1,12 +1,10 @@
 package fr.syncrase.perma.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Ressemblance.
@@ -21,18 +19,40 @@ public class Ressemblance implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "description")
     private String description;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "confusions", allowSetters = true)
+    @JsonIgnoreProperties(
+        value = {
+            "cycleDeVie",
+            "classification",
+            "confusions",
+            "interactions",
+            "expositions",
+            "sols",
+            "nomsVernaculaires",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+        },
+        allowSetters = true
+    )
     private Plante confusion;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Ressemblance id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -40,11 +60,11 @@ public class Ressemblance implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Ressemblance description(String description) {
-        this.description = description;
+        this.setDescription(description);
         return this;
     }
 
@@ -53,17 +73,18 @@ public class Ressemblance implements Serializable {
     }
 
     public Plante getConfusion() {
-        return confusion;
-    }
-
-    public Ressemblance confusion(Plante plante) {
-        this.confusion = plante;
-        return this;
+        return this.confusion;
     }
 
     public void setConfusion(Plante plante) {
         this.confusion = plante;
     }
+
+    public Ressemblance confusion(Plante plante) {
+        this.setConfusion(plante);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -79,7 +100,8 @@ public class Ressemblance implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

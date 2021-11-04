@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceExposition": {
+      "home": {
+        "title": "Expositions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Genera un nuovo Exposition",
+        "createOrEditLabel": "Genera o modifica un Exposition",
+        "notFound": "No Expositions found"
+      },
+      "delete": {
+        "question": "Sei sicuro di volere eliminare Exposition {{ id }}?"
+      },
+      "detail": {
+        "title": "Exposition"
+      },
+      "id": "ID",
+      "valeur": "Valeur",
+      "ensoleilement": "Ensoleilement",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceExposition": {
+      "created": "&Egrave; stato generato un nuovo Exposition con identificatore { param }}",
+      "updated": "&Egrave; stato aggiornato Exposition identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato Exposition con identificatore {{ param }}"
+    }
+  }
+}

@@ -1,40 +1,37 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.MicroserviceApp;
-import fr.syncrase.perma.config.TestSecurityConfiguration;
-import fr.syncrase.perma.domain.Cronquist;
-import fr.syncrase.perma.repository.CronquistRepository;
-import fr.syncrase.perma.service.CronquistService;
-import fr.syncrase.perma.service.dto.CronquistDTO;
-import fr.syncrase.perma.service.mapper.CronquistMapper;
-import fr.syncrase.perma.service.dto.CronquistCriteria;
-import fr.syncrase.perma.service.CronquistQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.syncrase.perma.IntegrationTest;
+import fr.syncrase.perma.domain.Cronquist;
+import fr.syncrase.perma.repository.CronquistRepository;
+import fr.syncrase.perma.service.criteria.CronquistCriteria;
+import fr.syncrase.perma.service.dto.CronquistDTO;
+import fr.syncrase.perma.service.mapper.CronquistMapper;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link CronquistResource} REST controller.
  */
-@SpringBootTest(classes = { MicroserviceApp.class, TestSecurityConfiguration.class })
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class CronquistResourceIT {
+class CronquistResourceIT {
 
     private static final String DEFAULT_REGNE = "AAAAAAAAAA";
     private static final String UPDATED_REGNE = "BBBBBBBBBB";
@@ -60,17 +57,17 @@ public class CronquistResourceIT {
     private static final String DEFAULT_GENRE = "AAAAAAAAAA";
     private static final String UPDATED_GENRE = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/cronquists";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private CronquistRepository cronquistRepository;
 
     @Autowired
     private CronquistMapper cronquistMapper;
-
-    @Autowired
-    private CronquistService cronquistService;
-
-    @Autowired
-    private CronquistQueryService cronquistQueryService;
 
     @Autowired
     private EntityManager em;
@@ -98,6 +95,7 @@ public class CronquistResourceIT {
             .genre(DEFAULT_GENRE);
         return cronquist;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -124,13 +122,17 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void createCronquist() throws Exception {
+    void createCronquist() throws Exception {
         int databaseSizeBeforeCreate = cronquistRepository.findAll().size();
         // Create the Cronquist
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Cronquist in the database
@@ -149,17 +151,21 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void createCronquistWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = cronquistRepository.findAll().size();
-
+    void createCronquistWithExistingId() throws Exception {
         // Create the Cronquist with an existing ID
         cronquist.setId(1L);
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
+        int databaseSizeBeforeCreate = cronquistRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Cronquist in the database
@@ -167,10 +173,9 @@ public class CronquistResourceIT {
         assertThat(cronquistList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkRegneIsRequired() throws Exception {
+    void checkRegneIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setRegne(null);
@@ -178,10 +183,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -190,7 +198,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void checkSousRegneIsRequired() throws Exception {
+    void checkSousRegneIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setSousRegne(null);
@@ -198,10 +206,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -210,7 +221,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void checkDivisionIsRequired() throws Exception {
+    void checkDivisionIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setDivision(null);
@@ -218,10 +229,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -230,7 +244,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void checkClasseIsRequired() throws Exception {
+    void checkClasseIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setClasse(null);
@@ -238,10 +252,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -250,7 +267,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void checkSousClasseIsRequired() throws Exception {
+    void checkSousClasseIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setSousClasse(null);
@@ -258,10 +275,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -270,7 +290,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void checkOrdreIsRequired() throws Exception {
+    void checkOrdreIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setOrdre(null);
@@ -278,10 +298,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -290,7 +313,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void checkFamilleIsRequired() throws Exception {
+    void checkFamilleIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setFamille(null);
@@ -298,10 +321,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -310,7 +336,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void checkGenreIsRequired() throws Exception {
+    void checkGenreIsRequired() throws Exception {
         int databaseSizeBeforeTest = cronquistRepository.findAll().size();
         // set the field null
         cronquist.setGenre(null);
@@ -318,10 +344,13 @@ public class CronquistResourceIT {
         // Create the Cronquist, which fails.
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
-
-        restCronquistMockMvc.perform(post("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Cronquist> cronquistList = cronquistRepository.findAll();
@@ -330,12 +359,13 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquists() throws Exception {
+    void getAllCronquists() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
         // Get all the cronquistList
-        restCronquistMockMvc.perform(get("/api/cronquists?sort=id,desc"))
+        restCronquistMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cronquist.getId().intValue())))
@@ -348,15 +378,16 @@ public class CronquistResourceIT {
             .andExpect(jsonPath("$.[*].famille").value(hasItem(DEFAULT_FAMILLE)))
             .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE)));
     }
-    
+
     @Test
     @Transactional
-    public void getCronquist() throws Exception {
+    void getCronquist() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
         // Get the cronquist
-        restCronquistMockMvc.perform(get("/api/cronquists/{id}", cronquist.getId()))
+        restCronquistMockMvc
+            .perform(get(ENTITY_API_URL_ID, cronquist.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(cronquist.getId().intValue()))
@@ -370,10 +401,9 @@ public class CronquistResourceIT {
             .andExpect(jsonPath("$.genre").value(DEFAULT_GENRE));
     }
 
-
     @Test
     @Transactional
-    public void getCronquistsByIdFiltering() throws Exception {
+    void getCronquistsByIdFiltering() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -389,10 +419,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldNotBeFound("id.lessThan=" + id);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsByRegneIsEqualToSomething() throws Exception {
+    void getAllCronquistsByRegneIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -405,7 +434,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByRegneIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsByRegneIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -418,7 +447,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByRegneIsInShouldWork() throws Exception {
+    void getAllCronquistsByRegneIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -431,7 +460,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByRegneIsNullOrNotNull() throws Exception {
+    void getAllCronquistsByRegneIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -441,9 +470,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where regne is null
         defaultCronquistShouldNotBeFound("regne.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsByRegneContainsSomething() throws Exception {
+    void getAllCronquistsByRegneContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -456,7 +486,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByRegneNotContainsSomething() throws Exception {
+    void getAllCronquistsByRegneNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -467,10 +497,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldBeFound("regne.doesNotContain=" + UPDATED_REGNE);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsBySousRegneIsEqualToSomething() throws Exception {
+    void getAllCronquistsBySousRegneIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -483,7 +512,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousRegneIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsBySousRegneIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -496,7 +525,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousRegneIsInShouldWork() throws Exception {
+    void getAllCronquistsBySousRegneIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -509,7 +538,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousRegneIsNullOrNotNull() throws Exception {
+    void getAllCronquistsBySousRegneIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -519,9 +548,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where sousRegne is null
         defaultCronquistShouldNotBeFound("sousRegne.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsBySousRegneContainsSomething() throws Exception {
+    void getAllCronquistsBySousRegneContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -534,7 +564,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousRegneNotContainsSomething() throws Exception {
+    void getAllCronquistsBySousRegneNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -545,10 +575,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldBeFound("sousRegne.doesNotContain=" + UPDATED_SOUS_REGNE);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsByDivisionIsEqualToSomething() throws Exception {
+    void getAllCronquistsByDivisionIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -561,7 +590,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByDivisionIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsByDivisionIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -574,7 +603,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByDivisionIsInShouldWork() throws Exception {
+    void getAllCronquistsByDivisionIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -587,7 +616,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByDivisionIsNullOrNotNull() throws Exception {
+    void getAllCronquistsByDivisionIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -597,9 +626,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where division is null
         defaultCronquistShouldNotBeFound("division.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsByDivisionContainsSomething() throws Exception {
+    void getAllCronquistsByDivisionContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -612,7 +642,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByDivisionNotContainsSomething() throws Exception {
+    void getAllCronquistsByDivisionNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -623,10 +653,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldBeFound("division.doesNotContain=" + UPDATED_DIVISION);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsByClasseIsEqualToSomething() throws Exception {
+    void getAllCronquistsByClasseIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -639,7 +668,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByClasseIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsByClasseIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -652,7 +681,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByClasseIsInShouldWork() throws Exception {
+    void getAllCronquistsByClasseIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -665,7 +694,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByClasseIsNullOrNotNull() throws Exception {
+    void getAllCronquistsByClasseIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -675,9 +704,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where classe is null
         defaultCronquistShouldNotBeFound("classe.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsByClasseContainsSomething() throws Exception {
+    void getAllCronquistsByClasseContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -690,7 +720,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByClasseNotContainsSomething() throws Exception {
+    void getAllCronquistsByClasseNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -701,10 +731,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldBeFound("classe.doesNotContain=" + UPDATED_CLASSE);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsBySousClasseIsEqualToSomething() throws Exception {
+    void getAllCronquistsBySousClasseIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -717,7 +746,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousClasseIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsBySousClasseIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -730,7 +759,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousClasseIsInShouldWork() throws Exception {
+    void getAllCronquistsBySousClasseIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -743,7 +772,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousClasseIsNullOrNotNull() throws Exception {
+    void getAllCronquistsBySousClasseIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -753,9 +782,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where sousClasse is null
         defaultCronquistShouldNotBeFound("sousClasse.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsBySousClasseContainsSomething() throws Exception {
+    void getAllCronquistsBySousClasseContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -768,7 +798,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsBySousClasseNotContainsSomething() throws Exception {
+    void getAllCronquistsBySousClasseNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -779,10 +809,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldBeFound("sousClasse.doesNotContain=" + UPDATED_SOUS_CLASSE);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsByOrdreIsEqualToSomething() throws Exception {
+    void getAllCronquistsByOrdreIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -795,7 +824,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByOrdreIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsByOrdreIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -808,7 +837,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByOrdreIsInShouldWork() throws Exception {
+    void getAllCronquistsByOrdreIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -821,7 +850,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByOrdreIsNullOrNotNull() throws Exception {
+    void getAllCronquistsByOrdreIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -831,9 +860,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where ordre is null
         defaultCronquistShouldNotBeFound("ordre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsByOrdreContainsSomething() throws Exception {
+    void getAllCronquistsByOrdreContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -846,7 +876,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByOrdreNotContainsSomething() throws Exception {
+    void getAllCronquistsByOrdreNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -857,10 +887,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldBeFound("ordre.doesNotContain=" + UPDATED_ORDRE);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsByFamilleIsEqualToSomething() throws Exception {
+    void getAllCronquistsByFamilleIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -873,7 +902,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByFamilleIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsByFamilleIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -886,7 +915,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByFamilleIsInShouldWork() throws Exception {
+    void getAllCronquistsByFamilleIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -899,7 +928,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByFamilleIsNullOrNotNull() throws Exception {
+    void getAllCronquistsByFamilleIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -909,9 +938,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where famille is null
         defaultCronquistShouldNotBeFound("famille.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsByFamilleContainsSomething() throws Exception {
+    void getAllCronquistsByFamilleContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -924,7 +954,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByFamilleNotContainsSomething() throws Exception {
+    void getAllCronquistsByFamilleNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -935,10 +965,9 @@ public class CronquistResourceIT {
         defaultCronquistShouldBeFound("famille.doesNotContain=" + UPDATED_FAMILLE);
     }
 
-
     @Test
     @Transactional
-    public void getAllCronquistsByGenreIsEqualToSomething() throws Exception {
+    void getAllCronquistsByGenreIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -951,7 +980,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByGenreIsNotEqualToSomething() throws Exception {
+    void getAllCronquistsByGenreIsNotEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -964,7 +993,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByGenreIsInShouldWork() throws Exception {
+    void getAllCronquistsByGenreIsInShouldWork() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -977,7 +1006,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByGenreIsNullOrNotNull() throws Exception {
+    void getAllCronquistsByGenreIsNullOrNotNull() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -987,9 +1016,10 @@ public class CronquistResourceIT {
         // Get all the cronquistList where genre is null
         defaultCronquistShouldNotBeFound("genre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllCronquistsByGenreContainsSomething() throws Exception {
+    void getAllCronquistsByGenreContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -1002,7 +1032,7 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getAllCronquistsByGenreNotContainsSomething() throws Exception {
+    void getAllCronquistsByGenreNotContainsSomething() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -1017,7 +1047,8 @@ public class CronquistResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultCronquistShouldBeFound(String filter) throws Exception {
-        restCronquistMockMvc.perform(get("/api/cronquists?sort=id,desc&" + filter))
+        restCronquistMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cronquist.getId().intValue())))
@@ -1031,7 +1062,8 @@ public class CronquistResourceIT {
             .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE)));
 
         // Check, that the count call also returns 1
-        restCronquistMockMvc.perform(get("/api/cronquists/count?sort=id,desc&" + filter))
+        restCronquistMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -1041,14 +1073,16 @@ public class CronquistResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultCronquistShouldNotBeFound(String filter) throws Exception {
-        restCronquistMockMvc.perform(get("/api/cronquists?sort=id,desc&" + filter))
+        restCronquistMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restCronquistMockMvc.perform(get("/api/cronquists/count?sort=id,desc&" + filter))
+        restCronquistMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -1056,15 +1090,14 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingCronquist() throws Exception {
+    void getNonExistingCronquist() throws Exception {
         // Get the cronquist
-        restCronquistMockMvc.perform(get("/api/cronquists/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCronquistMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateCronquist() throws Exception {
+    void putNewCronquist() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
@@ -1085,9 +1118,13 @@ public class CronquistResourceIT {
             .genre(UPDATED_GENRE);
         CronquistDTO cronquistDTO = cronquistMapper.toDto(updatedCronquist);
 
-        restCronquistMockMvc.perform(put("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, cronquistDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the Cronquist in the database
@@ -1106,16 +1143,21 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingCronquist() throws Exception {
+    void putNonExistingCronquist() throws Exception {
         int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+        cronquist.setId(count.incrementAndGet());
 
         // Create the Cronquist
         CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCronquistMockMvc.perform(put("/api/cronquists").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cronquistDTO)))
+        restCronquistMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, cronquistDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Cronquist in the database
@@ -1125,15 +1167,217 @@ public class CronquistResourceIT {
 
     @Test
     @Transactional
-    public void deleteCronquist() throws Exception {
+    void putWithIdMismatchCronquist() throws Exception {
+        int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+        cronquist.setId(count.incrementAndGet());
+
+        // Create the Cronquist
+        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCronquistMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Cronquist in the database
+        List<Cronquist> cronquistList = cronquistRepository.findAll();
+        assertThat(cronquistList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamCronquist() throws Exception {
+        int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+        cronquist.setId(count.incrementAndGet());
+
+        // Create the Cronquist
+        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCronquistMockMvc
+            .perform(
+                put(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Cronquist in the database
+        List<Cronquist> cronquistList = cronquistRepository.findAll();
+        assertThat(cronquistList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateCronquistWithPatch() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+
+        // Update the cronquist using partial update
+        Cronquist partialUpdatedCronquist = new Cronquist();
+        partialUpdatedCronquist.setId(cronquist.getId());
+
+        partialUpdatedCronquist.sousRegne(UPDATED_SOUS_REGNE).division(UPDATED_DIVISION).classe(UPDATED_CLASSE);
+
+        restCronquistMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCronquist.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCronquist))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Cronquist in the database
+        List<Cronquist> cronquistList = cronquistRepository.findAll();
+        assertThat(cronquistList).hasSize(databaseSizeBeforeUpdate);
+        Cronquist testCronquist = cronquistList.get(cronquistList.size() - 1);
+        assertThat(testCronquist.getRegne()).isEqualTo(DEFAULT_REGNE);
+        assertThat(testCronquist.getSousRegne()).isEqualTo(UPDATED_SOUS_REGNE);
+        assertThat(testCronquist.getDivision()).isEqualTo(UPDATED_DIVISION);
+        assertThat(testCronquist.getClasse()).isEqualTo(UPDATED_CLASSE);
+        assertThat(testCronquist.getSousClasse()).isEqualTo(DEFAULT_SOUS_CLASSE);
+        assertThat(testCronquist.getOrdre()).isEqualTo(DEFAULT_ORDRE);
+        assertThat(testCronquist.getFamille()).isEqualTo(DEFAULT_FAMILLE);
+        assertThat(testCronquist.getGenre()).isEqualTo(DEFAULT_GENRE);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateCronquistWithPatch() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+
+        // Update the cronquist using partial update
+        Cronquist partialUpdatedCronquist = new Cronquist();
+        partialUpdatedCronquist.setId(cronquist.getId());
+
+        partialUpdatedCronquist
+            .regne(UPDATED_REGNE)
+            .sousRegne(UPDATED_SOUS_REGNE)
+            .division(UPDATED_DIVISION)
+            .classe(UPDATED_CLASSE)
+            .sousClasse(UPDATED_SOUS_CLASSE)
+            .ordre(UPDATED_ORDRE)
+            .famille(UPDATED_FAMILLE)
+            .genre(UPDATED_GENRE);
+
+        restCronquistMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCronquist.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCronquist))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Cronquist in the database
+        List<Cronquist> cronquistList = cronquistRepository.findAll();
+        assertThat(cronquistList).hasSize(databaseSizeBeforeUpdate);
+        Cronquist testCronquist = cronquistList.get(cronquistList.size() - 1);
+        assertThat(testCronquist.getRegne()).isEqualTo(UPDATED_REGNE);
+        assertThat(testCronquist.getSousRegne()).isEqualTo(UPDATED_SOUS_REGNE);
+        assertThat(testCronquist.getDivision()).isEqualTo(UPDATED_DIVISION);
+        assertThat(testCronquist.getClasse()).isEqualTo(UPDATED_CLASSE);
+        assertThat(testCronquist.getSousClasse()).isEqualTo(UPDATED_SOUS_CLASSE);
+        assertThat(testCronquist.getOrdre()).isEqualTo(UPDATED_ORDRE);
+        assertThat(testCronquist.getFamille()).isEqualTo(UPDATED_FAMILLE);
+        assertThat(testCronquist.getGenre()).isEqualTo(UPDATED_GENRE);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingCronquist() throws Exception {
+        int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+        cronquist.setId(count.incrementAndGet());
+
+        // Create the Cronquist
+        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restCronquistMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, cronquistDTO.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Cronquist in the database
+        List<Cronquist> cronquistList = cronquistRepository.findAll();
+        assertThat(cronquistList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchCronquist() throws Exception {
+        int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+        cronquist.setId(count.incrementAndGet());
+
+        // Create the Cronquist
+        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCronquistMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Cronquist in the database
+        List<Cronquist> cronquistList = cronquistRepository.findAll();
+        assertThat(cronquistList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamCronquist() throws Exception {
+        int databaseSizeBeforeUpdate = cronquistRepository.findAll().size();
+        cronquist.setId(count.incrementAndGet());
+
+        // Create the Cronquist
+        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCronquistMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Cronquist in the database
+        List<Cronquist> cronquistList = cronquistRepository.findAll();
+        assertThat(cronquistList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteCronquist() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
 
         int databaseSizeBeforeDelete = cronquistRepository.findAll().size();
 
         // Delete the cronquist
-        restCronquistMockMvc.perform(delete("/api/cronquists/{id}", cronquist.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restCronquistMockMvc
+            .perform(delete(ENTITY_API_URL_ID, cronquist.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

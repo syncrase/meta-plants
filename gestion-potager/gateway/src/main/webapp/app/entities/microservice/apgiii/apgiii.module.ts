@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { APGIIIComponent } from './apgiii.component';
-import { APGIIIDetailComponent } from './apgiii-detail.component';
-import { APGIIIUpdateComponent } from './apgiii-update.component';
-import { APGIIIDeleteDialogComponent } from './apgiii-delete-dialog.component';
-import { aPGIIIRoute } from './apgiii.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { APGIIIComponent } from './list/apgiii.component';
+import { APGIIIDetailComponent } from './detail/apgiii-detail.component';
+import { APGIIIUpdateComponent } from './update/apgiii-update.component';
+import { APGIIIDeleteDialogComponent } from './delete/apgiii-delete-dialog.component';
+import { APGIIIRoutingModule } from './route/apgiii-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(aPGIIIRoute)],
+  imports: [SharedModule, APGIIIRoutingModule],
   declarations: [APGIIIComponent, APGIIIDetailComponent, APGIIIUpdateComponent, APGIIIDeleteDialogComponent],
   entryComponents: [APGIIIDeleteDialogComponent],
 })

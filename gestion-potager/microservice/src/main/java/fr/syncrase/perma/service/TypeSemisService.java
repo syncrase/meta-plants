@@ -1,17 +1,14 @@
 package fr.syncrase.perma.service;
 
 import fr.syncrase.perma.service.dto.TypeSemisDTO;
-
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * Service Interface for managing {@link fr.syncrase.perma.domain.TypeSemis}.
  */
 public interface TypeSemisService {
-
     /**
      * Save a typeSemis.
      *
@@ -21,13 +18,20 @@ public interface TypeSemisService {
     TypeSemisDTO save(TypeSemisDTO typeSemisDTO);
 
     /**
+     * Partially updates a typeSemis.
+     *
+     * @param typeSemisDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<TypeSemisDTO> partialUpdate(TypeSemisDTO typeSemisDTO);
+
+    /**
      * Get all the typeSemis.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<TypeSemisDTO> findAll(Pageable pageable);
-
 
     /**
      * Get the "id" typeSemis.

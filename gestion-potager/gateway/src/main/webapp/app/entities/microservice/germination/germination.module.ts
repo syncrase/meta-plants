@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { GerminationComponent } from './germination.component';
-import { GerminationDetailComponent } from './germination-detail.component';
-import { GerminationUpdateComponent } from './germination-update.component';
-import { GerminationDeleteDialogComponent } from './germination-delete-dialog.component';
-import { germinationRoute } from './germination.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { GerminationComponent } from './list/germination.component';
+import { GerminationDetailComponent } from './detail/germination-detail.component';
+import { GerminationUpdateComponent } from './update/germination-update.component';
+import { GerminationDeleteDialogComponent } from './delete/germination-delete-dialog.component';
+import { GerminationRoutingModule } from './route/germination-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(germinationRoute)],
+  imports: [SharedModule, GerminationRoutingModule],
   declarations: [GerminationComponent, GerminationDetailComponent, GerminationUpdateComponent, GerminationDeleteDialogComponent],
   entryComponents: [GerminationDeleteDialogComponent],
 })

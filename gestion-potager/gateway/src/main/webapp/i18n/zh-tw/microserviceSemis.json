@@ -3,6 +3,7 @@
     "microserviceSemis": {
       "home": {
         "title": "Semis",
+        "refreshListLabel": "Refresh list",
         "createLabel": "建立一筆新的 Semis",
         "createOrEditLabel": "建立或編輯 Semis",
         "notFound": "No Semis found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Semis"
       },
+      "id": "ID",
       "semisPleineTerre": "Semis Pleine Terre",
       "semisSousAbris": "Semis Sous Abris",
       "typeSemis": "Type Semis",

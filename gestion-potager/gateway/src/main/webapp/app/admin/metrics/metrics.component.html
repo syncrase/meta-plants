@@ -1,65 +1,51 @@
 <div>
-    <h2>
-        <span id="metrics-page-heading" jhiTranslate="metrics.title">Application Metrics</span>
+  <h2>
+    <span id="metrics-page-heading" gpTranslate="metrics.title" data-cy="metricsPageHeading">Application Metrics</span>
 
-        <button class="btn btn-primary float-right" (click)="refresh()">
-            <fa-icon icon="sync"></fa-icon> <span jhiTranslate="metrics.refresh.button">Refresh</span>
-        </button>
-    </h2>
+    <button class="btn btn-primary float-right" (click)="refresh()">
+      <fa-icon icon="sync"></fa-icon> <span gpTranslate="metrics.refresh.button">Refresh</span>
+    </button>
+  </h2>
 
-    <h3 jhiTranslate="metrics.jvm.title">JVM Metrics</h3>
+  <h3 gpTranslate="metrics.jvm.title">JVM Metrics</h3>
 
-    <div class="row" *ngIf="metrics && !updatingMetrics">
-        <jhi-jvm-memory
-            class="col-md-4"
-            [updating]="updatingMetrics"
-            [jvmMemoryMetrics]="metrics.jvm">
-        </jhi-jvm-memory>
+  <div class="row" *ngIf="metrics && !updatingMetrics">
+    <gp-jvm-memory class="col-md-4" [updating]="updatingMetrics" [jvmMemoryMetrics]="metrics.jvm"></gp-jvm-memory>
 
-        <jhi-jvm-threads
-            class="col-md-4"
-            [threadData]="threads">
-        </jhi-jvm-threads>
+    <gp-jvm-threads class="col-md-4" [threads]="threads"></gp-jvm-threads>
 
-        <jhi-metrics-system
-            class="col-md-4"
-            [updating]="updatingMetrics"
-            [systemMetrics]="metrics.processMetrics">
-        </jhi-metrics-system>
-    </div>
+    <gp-metrics-system class="col-md-4" [updating]="updatingMetrics" [systemMetrics]="metrics.processMetrics"></gp-metrics-system>
+  </div>
 
-    <div *ngIf="metrics && metricsKeyExists('garbageCollector')">
-        <h3 jhiTranslate="metrics.jvm.gc.title">Garbage collector statistics</h3>
+  <gp-metrics-garbagecollector
+    *ngIf="metrics && metricsKeyExists('garbageCollector')"
+    [updating]="updatingMetrics"
+    [garbageCollectorMetrics]="metrics.garbageCollector"
+  ></gp-metrics-garbagecollector>
 
-        <jhi-metrics-garbagecollector
-            [updating]="updatingMetrics"
-            [garbageCollectorMetrics]="metrics.garbageCollector">
-        </jhi-metrics-garbagecollector>
-    </div>
+  <div class="well well-lg" *ngIf="updatingMetrics" gpTranslate="metrics.updating">Updating...</div>
 
-    <div class="well well-lg" *ngIf="updatingMetrics" jhiTranslate="metrics.updating">Updating...</div>
+  <gp-metrics-request
+    *ngIf="metrics && metricsKeyExists('http.server.requests')"
+    [updating]="updatingMetrics"
+    [requestMetrics]="metrics['http.server.requests']"
+  ></gp-metrics-request>
 
-    <jhi-metrics-request
-        *ngIf="metrics && metricsKeyExists('http.server.requests')"
-        [updating]="updatingMetrics"
-        [requestMetrics]="metrics['http.server.requests']">
-    </jhi-metrics-request>
+  <gp-metrics-endpoints-requests
+    *ngIf="metrics && metricsKeyExists('services')"
+    [updating]="updatingMetrics"
+    [endpointsRequestsMetrics]="metrics.services"
+  ></gp-metrics-endpoints-requests>
 
-    <jhi-metrics-endpoints-requests
-        *ngIf="metrics && metricsKeyExists('services')"
-        [updating]="updatingMetrics"
-        [endpointsRequestsMetrics]="metrics.services">
-    </jhi-metrics-endpoints-requests>
+  <gp-metrics-cache
+    *ngIf="metrics && metricsKeyExists('cache')"
+    [updating]="updatingMetrics"
+    [cacheMetrics]="metrics.cache"
+  ></gp-metrics-cache>
 
-    <jhi-metrics-cache
-        *ngIf="metrics && metricsKeyExists('cache')"
-        [updating]="updatingMetrics"
-        [cacheMetrics]="metrics.cache">
-    </jhi-metrics-cache>
-
-    <jhi-metrics-datasource
-        *ngIf="metrics && metricsKeyExistsAndObjectNotEmpty('databases')"
-        [updating]="updatingMetrics"
-        [datasourceMetrics]="metrics.databases">
-    </jhi-metrics-datasource>
+  <gp-metrics-datasource
+    *ngIf="metrics && metricsKeyExistsAndObjectNotEmpty('databases')"
+    [updating]="updatingMetrics"
+    [datasourceMetrics]="metrics.databases"
+  ></gp-metrics-datasource>
 </div>

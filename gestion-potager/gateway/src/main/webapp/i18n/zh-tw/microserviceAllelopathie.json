@@ -3,6 +3,7 @@
     "microserviceAllelopathie": {
       "home": {
         "title": "Allelopathies",
+        "refreshListLabel": "Refresh list",
         "createLabel": "建立一筆新的 Allelopathie",
         "createOrEditLabel": "建立或編輯 Allelopathie",
         "notFound": "No Allelopathies found"
@@ -13,11 +14,12 @@
       "detail": {
         "title": "Allelopathie"
       },
+      "id": "ID",
       "type": "Type",
       "description": "Description",
       "cible": "Cible",
       "origine": "Origine",
-      "plante": "Plante"
+      "interaction": "Interaction"
     }
   },
   "microserviceApp": {

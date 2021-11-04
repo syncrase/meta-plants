@@ -3,9 +3,10 @@
     "microserviceCronquist": {
       "home": {
         "title": "Cronquists",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Cronquist",
         "createOrEditLabel": "Создать или отредактировать Cronquist",
-        "notFound": "No Cronquists found"
+        "notFound": "Cronquists не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Cronquist {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Cronquist"
       },
+      "id": "ID",
       "regne": "Regne",
       "sousRegne": "Sous Regne",
       "division": "Division",

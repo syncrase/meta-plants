@@ -1,0 +1,126 @@
+<div>
+  <h2 id="page-heading" data-cy="CronquistHeading">
+    <span gpTranslate="gatewayApp.microserviceCronquist.home.title">Cronquists</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span gpTranslate="gatewayApp.microserviceCronquist.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-cronquist"
+        [routerLink]="['/cronquist/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span gpTranslate="gatewayApp.microserviceCronquist.home.createLabel"> Create a new Cronquist </span>
+      </button>
+    </div>
+  </h2>
+
+  <gp-alert-error></gp-alert-error>
+
+  <gp-alert></gp-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="cronquists?.length === 0">
+    <span gpTranslate="gatewayApp.microserviceCronquist.home.notFound">No cronquists found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="cronquists && cronquists.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr gpSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" gpSortBy="id"><span gpTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" gpSortBy="regne">
+            <span gpTranslate="gatewayApp.microserviceCronquist.regne">Regne</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="sousRegne">
+            <span gpTranslate="gatewayApp.microserviceCronquist.sousRegne">Sous Regne</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="division">
+            <span gpTranslate="gatewayApp.microserviceCronquist.division">Division</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="classe">
+            <span gpTranslate="gatewayApp.microserviceCronquist.classe">Classe</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="sousClasse">
+            <span gpTranslate="gatewayApp.microserviceCronquist.sousClasse">Sous Classe</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="ordre">
+            <span gpTranslate="gatewayApp.microserviceCronquist.ordre">Ordre</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="famille">
+            <span gpTranslate="gatewayApp.microserviceCronquist.famille">Famille</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="genre">
+            <span gpTranslate="gatewayApp.microserviceCronquist.genre">Genre</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cronquist of cronquists; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/cronquist', cronquist.id, 'view']">{{ cronquist.id }}</a>
+          </td>
+          <td>{{ cronquist.regne }}</td>
+          <td>{{ cronquist.sousRegne }}</td>
+          <td>{{ cronquist.division }}</td>
+          <td>{{ cronquist.classe }}</td>
+          <td>{{ cronquist.sousClasse }}</td>
+          <td>{{ cronquist.ordre }}</td>
+          <td>{{ cronquist.famille }}</td>
+          <td>{{ cronquist.genre }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/cronquist', cronquist.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" gpTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/cronquist', cronquist.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" gpTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(cronquist)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" gpTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="cronquists && cronquists.length > 0">
+    <div class="row justify-content-center">
+      <gp-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></gp-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

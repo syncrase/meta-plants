@@ -11,11 +11,9 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "confusions",
-      "relationshipName": "confusion",
-      "otherEntityField": "id"
+      "relationshipName": "confusion"
     }
   ],
-  "changelogDate": "20210302090909",
   "entityTableName": "ressemblance",
   "dto": "mapstruct",
   "pagination": "pagination",
@@ -24,7 +22,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104121554"
 }

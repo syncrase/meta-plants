@@ -20,7 +20,7 @@ export class NomVernaculaireComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,11 +29,20 @@ export class NomVernaculaireUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   nomInput = element(by.id('field_nom'));
   descriptionInput = element(by.id('field_description'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setNomInput(nom: string): Promise<void> {
@@ -70,7 +79,7 @@ export class NomVernaculaireDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-nomVernaculaire'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

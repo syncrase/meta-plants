@@ -11,12 +11,14 @@ describe('Sol e2e test', () => {
   let solComponentsPage: SolComponentsPage;
   let solUpdatePage: SolUpdatePage;
   let solDeleteDialog: SolDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -40,10 +42,13 @@ describe('Sol e2e test', () => {
 
     await solComponentsPage.clickOnCreateButton();
 
-    await promise.all([solUpdatePage.setAciditeInput('5'), solUpdatePage.setTypeInput('type')]);
-
-    expect(await solUpdatePage.getAciditeInput()).to.eq('5', 'Expected acidite value to be equals to 5');
-    expect(await solUpdatePage.getTypeInput()).to.eq('type', 'Expected Type value to be equals to type');
+    await promise.all([
+      solUpdatePage.setPhMinInput('5'),
+      solUpdatePage.setPhMaxInput('5'),
+      solUpdatePage.setTypeInput('type'),
+      solUpdatePage.setRichesseInput('richesse'),
+      solUpdatePage.planteSelectLastOption(),
+    ]);
 
     await solUpdatePage.save();
     expect(await solUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
@@ -58,6 +63,7 @@ describe('Sol e2e test', () => {
     solDeleteDialog = new SolDeleteDialog();
     expect(await solDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceSol.delete.question');
     await solDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(solComponentsPage.title), 5000);
 
     expect(await solComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

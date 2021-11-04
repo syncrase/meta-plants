@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { TypeSemisComponent } from './type-semis.component';
-import { TypeSemisDetailComponent } from './type-semis-detail.component';
-import { TypeSemisUpdateComponent } from './type-semis-update.component';
-import { TypeSemisDeleteDialogComponent } from './type-semis-delete-dialog.component';
-import { typeSemisRoute } from './type-semis.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { TypeSemisComponent } from './list/type-semis.component';
+import { TypeSemisDetailComponent } from './detail/type-semis-detail.component';
+import { TypeSemisUpdateComponent } from './update/type-semis-update.component';
+import { TypeSemisDeleteDialogComponent } from './delete/type-semis-delete-dialog.component';
+import { TypeSemisRoutingModule } from './route/type-semis-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(typeSemisRoute)],
+  imports: [SharedModule, TypeSemisRoutingModule],
   declarations: [TypeSemisComponent, TypeSemisDetailComponent, TypeSemisUpdateComponent, TypeSemisDeleteDialogComponent],
   entryComponents: [TypeSemisDeleteDialogComponent],
 })

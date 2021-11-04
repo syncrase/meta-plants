@@ -1,14 +1,16 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.CycleDeVieService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.CycleDeVieDTO;
-import fr.syncrase.perma.service.dto.CycleDeVieCriteria;
+import fr.syncrase.perma.repository.CycleDeVieRepository;
 import fr.syncrase.perma.service.CycleDeVieQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.CycleDeVieService;
+import fr.syncrase.perma.service.criteria.CycleDeVieCriteria;
+import fr.syncrase.perma.service.dto.CycleDeVieDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,14 +18,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.CycleDeVie}.
@@ -41,10 +41,17 @@ public class CycleDeVieResource {
 
     private final CycleDeVieService cycleDeVieService;
 
+    private final CycleDeVieRepository cycleDeVieRepository;
+
     private final CycleDeVieQueryService cycleDeVieQueryService;
 
-    public CycleDeVieResource(CycleDeVieService cycleDeVieService, CycleDeVieQueryService cycleDeVieQueryService) {
+    public CycleDeVieResource(
+        CycleDeVieService cycleDeVieService,
+        CycleDeVieRepository cycleDeVieRepository,
+        CycleDeVieQueryService cycleDeVieQueryService
+    ) {
         this.cycleDeVieService = cycleDeVieService;
+        this.cycleDeVieRepository = cycleDeVieRepository;
         this.cycleDeVieQueryService = cycleDeVieQueryService;
     }
 
@@ -62,30 +69,80 @@ public class CycleDeVieResource {
             throw new BadRequestAlertException("A new cycleDeVie cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CycleDeVieDTO result = cycleDeVieService.save(cycleDeVieDTO);
-        return ResponseEntity.created(new URI("/api/cycle-de-vies/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/cycle-de-vies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /cycle-de-vies} : Updates an existing cycleDeVie.
+     * {@code PUT  /cycle-de-vies/:id} : Updates an existing cycleDeVie.
      *
+     * @param id the id of the cycleDeVieDTO to save.
      * @param cycleDeVieDTO the cycleDeVieDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated cycleDeVieDTO,
      * or with status {@code 400 (Bad Request)} if the cycleDeVieDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the cycleDeVieDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/cycle-de-vies")
-    public ResponseEntity<CycleDeVieDTO> updateCycleDeVie(@RequestBody CycleDeVieDTO cycleDeVieDTO) throws URISyntaxException {
-        log.debug("REST request to update CycleDeVie : {}", cycleDeVieDTO);
+    @PutMapping("/cycle-de-vies/{id}")
+    public ResponseEntity<CycleDeVieDTO> updateCycleDeVie(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody CycleDeVieDTO cycleDeVieDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update CycleDeVie : {}, {}", id, cycleDeVieDTO);
         if (cycleDeVieDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, cycleDeVieDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!cycleDeVieRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         CycleDeVieDTO result = cycleDeVieService.save(cycleDeVieDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, cycleDeVieDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /cycle-de-vies/:id} : Partial updates given fields of an existing cycleDeVie, field will ignore if it is null
+     *
+     * @param id the id of the cycleDeVieDTO to save.
+     * @param cycleDeVieDTO the cycleDeVieDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated cycleDeVieDTO,
+     * or with status {@code 400 (Bad Request)} if the cycleDeVieDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the cycleDeVieDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the cycleDeVieDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/cycle-de-vies/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<CycleDeVieDTO> partialUpdateCycleDeVie(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody CycleDeVieDTO cycleDeVieDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update CycleDeVie partially : {}, {}", id, cycleDeVieDTO);
+        if (cycleDeVieDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, cycleDeVieDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!cycleDeVieRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<CycleDeVieDTO> result = cycleDeVieService.partialUpdate(cycleDeVieDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, cycleDeVieDTO.getId().toString())
+        );
     }
 
     /**
@@ -138,6 +195,9 @@ public class CycleDeVieResource {
     public ResponseEntity<Void> deleteCycleDeVie(@PathVariable Long id) {
         log.debug("REST request to delete CycleDeVie : {}", id);
         cycleDeVieService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

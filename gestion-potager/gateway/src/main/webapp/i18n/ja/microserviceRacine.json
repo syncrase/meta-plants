@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceRacine": {
+      "home": {
+        "title": "Racines",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Racine を追加",
+        "createOrEditLabel": "Racineを追加または編集",
+        "notFound": "No Racines found"
+      },
+      "delete": {
+        "question": "Racine {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Racine"
+      },
+      "id": "ID",
+      "type": "Type",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRacine": {
+      "created": "A new Racine is created with identifier {{ param }}",
+      "updated": "A Racine is updated with identifier {{ param }}",
+      "deleted": "A Racine is deleted with identifier {{ param }}"
+    }
+  }
+}

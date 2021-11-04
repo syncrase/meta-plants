@@ -1,14 +1,16 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.TypeSemisService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.TypeSemisDTO;
-import fr.syncrase.perma.service.dto.TypeSemisCriteria;
+import fr.syncrase.perma.repository.TypeSemisRepository;
 import fr.syncrase.perma.service.TypeSemisQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.TypeSemisService;
+import fr.syncrase.perma.service.criteria.TypeSemisCriteria;
+import fr.syncrase.perma.service.dto.TypeSemisDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,14 +18,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.TypeSemis}.
@@ -41,10 +41,17 @@ public class TypeSemisResource {
 
     private final TypeSemisService typeSemisService;
 
+    private final TypeSemisRepository typeSemisRepository;
+
     private final TypeSemisQueryService typeSemisQueryService;
 
-    public TypeSemisResource(TypeSemisService typeSemisService, TypeSemisQueryService typeSemisQueryService) {
+    public TypeSemisResource(
+        TypeSemisService typeSemisService,
+        TypeSemisRepository typeSemisRepository,
+        TypeSemisQueryService typeSemisQueryService
+    ) {
         this.typeSemisService = typeSemisService;
+        this.typeSemisRepository = typeSemisRepository;
         this.typeSemisQueryService = typeSemisQueryService;
     }
 
@@ -62,30 +69,80 @@ public class TypeSemisResource {
             throw new BadRequestAlertException("A new typeSemis cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TypeSemisDTO result = typeSemisService.save(typeSemisDTO);
-        return ResponseEntity.created(new URI("/api/type-semis/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/type-semis/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /type-semis} : Updates an existing typeSemis.
+     * {@code PUT  /type-semis/:id} : Updates an existing typeSemis.
      *
+     * @param id the id of the typeSemisDTO to save.
      * @param typeSemisDTO the typeSemisDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated typeSemisDTO,
      * or with status {@code 400 (Bad Request)} if the typeSemisDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the typeSemisDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/type-semis")
-    public ResponseEntity<TypeSemisDTO> updateTypeSemis(@RequestBody TypeSemisDTO typeSemisDTO) throws URISyntaxException {
-        log.debug("REST request to update TypeSemis : {}", typeSemisDTO);
+    @PutMapping("/type-semis/{id}")
+    public ResponseEntity<TypeSemisDTO> updateTypeSemis(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody TypeSemisDTO typeSemisDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update TypeSemis : {}, {}", id, typeSemisDTO);
         if (typeSemisDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, typeSemisDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!typeSemisRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         TypeSemisDTO result = typeSemisService.save(typeSemisDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, typeSemisDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /type-semis/:id} : Partial updates given fields of an existing typeSemis, field will ignore if it is null
+     *
+     * @param id the id of the typeSemisDTO to save.
+     * @param typeSemisDTO the typeSemisDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated typeSemisDTO,
+     * or with status {@code 400 (Bad Request)} if the typeSemisDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the typeSemisDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the typeSemisDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/type-semis/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<TypeSemisDTO> partialUpdateTypeSemis(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody TypeSemisDTO typeSemisDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update TypeSemis partially : {}, {}", id, typeSemisDTO);
+        if (typeSemisDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, typeSemisDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!typeSemisRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<TypeSemisDTO> result = typeSemisService.partialUpdate(typeSemisDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, typeSemisDTO.getId().toString())
+        );
     }
 
     /**
@@ -138,6 +195,9 @@ public class TypeSemisResource {
     public ResponseEntity<Void> deleteTypeSemis(@PathVariable Long id) {
         log.debug("REST request to delete TypeSemis : {}", id);
         typeSemisService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

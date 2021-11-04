@@ -17,8 +17,10 @@
       "hystrix": "Hystrix",
       "diskSpace": "Spazio su disco",
       "mail": "Email",
+      "livenessState": "Liveness state",
+      "readinessState": "Readiness state",
       "ping": "Application",
-      "db": "Database"
+      "r2dbc": "Database"
     },
     "table": {
       "service": "Nome del servizio",

@@ -1,19 +1,17 @@
 package fr.syncrase.perma.service.impl;
 
-import fr.syncrase.perma.service.NomVernaculaireService;
 import fr.syncrase.perma.domain.NomVernaculaire;
 import fr.syncrase.perma.repository.NomVernaculaireRepository;
+import fr.syncrase.perma.service.NomVernaculaireService;
 import fr.syncrase.perma.service.dto.NomVernaculaireDTO;
 import fr.syncrase.perma.service.mapper.NomVernaculaireMapper;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link NomVernaculaire}.
@@ -42,20 +40,32 @@ public class NomVernaculaireServiceImpl implements NomVernaculaireService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<NomVernaculaireDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all NomVernaculaires");
-        return nomVernaculaireRepository.findAll(pageable)
+    public Optional<NomVernaculaireDTO> partialUpdate(NomVernaculaireDTO nomVernaculaireDTO) {
+        log.debug("Request to partially update NomVernaculaire : {}", nomVernaculaireDTO);
+
+        return nomVernaculaireRepository
+            .findById(nomVernaculaireDTO.getId())
+            .map(existingNomVernaculaire -> {
+                nomVernaculaireMapper.partialUpdate(existingNomVernaculaire, nomVernaculaireDTO);
+
+                return existingNomVernaculaire;
+            })
+            .map(nomVernaculaireRepository::save)
             .map(nomVernaculaireMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<NomVernaculaireDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all NomVernaculaires");
+        return nomVernaculaireRepository.findAll(pageable).map(nomVernaculaireMapper::toDto);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<NomVernaculaireDTO> findOne(Long id) {
         log.debug("Request to get NomVernaculaire : {}", id);
-        return nomVernaculaireRepository.findById(id)
-            .map(nomVernaculaireMapper::toDto);
+        return nomVernaculaireRepository.findById(id).map(nomVernaculaireMapper::toDto);
     }
 
     @Override

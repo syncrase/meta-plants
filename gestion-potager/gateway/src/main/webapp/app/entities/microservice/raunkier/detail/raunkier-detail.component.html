@@ -1,0 +1,32 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="raunkier">
+      <h2 data-cy="raunkierDetailsHeading"><span gpTranslate="gatewayApp.microserviceRaunkier.detail.title">Raunkier</span></h2>
+
+      <hr />
+
+      <gp-alert-error></gp-alert-error>
+
+      <gp-alert></gp-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span gpTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ raunkier.id }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceRaunkier.type">Type</span></dt>
+        <dd>
+          <span>{{ raunkier.type }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span gpTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/raunkier', raunkier.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span gpTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

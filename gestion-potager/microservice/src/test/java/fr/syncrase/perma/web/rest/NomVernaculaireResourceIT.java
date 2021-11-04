@@ -1,41 +1,38 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.MicroserviceApp;
-import fr.syncrase.perma.config.TestSecurityConfiguration;
-import fr.syncrase.perma.domain.NomVernaculaire;
-import fr.syncrase.perma.domain.Plante;
-import fr.syncrase.perma.repository.NomVernaculaireRepository;
-import fr.syncrase.perma.service.NomVernaculaireService;
-import fr.syncrase.perma.service.dto.NomVernaculaireDTO;
-import fr.syncrase.perma.service.mapper.NomVernaculaireMapper;
-import fr.syncrase.perma.service.dto.NomVernaculaireCriteria;
-import fr.syncrase.perma.service.NomVernaculaireQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.syncrase.perma.IntegrationTest;
+import fr.syncrase.perma.domain.NomVernaculaire;
+import fr.syncrase.perma.domain.Plante;
+import fr.syncrase.perma.repository.NomVernaculaireRepository;
+import fr.syncrase.perma.service.criteria.NomVernaculaireCriteria;
+import fr.syncrase.perma.service.dto.NomVernaculaireDTO;
+import fr.syncrase.perma.service.mapper.NomVernaculaireMapper;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link NomVernaculaireResource} REST controller.
  */
-@SpringBootTest(classes = { MicroserviceApp.class, TestSecurityConfiguration.class })
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class NomVernaculaireResourceIT {
+class NomVernaculaireResourceIT {
 
     private static final String DEFAULT_NOM = "AAAAAAAAAA";
     private static final String UPDATED_NOM = "BBBBBBBBBB";
@@ -43,17 +40,17 @@ public class NomVernaculaireResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/nom-vernaculaires";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private NomVernaculaireRepository nomVernaculaireRepository;
 
     @Autowired
     private NomVernaculaireMapper nomVernaculaireMapper;
-
-    @Autowired
-    private NomVernaculaireService nomVernaculaireService;
-
-    @Autowired
-    private NomVernaculaireQueryService nomVernaculaireQueryService;
 
     @Autowired
     private EntityManager em;
@@ -70,11 +67,10 @@ public class NomVernaculaireResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static NomVernaculaire createEntity(EntityManager em) {
-        NomVernaculaire nomVernaculaire = new NomVernaculaire()
-            .nom(DEFAULT_NOM)
-            .description(DEFAULT_DESCRIPTION);
+        NomVernaculaire nomVernaculaire = new NomVernaculaire().nom(DEFAULT_NOM).description(DEFAULT_DESCRIPTION);
         return nomVernaculaire;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -82,9 +78,7 @@ public class NomVernaculaireResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static NomVernaculaire createUpdatedEntity(EntityManager em) {
-        NomVernaculaire nomVernaculaire = new NomVernaculaire()
-            .nom(UPDATED_NOM)
-            .description(UPDATED_DESCRIPTION);
+        NomVernaculaire nomVernaculaire = new NomVernaculaire().nom(UPDATED_NOM).description(UPDATED_DESCRIPTION);
         return nomVernaculaire;
     }
 
@@ -95,13 +89,17 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void createNomVernaculaire() throws Exception {
+    void createNomVernaculaire() throws Exception {
         int databaseSizeBeforeCreate = nomVernaculaireRepository.findAll().size();
         // Create the NomVernaculaire
         NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
-        restNomVernaculaireMockMvc.perform(post("/api/nom-vernaculaires").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO)))
+        restNomVernaculaireMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the NomVernaculaire in the database
@@ -114,17 +112,21 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void createNomVernaculaireWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = nomVernaculaireRepository.findAll().size();
-
+    void createNomVernaculaireWithExistingId() throws Exception {
         // Create the NomVernaculaire with an existing ID
         nomVernaculaire.setId(1L);
         NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
 
+        int databaseSizeBeforeCreate = nomVernaculaireRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restNomVernaculaireMockMvc.perform(post("/api/nom-vernaculaires").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO)))
+        restNomVernaculaireMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the NomVernaculaire in the database
@@ -132,10 +134,9 @@ public class NomVernaculaireResourceIT {
         assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNomIsRequired() throws Exception {
+    void checkNomIsRequired() throws Exception {
         int databaseSizeBeforeTest = nomVernaculaireRepository.findAll().size();
         // set the field null
         nomVernaculaire.setNom(null);
@@ -143,10 +144,13 @@ public class NomVernaculaireResourceIT {
         // Create the NomVernaculaire, which fails.
         NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
 
-
-        restNomVernaculaireMockMvc.perform(post("/api/nom-vernaculaires").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO)))
+        restNomVernaculaireMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
@@ -155,27 +159,29 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculaires() throws Exception {
+    void getAllNomVernaculaires() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
         // Get all the nomVernaculaireList
-        restNomVernaculaireMockMvc.perform(get("/api/nom-vernaculaires?sort=id,desc"))
+        restNomVernaculaireMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(nomVernaculaire.getId().intValue())))
             .andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
-    
+
     @Test
     @Transactional
-    public void getNomVernaculaire() throws Exception {
+    void getNomVernaculaire() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
         // Get the nomVernaculaire
-        restNomVernaculaireMockMvc.perform(get("/api/nom-vernaculaires/{id}", nomVernaculaire.getId()))
+        restNomVernaculaireMockMvc
+            .perform(get(ENTITY_API_URL_ID, nomVernaculaire.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(nomVernaculaire.getId().intValue()))
@@ -183,10 +189,9 @@ public class NomVernaculaireResourceIT {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
 
-
     @Test
     @Transactional
-    public void getNomVernaculairesByIdFiltering() throws Exception {
+    void getNomVernaculairesByIdFiltering() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -202,10 +207,9 @@ public class NomVernaculaireResourceIT {
         defaultNomVernaculaireShouldNotBeFound("id.lessThan=" + id);
     }
 
-
     @Test
     @Transactional
-    public void getAllNomVernaculairesByNomIsEqualToSomething() throws Exception {
+    void getAllNomVernaculairesByNomIsEqualToSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -218,7 +222,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByNomIsNotEqualToSomething() throws Exception {
+    void getAllNomVernaculairesByNomIsNotEqualToSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -231,7 +235,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByNomIsInShouldWork() throws Exception {
+    void getAllNomVernaculairesByNomIsInShouldWork() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -244,7 +248,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByNomIsNullOrNotNull() throws Exception {
+    void getAllNomVernaculairesByNomIsNullOrNotNull() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -254,9 +258,10 @@ public class NomVernaculaireResourceIT {
         // Get all the nomVernaculaireList where nom is null
         defaultNomVernaculaireShouldNotBeFound("nom.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllNomVernaculairesByNomContainsSomething() throws Exception {
+    void getAllNomVernaculairesByNomContainsSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -269,7 +274,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByNomNotContainsSomething() throws Exception {
+    void getAllNomVernaculairesByNomNotContainsSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -280,10 +285,9 @@ public class NomVernaculaireResourceIT {
         defaultNomVernaculaireShouldBeFound("nom.doesNotContain=" + UPDATED_NOM);
     }
 
-
     @Test
     @Transactional
-    public void getAllNomVernaculairesByDescriptionIsEqualToSomething() throws Exception {
+    void getAllNomVernaculairesByDescriptionIsEqualToSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -296,7 +300,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByDescriptionIsNotEqualToSomething() throws Exception {
+    void getAllNomVernaculairesByDescriptionIsNotEqualToSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -309,7 +313,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByDescriptionIsInShouldWork() throws Exception {
+    void getAllNomVernaculairesByDescriptionIsInShouldWork() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -322,7 +326,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByDescriptionIsNullOrNotNull() throws Exception {
+    void getAllNomVernaculairesByDescriptionIsNullOrNotNull() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -332,9 +336,10 @@ public class NomVernaculaireResourceIT {
         // Get all the nomVernaculaireList where description is null
         defaultNomVernaculaireShouldNotBeFound("description.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllNomVernaculairesByDescriptionContainsSomething() throws Exception {
+    void getAllNomVernaculairesByDescriptionContainsSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -347,7 +352,7 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getAllNomVernaculairesByDescriptionNotContainsSomething() throws Exception {
+    void getAllNomVernaculairesByDescriptionNotContainsSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -358,13 +363,19 @@ public class NomVernaculaireResourceIT {
         defaultNomVernaculaireShouldBeFound("description.doesNotContain=" + UPDATED_DESCRIPTION);
     }
 
-
     @Test
     @Transactional
-    public void getAllNomVernaculairesByPlantesIsEqualToSomething() throws Exception {
+    void getAllNomVernaculairesByPlantesIsEqualToSomething() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
-        Plante plantes = PlanteResourceIT.createEntity(em);
+        Plante plantes;
+        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
+            plantes = PlanteResourceIT.createEntity(em);
+            em.persist(plantes);
+            em.flush();
+        } else {
+            plantes = TestUtil.findAll(em, Plante.class).get(0);
+        }
         em.persist(plantes);
         em.flush();
         nomVernaculaire.addPlantes(plantes);
@@ -374,7 +385,7 @@ public class NomVernaculaireResourceIT {
         // Get all the nomVernaculaireList where plantes equals to plantesId
         defaultNomVernaculaireShouldBeFound("plantesId.equals=" + plantesId);
 
-        // Get all the nomVernaculaireList where plantes equals to plantesId + 1
+        // Get all the nomVernaculaireList where plantes equals to (plantesId + 1)
         defaultNomVernaculaireShouldNotBeFound("plantesId.equals=" + (plantesId + 1));
     }
 
@@ -382,7 +393,8 @@ public class NomVernaculaireResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultNomVernaculaireShouldBeFound(String filter) throws Exception {
-        restNomVernaculaireMockMvc.perform(get("/api/nom-vernaculaires?sort=id,desc&" + filter))
+        restNomVernaculaireMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(nomVernaculaire.getId().intValue())))
@@ -390,7 +402,8 @@ public class NomVernaculaireResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
 
         // Check, that the count call also returns 1
-        restNomVernaculaireMockMvc.perform(get("/api/nom-vernaculaires/count?sort=id,desc&" + filter))
+        restNomVernaculaireMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -400,14 +413,16 @@ public class NomVernaculaireResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultNomVernaculaireShouldNotBeFound(String filter) throws Exception {
-        restNomVernaculaireMockMvc.perform(get("/api/nom-vernaculaires?sort=id,desc&" + filter))
+        restNomVernaculaireMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restNomVernaculaireMockMvc.perform(get("/api/nom-vernaculaires/count?sort=id,desc&" + filter))
+        restNomVernaculaireMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -415,15 +430,14 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingNomVernaculaire() throws Exception {
+    void getNonExistingNomVernaculaire() throws Exception {
         // Get the nomVernaculaire
-        restNomVernaculaireMockMvc.perform(get("/api/nom-vernaculaires/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restNomVernaculaireMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateNomVernaculaire() throws Exception {
+    void putNewNomVernaculaire() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
@@ -433,14 +447,16 @@ public class NomVernaculaireResourceIT {
         NomVernaculaire updatedNomVernaculaire = nomVernaculaireRepository.findById(nomVernaculaire.getId()).get();
         // Disconnect from session so that the updates on updatedNomVernaculaire are not directly saved in db
         em.detach(updatedNomVernaculaire);
-        updatedNomVernaculaire
-            .nom(UPDATED_NOM)
-            .description(UPDATED_DESCRIPTION);
+        updatedNomVernaculaire.nom(UPDATED_NOM).description(UPDATED_DESCRIPTION);
         NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(updatedNomVernaculaire);
 
-        restNomVernaculaireMockMvc.perform(put("/api/nom-vernaculaires").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO)))
+        restNomVernaculaireMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, nomVernaculaireDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the NomVernaculaire in the database
@@ -453,16 +469,21 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingNomVernaculaire() throws Exception {
+    void putNonExistingNomVernaculaire() throws Exception {
         int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+        nomVernaculaire.setId(count.incrementAndGet());
 
         // Create the NomVernaculaire
         NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restNomVernaculaireMockMvc.perform(put("/api/nom-vernaculaires").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO)))
+        restNomVernaculaireMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, nomVernaculaireDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the NomVernaculaire in the database
@@ -472,15 +493,197 @@ public class NomVernaculaireResourceIT {
 
     @Test
     @Transactional
-    public void deleteNomVernaculaire() throws Exception {
+    void putWithIdMismatchNomVernaculaire() throws Exception {
+        int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+        nomVernaculaire.setId(count.incrementAndGet());
+
+        // Create the NomVernaculaire
+        NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restNomVernaculaireMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the NomVernaculaire in the database
+        List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
+        assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamNomVernaculaire() throws Exception {
+        int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+        nomVernaculaire.setId(count.incrementAndGet());
+
+        // Create the NomVernaculaire
+        NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restNomVernaculaireMockMvc
+            .perform(
+                put(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the NomVernaculaire in the database
+        List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
+        assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateNomVernaculaireWithPatch() throws Exception {
+        // Initialize the database
+        nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
+
+        int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+
+        // Update the nomVernaculaire using partial update
+        NomVernaculaire partialUpdatedNomVernaculaire = new NomVernaculaire();
+        partialUpdatedNomVernaculaire.setId(nomVernaculaire.getId());
+
+        partialUpdatedNomVernaculaire.nom(UPDATED_NOM);
+
+        restNomVernaculaireMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedNomVernaculaire.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNomVernaculaire))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the NomVernaculaire in the database
+        List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
+        assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeUpdate);
+        NomVernaculaire testNomVernaculaire = nomVernaculaireList.get(nomVernaculaireList.size() - 1);
+        assertThat(testNomVernaculaire.getNom()).isEqualTo(UPDATED_NOM);
+        assertThat(testNomVernaculaire.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateNomVernaculaireWithPatch() throws Exception {
+        // Initialize the database
+        nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
+
+        int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+
+        // Update the nomVernaculaire using partial update
+        NomVernaculaire partialUpdatedNomVernaculaire = new NomVernaculaire();
+        partialUpdatedNomVernaculaire.setId(nomVernaculaire.getId());
+
+        partialUpdatedNomVernaculaire.nom(UPDATED_NOM).description(UPDATED_DESCRIPTION);
+
+        restNomVernaculaireMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedNomVernaculaire.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedNomVernaculaire))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the NomVernaculaire in the database
+        List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
+        assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeUpdate);
+        NomVernaculaire testNomVernaculaire = nomVernaculaireList.get(nomVernaculaireList.size() - 1);
+        assertThat(testNomVernaculaire.getNom()).isEqualTo(UPDATED_NOM);
+        assertThat(testNomVernaculaire.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingNomVernaculaire() throws Exception {
+        int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+        nomVernaculaire.setId(count.incrementAndGet());
+
+        // Create the NomVernaculaire
+        NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restNomVernaculaireMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, nomVernaculaireDTO.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the NomVernaculaire in the database
+        List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
+        assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchNomVernaculaire() throws Exception {
+        int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+        nomVernaculaire.setId(count.incrementAndGet());
+
+        // Create the NomVernaculaire
+        NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restNomVernaculaireMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the NomVernaculaire in the database
+        List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
+        assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamNomVernaculaire() throws Exception {
+        int databaseSizeBeforeUpdate = nomVernaculaireRepository.findAll().size();
+        nomVernaculaire.setId(count.incrementAndGet());
+
+        // Create the NomVernaculaire
+        NomVernaculaireDTO nomVernaculaireDTO = nomVernaculaireMapper.toDto(nomVernaculaire);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restNomVernaculaireMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(nomVernaculaireDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the NomVernaculaire in the database
+        List<NomVernaculaire> nomVernaculaireList = nomVernaculaireRepository.findAll();
+        assertThat(nomVernaculaireList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteNomVernaculaire() throws Exception {
         // Initialize the database
         nomVernaculaireRepository.saveAndFlush(nomVernaculaire);
 
         int databaseSizeBeforeDelete = nomVernaculaireRepository.findAll().size();
 
         // Delete the nomVernaculaire
-        restNomVernaculaireMockMvc.perform(delete("/api/nom-vernaculaires/{id}", nomVernaculaire.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restNomVernaculaireMockMvc
+            .perform(delete(ENTITY_API_URL_ID, nomVernaculaire.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

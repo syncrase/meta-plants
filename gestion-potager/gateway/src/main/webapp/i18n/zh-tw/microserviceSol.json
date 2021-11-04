@@ -3,6 +3,7 @@
     "microserviceSol": {
       "home": {
         "title": "Sols",
+        "refreshListLabel": "Refresh list",
         "createLabel": "建立一筆新的 Sol",
         "createOrEditLabel": "建立或編輯 Sol",
         "notFound": "No Sols found"
@@ -13,8 +14,12 @@
       "detail": {
         "title": "Sol"
       },
-      "acidite": "Acidite",
-      "type": "Type"
+      "id": "ID",
+      "phMin": "Ph Min",
+      "phMax": "Ph Max",
+      "type": "Type",
+      "richesse": "Richesse",
+      "plante": "Plante"
     }
   },
   "microserviceApp": {

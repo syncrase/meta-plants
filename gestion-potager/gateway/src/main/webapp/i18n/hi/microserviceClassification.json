@@ -3,6 +3,7 @@
     "microserviceClassification": {
       "home": {
         "title": "Classifications",
+        "refreshListLabel": "Refresh list",
         "createLabel": "नया Classification बनाएँ",
         "createOrEditLabel": "Classification बनाएँ या संपादित करें",
         "notFound": "No Classifications found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Classification"
       },
+      "id": "ID",
       "raunkier": "Raunkier",
       "cronquist": "Cronquist",
       "apg1": "Apg 1",

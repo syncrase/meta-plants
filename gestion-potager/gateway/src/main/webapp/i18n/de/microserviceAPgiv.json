@@ -3,9 +3,10 @@
     "microserviceAPgiv": {
       "home": {
         "title": "APGIVS",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "APGIV erstellen",
         "createOrEditLabel": "APGIV erstellen oder bearbeiten",
-        "notFound": "No APGIVS found"
+        "notFound": "Keine APGIVS gefunden"
       },
       "delete": {
         "question": "Soll APGIV {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGIV"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

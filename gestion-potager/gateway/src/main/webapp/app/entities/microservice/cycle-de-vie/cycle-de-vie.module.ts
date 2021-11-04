@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { CycleDeVieComponent } from './cycle-de-vie.component';
-import { CycleDeVieDetailComponent } from './cycle-de-vie-detail.component';
-import { CycleDeVieUpdateComponent } from './cycle-de-vie-update.component';
-import { CycleDeVieDeleteDialogComponent } from './cycle-de-vie-delete-dialog.component';
-import { cycleDeVieRoute } from './cycle-de-vie.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { CycleDeVieComponent } from './list/cycle-de-vie.component';
+import { CycleDeVieDetailComponent } from './detail/cycle-de-vie-detail.component';
+import { CycleDeVieUpdateComponent } from './update/cycle-de-vie-update.component';
+import { CycleDeVieDeleteDialogComponent } from './delete/cycle-de-vie-delete-dialog.component';
+import { CycleDeVieRoutingModule } from './route/cycle-de-vie-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(cycleDeVieRoute)],
+  imports: [SharedModule, CycleDeVieRoutingModule],
   declarations: [CycleDeVieComponent, CycleDeVieDetailComponent, CycleDeVieUpdateComponent, CycleDeVieDeleteDialogComponent],
   entryComponents: [CycleDeVieDeleteDialogComponent],
 })

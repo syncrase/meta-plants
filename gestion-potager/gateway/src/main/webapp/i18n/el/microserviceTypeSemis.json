@@ -3,6 +3,7 @@
     "microserviceTypeSemis": {
       "home": {
         "title": "Type Semis",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Δημιουργήστε ένα νέο Type Semis",
         "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Type Semis",
         "notFound": "No Type Semis found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Type Semis"
       },
+      "id": "ID",
       "description": "Description"
     }
   },

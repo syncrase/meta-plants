@@ -3,9 +3,10 @@
     "microserviceAPgi": {
       "home": {
         "title": "APGIS",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый APGI",
         "createOrEditLabel": "Создать или отредактировать APGI",
-        "notFound": "No APGIS found"
+        "notFound": "APGIS не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить APGI {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGI"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

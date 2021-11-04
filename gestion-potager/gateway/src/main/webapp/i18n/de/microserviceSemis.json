@@ -3,9 +3,10 @@
     "microserviceSemis": {
       "home": {
         "title": "Semis",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Semis erstellen",
         "createOrEditLabel": "Semis erstellen oder bearbeiten",
-        "notFound": "No Semis found"
+        "notFound": "Keine Semis gefunden"
       },
       "delete": {
         "question": "Soll Semis {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Semis"
       },
+      "id": "ID",
       "semisPleineTerre": "Semis Pleine Terre",
       "semisSousAbris": "Semis Sous Abris",
       "typeSemis": "Type Semis",

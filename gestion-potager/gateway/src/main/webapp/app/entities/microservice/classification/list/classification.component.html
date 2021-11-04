@@ -1,0 +1,142 @@
+<div>
+  <h2 id="page-heading" data-cy="ClassificationHeading">
+    <span gpTranslate="gatewayApp.microserviceClassification.home.title">Classifications</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span gpTranslate="gatewayApp.microserviceClassification.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-classification"
+        [routerLink]="['/classification/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span gpTranslate="gatewayApp.microserviceClassification.home.createLabel"> Create a new Classification </span>
+      </button>
+    </div>
+  </h2>
+
+  <gp-alert-error></gp-alert-error>
+
+  <gp-alert></gp-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="classifications?.length === 0">
+    <span gpTranslate="gatewayApp.microserviceClassification.home.notFound">No classifications found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="classifications && classifications.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr gpSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" gpSortBy="id"><span gpTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" gpSortBy="raunkier.id">
+            <span gpTranslate="gatewayApp.microserviceClassification.raunkier">Raunkier</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="cronquist.id">
+            <span gpTranslate="gatewayApp.microserviceClassification.cronquist">Cronquist</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="apg1.id">
+            <span gpTranslate="gatewayApp.microserviceClassification.apg1">Apg 1</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="apg2.id">
+            <span gpTranslate="gatewayApp.microserviceClassification.apg2">Apg 2</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="apg3.id">
+            <span gpTranslate="gatewayApp.microserviceClassification.apg3">Apg 3</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" gpSortBy="apg4.id">
+            <span gpTranslate="gatewayApp.microserviceClassification.apg4">Apg 4</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let classification of classifications; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/classification', classification.id, 'view']">{{ classification.id }}</a>
+          </td>
+          <td>
+            <div *ngIf="classification.raunkier">
+              <a [routerLink]="['/raunkier', classification.raunkier?.id, 'view']">{{ classification.raunkier?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="classification.cronquist">
+              <a [routerLink]="['/cronquist', classification.cronquist?.id, 'view']">{{ classification.cronquist?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="classification.apg1">
+              <a [routerLink]="['/apgi', classification.apg1?.id, 'view']">{{ classification.apg1?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="classification.apg2">
+              <a [routerLink]="['/apgii', classification.apg2?.id, 'view']">{{ classification.apg2?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="classification.apg3">
+              <a [routerLink]="['/apgiii', classification.apg3?.id, 'view']">{{ classification.apg3?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="classification.apg4">
+              <a [routerLink]="['/apgiv', classification.apg4?.id, 'view']">{{ classification.apg4?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/classification', classification.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" gpTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/classification', classification.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" gpTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(classification)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" gpTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="classifications && classifications.length > 0">
+    <div class="row justify-content-center">
+      <gp-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></gp-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

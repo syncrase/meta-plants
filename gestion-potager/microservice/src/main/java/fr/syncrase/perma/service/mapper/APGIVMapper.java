@@ -1,9 +1,7 @@
 package fr.syncrase.perma.service.mapper;
 
-
-import fr.syncrase.perma.domain.*;
+import fr.syncrase.perma.domain.APGIV;
 import fr.syncrase.perma.service.dto.APGIVDTO;
-
 import org.mapstruct.*;
 
 /**
@@ -11,15 +9,8 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface APGIVMapper extends EntityMapper<APGIVDTO, APGIV> {
-
-
-
-    default APGIV fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        APGIV aPGIV = new APGIV();
-        aPGIV.setId(id);
-        return aPGIV;
-    }
+    @Named("id")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    APGIVDTO toDtoId(APGIV aPGIV);
 }

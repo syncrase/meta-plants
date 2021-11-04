@@ -1,9 +1,7 @@
 package fr.syncrase.perma.service.mapper;
 
-
-import fr.syncrase.perma.domain.*;
+import fr.syncrase.perma.domain.Germination;
 import fr.syncrase.perma.service.dto.GerminationDTO;
-
 import org.mapstruct.*;
 
 /**
@@ -11,15 +9,8 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface GerminationMapper extends EntityMapper<GerminationDTO, Germination> {
-
-
-
-    default Germination fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Germination germination = new Germination();
-        germination.setId(id);
-        return germination;
-    }
+    @Named("id")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    GerminationDTO toDtoId(Germination germination);
 }

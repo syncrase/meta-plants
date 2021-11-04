@@ -20,7 +20,7 @@ export class ClassificationComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -28,6 +28,8 @@ export class ClassificationUpdatePage {
   pageTitle = element(by.id('gp-classification-heading'));
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
+
+  idInput = element(by.id('field_id'));
 
   raunkierSelect = element(by.id('field_raunkier'));
   cronquistSelect = element(by.id('field_cronquist'));
@@ -37,7 +39,15 @@ export class ClassificationUpdatePage {
   apg4Select = element(by.id('field_apg4'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async raunkierSelectLastOption(): Promise<void> {
@@ -154,7 +164,7 @@ export class ClassificationDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-classification'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

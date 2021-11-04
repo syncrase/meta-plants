@@ -1,14 +1,18 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.APGIIIService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.APGIIIDTO;
-import fr.syncrase.perma.service.dto.APGIIICriteria;
+import fr.syncrase.perma.repository.APGIIIRepository;
 import fr.syncrase.perma.service.APGIIIQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.APGIIIService;
+import fr.syncrase.perma.service.criteria.APGIIICriteria;
+import fr.syncrase.perma.service.dto.APGIIIDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.APGIII}.
@@ -42,10 +43,13 @@ public class APGIIIResource {
 
     private final APGIIIService aPGIIIService;
 
+    private final APGIIIRepository aPGIIIRepository;
+
     private final APGIIIQueryService aPGIIIQueryService;
 
-    public APGIIIResource(APGIIIService aPGIIIService, APGIIIQueryService aPGIIIQueryService) {
+    public APGIIIResource(APGIIIService aPGIIIService, APGIIIRepository aPGIIIRepository, APGIIIQueryService aPGIIIQueryService) {
         this.aPGIIIService = aPGIIIService;
+        this.aPGIIIRepository = aPGIIIRepository;
         this.aPGIIIQueryService = aPGIIIQueryService;
     }
 
@@ -63,30 +67,80 @@ public class APGIIIResource {
             throw new BadRequestAlertException("A new aPGIII cannot already have an ID", ENTITY_NAME, "idexists");
         }
         APGIIIDTO result = aPGIIIService.save(aPGIIIDTO);
-        return ResponseEntity.created(new URI("/api/apgiiis/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/apgiiis/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /apgiiis} : Updates an existing aPGIII.
+     * {@code PUT  /apgiiis/:id} : Updates an existing aPGIII.
      *
+     * @param id the id of the aPGIIIDTO to save.
      * @param aPGIIIDTO the aPGIIIDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated aPGIIIDTO,
      * or with status {@code 400 (Bad Request)} if the aPGIIIDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the aPGIIIDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/apgiiis")
-    public ResponseEntity<APGIIIDTO> updateAPGIII(@Valid @RequestBody APGIIIDTO aPGIIIDTO) throws URISyntaxException {
-        log.debug("REST request to update APGIII : {}", aPGIIIDTO);
+    @PutMapping("/apgiiis/{id}")
+    public ResponseEntity<APGIIIDTO> updateAPGIII(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody APGIIIDTO aPGIIIDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update APGIII : {}, {}", id, aPGIIIDTO);
         if (aPGIIIDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, aPGIIIDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!aPGIIIRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         APGIIIDTO result = aPGIIIService.save(aPGIIIDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, aPGIIIDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /apgiiis/:id} : Partial updates given fields of an existing aPGIII, field will ignore if it is null
+     *
+     * @param id the id of the aPGIIIDTO to save.
+     * @param aPGIIIDTO the aPGIIIDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated aPGIIIDTO,
+     * or with status {@code 400 (Bad Request)} if the aPGIIIDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the aPGIIIDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the aPGIIIDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/apgiiis/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<APGIIIDTO> partialUpdateAPGIII(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody APGIIIDTO aPGIIIDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update APGIII partially : {}, {}", id, aPGIIIDTO);
+        if (aPGIIIDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, aPGIIIDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!aPGIIIRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<APGIIIDTO> result = aPGIIIService.partialUpdate(aPGIIIDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, aPGIIIDTO.getId().toString())
+        );
     }
 
     /**
@@ -139,6 +193,9 @@ public class APGIIIResource {
     public ResponseEntity<Void> deleteAPGIII(@PathVariable Long id) {
         log.debug("REST request to delete APGIII : {}", id);
         aPGIIIService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

@@ -3,9 +3,10 @@
     "microserviceAllelopathie": {
       "home": {
         "title": "Allelopathies",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Allelopathie",
         "createOrEditLabel": "Создать или отредактировать Allelopathie",
-        "notFound": "No Allelopathies found"
+        "notFound": "Allelopathies не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Allelopathie {{ id }}?"
@@ -13,11 +14,12 @@
       "detail": {
         "title": "Allelopathie"
       },
+      "id": "ID",
       "type": "Type",
       "description": "Description",
       "cible": "Cible",
       "origine": "Origine",
-      "plante": "Plante"
+      "interaction": "Interaction"
     }
   },
   "microserviceApp": {

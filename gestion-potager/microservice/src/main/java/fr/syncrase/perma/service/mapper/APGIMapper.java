@@ -1,9 +1,7 @@
 package fr.syncrase.perma.service.mapper;
 
-
-import fr.syncrase.perma.domain.*;
+import fr.syncrase.perma.domain.APGI;
 import fr.syncrase.perma.service.dto.APGIDTO;
-
 import org.mapstruct.*;
 
 /**
@@ -11,15 +9,8 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface APGIMapper extends EntityMapper<APGIDTO, APGI> {
-
-
-
-    default APGI fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        APGI aPGI = new APGI();
-        aPGI.setId(id);
-        return aPGI;
-    }
+    @Named("id")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    APGIDTO toDtoId(APGI aPGI);
 }

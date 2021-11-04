@@ -1,19 +1,17 @@
 package fr.syncrase.perma.service.impl;
 
-import fr.syncrase.perma.service.TypeSemisService;
 import fr.syncrase.perma.domain.TypeSemis;
 import fr.syncrase.perma.repository.TypeSemisRepository;
+import fr.syncrase.perma.service.TypeSemisService;
 import fr.syncrase.perma.service.dto.TypeSemisDTO;
 import fr.syncrase.perma.service.mapper.TypeSemisMapper;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link TypeSemis}.
@@ -42,20 +40,32 @@ public class TypeSemisServiceImpl implements TypeSemisService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<TypeSemisDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all TypeSemis");
-        return typeSemisRepository.findAll(pageable)
+    public Optional<TypeSemisDTO> partialUpdate(TypeSemisDTO typeSemisDTO) {
+        log.debug("Request to partially update TypeSemis : {}", typeSemisDTO);
+
+        return typeSemisRepository
+            .findById(typeSemisDTO.getId())
+            .map(existingTypeSemis -> {
+                typeSemisMapper.partialUpdate(existingTypeSemis, typeSemisDTO);
+
+                return existingTypeSemis;
+            })
+            .map(typeSemisRepository::save)
             .map(typeSemisMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TypeSemisDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all TypeSemis");
+        return typeSemisRepository.findAll(pageable).map(typeSemisMapper::toDto);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<TypeSemisDTO> findOne(Long id) {
         log.debug("Request to get TypeSemis : {}", id);
-        return typeSemisRepository.findById(id)
-            .map(typeSemisMapper::toDto);
+        return typeSemisRepository.findById(id).map(typeSemisMapper::toDto);
     }
 
     @Override

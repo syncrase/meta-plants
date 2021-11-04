@@ -1,13 +1,14 @@
 package fr.syncrase.perma.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.APGIV} entity.
  */
 public class APGIVDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -16,7 +17,6 @@ public class APGIVDTO implements Serializable {
     @NotNull
     private String famille;
 
-    
     public Long getId() {
         return id;
     }
@@ -50,12 +50,16 @@ public class APGIVDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((APGIVDTO) o).id);
+        APGIVDTO aPGIVDTO = (APGIVDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, aPGIVDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore

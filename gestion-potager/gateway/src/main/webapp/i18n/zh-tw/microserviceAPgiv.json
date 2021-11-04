@@ -3,6 +3,7 @@
     "microserviceAPgiv": {
       "home": {
         "title": "APGIVS",
+        "refreshListLabel": "Refresh list",
         "createLabel": "建立一筆新的 APGIV",
         "createOrEditLabel": "建立或編輯 APGIV",
         "notFound": "No APGIVS found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGIV"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

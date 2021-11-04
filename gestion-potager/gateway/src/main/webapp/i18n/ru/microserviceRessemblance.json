@@ -3,9 +3,10 @@
     "microserviceRessemblance": {
       "home": {
         "title": "Ressemblances",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Ressemblance",
         "createOrEditLabel": "Создать или отредактировать Ressemblance",
-        "notFound": "No Ressemblances found"
+        "notFound": "Ressemblances не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Ressemblance {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Ressemblance"
       },
+      "id": "ID",
       "description": "Description",
       "confusion": "Confusion"
     }

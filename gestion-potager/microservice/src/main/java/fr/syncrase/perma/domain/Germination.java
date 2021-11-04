@@ -1,11 +1,9 @@
 package fr.syncrase.perma.domain;
 
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Germination.
@@ -20,6 +18,7 @@ public class Germination implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "temps_de_germination")
@@ -29,8 +28,14 @@ public class Germination implements Serializable {
     private String conditionDeGermination;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Germination id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -38,11 +43,11 @@ public class Germination implements Serializable {
     }
 
     public String getTempsDeGermination() {
-        return tempsDeGermination;
+        return this.tempsDeGermination;
     }
 
     public Germination tempsDeGermination(String tempsDeGermination) {
-        this.tempsDeGermination = tempsDeGermination;
+        this.setTempsDeGermination(tempsDeGermination);
         return this;
     }
 
@@ -51,17 +56,18 @@ public class Germination implements Serializable {
     }
 
     public String getConditionDeGermination() {
-        return conditionDeGermination;
+        return this.conditionDeGermination;
     }
 
     public Germination conditionDeGermination(String conditionDeGermination) {
-        this.conditionDeGermination = conditionDeGermination;
+        this.setConditionDeGermination(conditionDeGermination);
         return this;
     }
 
     public void setConditionDeGermination(String conditionDeGermination) {
         this.conditionDeGermination = conditionDeGermination;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -77,7 +83,8 @@ public class Germination implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

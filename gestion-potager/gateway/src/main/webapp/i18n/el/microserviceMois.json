@@ -3,6 +3,7 @@
     "microserviceMois": {
       "home": {
         "title": "Mois",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Δημιουργήστε ένα νέο Mois",
         "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Mois",
         "notFound": "No Mois found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Mois"
       },
+      "id": "ID",
       "numero": "Numero",
       "nom": "Nom"
     }

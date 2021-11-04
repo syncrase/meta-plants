@@ -1,7 +1,6 @@
 package fr.syncrase.perma.web.rest.vm;
 
 import java.util.List;
-
 import org.springframework.cloud.client.ServiceInstance;
 
 /**

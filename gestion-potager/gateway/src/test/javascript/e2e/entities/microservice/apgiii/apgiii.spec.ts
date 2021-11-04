@@ -11,12 +11,14 @@ describe('APGIII e2e test', () => {
   let aPGIIIComponentsPage: APGIIIComponentsPage;
   let aPGIIIUpdatePage: APGIIIUpdatePage;
   let aPGIIIDeleteDialog: APGIIIDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -42,9 +44,6 @@ describe('APGIII e2e test', () => {
 
     await promise.all([aPGIIIUpdatePage.setOrdreInput('ordre'), aPGIIIUpdatePage.setFamilleInput('famille')]);
 
-    expect(await aPGIIIUpdatePage.getOrdreInput()).to.eq('ordre', 'Expected Ordre value to be equals to ordre');
-    expect(await aPGIIIUpdatePage.getFamilleInput()).to.eq('famille', 'Expected Famille value to be equals to famille');
-
     await aPGIIIUpdatePage.save();
     expect(await aPGIIIUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -58,6 +57,7 @@ describe('APGIII e2e test', () => {
     aPGIIIDeleteDialog = new APGIIIDeleteDialog();
     expect(await aPGIIIDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceAPgiii.delete.question');
     await aPGIIIDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(aPGIIIComponentsPage.title), 5000);
 
     expect(await aPGIIIComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

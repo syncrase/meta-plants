@@ -3,9 +3,10 @@
     "microserviceAPgii": {
       "home": {
         "title": "APGIIS",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "APGII erstellen",
         "createOrEditLabel": "APGII erstellen oder bearbeiten",
-        "notFound": "No APGIIS found"
+        "notFound": "Keine APGIIS gefunden"
       },
       "delete": {
         "question": "Soll APGII {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGII"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

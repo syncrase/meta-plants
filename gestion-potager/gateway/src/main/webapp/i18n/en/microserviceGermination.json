@@ -3,6 +3,7 @@
     "microserviceGermination": {
       "home": {
         "title": "Germinations",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Germination",
         "createOrEditLabel": "Create or edit a Germination",
         "notFound": "No Germinations found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Germination"
       },
+      "id": "ID",
       "tempsDeGermination": "Temps De Germination",
       "conditionDeGermination": "Condition De Germination"
     }

@@ -20,7 +20,7 @@ export class SolComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,19 +29,40 @@ export class SolUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
-  aciditeInput = element(by.id('field_acidite'));
+  idInput = element(by.id('field_id'));
+  phMinInput = element(by.id('field_phMin'));
+  phMaxInput = element(by.id('field_phMax'));
   typeInput = element(by.id('field_type'));
+  richesseInput = element(by.id('field_richesse'));
+
+  planteSelect = element(by.id('field_plante'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
   }
 
-  async setAciditeInput(acidite: string): Promise<void> {
-    await this.aciditeInput.sendKeys(acidite);
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
   }
 
-  async getAciditeInput(): Promise<string> {
-    return await this.aciditeInput.getAttribute('value');
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
+  }
+
+  async setPhMinInput(phMin: string): Promise<void> {
+    await this.phMinInput.sendKeys(phMin);
+  }
+
+  async getPhMinInput(): Promise<string> {
+    return await this.phMinInput.getAttribute('value');
+  }
+
+  async setPhMaxInput(phMax: string): Promise<void> {
+    await this.phMaxInput.sendKeys(phMax);
+  }
+
+  async getPhMaxInput(): Promise<string> {
+    return await this.phMaxInput.getAttribute('value');
   }
 
   async setTypeInput(type: string): Promise<void> {
@@ -50,6 +71,30 @@ export class SolUpdatePage {
 
   async getTypeInput(): Promise<string> {
     return await this.typeInput.getAttribute('value');
+  }
+
+  async setRichesseInput(richesse: string): Promise<void> {
+    await this.richesseInput.sendKeys(richesse);
+  }
+
+  async getRichesseInput(): Promise<string> {
+    return await this.richesseInput.getAttribute('value');
+  }
+
+  async planteSelectLastOption(): Promise<void> {
+    await this.planteSelect.all(by.tagName('option')).last().click();
+  }
+
+  async planteSelectOption(option: string): Promise<void> {
+    await this.planteSelect.sendKeys(option);
+  }
+
+  getPlanteSelect(): ElementFinder {
+    return this.planteSelect;
+  }
+
+  async getPlanteSelectedOption(): Promise<string> {
+    return await this.planteSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {
@@ -70,7 +115,7 @@ export class SolDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-sol'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

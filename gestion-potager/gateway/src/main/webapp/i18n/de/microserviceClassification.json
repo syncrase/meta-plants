@@ -3,9 +3,10 @@
     "microserviceClassification": {
       "home": {
         "title": "Classifications",
+        "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Classification erstellen",
         "createOrEditLabel": "Classification erstellen oder bearbeiten",
-        "notFound": "No Classifications found"
+        "notFound": "Keine Classifications gefunden"
       },
       "delete": {
         "question": "Soll Classification {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Classification"
       },
+      "id": "ID",
       "raunkier": "Raunkier",
       "cronquist": "Cronquist",
       "apg1": "Apg 1",

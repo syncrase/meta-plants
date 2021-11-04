@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.APGI;
+import fr.syncrase.perma.repository.APGIRepository;
+import fr.syncrase.perma.service.criteria.APGICriteria;
+import fr.syncrase.perma.service.dto.APGIDTO;
+import fr.syncrase.perma.service.mapper.APGIMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.APGI;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.APGIRepository;
-import fr.syncrase.perma.service.dto.APGICriteria;
-import fr.syncrase.perma.service.dto.APGIDTO;
-import fr.syncrase.perma.service.mapper.APGIMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link APGI} entities in the database.
@@ -64,8 +60,7 @@ public class APGIQueryService extends QueryService<APGI> {
     public Page<APGIDTO> findByCriteria(APGICriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<APGI> specification = createSpecification(criteria);
-        return aPGIRepository.findAll(specification, page)
-            .map(aPGIMapper::toDto);
+        return aPGIRepository.findAll(specification, page).map(aPGIMapper::toDto);
     }
 
     /**
@@ -88,6 +83,10 @@ public class APGIQueryService extends QueryService<APGI> {
     protected Specification<APGI> createSpecification(APGICriteria criteria) {
         Specification<APGI> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), APGI_.id));
             }

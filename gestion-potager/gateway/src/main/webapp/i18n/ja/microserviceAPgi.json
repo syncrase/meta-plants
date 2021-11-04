@@ -3,6 +3,7 @@
     "microserviceAPgi": {
       "home": {
         "title": "APGIS",
+        "refreshListLabel": "Refresh list",
         "createLabel": "APGI を追加",
         "createOrEditLabel": "APGIを追加または編集",
         "notFound": "No APGIS found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGI"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

@@ -3,6 +3,7 @@
     "microserviceSemis": {
       "home": {
         "title": "Semis",
+        "refreshListLabel": "Refresh list",
         "createLabel": "नया Semis बनाएँ",
         "createOrEditLabel": "Semis बनाएँ या संपादित करें",
         "notFound": "No Semis found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Semis"
       },
+      "id": "ID",
       "semisPleineTerre": "Semis Pleine Terre",
       "semisSousAbris": "Semis Sous Abris",
       "typeSemis": "Type Semis",

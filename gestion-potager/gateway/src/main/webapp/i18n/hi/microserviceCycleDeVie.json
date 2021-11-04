@@ -3,6 +3,7 @@
     "microserviceCycleDeVie": {
       "home": {
         "title": "CycleDeVies",
+        "refreshListLabel": "Refresh list",
         "createLabel": "नया Cycle De Vie बनाएँ",
         "createOrEditLabel": "Cycle De Vie बनाएँ या संपादित करें",
         "notFound": "No Cycle De Vies found"
@@ -13,7 +14,7 @@
       "detail": {
         "title": "Cycle De Vie"
       },
-      "vitesseDeCroissance": "Vitesse De Croissance",
+      "id": "ID",
       "semis": "Semis",
       "apparitionFeuilles": "Apparition Feuilles",
       "floraison": "Floraison",
@@ -21,7 +22,8 @@
       "croissance": "Croissance",
       "maturite": "Maturite",
       "plantation": "Plantation",
-      "rempotage": "Rempotage"
+      "rempotage": "Rempotage",
+      "reproduction": "Reproduction"
     }
   },
   "microserviceApp": {

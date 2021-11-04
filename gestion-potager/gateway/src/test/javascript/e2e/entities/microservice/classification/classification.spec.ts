@@ -11,12 +11,14 @@ describe('Classification e2e test', () => {
   let classificationComponentsPage: ClassificationComponentsPage;
   let classificationUpdatePage: ClassificationUpdatePage;
   let classificationDeleteDialog: ClassificationDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -68,6 +70,7 @@ describe('Classification e2e test', () => {
     classificationDeleteDialog = new ClassificationDeleteDialog();
     expect(await classificationDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceClassification.delete.question');
     await classificationDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(classificationComponentsPage.title), 5000);
 
     expect(await classificationComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

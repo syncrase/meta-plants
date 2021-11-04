@@ -3,9 +3,10 @@
     "microserviceGermination": {
       "home": {
         "title": "Germinations",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Germination",
         "createOrEditLabel": "Создать или отредактировать Germination",
-        "notFound": "No Germinations found"
+        "notFound": "Germinations не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Germination {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Germination"
       },
+      "id": "ID",
       "tempsDeGermination": "Temps De Germination",
       "conditionDeGermination": "Condition De Germination"
     }

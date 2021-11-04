@@ -17,8 +17,10 @@
       "hystrix": "Hystrix",
       "diskSpace": "ディスクスペース",
       "mail": "メール",
+      "livenessState": "Liveness state",
+      "readinessState": "Readiness state",
       "ping": "Application",
-      "db": "データベース"
+      "r2dbc": "データベース"
     },
     "table": {
       "service": "サービス名",

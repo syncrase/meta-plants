@@ -17,7 +17,7 @@ class NomVernaculaireGatlingTest extends Simulation {
     // Log failed HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("DEBUG"))
 
-    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://localhost:8080"""
+    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://localhost:8081"""
 
     val httpConf = http
         .baseUrl(baseURL)
@@ -100,8 +100,7 @@ class NomVernaculaireGatlingTest extends Simulation {
             .post("/services/microservice/api/nom-vernaculaires")
             .headers(headers_http_authenticated)
             .body(StringBody("""{
-                "id":null
-                , "nom":"SAMPLE_TEXT"
+                "nom":"SAMPLE_TEXT"
                 , "description":"SAMPLE_TEXT"
                 }""")).asJson
             .check(status.is(201))

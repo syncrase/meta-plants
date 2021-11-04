@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.Semis;
+import fr.syncrase.perma.repository.SemisRepository;
+import fr.syncrase.perma.service.criteria.SemisCriteria;
+import fr.syncrase.perma.service.dto.SemisDTO;
+import fr.syncrase.perma.service.mapper.SemisMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.Semis;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.SemisRepository;
-import fr.syncrase.perma.service.dto.SemisCriteria;
-import fr.syncrase.perma.service.dto.SemisDTO;
-import fr.syncrase.perma.service.mapper.SemisMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Semis} entities in the database.
@@ -64,8 +60,7 @@ public class SemisQueryService extends QueryService<Semis> {
     public Page<SemisDTO> findByCriteria(SemisCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Semis> specification = createSpecification(criteria);
-        return semisRepository.findAll(specification, page)
-            .map(semisMapper::toDto);
+        return semisRepository.findAll(specification, page).map(semisMapper::toDto);
     }
 
     /**
@@ -88,24 +83,45 @@ public class SemisQueryService extends QueryService<Semis> {
     protected Specification<Semis> createSpecification(SemisCriteria criteria) {
         Specification<Semis> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Semis_.id));
             }
             if (criteria.getSemisPleineTerreId() != null) {
-                specification = specification.and(buildSpecification(criteria.getSemisPleineTerreId(),
-                    root -> root.join(Semis_.semisPleineTerre, JoinType.LEFT).get(PeriodeAnnee_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getSemisPleineTerreId(),
+                            root -> root.join(Semis_.semisPleineTerre, JoinType.LEFT).get(PeriodeAnnee_.id)
+                        )
+                    );
             }
             if (criteria.getSemisSousAbrisId() != null) {
-                specification = specification.and(buildSpecification(criteria.getSemisSousAbrisId(),
-                    root -> root.join(Semis_.semisSousAbris, JoinType.LEFT).get(PeriodeAnnee_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getSemisSousAbrisId(),
+                            root -> root.join(Semis_.semisSousAbris, JoinType.LEFT).get(PeriodeAnnee_.id)
+                        )
+                    );
             }
             if (criteria.getTypeSemisId() != null) {
-                specification = specification.and(buildSpecification(criteria.getTypeSemisId(),
-                    root -> root.join(Semis_.typeSemis, JoinType.LEFT).get(TypeSemis_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getTypeSemisId(), root -> root.join(Semis_.typeSemis, JoinType.LEFT).get(TypeSemis_.id))
+                    );
             }
             if (criteria.getGerminationId() != null) {
-                specification = specification.and(buildSpecification(criteria.getGerminationId(),
-                    root -> root.join(Semis_.germination, JoinType.LEFT).get(Germination_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getGerminationId(),
+                            root -> root.join(Semis_.germination, JoinType.LEFT).get(Germination_.id)
+                        )
+                    );
             }
         }
         return specification;

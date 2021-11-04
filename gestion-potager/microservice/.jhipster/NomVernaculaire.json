@@ -17,11 +17,9 @@
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "nomsVernaculaires",
       "relationshipName": "plantes",
-      "otherEntityField": "id",
       "ownerSide": false
     }
   ],
-  "changelogDate": "20210302085609",
   "entityTableName": "nom_vernaculaire",
   "dto": "mapstruct",
   "pagination": "pagination",
@@ -30,7 +28,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104121154"
 }

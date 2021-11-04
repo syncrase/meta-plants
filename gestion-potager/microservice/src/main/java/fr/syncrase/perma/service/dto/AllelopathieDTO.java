@@ -1,13 +1,14 @@
 package fr.syncrase.perma.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Allelopathie} entity.
  */
 public class AllelopathieDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -15,13 +16,12 @@ public class AllelopathieDTO implements Serializable {
 
     private String description;
 
+    private PlanteDTO cible;
 
-    private Long cibleId;
+    private PlanteDTO origine;
 
-    private Long origineId;
+    private PlanteDTO interaction;
 
-    private Long planteId;
-    
     public Long getId() {
         return id;
     }
@@ -46,28 +46,28 @@ public class AllelopathieDTO implements Serializable {
         this.description = description;
     }
 
-    public Long getCibleId() {
-        return cibleId;
+    public PlanteDTO getCible() {
+        return cible;
     }
 
-    public void setCibleId(Long planteId) {
-        this.cibleId = planteId;
+    public void setCible(PlanteDTO cible) {
+        this.cible = cible;
     }
 
-    public Long getOrigineId() {
-        return origineId;
+    public PlanteDTO getOrigine() {
+        return origine;
     }
 
-    public void setOrigineId(Long planteId) {
-        this.origineId = planteId;
+    public void setOrigine(PlanteDTO origine) {
+        this.origine = origine;
     }
 
-    public Long getPlanteId() {
-        return planteId;
+    public PlanteDTO getInteraction() {
+        return interaction;
     }
 
-    public void setPlanteId(Long planteId) {
-        this.planteId = planteId;
+    public void setInteraction(PlanteDTO interaction) {
+        this.interaction = interaction;
     }
 
     @Override
@@ -79,12 +79,16 @@ public class AllelopathieDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((AllelopathieDTO) o).id);
+        AllelopathieDTO allelopathieDTO = (AllelopathieDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, allelopathieDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -94,9 +98,9 @@ public class AllelopathieDTO implements Serializable {
             "id=" + getId() +
             ", type='" + getType() + "'" +
             ", description='" + getDescription() + "'" +
-            ", cibleId=" + getCibleId() +
-            ", origineId=" + getOrigineId() +
-            ", planteId=" + getPlanteId() +
+            ", cible=" + getCible() +
+            ", origine=" + getOrigine() +
+            ", interaction=" + getInteraction() +
             "}";
     }
 }

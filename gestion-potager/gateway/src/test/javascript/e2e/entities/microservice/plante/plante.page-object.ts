@@ -20,7 +20,7 @@ export class PlanteComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,18 +29,30 @@ export class PlanteUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   nomLatinInput = element(by.id('field_nomLatin'));
   entretienInput = element(by.id('field_entretien'));
   histoireInput = element(by.id('field_histoire'));
-  expositionInput = element(by.id('field_exposition'));
-  rusticiteInput = element(by.id('field_rusticite'));
+  vitesseInput = element(by.id('field_vitesse'));
 
   cycleDeVieSelect = element(by.id('field_cycleDeVie'));
   classificationSelect = element(by.id('field_classification'));
   nomsVernaculairesSelect = element(by.id('field_nomsVernaculaires'));
+  temperatureSelect = element(by.id('field_temperature'));
+  racineSelect = element(by.id('field_racine'));
+  strateSelect = element(by.id('field_strate'));
+  feuillageSelect = element(by.id('field_feuillage'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setNomLatinInput(nomLatin: string): Promise<void> {
@@ -67,20 +79,12 @@ export class PlanteUpdatePage {
     return await this.histoireInput.getAttribute('value');
   }
 
-  async setExpositionInput(exposition: string): Promise<void> {
-    await this.expositionInput.sendKeys(exposition);
+  async setVitesseInput(vitesse: string): Promise<void> {
+    await this.vitesseInput.sendKeys(vitesse);
   }
 
-  async getExpositionInput(): Promise<string> {
-    return await this.expositionInput.getAttribute('value');
-  }
-
-  async setRusticiteInput(rusticite: string): Promise<void> {
-    await this.rusticiteInput.sendKeys(rusticite);
-  }
-
-  async getRusticiteInput(): Promise<string> {
-    return await this.rusticiteInput.getAttribute('value');
+  async getVitesseInput(): Promise<string> {
+    return await this.vitesseInput.getAttribute('value');
   }
 
   async cycleDeVieSelectLastOption(): Promise<void> {
@@ -131,6 +135,70 @@ export class PlanteUpdatePage {
     return await this.nomsVernaculairesSelect.element(by.css('option:checked')).getText();
   }
 
+  async temperatureSelectLastOption(): Promise<void> {
+    await this.temperatureSelect.all(by.tagName('option')).last().click();
+  }
+
+  async temperatureSelectOption(option: string): Promise<void> {
+    await this.temperatureSelect.sendKeys(option);
+  }
+
+  getTemperatureSelect(): ElementFinder {
+    return this.temperatureSelect;
+  }
+
+  async getTemperatureSelectedOption(): Promise<string> {
+    return await this.temperatureSelect.element(by.css('option:checked')).getText();
+  }
+
+  async racineSelectLastOption(): Promise<void> {
+    await this.racineSelect.all(by.tagName('option')).last().click();
+  }
+
+  async racineSelectOption(option: string): Promise<void> {
+    await this.racineSelect.sendKeys(option);
+  }
+
+  getRacineSelect(): ElementFinder {
+    return this.racineSelect;
+  }
+
+  async getRacineSelectedOption(): Promise<string> {
+    return await this.racineSelect.element(by.css('option:checked')).getText();
+  }
+
+  async strateSelectLastOption(): Promise<void> {
+    await this.strateSelect.all(by.tagName('option')).last().click();
+  }
+
+  async strateSelectOption(option: string): Promise<void> {
+    await this.strateSelect.sendKeys(option);
+  }
+
+  getStrateSelect(): ElementFinder {
+    return this.strateSelect;
+  }
+
+  async getStrateSelectedOption(): Promise<string> {
+    return await this.strateSelect.element(by.css('option:checked')).getText();
+  }
+
+  async feuillageSelectLastOption(): Promise<void> {
+    await this.feuillageSelect.all(by.tagName('option')).last().click();
+  }
+
+  async feuillageSelectOption(option: string): Promise<void> {
+    await this.feuillageSelect.sendKeys(option);
+  }
+
+  getFeuillageSelect(): ElementFinder {
+    return this.feuillageSelect;
+  }
+
+  async getFeuillageSelectedOption(): Promise<string> {
+    return await this.feuillageSelect.element(by.css('option:checked')).getText();
+  }
+
   async save(): Promise<void> {
     await this.saveButton.click();
   }
@@ -149,7 +217,7 @@ export class PlanteDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-plante'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

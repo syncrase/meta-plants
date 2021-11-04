@@ -1,53 +1,57 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.MicroserviceApp;
-import fr.syncrase.perma.config.TestSecurityConfiguration;
-import fr.syncrase.perma.domain.Plante;
-import fr.syncrase.perma.domain.CycleDeVie;
-import fr.syncrase.perma.domain.Classification;
-import fr.syncrase.perma.domain.Ressemblance;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import fr.syncrase.perma.IntegrationTest;
 import fr.syncrase.perma.domain.Allelopathie;
+import fr.syncrase.perma.domain.Classification;
+import fr.syncrase.perma.domain.CycleDeVie;
+import fr.syncrase.perma.domain.Exposition;
+import fr.syncrase.perma.domain.Feuillage;
 import fr.syncrase.perma.domain.NomVernaculaire;
+import fr.syncrase.perma.domain.Plante;
+import fr.syncrase.perma.domain.Racine;
+import fr.syncrase.perma.domain.Ressemblance;
+import fr.syncrase.perma.domain.Sol;
+import fr.syncrase.perma.domain.Strate;
+import fr.syncrase.perma.domain.Temperature;
 import fr.syncrase.perma.repository.PlanteRepository;
 import fr.syncrase.perma.service.PlanteService;
+import fr.syncrase.perma.service.criteria.PlanteCriteria;
 import fr.syncrase.perma.service.dto.PlanteDTO;
 import fr.syncrase.perma.service.mapper.PlanteMapper;
-import fr.syncrase.perma.service.dto.PlanteCriteria;
-import fr.syncrase.perma.service.PlanteQueryService;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link PlanteResource} REST controller.
  */
-@SpringBootTest(classes = { MicroserviceApp.class, TestSecurityConfiguration.class })
+@IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class PlanteResourceIT {
+class PlanteResourceIT {
 
     private static final String DEFAULT_NOM_LATIN = "AAAAAAAAAA";
     private static final String UPDATED_NOM_LATIN = "BBBBBBBBBB";
@@ -58,11 +62,14 @@ public class PlanteResourceIT {
     private static final String DEFAULT_HISTOIRE = "AAAAAAAAAA";
     private static final String UPDATED_HISTOIRE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_EXPOSITION = "AAAAAAAAAA";
-    private static final String UPDATED_EXPOSITION = "BBBBBBBBBB";
+    private static final String DEFAULT_VITESSE = "AAAAAAAAAA";
+    private static final String UPDATED_VITESSE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_RUSTICITE = "AAAAAAAAAA";
-    private static final String UPDATED_RUSTICITE = "BBBBBBBBBB";
+    private static final String ENTITY_API_URL = "/api/plantes";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private PlanteRepository planteRepository;
@@ -75,12 +82,6 @@ public class PlanteResourceIT {
 
     @Mock
     private PlanteService planteServiceMock;
-
-    @Autowired
-    private PlanteService planteService;
-
-    @Autowired
-    private PlanteQueryService planteQueryService;
 
     @Autowired
     private EntityManager em;
@@ -101,10 +102,10 @@ public class PlanteResourceIT {
             .nomLatin(DEFAULT_NOM_LATIN)
             .entretien(DEFAULT_ENTRETIEN)
             .histoire(DEFAULT_HISTOIRE)
-            .exposition(DEFAULT_EXPOSITION)
-            .rusticite(DEFAULT_RUSTICITE);
+            .vitesse(DEFAULT_VITESSE);
         return plante;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -116,8 +117,7 @@ public class PlanteResourceIT {
             .nomLatin(UPDATED_NOM_LATIN)
             .entretien(UPDATED_ENTRETIEN)
             .histoire(UPDATED_HISTOIRE)
-            .exposition(UPDATED_EXPOSITION)
-            .rusticite(UPDATED_RUSTICITE);
+            .vitesse(UPDATED_VITESSE);
         return plante;
     }
 
@@ -128,13 +128,17 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void createPlante() throws Exception {
+    void createPlante() throws Exception {
         int databaseSizeBeforeCreate = planteRepository.findAll().size();
         // Create the Plante
         PlanteDTO planteDTO = planteMapper.toDto(plante);
-        restPlanteMockMvc.perform(post("/api/plantes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(planteDTO)))
+        restPlanteMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Plante in the database
@@ -144,23 +148,26 @@ public class PlanteResourceIT {
         assertThat(testPlante.getNomLatin()).isEqualTo(DEFAULT_NOM_LATIN);
         assertThat(testPlante.getEntretien()).isEqualTo(DEFAULT_ENTRETIEN);
         assertThat(testPlante.getHistoire()).isEqualTo(DEFAULT_HISTOIRE);
-        assertThat(testPlante.getExposition()).isEqualTo(DEFAULT_EXPOSITION);
-        assertThat(testPlante.getRusticite()).isEqualTo(DEFAULT_RUSTICITE);
+        assertThat(testPlante.getVitesse()).isEqualTo(DEFAULT_VITESSE);
     }
 
     @Test
     @Transactional
-    public void createPlanteWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = planteRepository.findAll().size();
-
+    void createPlanteWithExistingId() throws Exception {
         // Create the Plante with an existing ID
         plante.setId(1L);
         PlanteDTO planteDTO = planteMapper.toDto(plante);
 
+        int databaseSizeBeforeCreate = planteRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPlanteMockMvc.perform(post("/api/plantes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(planteDTO)))
+        restPlanteMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Plante in the database
@@ -168,10 +175,9 @@ public class PlanteResourceIT {
         assertThat(planteList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNomLatinIsRequired() throws Exception {
+    void checkNomLatinIsRequired() throws Exception {
         int databaseSizeBeforeTest = planteRepository.findAll().size();
         // set the field null
         plante.setNomLatin(null);
@@ -179,10 +185,13 @@ public class PlanteResourceIT {
         // Create the Plante, which fails.
         PlanteDTO planteDTO = planteMapper.toDto(plante);
 
-
-        restPlanteMockMvc.perform(post("/api/plantes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(planteDTO)))
+        restPlanteMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Plante> planteList = planteRepository.findAll();
@@ -191,64 +200,61 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantes() throws Exception {
+    void getAllPlantes() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
         // Get all the planteList
-        restPlanteMockMvc.perform(get("/api/plantes?sort=id,desc"))
+        restPlanteMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(plante.getId().intValue())))
             .andExpect(jsonPath("$.[*].nomLatin").value(hasItem(DEFAULT_NOM_LATIN)))
             .andExpect(jsonPath("$.[*].entretien").value(hasItem(DEFAULT_ENTRETIEN)))
             .andExpect(jsonPath("$.[*].histoire").value(hasItem(DEFAULT_HISTOIRE)))
-            .andExpect(jsonPath("$.[*].exposition").value(hasItem(DEFAULT_EXPOSITION)))
-            .andExpect(jsonPath("$.[*].rusticite").value(hasItem(DEFAULT_RUSTICITE)));
+            .andExpect(jsonPath("$.[*].vitesse").value(hasItem(DEFAULT_VITESSE)));
     }
-    
-    @SuppressWarnings({"unchecked"})
-    public void getAllPlantesWithEagerRelationshipsIsEnabled() throws Exception {
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllPlantesWithEagerRelationshipsIsEnabled() throws Exception {
         when(planteServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restPlanteMockMvc.perform(get("/api/plantes?eagerload=true"))
-            .andExpect(status().isOk());
+        restPlanteMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(planteServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
-    @SuppressWarnings({"unchecked"})
-    public void getAllPlantesWithEagerRelationshipsIsNotEnabled() throws Exception {
+    @SuppressWarnings({ "unchecked" })
+    void getAllPlantesWithEagerRelationshipsIsNotEnabled() throws Exception {
         when(planteServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restPlanteMockMvc.perform(get("/api/plantes?eagerload=true"))
-            .andExpect(status().isOk());
+        restPlanteMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(planteServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
     @Transactional
-    public void getPlante() throws Exception {
+    void getPlante() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
         // Get the plante
-        restPlanteMockMvc.perform(get("/api/plantes/{id}", plante.getId()))
+        restPlanteMockMvc
+            .perform(get(ENTITY_API_URL_ID, plante.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(plante.getId().intValue()))
             .andExpect(jsonPath("$.nomLatin").value(DEFAULT_NOM_LATIN))
             .andExpect(jsonPath("$.entretien").value(DEFAULT_ENTRETIEN))
             .andExpect(jsonPath("$.histoire").value(DEFAULT_HISTOIRE))
-            .andExpect(jsonPath("$.exposition").value(DEFAULT_EXPOSITION))
-            .andExpect(jsonPath("$.rusticite").value(DEFAULT_RUSTICITE));
+            .andExpect(jsonPath("$.vitesse").value(DEFAULT_VITESSE));
     }
-
 
     @Test
     @Transactional
-    public void getPlantesByIdFiltering() throws Exception {
+    void getPlantesByIdFiltering() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -264,10 +270,9 @@ public class PlanteResourceIT {
         defaultPlanteShouldNotBeFound("id.lessThan=" + id);
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByNomLatinIsEqualToSomething() throws Exception {
+    void getAllPlantesByNomLatinIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -280,7 +285,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByNomLatinIsNotEqualToSomething() throws Exception {
+    void getAllPlantesByNomLatinIsNotEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -293,7 +298,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByNomLatinIsInShouldWork() throws Exception {
+    void getAllPlantesByNomLatinIsInShouldWork() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -306,7 +311,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByNomLatinIsNullOrNotNull() throws Exception {
+    void getAllPlantesByNomLatinIsNullOrNotNull() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -316,9 +321,10 @@ public class PlanteResourceIT {
         // Get all the planteList where nomLatin is null
         defaultPlanteShouldNotBeFound("nomLatin.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllPlantesByNomLatinContainsSomething() throws Exception {
+    void getAllPlantesByNomLatinContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -331,7 +337,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByNomLatinNotContainsSomething() throws Exception {
+    void getAllPlantesByNomLatinNotContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -342,10 +348,9 @@ public class PlanteResourceIT {
         defaultPlanteShouldBeFound("nomLatin.doesNotContain=" + UPDATED_NOM_LATIN);
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByEntretienIsEqualToSomething() throws Exception {
+    void getAllPlantesByEntretienIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -358,7 +363,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByEntretienIsNotEqualToSomething() throws Exception {
+    void getAllPlantesByEntretienIsNotEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -371,7 +376,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByEntretienIsInShouldWork() throws Exception {
+    void getAllPlantesByEntretienIsInShouldWork() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -384,7 +389,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByEntretienIsNullOrNotNull() throws Exception {
+    void getAllPlantesByEntretienIsNullOrNotNull() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -394,9 +399,10 @@ public class PlanteResourceIT {
         // Get all the planteList where entretien is null
         defaultPlanteShouldNotBeFound("entretien.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllPlantesByEntretienContainsSomething() throws Exception {
+    void getAllPlantesByEntretienContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -409,7 +415,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByEntretienNotContainsSomething() throws Exception {
+    void getAllPlantesByEntretienNotContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -420,10 +426,9 @@ public class PlanteResourceIT {
         defaultPlanteShouldBeFound("entretien.doesNotContain=" + UPDATED_ENTRETIEN);
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByHistoireIsEqualToSomething() throws Exception {
+    void getAllPlantesByHistoireIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -436,7 +441,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByHistoireIsNotEqualToSomething() throws Exception {
+    void getAllPlantesByHistoireIsNotEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -449,7 +454,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByHistoireIsInShouldWork() throws Exception {
+    void getAllPlantesByHistoireIsInShouldWork() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -462,7 +467,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByHistoireIsNullOrNotNull() throws Exception {
+    void getAllPlantesByHistoireIsNullOrNotNull() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -472,9 +477,10 @@ public class PlanteResourceIT {
         // Get all the planteList where histoire is null
         defaultPlanteShouldNotBeFound("histoire.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllPlantesByHistoireContainsSomething() throws Exception {
+    void getAllPlantesByHistoireContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -487,7 +493,7 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getAllPlantesByHistoireNotContainsSomething() throws Exception {
+    void getAllPlantesByHistoireNotContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -498,169 +504,97 @@ public class PlanteResourceIT {
         defaultPlanteShouldBeFound("histoire.doesNotContain=" + UPDATED_HISTOIRE);
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByExpositionIsEqualToSomething() throws Exception {
+    void getAllPlantesByVitesseIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where exposition equals to DEFAULT_EXPOSITION
-        defaultPlanteShouldBeFound("exposition.equals=" + DEFAULT_EXPOSITION);
+        // Get all the planteList where vitesse equals to DEFAULT_VITESSE
+        defaultPlanteShouldBeFound("vitesse.equals=" + DEFAULT_VITESSE);
 
-        // Get all the planteList where exposition equals to UPDATED_EXPOSITION
-        defaultPlanteShouldNotBeFound("exposition.equals=" + UPDATED_EXPOSITION);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPlantesByExpositionIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-
-        // Get all the planteList where exposition not equals to DEFAULT_EXPOSITION
-        defaultPlanteShouldNotBeFound("exposition.notEquals=" + DEFAULT_EXPOSITION);
-
-        // Get all the planteList where exposition not equals to UPDATED_EXPOSITION
-        defaultPlanteShouldBeFound("exposition.notEquals=" + UPDATED_EXPOSITION);
+        // Get all the planteList where vitesse equals to UPDATED_VITESSE
+        defaultPlanteShouldNotBeFound("vitesse.equals=" + UPDATED_VITESSE);
     }
 
     @Test
     @Transactional
-    public void getAllPlantesByExpositionIsInShouldWork() throws Exception {
+    void getAllPlantesByVitesseIsNotEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where exposition in DEFAULT_EXPOSITION or UPDATED_EXPOSITION
-        defaultPlanteShouldBeFound("exposition.in=" + DEFAULT_EXPOSITION + "," + UPDATED_EXPOSITION);
+        // Get all the planteList where vitesse not equals to DEFAULT_VITESSE
+        defaultPlanteShouldNotBeFound("vitesse.notEquals=" + DEFAULT_VITESSE);
 
-        // Get all the planteList where exposition equals to UPDATED_EXPOSITION
-        defaultPlanteShouldNotBeFound("exposition.in=" + UPDATED_EXPOSITION);
+        // Get all the planteList where vitesse not equals to UPDATED_VITESSE
+        defaultPlanteShouldBeFound("vitesse.notEquals=" + UPDATED_VITESSE);
     }
 
     @Test
     @Transactional
-    public void getAllPlantesByExpositionIsNullOrNotNull() throws Exception {
+    void getAllPlantesByVitesseIsInShouldWork() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where exposition is not null
-        defaultPlanteShouldBeFound("exposition.specified=true");
+        // Get all the planteList where vitesse in DEFAULT_VITESSE or UPDATED_VITESSE
+        defaultPlanteShouldBeFound("vitesse.in=" + DEFAULT_VITESSE + "," + UPDATED_VITESSE);
 
-        // Get all the planteList where exposition is null
-        defaultPlanteShouldNotBeFound("exposition.specified=false");
-    }
-                @Test
-    @Transactional
-    public void getAllPlantesByExpositionContainsSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-
-        // Get all the planteList where exposition contains DEFAULT_EXPOSITION
-        defaultPlanteShouldBeFound("exposition.contains=" + DEFAULT_EXPOSITION);
-
-        // Get all the planteList where exposition contains UPDATED_EXPOSITION
-        defaultPlanteShouldNotBeFound("exposition.contains=" + UPDATED_EXPOSITION);
+        // Get all the planteList where vitesse equals to UPDATED_VITESSE
+        defaultPlanteShouldNotBeFound("vitesse.in=" + UPDATED_VITESSE);
     }
 
     @Test
     @Transactional
-    public void getAllPlantesByExpositionNotContainsSomething() throws Exception {
+    void getAllPlantesByVitesseIsNullOrNotNull() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where exposition does not contain DEFAULT_EXPOSITION
-        defaultPlanteShouldNotBeFound("exposition.doesNotContain=" + DEFAULT_EXPOSITION);
+        // Get all the planteList where vitesse is not null
+        defaultPlanteShouldBeFound("vitesse.specified=true");
 
-        // Get all the planteList where exposition does not contain UPDATED_EXPOSITION
-        defaultPlanteShouldBeFound("exposition.doesNotContain=" + UPDATED_EXPOSITION);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllPlantesByRusticiteIsEqualToSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-
-        // Get all the planteList where rusticite equals to DEFAULT_RUSTICITE
-        defaultPlanteShouldBeFound("rusticite.equals=" + DEFAULT_RUSTICITE);
-
-        // Get all the planteList where rusticite equals to UPDATED_RUSTICITE
-        defaultPlanteShouldNotBeFound("rusticite.equals=" + UPDATED_RUSTICITE);
+        // Get all the planteList where vitesse is null
+        defaultPlanteShouldNotBeFound("vitesse.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllPlantesByRusticiteIsNotEqualToSomething() throws Exception {
+    void getAllPlantesByVitesseContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where rusticite not equals to DEFAULT_RUSTICITE
-        defaultPlanteShouldNotBeFound("rusticite.notEquals=" + DEFAULT_RUSTICITE);
+        // Get all the planteList where vitesse contains DEFAULT_VITESSE
+        defaultPlanteShouldBeFound("vitesse.contains=" + DEFAULT_VITESSE);
 
-        // Get all the planteList where rusticite not equals to UPDATED_RUSTICITE
-        defaultPlanteShouldBeFound("rusticite.notEquals=" + UPDATED_RUSTICITE);
+        // Get all the planteList where vitesse contains UPDATED_VITESSE
+        defaultPlanteShouldNotBeFound("vitesse.contains=" + UPDATED_VITESSE);
     }
 
     @Test
     @Transactional
-    public void getAllPlantesByRusticiteIsInShouldWork() throws Exception {
+    void getAllPlantesByVitesseNotContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where rusticite in DEFAULT_RUSTICITE or UPDATED_RUSTICITE
-        defaultPlanteShouldBeFound("rusticite.in=" + DEFAULT_RUSTICITE + "," + UPDATED_RUSTICITE);
+        // Get all the planteList where vitesse does not contain DEFAULT_VITESSE
+        defaultPlanteShouldNotBeFound("vitesse.doesNotContain=" + DEFAULT_VITESSE);
 
-        // Get all the planteList where rusticite equals to UPDATED_RUSTICITE
-        defaultPlanteShouldNotBeFound("rusticite.in=" + UPDATED_RUSTICITE);
+        // Get all the planteList where vitesse does not contain UPDATED_VITESSE
+        defaultPlanteShouldBeFound("vitesse.doesNotContain=" + UPDATED_VITESSE);
     }
 
     @Test
     @Transactional
-    public void getAllPlantesByRusticiteIsNullOrNotNull() throws Exception {
+    void getAllPlantesByCycleDeVieIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-
-        // Get all the planteList where rusticite is not null
-        defaultPlanteShouldBeFound("rusticite.specified=true");
-
-        // Get all the planteList where rusticite is null
-        defaultPlanteShouldNotBeFound("rusticite.specified=false");
-    }
-                @Test
-    @Transactional
-    public void getAllPlantesByRusticiteContainsSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-
-        // Get all the planteList where rusticite contains DEFAULT_RUSTICITE
-        defaultPlanteShouldBeFound("rusticite.contains=" + DEFAULT_RUSTICITE);
-
-        // Get all the planteList where rusticite contains UPDATED_RUSTICITE
-        defaultPlanteShouldNotBeFound("rusticite.contains=" + UPDATED_RUSTICITE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPlantesByRusticiteNotContainsSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-
-        // Get all the planteList where rusticite does not contain DEFAULT_RUSTICITE
-        defaultPlanteShouldNotBeFound("rusticite.doesNotContain=" + DEFAULT_RUSTICITE);
-
-        // Get all the planteList where rusticite does not contain UPDATED_RUSTICITE
-        defaultPlanteShouldBeFound("rusticite.doesNotContain=" + UPDATED_RUSTICITE);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllPlantesByCycleDeVieIsEqualToSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-        CycleDeVie cycleDeVie = CycleDeVieResourceIT.createEntity(em);
+        CycleDeVie cycleDeVie;
+        if (TestUtil.findAll(em, CycleDeVie.class).isEmpty()) {
+            cycleDeVie = CycleDeVieResourceIT.createEntity(em);
+            em.persist(cycleDeVie);
+            em.flush();
+        } else {
+            cycleDeVie = TestUtil.findAll(em, CycleDeVie.class).get(0);
+        }
         em.persist(cycleDeVie);
         em.flush();
         plante.setCycleDeVie(cycleDeVie);
@@ -670,17 +604,23 @@ public class PlanteResourceIT {
         // Get all the planteList where cycleDeVie equals to cycleDeVieId
         defaultPlanteShouldBeFound("cycleDeVieId.equals=" + cycleDeVieId);
 
-        // Get all the planteList where cycleDeVie equals to cycleDeVieId + 1
+        // Get all the planteList where cycleDeVie equals to (cycleDeVieId + 1)
         defaultPlanteShouldNotBeFound("cycleDeVieId.equals=" + (cycleDeVieId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByClassificationIsEqualToSomething() throws Exception {
+    void getAllPlantesByClassificationIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Classification classification = ClassificationResourceIT.createEntity(em);
+        Classification classification;
+        if (TestUtil.findAll(em, Classification.class).isEmpty()) {
+            classification = ClassificationResourceIT.createEntity(em);
+            em.persist(classification);
+            em.flush();
+        } else {
+            classification = TestUtil.findAll(em, Classification.class).get(0);
+        }
         em.persist(classification);
         em.flush();
         plante.setClassification(classification);
@@ -690,17 +630,23 @@ public class PlanteResourceIT {
         // Get all the planteList where classification equals to classificationId
         defaultPlanteShouldBeFound("classificationId.equals=" + classificationId);
 
-        // Get all the planteList where classification equals to classificationId + 1
+        // Get all the planteList where classification equals to (classificationId + 1)
         defaultPlanteShouldNotBeFound("classificationId.equals=" + (classificationId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByConfusionsIsEqualToSomething() throws Exception {
+    void getAllPlantesByConfusionsIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Ressemblance confusions = RessemblanceResourceIT.createEntity(em);
+        Ressemblance confusions;
+        if (TestUtil.findAll(em, Ressemblance.class).isEmpty()) {
+            confusions = RessemblanceResourceIT.createEntity(em);
+            em.persist(confusions);
+            em.flush();
+        } else {
+            confusions = TestUtil.findAll(em, Ressemblance.class).get(0);
+        }
         em.persist(confusions);
         em.flush();
         plante.addConfusions(confusions);
@@ -710,17 +656,23 @@ public class PlanteResourceIT {
         // Get all the planteList where confusions equals to confusionsId
         defaultPlanteShouldBeFound("confusionsId.equals=" + confusionsId);
 
-        // Get all the planteList where confusions equals to confusionsId + 1
+        // Get all the planteList where confusions equals to (confusionsId + 1)
         defaultPlanteShouldNotBeFound("confusionsId.equals=" + (confusionsId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByInteractionsIsEqualToSomething() throws Exception {
+    void getAllPlantesByInteractionsIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Allelopathie interactions = AllelopathieResourceIT.createEntity(em);
+        Allelopathie interactions;
+        if (TestUtil.findAll(em, Allelopathie.class).isEmpty()) {
+            interactions = AllelopathieResourceIT.createEntity(em);
+            em.persist(interactions);
+            em.flush();
+        } else {
+            interactions = TestUtil.findAll(em, Allelopathie.class).get(0);
+        }
         em.persist(interactions);
         em.flush();
         plante.addInteractions(interactions);
@@ -730,17 +682,75 @@ public class PlanteResourceIT {
         // Get all the planteList where interactions equals to interactionsId
         defaultPlanteShouldBeFound("interactionsId.equals=" + interactionsId);
 
-        // Get all the planteList where interactions equals to interactionsId + 1
+        // Get all the planteList where interactions equals to (interactionsId + 1)
         defaultPlanteShouldNotBeFound("interactionsId.equals=" + (interactionsId + 1));
     }
 
+    @Test
+    @Transactional
+    void getAllPlantesByExpositionsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        Exposition expositions;
+        if (TestUtil.findAll(em, Exposition.class).isEmpty()) {
+            expositions = ExpositionResourceIT.createEntity(em);
+            em.persist(expositions);
+            em.flush();
+        } else {
+            expositions = TestUtil.findAll(em, Exposition.class).get(0);
+        }
+        em.persist(expositions);
+        em.flush();
+        plante.addExpositions(expositions);
+        planteRepository.saveAndFlush(plante);
+        Long expositionsId = expositions.getId();
+
+        // Get all the planteList where expositions equals to expositionsId
+        defaultPlanteShouldBeFound("expositionsId.equals=" + expositionsId);
+
+        // Get all the planteList where expositions equals to (expositionsId + 1)
+        defaultPlanteShouldNotBeFound("expositionsId.equals=" + (expositionsId + 1));
+    }
 
     @Test
     @Transactional
-    public void getAllPlantesByNomsVernaculairesIsEqualToSomething() throws Exception {
+    void getAllPlantesBySolsIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        NomVernaculaire nomsVernaculaires = NomVernaculaireResourceIT.createEntity(em);
+        Sol sols;
+        if (TestUtil.findAll(em, Sol.class).isEmpty()) {
+            sols = SolResourceIT.createEntity(em);
+            em.persist(sols);
+            em.flush();
+        } else {
+            sols = TestUtil.findAll(em, Sol.class).get(0);
+        }
+        em.persist(sols);
+        em.flush();
+        plante.addSols(sols);
+        planteRepository.saveAndFlush(plante);
+        Long solsId = sols.getId();
+
+        // Get all the planteList where sols equals to solsId
+        defaultPlanteShouldBeFound("solsId.equals=" + solsId);
+
+        // Get all the planteList where sols equals to (solsId + 1)
+        defaultPlanteShouldNotBeFound("solsId.equals=" + (solsId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByNomsVernaculairesIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        NomVernaculaire nomsVernaculaires;
+        if (TestUtil.findAll(em, NomVernaculaire.class).isEmpty()) {
+            nomsVernaculaires = NomVernaculaireResourceIT.createEntity(em);
+            em.persist(nomsVernaculaires);
+            em.flush();
+        } else {
+            nomsVernaculaires = TestUtil.findAll(em, NomVernaculaire.class).get(0);
+        }
         em.persist(nomsVernaculaires);
         em.flush();
         plante.addNomsVernaculaires(nomsVernaculaires);
@@ -750,68 +760,131 @@ public class PlanteResourceIT {
         // Get all the planteList where nomsVernaculaires equals to nomsVernaculairesId
         defaultPlanteShouldBeFound("nomsVernaculairesId.equals=" + nomsVernaculairesId);
 
-        // Get all the planteList where nomsVernaculaires equals to nomsVernaculairesId + 1
+        // Get all the planteList where nomsVernaculaires equals to (nomsVernaculairesId + 1)
         defaultPlanteShouldNotBeFound("nomsVernaculairesId.equals=" + (nomsVernaculairesId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPlantesByAllelopathieRecueIsEqualToSomething() throws Exception {
+    void getAllPlantesByTemperatureIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Allelopathie allelopathieRecue = AllelopathieResourceIT.createEntity(em);
-        em.persist(allelopathieRecue);
+        Temperature temperature;
+        if (TestUtil.findAll(em, Temperature.class).isEmpty()) {
+            temperature = TemperatureResourceIT.createEntity(em);
+            em.persist(temperature);
+            em.flush();
+        } else {
+            temperature = TestUtil.findAll(em, Temperature.class).get(0);
+        }
+        em.persist(temperature);
         em.flush();
-        plante.setAllelopathieRecue(allelopathieRecue);
-        allelopathieRecue.setCible(plante);
+        plante.setTemperature(temperature);
         planteRepository.saveAndFlush(plante);
-        Long allelopathieRecueId = allelopathieRecue.getId();
+        Long temperatureId = temperature.getId();
 
-        // Get all the planteList where allelopathieRecue equals to allelopathieRecueId
-        defaultPlanteShouldBeFound("allelopathieRecueId.equals=" + allelopathieRecueId);
+        // Get all the planteList where temperature equals to temperatureId
+        defaultPlanteShouldBeFound("temperatureId.equals=" + temperatureId);
 
-        // Get all the planteList where allelopathieRecue equals to allelopathieRecueId + 1
-        defaultPlanteShouldNotBeFound("allelopathieRecueId.equals=" + (allelopathieRecueId + 1));
+        // Get all the planteList where temperature equals to (temperatureId + 1)
+        defaultPlanteShouldNotBeFound("temperatureId.equals=" + (temperatureId + 1));
     }
 
+    @Test
+    @Transactional
+    void getAllPlantesByRacineIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        Racine racine;
+        if (TestUtil.findAll(em, Racine.class).isEmpty()) {
+            racine = RacineResourceIT.createEntity(em);
+            em.persist(racine);
+            em.flush();
+        } else {
+            racine = TestUtil.findAll(em, Racine.class).get(0);
+        }
+        em.persist(racine);
+        em.flush();
+        plante.setRacine(racine);
+        planteRepository.saveAndFlush(plante);
+        Long racineId = racine.getId();
+
+        // Get all the planteList where racine equals to racineId
+        defaultPlanteShouldBeFound("racineId.equals=" + racineId);
+
+        // Get all the planteList where racine equals to (racineId + 1)
+        defaultPlanteShouldNotBeFound("racineId.equals=" + (racineId + 1));
+    }
 
     @Test
     @Transactional
-    public void getAllPlantesByAllelopathieProduiteIsEqualToSomething() throws Exception {
+    void getAllPlantesByStrateIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Allelopathie allelopathieProduite = AllelopathieResourceIT.createEntity(em);
-        em.persist(allelopathieProduite);
+        Strate strate;
+        if (TestUtil.findAll(em, Strate.class).isEmpty()) {
+            strate = StrateResourceIT.createEntity(em);
+            em.persist(strate);
+            em.flush();
+        } else {
+            strate = TestUtil.findAll(em, Strate.class).get(0);
+        }
+        em.persist(strate);
         em.flush();
-        plante.setAllelopathieProduite(allelopathieProduite);
-        allelopathieProduite.setOrigine(plante);
+        plante.setStrate(strate);
         planteRepository.saveAndFlush(plante);
-        Long allelopathieProduiteId = allelopathieProduite.getId();
+        Long strateId = strate.getId();
 
-        // Get all the planteList where allelopathieProduite equals to allelopathieProduiteId
-        defaultPlanteShouldBeFound("allelopathieProduiteId.equals=" + allelopathieProduiteId);
+        // Get all the planteList where strate equals to strateId
+        defaultPlanteShouldBeFound("strateId.equals=" + strateId);
 
-        // Get all the planteList where allelopathieProduite equals to allelopathieProduiteId + 1
-        defaultPlanteShouldNotBeFound("allelopathieProduiteId.equals=" + (allelopathieProduiteId + 1));
+        // Get all the planteList where strate equals to (strateId + 1)
+        defaultPlanteShouldNotBeFound("strateId.equals=" + (strateId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByFeuillageIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        Feuillage feuillage;
+        if (TestUtil.findAll(em, Feuillage.class).isEmpty()) {
+            feuillage = FeuillageResourceIT.createEntity(em);
+            em.persist(feuillage);
+            em.flush();
+        } else {
+            feuillage = TestUtil.findAll(em, Feuillage.class).get(0);
+        }
+        em.persist(feuillage);
+        em.flush();
+        plante.setFeuillage(feuillage);
+        planteRepository.saveAndFlush(plante);
+        Long feuillageId = feuillage.getId();
+
+        // Get all the planteList where feuillage equals to feuillageId
+        defaultPlanteShouldBeFound("feuillageId.equals=" + feuillageId);
+
+        // Get all the planteList where feuillage equals to (feuillageId + 1)
+        defaultPlanteShouldNotBeFound("feuillageId.equals=" + (feuillageId + 1));
     }
 
     /**
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultPlanteShouldBeFound(String filter) throws Exception {
-        restPlanteMockMvc.perform(get("/api/plantes?sort=id,desc&" + filter))
+        restPlanteMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(plante.getId().intValue())))
             .andExpect(jsonPath("$.[*].nomLatin").value(hasItem(DEFAULT_NOM_LATIN)))
             .andExpect(jsonPath("$.[*].entretien").value(hasItem(DEFAULT_ENTRETIEN)))
             .andExpect(jsonPath("$.[*].histoire").value(hasItem(DEFAULT_HISTOIRE)))
-            .andExpect(jsonPath("$.[*].exposition").value(hasItem(DEFAULT_EXPOSITION)))
-            .andExpect(jsonPath("$.[*].rusticite").value(hasItem(DEFAULT_RUSTICITE)));
+            .andExpect(jsonPath("$.[*].vitesse").value(hasItem(DEFAULT_VITESSE)));
 
         // Check, that the count call also returns 1
-        restPlanteMockMvc.perform(get("/api/plantes/count?sort=id,desc&" + filter))
+        restPlanteMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -821,14 +894,16 @@ public class PlanteResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultPlanteShouldNotBeFound(String filter) throws Exception {
-        restPlanteMockMvc.perform(get("/api/plantes?sort=id,desc&" + filter))
+        restPlanteMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restPlanteMockMvc.perform(get("/api/plantes/count?sort=id,desc&" + filter))
+        restPlanteMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -836,15 +911,14 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingPlante() throws Exception {
+    void getNonExistingPlante() throws Exception {
         // Get the plante
-        restPlanteMockMvc.perform(get("/api/plantes/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPlanteMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updatePlante() throws Exception {
+    void putNewPlante() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
@@ -854,17 +928,16 @@ public class PlanteResourceIT {
         Plante updatedPlante = planteRepository.findById(plante.getId()).get();
         // Disconnect from session so that the updates on updatedPlante are not directly saved in db
         em.detach(updatedPlante);
-        updatedPlante
-            .nomLatin(UPDATED_NOM_LATIN)
-            .entretien(UPDATED_ENTRETIEN)
-            .histoire(UPDATED_HISTOIRE)
-            .exposition(UPDATED_EXPOSITION)
-            .rusticite(UPDATED_RUSTICITE);
+        updatedPlante.nomLatin(UPDATED_NOM_LATIN).entretien(UPDATED_ENTRETIEN).histoire(UPDATED_HISTOIRE).vitesse(UPDATED_VITESSE);
         PlanteDTO planteDTO = planteMapper.toDto(updatedPlante);
 
-        restPlanteMockMvc.perform(put("/api/plantes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(planteDTO)))
+        restPlanteMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, planteDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the Plante in the database
@@ -874,22 +947,26 @@ public class PlanteResourceIT {
         assertThat(testPlante.getNomLatin()).isEqualTo(UPDATED_NOM_LATIN);
         assertThat(testPlante.getEntretien()).isEqualTo(UPDATED_ENTRETIEN);
         assertThat(testPlante.getHistoire()).isEqualTo(UPDATED_HISTOIRE);
-        assertThat(testPlante.getExposition()).isEqualTo(UPDATED_EXPOSITION);
-        assertThat(testPlante.getRusticite()).isEqualTo(UPDATED_RUSTICITE);
+        assertThat(testPlante.getVitesse()).isEqualTo(UPDATED_VITESSE);
     }
 
     @Test
     @Transactional
-    public void updateNonExistingPlante() throws Exception {
+    void putNonExistingPlante() throws Exception {
         int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+        plante.setId(count.incrementAndGet());
 
         // Create the Plante
         PlanteDTO planteDTO = planteMapper.toDto(plante);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPlanteMockMvc.perform(put("/api/plantes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(planteDTO)))
+        restPlanteMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, planteDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Plante in the database
@@ -899,15 +976,201 @@ public class PlanteResourceIT {
 
     @Test
     @Transactional
-    public void deletePlante() throws Exception {
+    void putWithIdMismatchPlante() throws Exception {
+        int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+        plante.setId(count.incrementAndGet());
+
+        // Create the Plante
+        PlanteDTO planteDTO = planteMapper.toDto(plante);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPlanteMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Plante in the database
+        List<Plante> planteList = planteRepository.findAll();
+        assertThat(planteList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamPlante() throws Exception {
+        int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+        plante.setId(count.incrementAndGet());
+
+        // Create the Plante
+        PlanteDTO planteDTO = planteMapper.toDto(plante);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPlanteMockMvc
+            .perform(
+                put(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Plante in the database
+        List<Plante> planteList = planteRepository.findAll();
+        assertThat(planteList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdatePlanteWithPatch() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+
+        // Update the plante using partial update
+        Plante partialUpdatedPlante = new Plante();
+        partialUpdatedPlante.setId(plante.getId());
+
+        partialUpdatedPlante.histoire(UPDATED_HISTOIRE);
+
+        restPlanteMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPlante.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPlante))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Plante in the database
+        List<Plante> planteList = planteRepository.findAll();
+        assertThat(planteList).hasSize(databaseSizeBeforeUpdate);
+        Plante testPlante = planteList.get(planteList.size() - 1);
+        assertThat(testPlante.getNomLatin()).isEqualTo(DEFAULT_NOM_LATIN);
+        assertThat(testPlante.getEntretien()).isEqualTo(DEFAULT_ENTRETIEN);
+        assertThat(testPlante.getHistoire()).isEqualTo(UPDATED_HISTOIRE);
+        assertThat(testPlante.getVitesse()).isEqualTo(DEFAULT_VITESSE);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdatePlanteWithPatch() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+
+        // Update the plante using partial update
+        Plante partialUpdatedPlante = new Plante();
+        partialUpdatedPlante.setId(plante.getId());
+
+        partialUpdatedPlante.nomLatin(UPDATED_NOM_LATIN).entretien(UPDATED_ENTRETIEN).histoire(UPDATED_HISTOIRE).vitesse(UPDATED_VITESSE);
+
+        restPlanteMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPlante.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPlante))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Plante in the database
+        List<Plante> planteList = planteRepository.findAll();
+        assertThat(planteList).hasSize(databaseSizeBeforeUpdate);
+        Plante testPlante = planteList.get(planteList.size() - 1);
+        assertThat(testPlante.getNomLatin()).isEqualTo(UPDATED_NOM_LATIN);
+        assertThat(testPlante.getEntretien()).isEqualTo(UPDATED_ENTRETIEN);
+        assertThat(testPlante.getHistoire()).isEqualTo(UPDATED_HISTOIRE);
+        assertThat(testPlante.getVitesse()).isEqualTo(UPDATED_VITESSE);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingPlante() throws Exception {
+        int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+        plante.setId(count.incrementAndGet());
+
+        // Create the Plante
+        PlanteDTO planteDTO = planteMapper.toDto(plante);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restPlanteMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, planteDTO.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Plante in the database
+        List<Plante> planteList = planteRepository.findAll();
+        assertThat(planteList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchPlante() throws Exception {
+        int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+        plante.setId(count.incrementAndGet());
+
+        // Create the Plante
+        PlanteDTO planteDTO = planteMapper.toDto(plante);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPlanteMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Plante in the database
+        List<Plante> planteList = planteRepository.findAll();
+        assertThat(planteList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamPlante() throws Exception {
+        int databaseSizeBeforeUpdate = planteRepository.findAll().size();
+        plante.setId(count.incrementAndGet());
+
+        // Create the Plante
+        PlanteDTO planteDTO = planteMapper.toDto(plante);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPlanteMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(planteDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Plante in the database
+        List<Plante> planteList = planteRepository.findAll();
+        assertThat(planteList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deletePlante() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
         int databaseSizeBeforeDelete = planteRepository.findAll().size();
 
         // Delete the plante
-        restPlanteMockMvc.perform(delete("/api/plantes/{id}", plante.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restPlanteMockMvc
+            .perform(delete(ENTITY_API_URL_ID, plante.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -1,40 +1,37 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.MicroserviceApp;
-import fr.syncrase.perma.config.TestSecurityConfiguration;
-import fr.syncrase.perma.domain.Germination;
-import fr.syncrase.perma.repository.GerminationRepository;
-import fr.syncrase.perma.service.GerminationService;
-import fr.syncrase.perma.service.dto.GerminationDTO;
-import fr.syncrase.perma.service.mapper.GerminationMapper;
-import fr.syncrase.perma.service.dto.GerminationCriteria;
-import fr.syncrase.perma.service.GerminationQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.syncrase.perma.IntegrationTest;
+import fr.syncrase.perma.domain.Germination;
+import fr.syncrase.perma.repository.GerminationRepository;
+import fr.syncrase.perma.service.criteria.GerminationCriteria;
+import fr.syncrase.perma.service.dto.GerminationDTO;
+import fr.syncrase.perma.service.mapper.GerminationMapper;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link GerminationResource} REST controller.
  */
-@SpringBootTest(classes = { MicroserviceApp.class, TestSecurityConfiguration.class })
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class GerminationResourceIT {
+class GerminationResourceIT {
 
     private static final String DEFAULT_TEMPS_DE_GERMINATION = "AAAAAAAAAA";
     private static final String UPDATED_TEMPS_DE_GERMINATION = "BBBBBBBBBB";
@@ -42,17 +39,17 @@ public class GerminationResourceIT {
     private static final String DEFAULT_CONDITION_DE_GERMINATION = "AAAAAAAAAA";
     private static final String UPDATED_CONDITION_DE_GERMINATION = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/germinations";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private GerminationRepository germinationRepository;
 
     @Autowired
     private GerminationMapper germinationMapper;
-
-    @Autowired
-    private GerminationService germinationService;
-
-    @Autowired
-    private GerminationQueryService germinationQueryService;
 
     @Autowired
     private EntityManager em;
@@ -74,6 +71,7 @@ public class GerminationResourceIT {
             .conditionDeGermination(DEFAULT_CONDITION_DE_GERMINATION);
         return germination;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -94,13 +92,17 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void createGermination() throws Exception {
+    void createGermination() throws Exception {
         int databaseSizeBeforeCreate = germinationRepository.findAll().size();
         // Create the Germination
         GerminationDTO germinationDTO = germinationMapper.toDto(germination);
-        restGerminationMockMvc.perform(post("/api/germinations").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(germinationDTO)))
+        restGerminationMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Germination in the database
@@ -113,17 +115,21 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void createGerminationWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = germinationRepository.findAll().size();
-
+    void createGerminationWithExistingId() throws Exception {
         // Create the Germination with an existing ID
         germination.setId(1L);
         GerminationDTO germinationDTO = germinationMapper.toDto(germination);
 
+        int databaseSizeBeforeCreate = germinationRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restGerminationMockMvc.perform(post("/api/germinations").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(germinationDTO)))
+        restGerminationMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Germination in the database
@@ -131,30 +137,31 @@ public class GerminationResourceIT {
         assertThat(germinationList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllGerminations() throws Exception {
+    void getAllGerminations() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
         // Get all the germinationList
-        restGerminationMockMvc.perform(get("/api/germinations?sort=id,desc"))
+        restGerminationMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(germination.getId().intValue())))
             .andExpect(jsonPath("$.[*].tempsDeGermination").value(hasItem(DEFAULT_TEMPS_DE_GERMINATION)))
             .andExpect(jsonPath("$.[*].conditionDeGermination").value(hasItem(DEFAULT_CONDITION_DE_GERMINATION)));
     }
-    
+
     @Test
     @Transactional
-    public void getGermination() throws Exception {
+    void getGermination() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
         // Get the germination
-        restGerminationMockMvc.perform(get("/api/germinations/{id}", germination.getId()))
+        restGerminationMockMvc
+            .perform(get(ENTITY_API_URL_ID, germination.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(germination.getId().intValue()))
@@ -162,10 +169,9 @@ public class GerminationResourceIT {
             .andExpect(jsonPath("$.conditionDeGermination").value(DEFAULT_CONDITION_DE_GERMINATION));
     }
 
-
     @Test
     @Transactional
-    public void getGerminationsByIdFiltering() throws Exception {
+    void getGerminationsByIdFiltering() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -181,10 +187,9 @@ public class GerminationResourceIT {
         defaultGerminationShouldNotBeFound("id.lessThan=" + id);
     }
 
-
     @Test
     @Transactional
-    public void getAllGerminationsByTempsDeGerminationIsEqualToSomething() throws Exception {
+    void getAllGerminationsByTempsDeGerminationIsEqualToSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -197,7 +202,7 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByTempsDeGerminationIsNotEqualToSomething() throws Exception {
+    void getAllGerminationsByTempsDeGerminationIsNotEqualToSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -210,7 +215,7 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByTempsDeGerminationIsInShouldWork() throws Exception {
+    void getAllGerminationsByTempsDeGerminationIsInShouldWork() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -223,7 +228,7 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByTempsDeGerminationIsNullOrNotNull() throws Exception {
+    void getAllGerminationsByTempsDeGerminationIsNullOrNotNull() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -233,9 +238,10 @@ public class GerminationResourceIT {
         // Get all the germinationList where tempsDeGermination is null
         defaultGerminationShouldNotBeFound("tempsDeGermination.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllGerminationsByTempsDeGerminationContainsSomething() throws Exception {
+    void getAllGerminationsByTempsDeGerminationContainsSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -248,7 +254,7 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByTempsDeGerminationNotContainsSomething() throws Exception {
+    void getAllGerminationsByTempsDeGerminationNotContainsSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -259,10 +265,9 @@ public class GerminationResourceIT {
         defaultGerminationShouldBeFound("tempsDeGermination.doesNotContain=" + UPDATED_TEMPS_DE_GERMINATION);
     }
 
-
     @Test
     @Transactional
-    public void getAllGerminationsByConditionDeGerminationIsEqualToSomething() throws Exception {
+    void getAllGerminationsByConditionDeGerminationIsEqualToSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -275,7 +280,7 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByConditionDeGerminationIsNotEqualToSomething() throws Exception {
+    void getAllGerminationsByConditionDeGerminationIsNotEqualToSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -288,12 +293,14 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByConditionDeGerminationIsInShouldWork() throws Exception {
+    void getAllGerminationsByConditionDeGerminationIsInShouldWork() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
         // Get all the germinationList where conditionDeGermination in DEFAULT_CONDITION_DE_GERMINATION or UPDATED_CONDITION_DE_GERMINATION
-        defaultGerminationShouldBeFound("conditionDeGermination.in=" + DEFAULT_CONDITION_DE_GERMINATION + "," + UPDATED_CONDITION_DE_GERMINATION);
+        defaultGerminationShouldBeFound(
+            "conditionDeGermination.in=" + DEFAULT_CONDITION_DE_GERMINATION + "," + UPDATED_CONDITION_DE_GERMINATION
+        );
 
         // Get all the germinationList where conditionDeGermination equals to UPDATED_CONDITION_DE_GERMINATION
         defaultGerminationShouldNotBeFound("conditionDeGermination.in=" + UPDATED_CONDITION_DE_GERMINATION);
@@ -301,7 +308,7 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByConditionDeGerminationIsNullOrNotNull() throws Exception {
+    void getAllGerminationsByConditionDeGerminationIsNullOrNotNull() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -311,9 +318,10 @@ public class GerminationResourceIT {
         // Get all the germinationList where conditionDeGermination is null
         defaultGerminationShouldNotBeFound("conditionDeGermination.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
-    public void getAllGerminationsByConditionDeGerminationContainsSomething() throws Exception {
+    void getAllGerminationsByConditionDeGerminationContainsSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -326,7 +334,7 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getAllGerminationsByConditionDeGerminationNotContainsSomething() throws Exception {
+    void getAllGerminationsByConditionDeGerminationNotContainsSomething() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -341,7 +349,8 @@ public class GerminationResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultGerminationShouldBeFound(String filter) throws Exception {
-        restGerminationMockMvc.perform(get("/api/germinations?sort=id,desc&" + filter))
+        restGerminationMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(germination.getId().intValue())))
@@ -349,7 +358,8 @@ public class GerminationResourceIT {
             .andExpect(jsonPath("$.[*].conditionDeGermination").value(hasItem(DEFAULT_CONDITION_DE_GERMINATION)));
 
         // Check, that the count call also returns 1
-        restGerminationMockMvc.perform(get("/api/germinations/count?sort=id,desc&" + filter))
+        restGerminationMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -359,14 +369,16 @@ public class GerminationResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultGerminationShouldNotBeFound(String filter) throws Exception {
-        restGerminationMockMvc.perform(get("/api/germinations?sort=id,desc&" + filter))
+        restGerminationMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restGerminationMockMvc.perform(get("/api/germinations/count?sort=id,desc&" + filter))
+        restGerminationMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -374,15 +386,14 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingGermination() throws Exception {
+    void getNonExistingGermination() throws Exception {
         // Get the germination
-        restGerminationMockMvc.perform(get("/api/germinations/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restGerminationMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateGermination() throws Exception {
+    void putNewGermination() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
@@ -392,14 +403,16 @@ public class GerminationResourceIT {
         Germination updatedGermination = germinationRepository.findById(germination.getId()).get();
         // Disconnect from session so that the updates on updatedGermination are not directly saved in db
         em.detach(updatedGermination);
-        updatedGermination
-            .tempsDeGermination(UPDATED_TEMPS_DE_GERMINATION)
-            .conditionDeGermination(UPDATED_CONDITION_DE_GERMINATION);
+        updatedGermination.tempsDeGermination(UPDATED_TEMPS_DE_GERMINATION).conditionDeGermination(UPDATED_CONDITION_DE_GERMINATION);
         GerminationDTO germinationDTO = germinationMapper.toDto(updatedGermination);
 
-        restGerminationMockMvc.perform(put("/api/germinations").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(germinationDTO)))
+        restGerminationMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, germinationDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the Germination in the database
@@ -412,16 +425,21 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingGermination() throws Exception {
+    void putNonExistingGermination() throws Exception {
         int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+        germination.setId(count.incrementAndGet());
 
         // Create the Germination
         GerminationDTO germinationDTO = germinationMapper.toDto(germination);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restGerminationMockMvc.perform(put("/api/germinations").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(germinationDTO)))
+        restGerminationMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, germinationDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Germination in the database
@@ -431,15 +449,197 @@ public class GerminationResourceIT {
 
     @Test
     @Transactional
-    public void deleteGermination() throws Exception {
+    void putWithIdMismatchGermination() throws Exception {
+        int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+        germination.setId(count.incrementAndGet());
+
+        // Create the Germination
+        GerminationDTO germinationDTO = germinationMapper.toDto(germination);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restGerminationMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Germination in the database
+        List<Germination> germinationList = germinationRepository.findAll();
+        assertThat(germinationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamGermination() throws Exception {
+        int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+        germination.setId(count.incrementAndGet());
+
+        // Create the Germination
+        GerminationDTO germinationDTO = germinationMapper.toDto(germination);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restGerminationMockMvc
+            .perform(
+                put(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Germination in the database
+        List<Germination> germinationList = germinationRepository.findAll();
+        assertThat(germinationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateGerminationWithPatch() throws Exception {
+        // Initialize the database
+        germinationRepository.saveAndFlush(germination);
+
+        int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+
+        // Update the germination using partial update
+        Germination partialUpdatedGermination = new Germination();
+        partialUpdatedGermination.setId(germination.getId());
+
+        partialUpdatedGermination.conditionDeGermination(UPDATED_CONDITION_DE_GERMINATION);
+
+        restGerminationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedGermination.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedGermination))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Germination in the database
+        List<Germination> germinationList = germinationRepository.findAll();
+        assertThat(germinationList).hasSize(databaseSizeBeforeUpdate);
+        Germination testGermination = germinationList.get(germinationList.size() - 1);
+        assertThat(testGermination.getTempsDeGermination()).isEqualTo(DEFAULT_TEMPS_DE_GERMINATION);
+        assertThat(testGermination.getConditionDeGermination()).isEqualTo(UPDATED_CONDITION_DE_GERMINATION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateGerminationWithPatch() throws Exception {
+        // Initialize the database
+        germinationRepository.saveAndFlush(germination);
+
+        int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+
+        // Update the germination using partial update
+        Germination partialUpdatedGermination = new Germination();
+        partialUpdatedGermination.setId(germination.getId());
+
+        partialUpdatedGermination.tempsDeGermination(UPDATED_TEMPS_DE_GERMINATION).conditionDeGermination(UPDATED_CONDITION_DE_GERMINATION);
+
+        restGerminationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedGermination.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedGermination))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Germination in the database
+        List<Germination> germinationList = germinationRepository.findAll();
+        assertThat(germinationList).hasSize(databaseSizeBeforeUpdate);
+        Germination testGermination = germinationList.get(germinationList.size() - 1);
+        assertThat(testGermination.getTempsDeGermination()).isEqualTo(UPDATED_TEMPS_DE_GERMINATION);
+        assertThat(testGermination.getConditionDeGermination()).isEqualTo(UPDATED_CONDITION_DE_GERMINATION);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingGermination() throws Exception {
+        int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+        germination.setId(count.incrementAndGet());
+
+        // Create the Germination
+        GerminationDTO germinationDTO = germinationMapper.toDto(germination);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restGerminationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, germinationDTO.getId())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Germination in the database
+        List<Germination> germinationList = germinationRepository.findAll();
+        assertThat(germinationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchGermination() throws Exception {
+        int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+        germination.setId(count.incrementAndGet());
+
+        // Create the Germination
+        GerminationDTO germinationDTO = germinationMapper.toDto(germination);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restGerminationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Germination in the database
+        List<Germination> germinationList = germinationRepository.findAll();
+        assertThat(germinationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamGermination() throws Exception {
+        int databaseSizeBeforeUpdate = germinationRepository.findAll().size();
+        germination.setId(count.incrementAndGet());
+
+        // Create the Germination
+        GerminationDTO germinationDTO = germinationMapper.toDto(germination);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restGerminationMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(germinationDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Germination in the database
+        List<Germination> germinationList = germinationRepository.findAll();
+        assertThat(germinationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteGermination() throws Exception {
         // Initialize the database
         germinationRepository.saveAndFlush(germination);
 
         int databaseSizeBeforeDelete = germinationRepository.findAll().size();
 
         // Delete the germination
-        restGerminationMockMvc.perform(delete("/api/germinations/{id}", germination.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restGerminationMockMvc
+            .perform(delete(ENTITY_API_URL_ID, germination.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

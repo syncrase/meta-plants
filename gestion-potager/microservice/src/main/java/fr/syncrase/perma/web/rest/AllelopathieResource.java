@@ -1,14 +1,18 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.AllelopathieService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.AllelopathieDTO;
-import fr.syncrase.perma.service.dto.AllelopathieCriteria;
+import fr.syncrase.perma.repository.AllelopathieRepository;
 import fr.syncrase.perma.service.AllelopathieQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.AllelopathieService;
+import fr.syncrase.perma.service.criteria.AllelopathieCriteria;
+import fr.syncrase.perma.service.dto.AllelopathieDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.Allelopathie}.
@@ -42,10 +43,17 @@ public class AllelopathieResource {
 
     private final AllelopathieService allelopathieService;
 
+    private final AllelopathieRepository allelopathieRepository;
+
     private final AllelopathieQueryService allelopathieQueryService;
 
-    public AllelopathieResource(AllelopathieService allelopathieService, AllelopathieQueryService allelopathieQueryService) {
+    public AllelopathieResource(
+        AllelopathieService allelopathieService,
+        AllelopathieRepository allelopathieRepository,
+        AllelopathieQueryService allelopathieQueryService
+    ) {
         this.allelopathieService = allelopathieService;
+        this.allelopathieRepository = allelopathieRepository;
         this.allelopathieQueryService = allelopathieQueryService;
     }
 
@@ -57,36 +65,87 @@ public class AllelopathieResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/allelopathies")
-    public ResponseEntity<AllelopathieDTO> createAllelopathie(@Valid @RequestBody AllelopathieDTO allelopathieDTO) throws URISyntaxException {
+    public ResponseEntity<AllelopathieDTO> createAllelopathie(@Valid @RequestBody AllelopathieDTO allelopathieDTO)
+        throws URISyntaxException {
         log.debug("REST request to save Allelopathie : {}", allelopathieDTO);
         if (allelopathieDTO.getId() != null) {
             throw new BadRequestAlertException("A new allelopathie cannot already have an ID", ENTITY_NAME, "idexists");
         }
         AllelopathieDTO result = allelopathieService.save(allelopathieDTO);
-        return ResponseEntity.created(new URI("/api/allelopathies/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/allelopathies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /allelopathies} : Updates an existing allelopathie.
+     * {@code PUT  /allelopathies/:id} : Updates an existing allelopathie.
      *
+     * @param id the id of the allelopathieDTO to save.
      * @param allelopathieDTO the allelopathieDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated allelopathieDTO,
      * or with status {@code 400 (Bad Request)} if the allelopathieDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the allelopathieDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/allelopathies")
-    public ResponseEntity<AllelopathieDTO> updateAllelopathie(@Valid @RequestBody AllelopathieDTO allelopathieDTO) throws URISyntaxException {
-        log.debug("REST request to update Allelopathie : {}", allelopathieDTO);
+    @PutMapping("/allelopathies/{id}")
+    public ResponseEntity<AllelopathieDTO> updateAllelopathie(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody AllelopathieDTO allelopathieDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update Allelopathie : {}, {}", id, allelopathieDTO);
         if (allelopathieDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, allelopathieDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!allelopathieRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         AllelopathieDTO result = allelopathieService.save(allelopathieDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, allelopathieDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /allelopathies/:id} : Partial updates given fields of an existing allelopathie, field will ignore if it is null
+     *
+     * @param id the id of the allelopathieDTO to save.
+     * @param allelopathieDTO the allelopathieDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated allelopathieDTO,
+     * or with status {@code 400 (Bad Request)} if the allelopathieDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the allelopathieDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the allelopathieDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/allelopathies/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<AllelopathieDTO> partialUpdateAllelopathie(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody AllelopathieDTO allelopathieDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Allelopathie partially : {}, {}", id, allelopathieDTO);
+        if (allelopathieDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, allelopathieDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!allelopathieRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<AllelopathieDTO> result = allelopathieService.partialUpdate(allelopathieDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, allelopathieDTO.getId().toString())
+        );
     }
 
     /**
@@ -139,6 +198,9 @@ public class AllelopathieResource {
     public ResponseEntity<Void> deleteAllelopathie(@PathVariable Long id) {
         log.debug("REST request to delete Allelopathie : {}", id);
         allelopathieService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

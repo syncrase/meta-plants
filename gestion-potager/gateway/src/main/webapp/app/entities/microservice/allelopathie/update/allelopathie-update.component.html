@@ -1,0 +1,103 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="gp-allelopathie-heading"
+        data-cy="AllelopathieCreateUpdateHeading"
+        gpTranslate="gatewayApp.microserviceAllelopathie.home.createOrEditLabel"
+      >
+        Create or edit a Allelopathie
+      </h2>
+
+      <div>
+        <gp-alert-error></gp-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" gpTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceAllelopathie.type" for="field_type">Type</label>
+          <input type="text" class="form-control" name="type" id="field_type" data-cy="type" formControlName="type" />
+          <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('type')?.errors?.required" gpTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceAllelopathie.description" for="field_description"
+            >Description</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceAllelopathie.cible" for="field_cible">Cible</label>
+          <select class="form-control" id="field_cible" data-cy="cible" name="cible" formControlName="cible">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="planteOption.id === editForm.get('cible')!.value?.id ? editForm.get('cible')!.value : planteOption"
+              *ngFor="let planteOption of ciblesCollection; trackBy: trackPlanteById"
+            >
+              {{ planteOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceAllelopathie.origine" for="field_origine">Origine</label>
+          <select class="form-control" id="field_origine" data-cy="origine" name="origine" formControlName="origine">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="planteOption.id === editForm.get('origine')!.value?.id ? editForm.get('origine')!.value : planteOption"
+              *ngFor="let planteOption of originesCollection; trackBy: trackPlanteById"
+            >
+              {{ planteOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" gpTranslate="gatewayApp.microserviceAllelopathie.interaction" for="field_interaction"
+            >Interaction</label
+          >
+          <select class="form-control" id="field_interaction" data-cy="interaction" name="interaction" formControlName="interaction">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="planteOption.id === editForm.get('interaction')!.value?.id ? editForm.get('interaction')!.value : planteOption"
+              *ngFor="let planteOption of plantesSharedCollection; trackBy: trackPlanteById"
+            >
+              {{ planteOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span gpTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span gpTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

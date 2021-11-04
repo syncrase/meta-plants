@@ -1,11 +1,10 @@
 package fr.syncrase.perma.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A CycleDeVie.
@@ -20,168 +19,185 @@ public class CycleDeVie implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "vitesse_de_croissance")
-    private String vitesseDeCroissance;
-
+    @JsonIgnoreProperties(value = { "semisPleineTerre", "semisSousAbris", "typeSemis", "germination" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private Semis semis;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee apparitionFeuilles;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee floraison;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee recolte;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee croissance;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee maturite;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee plantation;
 
+    @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private PeriodeAnnee rempotage;
 
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "cycleDeVies" }, allowSetters = true)
+    private Reproduction reproduction;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public CycleDeVie id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getVitesseDeCroissance() {
-        return vitesseDeCroissance;
-    }
-
-    public CycleDeVie vitesseDeCroissance(String vitesseDeCroissance) {
-        this.vitesseDeCroissance = vitesseDeCroissance;
-        return this;
-    }
-
-    public void setVitesseDeCroissance(String vitesseDeCroissance) {
-        this.vitesseDeCroissance = vitesseDeCroissance;
-    }
-
     public Semis getSemis() {
-        return semis;
-    }
-
-    public CycleDeVie semis(Semis semis) {
-        this.semis = semis;
-        return this;
+        return this.semis;
     }
 
     public void setSemis(Semis semis) {
         this.semis = semis;
     }
 
-    public PeriodeAnnee getApparitionFeuilles() {
-        return apparitionFeuilles;
+    public CycleDeVie semis(Semis semis) {
+        this.setSemis(semis);
+        return this;
     }
 
-    public CycleDeVie apparitionFeuilles(PeriodeAnnee periodeAnnee) {
-        this.apparitionFeuilles = periodeAnnee;
-        return this;
+    public PeriodeAnnee getApparitionFeuilles() {
+        return this.apparitionFeuilles;
     }
 
     public void setApparitionFeuilles(PeriodeAnnee periodeAnnee) {
         this.apparitionFeuilles = periodeAnnee;
     }
 
-    public PeriodeAnnee getFloraison() {
-        return floraison;
+    public CycleDeVie apparitionFeuilles(PeriodeAnnee periodeAnnee) {
+        this.setApparitionFeuilles(periodeAnnee);
+        return this;
     }
 
-    public CycleDeVie floraison(PeriodeAnnee periodeAnnee) {
-        this.floraison = periodeAnnee;
-        return this;
+    public PeriodeAnnee getFloraison() {
+        return this.floraison;
     }
 
     public void setFloraison(PeriodeAnnee periodeAnnee) {
         this.floraison = periodeAnnee;
     }
 
-    public PeriodeAnnee getRecolte() {
-        return recolte;
+    public CycleDeVie floraison(PeriodeAnnee periodeAnnee) {
+        this.setFloraison(periodeAnnee);
+        return this;
     }
 
-    public CycleDeVie recolte(PeriodeAnnee periodeAnnee) {
-        this.recolte = periodeAnnee;
-        return this;
+    public PeriodeAnnee getRecolte() {
+        return this.recolte;
     }
 
     public void setRecolte(PeriodeAnnee periodeAnnee) {
         this.recolte = periodeAnnee;
     }
 
-    public PeriodeAnnee getCroissance() {
-        return croissance;
+    public CycleDeVie recolte(PeriodeAnnee periodeAnnee) {
+        this.setRecolte(periodeAnnee);
+        return this;
     }
 
-    public CycleDeVie croissance(PeriodeAnnee periodeAnnee) {
-        this.croissance = periodeAnnee;
-        return this;
+    public PeriodeAnnee getCroissance() {
+        return this.croissance;
     }
 
     public void setCroissance(PeriodeAnnee periodeAnnee) {
         this.croissance = periodeAnnee;
     }
 
-    public PeriodeAnnee getMaturite() {
-        return maturite;
+    public CycleDeVie croissance(PeriodeAnnee periodeAnnee) {
+        this.setCroissance(periodeAnnee);
+        return this;
     }
 
-    public CycleDeVie maturite(PeriodeAnnee periodeAnnee) {
-        this.maturite = periodeAnnee;
-        return this;
+    public PeriodeAnnee getMaturite() {
+        return this.maturite;
     }
 
     public void setMaturite(PeriodeAnnee periodeAnnee) {
         this.maturite = periodeAnnee;
     }
 
-    public PeriodeAnnee getPlantation() {
-        return plantation;
+    public CycleDeVie maturite(PeriodeAnnee periodeAnnee) {
+        this.setMaturite(periodeAnnee);
+        return this;
     }
 
-    public CycleDeVie plantation(PeriodeAnnee periodeAnnee) {
-        this.plantation = periodeAnnee;
-        return this;
+    public PeriodeAnnee getPlantation() {
+        return this.plantation;
     }
 
     public void setPlantation(PeriodeAnnee periodeAnnee) {
         this.plantation = periodeAnnee;
     }
 
-    public PeriodeAnnee getRempotage() {
-        return rempotage;
+    public CycleDeVie plantation(PeriodeAnnee periodeAnnee) {
+        this.setPlantation(periodeAnnee);
+        return this;
     }
 
-    public CycleDeVie rempotage(PeriodeAnnee periodeAnnee) {
-        this.rempotage = periodeAnnee;
-        return this;
+    public PeriodeAnnee getRempotage() {
+        return this.rempotage;
     }
 
     public void setRempotage(PeriodeAnnee periodeAnnee) {
         this.rempotage = periodeAnnee;
     }
+
+    public CycleDeVie rempotage(PeriodeAnnee periodeAnnee) {
+        this.setRempotage(periodeAnnee);
+        return this;
+    }
+
+    public Reproduction getReproduction() {
+        return this.reproduction;
+    }
+
+    public void setReproduction(Reproduction reproduction) {
+        this.reproduction = reproduction;
+    }
+
+    public CycleDeVie reproduction(Reproduction reproduction) {
+        this.setReproduction(reproduction);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -197,7 +213,8 @@ public class CycleDeVie implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -205,7 +222,6 @@ public class CycleDeVie implements Serializable {
     public String toString() {
         return "CycleDeVie{" +
             "id=" + getId() +
-            ", vitesseDeCroissance='" + getVitesseDeCroissance() + "'" +
             "}";
     }
 }

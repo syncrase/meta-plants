@@ -3,6 +3,7 @@
     "microserviceRaunkier": {
       "home": {
         "title": "Raunkiers",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Δημιουργήστε ένα νέο Raunkier",
         "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Raunkier",
         "notFound": "No Raunkiers found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Raunkier"
       },
+      "id": "ID",
       "type": "Type"
     }
   },

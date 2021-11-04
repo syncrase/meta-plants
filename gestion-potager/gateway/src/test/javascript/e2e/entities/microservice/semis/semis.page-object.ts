@@ -20,7 +20,7 @@ export class SemisComponentsPage {
   }
 
   async getTitle(): Promise<string> {
-    return this.title.getAttribute('jhiTranslate');
+    return this.title.getAttribute('gpTranslate');
   }
 }
 
@@ -29,13 +29,23 @@ export class SemisUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
+
   semisPleineTerreSelect = element(by.id('field_semisPleineTerre'));
   semisSousAbrisSelect = element(by.id('field_semisSousAbris'));
   typeSemisSelect = element(by.id('field_typeSemis'));
   germinationSelect = element(by.id('field_germination'));
 
   async getPageTitle(): Promise<string> {
-    return this.pageTitle.getAttribute('jhiTranslate');
+    return this.pageTitle.getAttribute('gpTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async semisPleineTerreSelectLastOption(): Promise<void> {
@@ -120,7 +130,7 @@ export class SemisDeleteDialog {
   private confirmButton = element(by.id('gp-confirm-delete-semis'));
 
   async getDialogTitle(): Promise<string> {
-    return this.dialogTitle.getAttribute('jhiTranslate');
+    return this.dialogTitle.getAttribute('gpTranslate');
   }
 
   async clickOnConfirmButton(): Promise<void> {

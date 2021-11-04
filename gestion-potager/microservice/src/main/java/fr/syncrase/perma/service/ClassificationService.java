@@ -1,17 +1,14 @@
 package fr.syncrase.perma.service;
 
 import fr.syncrase.perma.service.dto.ClassificationDTO;
-
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * Service Interface for managing {@link fr.syncrase.perma.domain.Classification}.
  */
 public interface ClassificationService {
-
     /**
      * Save a classification.
      *
@@ -21,13 +18,20 @@ public interface ClassificationService {
     ClassificationDTO save(ClassificationDTO classificationDTO);
 
     /**
+     * Partially updates a classification.
+     *
+     * @param classificationDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<ClassificationDTO> partialUpdate(ClassificationDTO classificationDTO);
+
+    /**
      * Get all the classifications.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<ClassificationDTO> findAll(Pageable pageable);
-
 
     /**
      * Get the "id" classification.

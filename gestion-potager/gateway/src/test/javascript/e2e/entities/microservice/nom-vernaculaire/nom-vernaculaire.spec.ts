@@ -11,12 +11,14 @@ describe('NomVernaculaire e2e test', () => {
   let nomVernaculaireComponentsPage: NomVernaculaireComponentsPage;
   let nomVernaculaireUpdatePage: NomVernaculaireUpdatePage;
   let nomVernaculaireDeleteDialog: NomVernaculaireDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -45,12 +47,6 @@ describe('NomVernaculaire e2e test', () => {
 
     await promise.all([nomVernaculaireUpdatePage.setNomInput('nom'), nomVernaculaireUpdatePage.setDescriptionInput('description')]);
 
-    expect(await nomVernaculaireUpdatePage.getNomInput()).to.eq('nom', 'Expected Nom value to be equals to nom');
-    expect(await nomVernaculaireUpdatePage.getDescriptionInput()).to.eq(
-      'description',
-      'Expected Description value to be equals to description'
-    );
-
     await nomVernaculaireUpdatePage.save();
     expect(await nomVernaculaireUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -67,6 +63,7 @@ describe('NomVernaculaire e2e test', () => {
     nomVernaculaireDeleteDialog = new NomVernaculaireDeleteDialog();
     expect(await nomVernaculaireDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceNomVernaculaire.delete.question');
     await nomVernaculaireDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(nomVernaculaireComponentsPage.title), 5000);
 
     expect(await nomVernaculaireComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

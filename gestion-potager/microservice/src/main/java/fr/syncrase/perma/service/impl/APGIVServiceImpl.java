@@ -1,19 +1,17 @@
 package fr.syncrase.perma.service.impl;
 
-import fr.syncrase.perma.service.APGIVService;
 import fr.syncrase.perma.domain.APGIV;
 import fr.syncrase.perma.repository.APGIVRepository;
+import fr.syncrase.perma.service.APGIVService;
 import fr.syncrase.perma.service.dto.APGIVDTO;
 import fr.syncrase.perma.service.mapper.APGIVMapper;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link APGIV}.
@@ -42,20 +40,32 @@ public class APGIVServiceImpl implements APGIVService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<APGIVDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all APGIVS");
-        return aPGIVRepository.findAll(pageable)
+    public Optional<APGIVDTO> partialUpdate(APGIVDTO aPGIVDTO) {
+        log.debug("Request to partially update APGIV : {}", aPGIVDTO);
+
+        return aPGIVRepository
+            .findById(aPGIVDTO.getId())
+            .map(existingAPGIV -> {
+                aPGIVMapper.partialUpdate(existingAPGIV, aPGIVDTO);
+
+                return existingAPGIV;
+            })
+            .map(aPGIVRepository::save)
             .map(aPGIVMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<APGIVDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all APGIVS");
+        return aPGIVRepository.findAll(pageable).map(aPGIVMapper::toDto);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<APGIVDTO> findOne(Long id) {
         log.debug("Request to get APGIV : {}", id);
-        return aPGIVRepository.findById(id)
-            .map(aPGIVMapper::toDto);
+        return aPGIVRepository.findById(id).map(aPGIVMapper::toDto);
     }
 
     @Override

@@ -3,6 +3,7 @@
     "microserviceAllelopathie": {
       "home": {
         "title": "Allelopathies",
+        "refreshListLabel": "Actualiser la liste",
         "createLabel": "Créer un nouveau Allelopathie",
         "createOrEditLabel": "Créer ou éditer un Allelopathie",
         "notFound": "Aucun Allelopathie trouvé"
@@ -13,11 +14,12 @@
       "detail": {
         "title": "Allelopathie"
       },
+      "id": "ID",
       "type": "Type",
       "description": "Description",
       "cible": "Cible",
       "origine": "Origine",
-      "plante": "Plante"
+      "interaction": "Interaction"
     }
   },
   "microserviceApp": {

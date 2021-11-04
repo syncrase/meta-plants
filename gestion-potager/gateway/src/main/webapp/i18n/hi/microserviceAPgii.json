@@ -3,6 +3,7 @@
     "microserviceAPgii": {
       "home": {
         "title": "APGIIS",
+        "refreshListLabel": "Refresh list",
         "createLabel": "नया APGII बनाएँ",
         "createOrEditLabel": "APGII बनाएँ या संपादित करें",
         "notFound": "No APGIIS found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGII"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

@@ -8,7 +8,6 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20210302085909",
   "entityTableName": "raunkier",
   "dto": "mapstruct",
   "pagination": "pagination",
@@ -17,7 +16,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104120254"
 }

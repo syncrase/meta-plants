@@ -11,12 +11,14 @@ describe('Allelopathie e2e test', () => {
   let allelopathieComponentsPage: AllelopathieComponentsPage;
   let allelopathieUpdatePage: AllelopathieUpdatePage;
   let allelopathieDeleteDialog: AllelopathieDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -48,14 +50,8 @@ describe('Allelopathie e2e test', () => {
       allelopathieUpdatePage.setDescriptionInput('description'),
       allelopathieUpdatePage.cibleSelectLastOption(),
       allelopathieUpdatePage.origineSelectLastOption(),
-      allelopathieUpdatePage.planteSelectLastOption(),
+      allelopathieUpdatePage.interactionSelectLastOption(),
     ]);
-
-    expect(await allelopathieUpdatePage.getTypeInput()).to.eq('type', 'Expected Type value to be equals to type');
-    expect(await allelopathieUpdatePage.getDescriptionInput()).to.eq(
-      'description',
-      'Expected Description value to be equals to description'
-    );
 
     await allelopathieUpdatePage.save();
     expect(await allelopathieUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
@@ -70,6 +66,7 @@ describe('Allelopathie e2e test', () => {
     allelopathieDeleteDialog = new AllelopathieDeleteDialog();
     expect(await allelopathieDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceAllelopathie.delete.question');
     await allelopathieDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(allelopathieComponentsPage.title), 5000);
 
     expect(await allelopathieComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

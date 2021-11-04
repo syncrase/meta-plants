@@ -1,13 +1,14 @@
 package fr.syncrase.perma.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Cronquist} entity.
  */
 public class CronquistDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -34,7 +35,6 @@ public class CronquistDTO implements Serializable {
     @NotNull
     private String genre;
 
-    
     public Long getId() {
         return id;
     }
@@ -116,12 +116,16 @@ public class CronquistDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((CronquistDTO) o).id);
+        CronquistDTO cronquistDTO = (CronquistDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, cronquistDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore

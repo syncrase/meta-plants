@@ -3,9 +3,10 @@
     "microserviceSemis": {
       "home": {
         "title": "Semis",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Semis",
         "createOrEditLabel": "Создать или отредактировать Semis",
-        "notFound": "No Semis found"
+        "notFound": "Semis не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Semis {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Semis"
       },
+      "id": "ID",
       "semisPleineTerre": "Semis Pleine Terre",
       "semisSousAbris": "Semis Sous Abris",
       "typeSemis": "Type Semis",

@@ -1,11 +1,9 @@
 package fr.syncrase.perma.domain;
 
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Classification.
@@ -20,6 +18,7 @@ public class Classification implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @OneToOne
@@ -47,8 +46,14 @@ public class Classification implements Serializable {
     private APGIV apg4;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public Classification id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -56,82 +61,83 @@ public class Classification implements Serializable {
     }
 
     public Raunkier getRaunkier() {
-        return raunkier;
-    }
-
-    public Classification raunkier(Raunkier raunkier) {
-        this.raunkier = raunkier;
-        return this;
+        return this.raunkier;
     }
 
     public void setRaunkier(Raunkier raunkier) {
         this.raunkier = raunkier;
     }
 
-    public Cronquist getCronquist() {
-        return cronquist;
+    public Classification raunkier(Raunkier raunkier) {
+        this.setRaunkier(raunkier);
+        return this;
     }
 
-    public Classification cronquist(Cronquist cronquist) {
-        this.cronquist = cronquist;
-        return this;
+    public Cronquist getCronquist() {
+        return this.cronquist;
     }
 
     public void setCronquist(Cronquist cronquist) {
         this.cronquist = cronquist;
     }
 
-    public APGI getApg1() {
-        return apg1;
+    public Classification cronquist(Cronquist cronquist) {
+        this.setCronquist(cronquist);
+        return this;
     }
 
-    public Classification apg1(APGI aPGI) {
-        this.apg1 = aPGI;
-        return this;
+    public APGI getApg1() {
+        return this.apg1;
     }
 
     public void setApg1(APGI aPGI) {
         this.apg1 = aPGI;
     }
 
-    public APGII getApg2() {
-        return apg2;
+    public Classification apg1(APGI aPGI) {
+        this.setApg1(aPGI);
+        return this;
     }
 
-    public Classification apg2(APGII aPGII) {
-        this.apg2 = aPGII;
-        return this;
+    public APGII getApg2() {
+        return this.apg2;
     }
 
     public void setApg2(APGII aPGII) {
         this.apg2 = aPGII;
     }
 
-    public APGIII getApg3() {
-        return apg3;
+    public Classification apg2(APGII aPGII) {
+        this.setApg2(aPGII);
+        return this;
     }
 
-    public Classification apg3(APGIII aPGIII) {
-        this.apg3 = aPGIII;
-        return this;
+    public APGIII getApg3() {
+        return this.apg3;
     }
 
     public void setApg3(APGIII aPGIII) {
         this.apg3 = aPGIII;
     }
 
-    public APGIV getApg4() {
-        return apg4;
+    public Classification apg3(APGIII aPGIII) {
+        this.setApg3(aPGIII);
+        return this;
     }
 
-    public Classification apg4(APGIV aPGIV) {
-        this.apg4 = aPGIV;
-        return this;
+    public APGIV getApg4() {
+        return this.apg4;
     }
 
     public void setApg4(APGIV aPGIV) {
         this.apg4 = aPGIV;
     }
+
+    public Classification apg4(APGIV aPGIV) {
+        this.setApg4(aPGIV);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -147,7 +153,8 @@ public class Classification implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

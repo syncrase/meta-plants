@@ -1,19 +1,17 @@
 package fr.syncrase.perma.service.impl;
 
-import fr.syncrase.perma.service.RessemblanceService;
 import fr.syncrase.perma.domain.Ressemblance;
 import fr.syncrase.perma.repository.RessemblanceRepository;
+import fr.syncrase.perma.service.RessemblanceService;
 import fr.syncrase.perma.service.dto.RessemblanceDTO;
 import fr.syncrase.perma.service.mapper.RessemblanceMapper;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link Ressemblance}.
@@ -42,20 +40,32 @@ public class RessemblanceServiceImpl implements RessemblanceService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<RessemblanceDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Ressemblances");
-        return ressemblanceRepository.findAll(pageable)
+    public Optional<RessemblanceDTO> partialUpdate(RessemblanceDTO ressemblanceDTO) {
+        log.debug("Request to partially update Ressemblance : {}", ressemblanceDTO);
+
+        return ressemblanceRepository
+            .findById(ressemblanceDTO.getId())
+            .map(existingRessemblance -> {
+                ressemblanceMapper.partialUpdate(existingRessemblance, ressemblanceDTO);
+
+                return existingRessemblance;
+            })
+            .map(ressemblanceRepository::save)
             .map(ressemblanceMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<RessemblanceDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Ressemblances");
+        return ressemblanceRepository.findAll(pageable).map(ressemblanceMapper::toDto);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<RessemblanceDTO> findOne(Long id) {
         log.debug("Request to get Ressemblance : {}", id);
-        return ressemblanceRepository.findById(id)
-            .map(ressemblanceMapper::toDto);
+        return ressemblanceRepository.findById(id).map(ressemblanceMapper::toDto);
     }
 
     @Override

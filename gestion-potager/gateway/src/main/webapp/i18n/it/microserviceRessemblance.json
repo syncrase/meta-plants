@@ -3,6 +3,7 @@
     "microserviceRessemblance": {
       "home": {
         "title": "Ressemblances",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Genera un nuovo Ressemblance",
         "createOrEditLabel": "Genera o modifica un Ressemblance",
         "notFound": "No Ressemblances found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Ressemblance"
       },
+      "id": "ID",
       "description": "Description",
       "confusion": "Confusion"
     }

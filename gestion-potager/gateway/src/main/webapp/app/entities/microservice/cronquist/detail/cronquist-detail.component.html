@@ -1,0 +1,60 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cronquist">
+      <h2 data-cy="cronquistDetailsHeading"><span gpTranslate="gatewayApp.microserviceCronquist.detail.title">Cronquist</span></h2>
+
+      <hr />
+
+      <gp-alert-error></gp-alert-error>
+
+      <gp-alert></gp-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span gpTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ cronquist.id }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.regne">Regne</span></dt>
+        <dd>
+          <span>{{ cronquist.regne }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.sousRegne">Sous Regne</span></dt>
+        <dd>
+          <span>{{ cronquist.sousRegne }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.division">Division</span></dt>
+        <dd>
+          <span>{{ cronquist.division }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.classe">Classe</span></dt>
+        <dd>
+          <span>{{ cronquist.classe }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.sousClasse">Sous Classe</span></dt>
+        <dd>
+          <span>{{ cronquist.sousClasse }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.ordre">Ordre</span></dt>
+        <dd>
+          <span>{{ cronquist.ordre }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.famille">Famille</span></dt>
+        <dd>
+          <span>{{ cronquist.famille }}</span>
+        </dd>
+        <dt><span gpTranslate="gatewayApp.microserviceCronquist.genre">Genre</span></dt>
+        <dd>
+          <span>{{ cronquist.genre }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span gpTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/cronquist', cronquist.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span gpTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

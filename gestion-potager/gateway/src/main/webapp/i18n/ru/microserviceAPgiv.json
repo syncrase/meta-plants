@@ -3,9 +3,10 @@
     "microserviceAPgiv": {
       "home": {
         "title": "APGIVS",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый APGIV",
         "createOrEditLabel": "Создать или отредактировать APGIV",
-        "notFound": "No APGIVS found"
+        "notFound": "APGIVS не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить APGIV {{ id }}?"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGIV"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

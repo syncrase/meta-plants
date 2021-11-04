@@ -15,28 +15,24 @@
     {
       "relationshipType": "one-to-one",
       "otherEntityName": "plante",
-      "otherEntityRelationshipName": "allelopathieRecue",
+      "otherEntityRelationshipName": "allelopathie",
       "relationshipName": "cible",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
       "relationshipType": "one-to-one",
       "otherEntityName": "plante",
-      "otherEntityRelationshipName": "allelopathieProduite",
+      "otherEntityRelationshipName": "allelopathie",
       "relationshipName": "origine",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "interactions",
-      "relationshipName": "plante",
-      "otherEntityField": "id"
+      "relationshipName": "interaction"
     }
   ],
-  "changelogDate": "20210302090809",
   "entityTableName": "allelopathie",
   "dto": "mapstruct",
   "pagination": "pagination",
@@ -45,7 +41,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104121754"
 }

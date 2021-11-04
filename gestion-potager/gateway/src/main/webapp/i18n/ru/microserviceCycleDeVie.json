@@ -3,9 +3,10 @@
     "microserviceCycleDeVie": {
       "home": {
         "title": "Cycle De Vies",
+        "refreshListLabel": "Обновить список",
         "createLabel": "Создать новый Cycle De Vie",
         "createOrEditLabel": "Создать или отредактировать Cycle De Vie",
-        "notFound": "No Cycle De Vies found"
+        "notFound": "Cycle De Vies не найдено"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить Cycle De Vie {{ id }}?"
@@ -13,7 +14,7 @@
       "detail": {
         "title": "Cycle De Vie"
       },
-      "vitesseDeCroissance": "Vitesse De Croissance",
+      "id": "ID",
       "semis": "Semis",
       "apparitionFeuilles": "Apparition Feuilles",
       "floraison": "Floraison",
@@ -21,7 +22,8 @@
       "croissance": "Croissance",
       "maturite": "Maturite",
       "plantation": "Plantation",
-      "rempotage": "Rempotage"
+      "rempotage": "Rempotage",
+      "reproduction": "Reproduction"
     }
   },
   "microserviceApp": {

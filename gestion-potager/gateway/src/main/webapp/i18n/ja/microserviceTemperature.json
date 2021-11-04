@@ -1,0 +1,32 @@
+{
+  "gatewayApp": {
+    "microserviceTemperature": {
+      "home": {
+        "title": "Temperatures",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Temperature を追加",
+        "createOrEditLabel": "Temperatureを追加または編集",
+        "notFound": "No Temperatures found"
+      },
+      "delete": {
+        "question": "Temperature {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Temperature"
+      },
+      "id": "ID",
+      "min": "Min",
+      "max": "Max",
+      "description": "Description",
+      "rusticite": "Rusticite",
+      "plantes": "Plantes"
+    }
+  },
+  "microserviceApp": {
+    "microserviceTemperature": {
+      "created": "A new Temperature is created with identifier {{ param }}",
+      "updated": "A Temperature is updated with identifier {{ param }}",
+      "deleted": "A Temperature is deleted with identifier {{ param }}"
+    }
+  }
+}

@@ -5,19 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class APGIIMapperTest {
+class APGIIMapperTest {
 
-	private APGIIMapper aPGIIMapper;
+    private APGIIMapper aPGIIMapper;
 
-	@BeforeEach
-	public void setUp() {
-		aPGIIMapper = new APGIIMapperImpl();
-	}
-
-	@Test
-	public void testEntityFromId() {
-		Long id = 1L;
-		assertThat(aPGIIMapper.fromId(id).getId()).isEqualTo(id);
-		assertThat(aPGIIMapper.fromId(null)).isNull();
-	}
+    @BeforeEach
+    public void setUp() {
+        aPGIIMapper = new APGIIMapperImpl();
+    }
 }

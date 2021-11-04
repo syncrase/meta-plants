@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.PeriodeAnnee;
+import fr.syncrase.perma.repository.PeriodeAnneeRepository;
+import fr.syncrase.perma.service.criteria.PeriodeAnneeCriteria;
+import fr.syncrase.perma.service.dto.PeriodeAnneeDTO;
+import fr.syncrase.perma.service.mapper.PeriodeAnneeMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.PeriodeAnnee;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.PeriodeAnneeRepository;
-import fr.syncrase.perma.service.dto.PeriodeAnneeCriteria;
-import fr.syncrase.perma.service.dto.PeriodeAnneeDTO;
-import fr.syncrase.perma.service.mapper.PeriodeAnneeMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link PeriodeAnnee} entities in the database.
@@ -64,8 +60,7 @@ public class PeriodeAnneeQueryService extends QueryService<PeriodeAnnee> {
     public Page<PeriodeAnneeDTO> findByCriteria(PeriodeAnneeCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<PeriodeAnnee> specification = createSpecification(criteria);
-        return periodeAnneeRepository.findAll(specification, page)
-            .map(periodeAnneeMapper::toDto);
+        return periodeAnneeRepository.findAll(specification, page).map(periodeAnneeMapper::toDto);
     }
 
     /**
@@ -88,16 +83,24 @@ public class PeriodeAnneeQueryService extends QueryService<PeriodeAnnee> {
     protected Specification<PeriodeAnnee> createSpecification(PeriodeAnneeCriteria criteria) {
         Specification<PeriodeAnnee> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), PeriodeAnnee_.id));
             }
             if (criteria.getDebutId() != null) {
-                specification = specification.and(buildSpecification(criteria.getDebutId(),
-                    root -> root.join(PeriodeAnnee_.debut, JoinType.LEFT).get(Mois_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getDebutId(), root -> root.join(PeriodeAnnee_.debut, JoinType.LEFT).get(Mois_.id))
+                    );
             }
             if (criteria.getFinId() != null) {
-                specification = specification.and(buildSpecification(criteria.getFinId(),
-                    root -> root.join(PeriodeAnnee_.fin, JoinType.LEFT).get(Mois_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getFinId(), root -> root.join(PeriodeAnnee_.fin, JoinType.LEFT).get(Mois_.id))
+                    );
             }
         }
         return specification;

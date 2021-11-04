@@ -3,6 +3,7 @@
     "microserviceCronquist": {
       "home": {
         "title": "Cronquists",
+        "refreshListLabel": "Actualiser la liste",
         "createLabel": "Créer un nouveau Cronquist",
         "createOrEditLabel": "Créer ou éditer un Cronquist",
         "notFound": "Aucun Cronquist trouvé"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Cronquist"
       },
+      "id": "ID",
       "regne": "Regne",
       "sousRegne": "Sous Regne",
       "division": "Division",

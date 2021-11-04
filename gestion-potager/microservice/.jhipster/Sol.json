@@ -2,16 +2,30 @@
   "name": "Sol",
   "fields": [
     {
-      "fieldName": "acidite",
+      "fieldName": "phMin",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "phMax",
       "fieldType": "Double"
     },
     {
       "fieldName": "type",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "richesse",
+      "fieldType": "String"
     }
   ],
-  "relationships": [],
-  "changelogDate": "20210302085509",
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "sols",
+      "relationshipName": "plante"
+    }
+  ],
   "entityTableName": "sol",
   "dto": "mapstruct",
   "pagination": "pagination",
@@ -20,7 +34,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
   "applications": ["microservice", "gateway"],
-  "microserviceName": "microservice"
+  "microserviceName": "microservice",
+  "clientRootFolder": "microservice",
+  "databaseType": "sql",
+  "changelogDate": "20211104120454"
 }

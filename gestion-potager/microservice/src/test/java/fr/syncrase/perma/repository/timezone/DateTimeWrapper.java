@@ -1,9 +1,9 @@
 package fr.syncrase.perma.repository.timezone;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.*;
 import java.util.Objects;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "gp_date_time_wrapper")

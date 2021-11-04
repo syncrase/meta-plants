@@ -3,6 +3,7 @@
     "microservicePlante": {
       "home": {
         "title": "Plantes",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Δημιουργήστε ένα νέο Plante",
         "createOrEditLabel": "Δημιουργήστε η επεξεργαστείτε ένα Plante",
         "notFound": "No Plantes found"
@@ -13,18 +14,22 @@
       "detail": {
         "title": "Plante"
       },
+      "id": "ID",
       "nomLatin": "Nom Latin",
       "entretien": "Entretien",
       "histoire": "Histoire",
-      "exposition": "Exposition",
-      "rusticite": "Rusticite",
+      "vitesse": "Vitesse",
       "cycleDeVie": "Cycle De Vie",
       "classification": "Classification",
       "confusions": "Confusions",
       "interactions": "Interactions",
+      "expositions": "Expositions",
+      "sols": "Sols",
       "nomsVernaculaires": "Noms Vernaculaires",
-      "allelopathieRecue": "Allelopathie Recue",
-      "allelopathieProduite": "Allelopathie Produite"
+      "temperature": "Temperature",
+      "racine": "Racine",
+      "strate": "Strate",
+      "feuillage": "Feuillage"
     }
   },
   "microserviceApp": {

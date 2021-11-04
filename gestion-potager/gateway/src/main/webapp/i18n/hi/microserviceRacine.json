@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceRacine": {
+      "home": {
+        "title": "Racines",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "नया Racine बनाएँ",
+        "createOrEditLabel": "Racine बनाएँ या संपादित करें",
+        "notFound": "No Racines found"
+      },
+      "delete": {
+        "question": "Racine [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Racine"
+      },
+      "id": "ID",
+      "type": "Type",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceRacine": {
+      "created": "एक नया Racine [identifier: {{ param }}] तैयार है",
+      "updated": "एक Racine [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Racine [identifier: {{ param }}] हटा दिया है"
+    }
+  }
+}

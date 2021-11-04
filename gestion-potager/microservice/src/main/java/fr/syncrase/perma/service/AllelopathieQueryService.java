@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.Allelopathie;
+import fr.syncrase.perma.repository.AllelopathieRepository;
+import fr.syncrase.perma.service.criteria.AllelopathieCriteria;
+import fr.syncrase.perma.service.dto.AllelopathieDTO;
+import fr.syncrase.perma.service.mapper.AllelopathieMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.Allelopathie;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.AllelopathieRepository;
-import fr.syncrase.perma.service.dto.AllelopathieCriteria;
-import fr.syncrase.perma.service.dto.AllelopathieDTO;
-import fr.syncrase.perma.service.mapper.AllelopathieMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Allelopathie} entities in the database.
@@ -64,8 +60,7 @@ public class AllelopathieQueryService extends QueryService<Allelopathie> {
     public Page<AllelopathieDTO> findByCriteria(AllelopathieCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Allelopathie> specification = createSpecification(criteria);
-        return allelopathieRepository.findAll(specification, page)
-            .map(allelopathieMapper::toDto);
+        return allelopathieRepository.findAll(specification, page).map(allelopathieMapper::toDto);
     }
 
     /**
@@ -88,6 +83,10 @@ public class AllelopathieQueryService extends QueryService<Allelopathie> {
     protected Specification<Allelopathie> createSpecification(AllelopathieCriteria criteria) {
         Specification<Allelopathie> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Allelopathie_.id));
             }
@@ -98,16 +97,25 @@ public class AllelopathieQueryService extends QueryService<Allelopathie> {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Allelopathie_.description));
             }
             if (criteria.getCibleId() != null) {
-                specification = specification.and(buildSpecification(criteria.getCibleId(),
-                    root -> root.join(Allelopathie_.cible, JoinType.LEFT).get(Plante_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getCibleId(), root -> root.join(Allelopathie_.cible, JoinType.LEFT).get(Plante_.id))
+                    );
             }
             if (criteria.getOrigineId() != null) {
-                specification = specification.and(buildSpecification(criteria.getOrigineId(),
-                    root -> root.join(Allelopathie_.origine, JoinType.LEFT).get(Plante_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getOrigineId(), root -> root.join(Allelopathie_.origine, JoinType.LEFT).get(Plante_.id))
+                    );
             }
-            if (criteria.getPlanteId() != null) {
-                specification = specification.and(buildSpecification(criteria.getPlanteId(),
-                    root -> root.join(Allelopathie_.plante, JoinType.LEFT).get(Plante_.id)));
+            if (criteria.getInteractionId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getInteractionId(),
+                            root -> root.join(Allelopathie_.interaction, JoinType.LEFT).get(Plante_.id)
+                        )
+                    );
             }
         }
         return specification;

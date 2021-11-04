@@ -1,14 +1,18 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.RaunkierService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.RaunkierDTO;
-import fr.syncrase.perma.service.dto.RaunkierCriteria;
+import fr.syncrase.perma.repository.RaunkierRepository;
 import fr.syncrase.perma.service.RaunkierQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.RaunkierService;
+import fr.syncrase.perma.service.criteria.RaunkierCriteria;
+import fr.syncrase.perma.service.dto.RaunkierDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.Raunkier}.
@@ -42,10 +43,17 @@ public class RaunkierResource {
 
     private final RaunkierService raunkierService;
 
+    private final RaunkierRepository raunkierRepository;
+
     private final RaunkierQueryService raunkierQueryService;
 
-    public RaunkierResource(RaunkierService raunkierService, RaunkierQueryService raunkierQueryService) {
+    public RaunkierResource(
+        RaunkierService raunkierService,
+        RaunkierRepository raunkierRepository,
+        RaunkierQueryService raunkierQueryService
+    ) {
         this.raunkierService = raunkierService;
+        this.raunkierRepository = raunkierRepository;
         this.raunkierQueryService = raunkierQueryService;
     }
 
@@ -63,30 +71,80 @@ public class RaunkierResource {
             throw new BadRequestAlertException("A new raunkier cannot already have an ID", ENTITY_NAME, "idexists");
         }
         RaunkierDTO result = raunkierService.save(raunkierDTO);
-        return ResponseEntity.created(new URI("/api/raunkiers/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/raunkiers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /raunkiers} : Updates an existing raunkier.
+     * {@code PUT  /raunkiers/:id} : Updates an existing raunkier.
      *
+     * @param id the id of the raunkierDTO to save.
      * @param raunkierDTO the raunkierDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated raunkierDTO,
      * or with status {@code 400 (Bad Request)} if the raunkierDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the raunkierDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/raunkiers")
-    public ResponseEntity<RaunkierDTO> updateRaunkier(@Valid @RequestBody RaunkierDTO raunkierDTO) throws URISyntaxException {
-        log.debug("REST request to update Raunkier : {}", raunkierDTO);
+    @PutMapping("/raunkiers/{id}")
+    public ResponseEntity<RaunkierDTO> updateRaunkier(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody RaunkierDTO raunkierDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update Raunkier : {}, {}", id, raunkierDTO);
         if (raunkierDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, raunkierDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!raunkierRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         RaunkierDTO result = raunkierService.save(raunkierDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, raunkierDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /raunkiers/:id} : Partial updates given fields of an existing raunkier, field will ignore if it is null
+     *
+     * @param id the id of the raunkierDTO to save.
+     * @param raunkierDTO the raunkierDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated raunkierDTO,
+     * or with status {@code 400 (Bad Request)} if the raunkierDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the raunkierDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the raunkierDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/raunkiers/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<RaunkierDTO> partialUpdateRaunkier(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody RaunkierDTO raunkierDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Raunkier partially : {}, {}", id, raunkierDTO);
+        if (raunkierDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, raunkierDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!raunkierRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<RaunkierDTO> result = raunkierService.partialUpdate(raunkierDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, raunkierDTO.getId().toString())
+        );
     }
 
     /**
@@ -139,6 +197,9 @@ public class RaunkierResource {
     public ResponseEntity<Void> deleteRaunkier(@PathVariable Long id) {
         log.debug("REST request to delete Raunkier : {}", id);
         raunkierService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

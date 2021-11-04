@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "microserviceFeuillage": {
+      "home": {
+        "title": "Feuillages",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Feuillage を追加",
+        "createOrEditLabel": "Feuillageを追加または編集",
+        "notFound": "No Feuillages found"
+      },
+      "delete": {
+        "question": "Feuillage {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Feuillage"
+      },
+      "id": "ID",
+      "type": "Type",
+      "plante": "Plante"
+    }
+  },
+  "microserviceApp": {
+    "microserviceFeuillage": {
+      "created": "A new Feuillage is created with identifier {{ param }}",
+      "updated": "A Feuillage is updated with identifier {{ param }}",
+      "deleted": "A Feuillage is deleted with identifier {{ param }}"
+    }
+  }
+}

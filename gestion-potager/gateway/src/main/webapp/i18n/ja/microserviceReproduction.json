@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "microserviceReproduction": {
+      "home": {
+        "title": "Reproductions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Reproduction を追加",
+        "createOrEditLabel": "Reproductionを追加または編集",
+        "notFound": "No Reproductions found"
+      },
+      "delete": {
+        "question": "Reproduction {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Reproduction"
+      },
+      "id": "ID",
+      "vitesse": "Vitesse",
+      "type": "Type",
+      "cycleDeVie": "Cycle De Vie"
+    }
+  },
+  "microserviceApp": {
+    "microserviceReproduction": {
+      "created": "A new Reproduction is created with identifier {{ param }}",
+      "updated": "A Reproduction is updated with identifier {{ param }}",
+      "deleted": "A Reproduction is deleted with identifier {{ param }}"
+    }
+  }
+}

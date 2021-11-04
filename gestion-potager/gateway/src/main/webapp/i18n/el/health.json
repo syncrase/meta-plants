@@ -17,8 +17,10 @@
       "hystrix": "Hystrix",
       "diskSpace": "Χώρος σκληρού δίσκου",
       "mail": "Email",
+      "livenessState": "Liveness state",
+      "readinessState": "Readiness state",
       "ping": "Application",
-      "db": "Βάση Δεδομένων"
+      "r2dbc": "Βάση Δεδομένων"
     },
     "table": {
       "service": "Υπηρεσία",

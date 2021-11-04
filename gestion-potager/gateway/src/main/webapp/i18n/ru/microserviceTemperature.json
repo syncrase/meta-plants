@@ -1,0 +1,32 @@
+{
+  "gatewayApp": {
+    "microserviceTemperature": {
+      "home": {
+        "title": "Temperatures",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Temperature",
+        "createOrEditLabel": "Создать или отредактировать Temperature",
+        "notFound": "Temperatures не найдено"
+      },
+      "delete": {
+        "question": "Вы уверены что хотите удалить Temperature {{ id }}?"
+      },
+      "detail": {
+        "title": "Temperature"
+      },
+      "id": "ID",
+      "min": "Min",
+      "max": "Max",
+      "description": "Description",
+      "rusticite": "Rusticite",
+      "plantes": "Plantes"
+    }
+  },
+  "microserviceApp": {
+    "microserviceTemperature": {
+      "created": "Новый Temperature создан с идентификатором {{ param }}",
+      "updated": "Temperature обновлен с идентификатором {{ param }}",
+      "deleted": "Temperature удален с идентификатором {{ param }}"
+    }
+  }
+}

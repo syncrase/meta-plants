@@ -17,7 +17,7 @@ class PlanteGatlingTest extends Simulation {
     // Log failed HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("DEBUG"))
 
-    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://localhost:8080"""
+    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://localhost:8081"""
 
     val httpConf = http
         .baseUrl(baseURL)
@@ -100,12 +100,10 @@ class PlanteGatlingTest extends Simulation {
             .post("/services/microservice/api/plantes")
             .headers(headers_http_authenticated)
             .body(StringBody("""{
-                "id":null
-                , "nomLatin":"SAMPLE_TEXT"
+                "nomLatin":"SAMPLE_TEXT"
                 , "entretien":"SAMPLE_TEXT"
                 , "histoire":"SAMPLE_TEXT"
-                , "exposition":"SAMPLE_TEXT"
-                , "rusticite":"SAMPLE_TEXT"
+                , "vitesse":"SAMPLE_TEXT"
                 }""")).asJson
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_plante_url"))).exitHereIfFailed

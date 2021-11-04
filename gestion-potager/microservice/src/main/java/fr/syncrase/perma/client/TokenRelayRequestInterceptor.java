@@ -1,10 +1,8 @@
 package fr.syncrase.perma.client;
 
-import fr.syncrase.perma.security.oauth2.AuthorizationHeaderUtil;
-
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-
+import fr.syncrase.perma.security.oauth2.AuthorizationHeaderUtil;
 import java.util.Optional;
 
 public class TokenRelayRequestInterceptor implements RequestInterceptor {

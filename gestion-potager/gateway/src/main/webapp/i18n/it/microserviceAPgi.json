@@ -3,6 +3,7 @@
     "microserviceAPgi": {
       "home": {
         "title": "APGIS",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Genera un nuovo APGI",
         "createOrEditLabel": "Genera o modifica un APGI",
         "notFound": "No APGIS found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "APGI"
       },
+      "id": "ID",
       "ordre": "Ordre",
       "famille": "Famille"
     }

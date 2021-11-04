@@ -1,24 +1,20 @@
 package fr.syncrase.perma.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.PeriodeAnnee} entity.
  */
 public class PeriodeAnneeDTO implements Serializable {
-    
+
     private Long id;
 
+    private MoisDTO debut;
 
-    private Long debutId;
+    private MoisDTO fin;
 
-    private String debutNom;
-
-    private Long finId;
-
-    private String finNom;
-    
     public Long getId() {
         return id;
     }
@@ -27,36 +23,20 @@ public class PeriodeAnneeDTO implements Serializable {
         this.id = id;
     }
 
-    public Long getDebutId() {
-        return debutId;
+    public MoisDTO getDebut() {
+        return debut;
     }
 
-    public void setDebutId(Long moisId) {
-        this.debutId = moisId;
+    public void setDebut(MoisDTO debut) {
+        this.debut = debut;
     }
 
-    public String getDebutNom() {
-        return debutNom;
+    public MoisDTO getFin() {
+        return fin;
     }
 
-    public void setDebutNom(String moisNom) {
-        this.debutNom = moisNom;
-    }
-
-    public Long getFinId() {
-        return finId;
-    }
-
-    public void setFinId(Long moisId) {
-        this.finId = moisId;
-    }
-
-    public String getFinNom() {
-        return finNom;
-    }
-
-    public void setFinNom(String moisNom) {
-        this.finNom = moisNom;
+    public void setFin(MoisDTO fin) {
+        this.fin = fin;
     }
 
     @Override
@@ -68,12 +48,16 @@ public class PeriodeAnneeDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((PeriodeAnneeDTO) o).id);
+        PeriodeAnneeDTO periodeAnneeDTO = (PeriodeAnneeDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, periodeAnneeDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -81,10 +65,8 @@ public class PeriodeAnneeDTO implements Serializable {
     public String toString() {
         return "PeriodeAnneeDTO{" +
             "id=" + getId() +
-            ", debutId=" + getDebutId() +
-            ", debutNom='" + getDebutNom() + "'" +
-            ", finId=" + getFinId() +
-            ", finNom='" + getFinNom() + "'" +
+            ", debut=" + getDebut() +
+            ", fin=" + getFin() +
             "}";
     }
 }

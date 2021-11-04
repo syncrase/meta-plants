@@ -11,7 +11,7 @@ export class NavBarPage {
   passwordMenu = element(by.css('[routerLink="account/password"]'));
   settingsMenu = element(by.css('[routerLink="account/settings"]'));
 
-  constructor(asAdmin?: Boolean) {
+  constructor(asAdmin?: boolean) {
     if (asAdmin) {
       this.adminMenu = element(by.id('admin-menu'));
     }
@@ -116,6 +116,7 @@ export class SignInPage {
   async loginWithOAuth(username: string, password: string): Promise<void> {
     // Entering non angular site, tell webdriver to switch to synchronous mode.
     await browser.waitForAngularEnabled(false);
+    await browser.sleep(1000);
 
     if (await this.username.isPresent()) {
       await this.username.sendKeys(username);

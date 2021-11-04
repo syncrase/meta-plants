@@ -1,17 +1,17 @@
 package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.TypeSemis} entity.
  */
 public class TypeSemisDTO implements Serializable {
-    
+
     private Long id;
 
     private String description;
 
-    
     public Long getId() {
         return id;
     }
@@ -37,12 +37,16 @@ public class TypeSemisDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((TypeSemisDTO) o).id);
+        TypeSemisDTO typeSemisDTO = (TypeSemisDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, typeSemisDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore

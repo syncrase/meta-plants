@@ -1,19 +1,17 @@
 package fr.syncrase.perma.service.impl;
 
-import fr.syncrase.perma.service.CronquistService;
 import fr.syncrase.perma.domain.Cronquist;
 import fr.syncrase.perma.repository.CronquistRepository;
+import fr.syncrase.perma.service.CronquistService;
 import fr.syncrase.perma.service.dto.CronquistDTO;
 import fr.syncrase.perma.service.mapper.CronquistMapper;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link Cronquist}.
@@ -42,20 +40,32 @@ public class CronquistServiceImpl implements CronquistService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<CronquistDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Cronquists");
-        return cronquistRepository.findAll(pageable)
+    public Optional<CronquistDTO> partialUpdate(CronquistDTO cronquistDTO) {
+        log.debug("Request to partially update Cronquist : {}", cronquistDTO);
+
+        return cronquistRepository
+            .findById(cronquistDTO.getId())
+            .map(existingCronquist -> {
+                cronquistMapper.partialUpdate(existingCronquist, cronquistDTO);
+
+                return existingCronquist;
+            })
+            .map(cronquistRepository::save)
             .map(cronquistMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<CronquistDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Cronquists");
+        return cronquistRepository.findAll(pageable).map(cronquistMapper::toDto);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<CronquistDTO> findOne(Long id) {
         log.debug("Request to get Cronquist : {}", id);
-        return cronquistRepository.findById(id)
-            .map(cronquistMapper::toDto);
+        return cronquistRepository.findById(id).map(cronquistMapper::toDto);
     }
 
     @Override

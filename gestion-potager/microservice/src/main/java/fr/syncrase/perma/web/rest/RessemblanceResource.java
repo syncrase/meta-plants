@@ -1,14 +1,16 @@
 package fr.syncrase.perma.web.rest;
 
-import fr.syncrase.perma.service.RessemblanceService;
-import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
-import fr.syncrase.perma.service.dto.RessemblanceDTO;
-import fr.syncrase.perma.service.dto.RessemblanceCriteria;
+import fr.syncrase.perma.repository.RessemblanceRepository;
 import fr.syncrase.perma.service.RessemblanceQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import fr.syncrase.perma.service.RessemblanceService;
+import fr.syncrase.perma.service.criteria.RessemblanceCriteria;
+import fr.syncrase.perma.service.dto.RessemblanceDTO;
+import fr.syncrase.perma.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,14 +18,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link fr.syncrase.perma.domain.Ressemblance}.
@@ -41,10 +41,17 @@ public class RessemblanceResource {
 
     private final RessemblanceService ressemblanceService;
 
+    private final RessemblanceRepository ressemblanceRepository;
+
     private final RessemblanceQueryService ressemblanceQueryService;
 
-    public RessemblanceResource(RessemblanceService ressemblanceService, RessemblanceQueryService ressemblanceQueryService) {
+    public RessemblanceResource(
+        RessemblanceService ressemblanceService,
+        RessemblanceRepository ressemblanceRepository,
+        RessemblanceQueryService ressemblanceQueryService
+    ) {
         this.ressemblanceService = ressemblanceService;
+        this.ressemblanceRepository = ressemblanceRepository;
         this.ressemblanceQueryService = ressemblanceQueryService;
     }
 
@@ -62,30 +69,80 @@ public class RessemblanceResource {
             throw new BadRequestAlertException("A new ressemblance cannot already have an ID", ENTITY_NAME, "idexists");
         }
         RessemblanceDTO result = ressemblanceService.save(ressemblanceDTO);
-        return ResponseEntity.created(new URI("/api/ressemblances/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/ressemblances/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /ressemblances} : Updates an existing ressemblance.
+     * {@code PUT  /ressemblances/:id} : Updates an existing ressemblance.
      *
+     * @param id the id of the ressemblanceDTO to save.
      * @param ressemblanceDTO the ressemblanceDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ressemblanceDTO,
      * or with status {@code 400 (Bad Request)} if the ressemblanceDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the ressemblanceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/ressemblances")
-    public ResponseEntity<RessemblanceDTO> updateRessemblance(@RequestBody RessemblanceDTO ressemblanceDTO) throws URISyntaxException {
-        log.debug("REST request to update Ressemblance : {}", ressemblanceDTO);
+    @PutMapping("/ressemblances/{id}")
+    public ResponseEntity<RessemblanceDTO> updateRessemblance(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody RessemblanceDTO ressemblanceDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update Ressemblance : {}, {}", id, ressemblanceDTO);
         if (ressemblanceDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, ressemblanceDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!ressemblanceRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         RessemblanceDTO result = ressemblanceService.save(ressemblanceDTO);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ressemblanceDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /ressemblances/:id} : Partial updates given fields of an existing ressemblance, field will ignore if it is null
+     *
+     * @param id the id of the ressemblanceDTO to save.
+     * @param ressemblanceDTO the ressemblanceDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ressemblanceDTO,
+     * or with status {@code 400 (Bad Request)} if the ressemblanceDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the ressemblanceDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the ressemblanceDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/ressemblances/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<RessemblanceDTO> partialUpdateRessemblance(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody RessemblanceDTO ressemblanceDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Ressemblance partially : {}, {}", id, ressemblanceDTO);
+        if (ressemblanceDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, ressemblanceDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!ressemblanceRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<RessemblanceDTO> result = ressemblanceService.partialUpdate(ressemblanceDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ressemblanceDTO.getId().toString())
+        );
     }
 
     /**
@@ -138,6 +195,9 @@ public class RessemblanceResource {
     public ResponseEntity<Void> deleteRessemblance(@PathVariable Long id) {
         log.debug("REST request to delete Ressemblance : {}", id);
         ressemblanceService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

@@ -11,12 +11,14 @@ describe('Raunkier e2e test', () => {
   let raunkierComponentsPage: RaunkierComponentsPage;
   let raunkierUpdatePage: RaunkierUpdatePage;
   let raunkierDeleteDialog: RaunkierDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.loginWithOAuth('admin', 'admin');
+    await signInPage.loginWithOAuth(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -42,8 +44,6 @@ describe('Raunkier e2e test', () => {
 
     await promise.all([raunkierUpdatePage.setTypeInput('type')]);
 
-    expect(await raunkierUpdatePage.getTypeInput()).to.eq('type', 'Expected Type value to be equals to type');
-
     await raunkierUpdatePage.save();
     expect(await raunkierUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -57,6 +57,7 @@ describe('Raunkier e2e test', () => {
     raunkierDeleteDialog = new RaunkierDeleteDialog();
     expect(await raunkierDeleteDialog.getDialogTitle()).to.eq('gatewayApp.microserviceRaunkier.delete.question');
     await raunkierDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(raunkierComponentsPage.title), 5000);
 
     expect(await raunkierComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

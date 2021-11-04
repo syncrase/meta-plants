@@ -3,6 +3,7 @@
     "microserviceRessemblance": {
       "home": {
         "title": "Ressemblances",
+        "refreshListLabel": "Refresh list",
         "createLabel": "नया Ressemblance बनाएँ",
         "createOrEditLabel": "Ressemblance बनाएँ या संपादित करें",
         "notFound": "No Ressemblances found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Ressemblance"
       },
+      "id": "ID",
       "description": "Description",
       "confusion": "Confusion"
     }

@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { MoisComponent } from './mois.component';
-import { MoisDetailComponent } from './mois-detail.component';
-import { MoisUpdateComponent } from './mois-update.component';
-import { MoisDeleteDialogComponent } from './mois-delete-dialog.component';
-import { moisRoute } from './mois.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { MoisComponent } from './list/mois.component';
+import { MoisDetailComponent } from './detail/mois-detail.component';
+import { MoisUpdateComponent } from './update/mois-update.component';
+import { MoisDeleteDialogComponent } from './delete/mois-delete-dialog.component';
+import { MoisRoutingModule } from './route/mois-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(moisRoute)],
+  imports: [SharedModule, MoisRoutingModule],
   declarations: [MoisComponent, MoisDetailComponent, MoisUpdateComponent, MoisDeleteDialogComponent],
   entryComponents: [MoisDeleteDialogComponent],
 })

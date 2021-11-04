@@ -1,9 +1,13 @@
 package fr.syncrase.perma.service;
 
+import fr.syncrase.perma.domain.*; // for static metamodels
+import fr.syncrase.perma.domain.Raunkier;
+import fr.syncrase.perma.repository.RaunkierRepository;
+import fr.syncrase.perma.service.criteria.RaunkierCriteria;
+import fr.syncrase.perma.service.dto.RaunkierDTO;
+import fr.syncrase.perma.service.mapper.RaunkierMapper;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import fr.syncrase.perma.domain.Raunkier;
-import fr.syncrase.perma.domain.*; // for static metamodels
-import fr.syncrase.perma.repository.RaunkierRepository;
-import fr.syncrase.perma.service.dto.RaunkierCriteria;
-import fr.syncrase.perma.service.dto.RaunkierDTO;
-import fr.syncrase.perma.service.mapper.RaunkierMapper;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Raunkier} entities in the database.
@@ -64,8 +60,7 @@ public class RaunkierQueryService extends QueryService<Raunkier> {
     public Page<RaunkierDTO> findByCriteria(RaunkierCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Raunkier> specification = createSpecification(criteria);
-        return raunkierRepository.findAll(specification, page)
-            .map(raunkierMapper::toDto);
+        return raunkierRepository.findAll(specification, page).map(raunkierMapper::toDto);
     }
 
     /**
@@ -88,6 +83,10 @@ public class RaunkierQueryService extends QueryService<Raunkier> {
     protected Specification<Raunkier> createSpecification(RaunkierCriteria criteria) {
         Specification<Raunkier> specification = Specification.where(null);
         if (criteria != null) {
+            // This has to be called first, because the distinct method returns null
+            if (criteria.getDistinct() != null) {
+                specification = specification.and(distinct(criteria.getDistinct()));
+            }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Raunkier_.id));
             }

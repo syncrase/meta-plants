@@ -3,6 +3,7 @@
     "microservicePeriodeAnnee": {
       "home": {
         "title": "PeriodeAnnees",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Genera un nuovo Periode Annee",
         "createOrEditLabel": "Genera o modifica un Periode Annee",
         "notFound": "No Periode Annees found"
@@ -13,6 +14,7 @@
       "detail": {
         "title": "Periode Annee"
       },
+      "id": "ID",
       "debut": "Debut",
       "fin": "Fin"
     }

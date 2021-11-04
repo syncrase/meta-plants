@@ -1,15 +1,13 @@
 package fr.syncrase.perma.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A NomVernaculaire.
@@ -24,6 +22,7 @@ public class NomVernaculaire implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -35,12 +34,33 @@ public class NomVernaculaire implements Serializable {
 
     @ManyToMany(mappedBy = "nomsVernaculaires")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
+    @JsonIgnoreProperties(
+        value = {
+            "cycleDeVie",
+            "classification",
+            "confusions",
+            "interactions",
+            "expositions",
+            "sols",
+            "nomsVernaculaires",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+        },
+        allowSetters = true
+    )
     private Set<Plante> plantes = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public NomVernaculaire id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
@@ -48,11 +68,11 @@ public class NomVernaculaire implements Serializable {
     }
 
     public String getNom() {
-        return nom;
+        return this.nom;
     }
 
     public NomVernaculaire nom(String nom) {
-        this.nom = nom;
+        this.setNom(nom);
         return this;
     }
 
@@ -61,11 +81,11 @@ public class NomVernaculaire implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public NomVernaculaire description(String description) {
-        this.description = description;
+        this.setDescription(description);
         return this;
     }
 
@@ -74,11 +94,21 @@ public class NomVernaculaire implements Serializable {
     }
 
     public Set<Plante> getPlantes() {
-        return plantes;
+        return this.plantes;
+    }
+
+    public void setPlantes(Set<Plante> plantes) {
+        if (this.plantes != null) {
+            this.plantes.forEach(i -> i.removeNomsVernaculaires(this));
+        }
+        if (plantes != null) {
+            plantes.forEach(i -> i.addNomsVernaculaires(this));
+        }
+        this.plantes = plantes;
     }
 
     public NomVernaculaire plantes(Set<Plante> plantes) {
-        this.plantes = plantes;
+        this.setPlantes(plantes);
         return this;
     }
 
@@ -94,9 +124,6 @@ public class NomVernaculaire implements Serializable {
         return this;
     }
 
-    public void setPlantes(Set<Plante> plantes) {
-        this.plantes = plantes;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -112,7 +139,8 @@ public class NomVernaculaire implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

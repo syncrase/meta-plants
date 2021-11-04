@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { GatewaySharedModule } from 'app/shared/shared.module';
-import { APGIVComponent } from './apgiv.component';
-import { APGIVDetailComponent } from './apgiv-detail.component';
-import { APGIVUpdateComponent } from './apgiv-update.component';
-import { APGIVDeleteDialogComponent } from './apgiv-delete-dialog.component';
-import { aPGIVRoute } from './apgiv.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { APGIVComponent } from './list/apgiv.component';
+import { APGIVDetailComponent } from './detail/apgiv-detail.component';
+import { APGIVUpdateComponent } from './update/apgiv-update.component';
+import { APGIVDeleteDialogComponent } from './delete/apgiv-delete-dialog.component';
+import { APGIVRoutingModule } from './route/apgiv-routing.module';
 
 @NgModule({
-  imports: [GatewaySharedModule, RouterModule.forChild(aPGIVRoute)],
+  imports: [SharedModule, APGIVRoutingModule],
   declarations: [APGIVComponent, APGIVDetailComponent, APGIVUpdateComponent, APGIVDeleteDialogComponent],
   entryComponents: [APGIVDeleteDialogComponent],
 })

@@ -16,9 +16,11 @@
       "clientConfigServer": "Сервер конфигурации микросервиса",
       "hystrix": "Hystrix",
       "diskSpace": "Место на диске",
-      "mail": "Email",
-      "ping": "Application",
-      "db": "База данных"
+      "mail": "Эл. почта",
+      "livenessState": "Живой",
+      "readinessState": "Готово",
+      "ping": "Приложение",
+      "r2dbc": "База данных"
     },
     "table": {
       "service": "Название сервиса",
