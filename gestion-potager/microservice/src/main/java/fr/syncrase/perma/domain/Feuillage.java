@@ -34,8 +34,7 @@ public class Feuillage implements Serializable {
             "cycleDeVie",
             "classification",
             "confusions",
-            "interactions",
-            "expositions",
+            "ensoleillements",
             "sols",
             "nomsVernaculaires",
             "temperature",
@@ -49,15 +48,7 @@ public class Feuillage implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Feuillage(String type) {
-    	this.type = type;
-	}
-
-	public Feuillage() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 

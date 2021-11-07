@@ -11,6 +11,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +65,7 @@ public class TypeSemisResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/type-semis")
-    public ResponseEntity<TypeSemisDTO> createTypeSemis(@RequestBody TypeSemisDTO typeSemisDTO) throws URISyntaxException {
+    public ResponseEntity<TypeSemisDTO> createTypeSemis(@Valid @RequestBody TypeSemisDTO typeSemisDTO) throws URISyntaxException {
         log.debug("REST request to save TypeSemis : {}", typeSemisDTO);
         if (typeSemisDTO.getId() != null) {
             throw new BadRequestAlertException("A new typeSemis cannot already have an ID", ENTITY_NAME, "idexists");
@@ -88,7 +90,7 @@ public class TypeSemisResource {
     @PutMapping("/type-semis/{id}")
     public ResponseEntity<TypeSemisDTO> updateTypeSemis(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody TypeSemisDTO typeSemisDTO
+        @Valid @RequestBody TypeSemisDTO typeSemisDTO
     ) throws URISyntaxException {
         log.debug("REST request to update TypeSemis : {}, {}", id, typeSemisDTO);
         if (typeSemisDTO.getId() == null) {
@@ -123,7 +125,7 @@ public class TypeSemisResource {
     @PatchMapping(value = "/type-semis/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<TypeSemisDTO> partialUpdateTypeSemis(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody TypeSemisDTO typeSemisDTO
+        @NotNull @RequestBody TypeSemisDTO typeSemisDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update TypeSemis partially : {}, {}", id, typeSemisDTO);
         if (typeSemisDTO.getId() == null) {

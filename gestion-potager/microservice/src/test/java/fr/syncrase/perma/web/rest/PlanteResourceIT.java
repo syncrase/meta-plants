@@ -8,10 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.perma.IntegrationTest;
-import fr.syncrase.perma.domain.Allelopathie;
 import fr.syncrase.perma.domain.Classification;
 import fr.syncrase.perma.domain.CycleDeVie;
-import fr.syncrase.perma.domain.Exposition;
+import fr.syncrase.perma.domain.Ensoleillement;
 import fr.syncrase.perma.domain.Feuillage;
 import fr.syncrase.perma.domain.NomVernaculaire;
 import fr.syncrase.perma.domain.Plante;
@@ -62,8 +61,11 @@ class PlanteResourceIT {
     private static final String DEFAULT_HISTOIRE = "AAAAAAAAAA";
     private static final String UPDATED_HISTOIRE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_VITESSE = "AAAAAAAAAA";
-    private static final String UPDATED_VITESSE = "BBBBBBBBBB";
+    private static final String DEFAULT_VITESSE_CROISSANCE = "AAAAAAAAAA";
+    private static final String UPDATED_VITESSE_CROISSANCE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_EXPOSITION = "AAAAAAAAAA";
+    private static final String UPDATED_EXPOSITION = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/plantes";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -102,7 +104,8 @@ class PlanteResourceIT {
             .nomLatin(DEFAULT_NOM_LATIN)
             .entretien(DEFAULT_ENTRETIEN)
             .histoire(DEFAULT_HISTOIRE)
-            .vitesse(DEFAULT_VITESSE);
+            .vitesseCroissance(DEFAULT_VITESSE_CROISSANCE)
+            .exposition(DEFAULT_EXPOSITION);
         return plante;
     }
 
@@ -117,7 +120,8 @@ class PlanteResourceIT {
             .nomLatin(UPDATED_NOM_LATIN)
             .entretien(UPDATED_ENTRETIEN)
             .histoire(UPDATED_HISTOIRE)
-            .vitesse(UPDATED_VITESSE);
+            .vitesseCroissance(UPDATED_VITESSE_CROISSANCE)
+            .exposition(UPDATED_EXPOSITION);
         return plante;
     }
 
@@ -148,7 +152,8 @@ class PlanteResourceIT {
         assertThat(testPlante.getNomLatin()).isEqualTo(DEFAULT_NOM_LATIN);
         assertThat(testPlante.getEntretien()).isEqualTo(DEFAULT_ENTRETIEN);
         assertThat(testPlante.getHistoire()).isEqualTo(DEFAULT_HISTOIRE);
-        assertThat(testPlante.getVitesse()).isEqualTo(DEFAULT_VITESSE);
+        assertThat(testPlante.getVitesseCroissance()).isEqualTo(DEFAULT_VITESSE_CROISSANCE);
+        assertThat(testPlante.getExposition()).isEqualTo(DEFAULT_EXPOSITION);
     }
 
     @Test
@@ -213,7 +218,8 @@ class PlanteResourceIT {
             .andExpect(jsonPath("$.[*].nomLatin").value(hasItem(DEFAULT_NOM_LATIN)))
             .andExpect(jsonPath("$.[*].entretien").value(hasItem(DEFAULT_ENTRETIEN)))
             .andExpect(jsonPath("$.[*].histoire").value(hasItem(DEFAULT_HISTOIRE)))
-            .andExpect(jsonPath("$.[*].vitesse").value(hasItem(DEFAULT_VITESSE)));
+            .andExpect(jsonPath("$.[*].vitesseCroissance").value(hasItem(DEFAULT_VITESSE_CROISSANCE)))
+            .andExpect(jsonPath("$.[*].exposition").value(hasItem(DEFAULT_EXPOSITION)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -249,7 +255,8 @@ class PlanteResourceIT {
             .andExpect(jsonPath("$.nomLatin").value(DEFAULT_NOM_LATIN))
             .andExpect(jsonPath("$.entretien").value(DEFAULT_ENTRETIEN))
             .andExpect(jsonPath("$.histoire").value(DEFAULT_HISTOIRE))
-            .andExpect(jsonPath("$.vitesse").value(DEFAULT_VITESSE));
+            .andExpect(jsonPath("$.vitesseCroissance").value(DEFAULT_VITESSE_CROISSANCE))
+            .andExpect(jsonPath("$.exposition").value(DEFAULT_EXPOSITION));
     }
 
     @Test
@@ -506,80 +513,158 @@ class PlanteResourceIT {
 
     @Test
     @Transactional
-    void getAllPlantesByVitesseIsEqualToSomething() throws Exception {
+    void getAllPlantesByVitesseCroissanceIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where vitesse equals to DEFAULT_VITESSE
-        defaultPlanteShouldBeFound("vitesse.equals=" + DEFAULT_VITESSE);
+        // Get all the planteList where vitesseCroissance equals to DEFAULT_VITESSE_CROISSANCE
+        defaultPlanteShouldBeFound("vitesseCroissance.equals=" + DEFAULT_VITESSE_CROISSANCE);
 
-        // Get all the planteList where vitesse equals to UPDATED_VITESSE
-        defaultPlanteShouldNotBeFound("vitesse.equals=" + UPDATED_VITESSE);
+        // Get all the planteList where vitesseCroissance equals to UPDATED_VITESSE_CROISSANCE
+        defaultPlanteShouldNotBeFound("vitesseCroissance.equals=" + UPDATED_VITESSE_CROISSANCE);
     }
 
     @Test
     @Transactional
-    void getAllPlantesByVitesseIsNotEqualToSomething() throws Exception {
+    void getAllPlantesByVitesseCroissanceIsNotEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where vitesse not equals to DEFAULT_VITESSE
-        defaultPlanteShouldNotBeFound("vitesse.notEquals=" + DEFAULT_VITESSE);
+        // Get all the planteList where vitesseCroissance not equals to DEFAULT_VITESSE_CROISSANCE
+        defaultPlanteShouldNotBeFound("vitesseCroissance.notEquals=" + DEFAULT_VITESSE_CROISSANCE);
 
-        // Get all the planteList where vitesse not equals to UPDATED_VITESSE
-        defaultPlanteShouldBeFound("vitesse.notEquals=" + UPDATED_VITESSE);
+        // Get all the planteList where vitesseCroissance not equals to UPDATED_VITESSE_CROISSANCE
+        defaultPlanteShouldBeFound("vitesseCroissance.notEquals=" + UPDATED_VITESSE_CROISSANCE);
     }
 
     @Test
     @Transactional
-    void getAllPlantesByVitesseIsInShouldWork() throws Exception {
+    void getAllPlantesByVitesseCroissanceIsInShouldWork() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where vitesse in DEFAULT_VITESSE or UPDATED_VITESSE
-        defaultPlanteShouldBeFound("vitesse.in=" + DEFAULT_VITESSE + "," + UPDATED_VITESSE);
+        // Get all the planteList where vitesseCroissance in DEFAULT_VITESSE_CROISSANCE or UPDATED_VITESSE_CROISSANCE
+        defaultPlanteShouldBeFound("vitesseCroissance.in=" + DEFAULT_VITESSE_CROISSANCE + "," + UPDATED_VITESSE_CROISSANCE);
 
-        // Get all the planteList where vitesse equals to UPDATED_VITESSE
-        defaultPlanteShouldNotBeFound("vitesse.in=" + UPDATED_VITESSE);
+        // Get all the planteList where vitesseCroissance equals to UPDATED_VITESSE_CROISSANCE
+        defaultPlanteShouldNotBeFound("vitesseCroissance.in=" + UPDATED_VITESSE_CROISSANCE);
     }
 
     @Test
     @Transactional
-    void getAllPlantesByVitesseIsNullOrNotNull() throws Exception {
+    void getAllPlantesByVitesseCroissanceIsNullOrNotNull() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where vitesse is not null
-        defaultPlanteShouldBeFound("vitesse.specified=true");
+        // Get all the planteList where vitesseCroissance is not null
+        defaultPlanteShouldBeFound("vitesseCroissance.specified=true");
 
-        // Get all the planteList where vitesse is null
-        defaultPlanteShouldNotBeFound("vitesse.specified=false");
+        // Get all the planteList where vitesseCroissance is null
+        defaultPlanteShouldNotBeFound("vitesseCroissance.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllPlantesByVitesseContainsSomething() throws Exception {
+    void getAllPlantesByVitesseCroissanceContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where vitesse contains DEFAULT_VITESSE
-        defaultPlanteShouldBeFound("vitesse.contains=" + DEFAULT_VITESSE);
+        // Get all the planteList where vitesseCroissance contains DEFAULT_VITESSE_CROISSANCE
+        defaultPlanteShouldBeFound("vitesseCroissance.contains=" + DEFAULT_VITESSE_CROISSANCE);
 
-        // Get all the planteList where vitesse contains UPDATED_VITESSE
-        defaultPlanteShouldNotBeFound("vitesse.contains=" + UPDATED_VITESSE);
+        // Get all the planteList where vitesseCroissance contains UPDATED_VITESSE_CROISSANCE
+        defaultPlanteShouldNotBeFound("vitesseCroissance.contains=" + UPDATED_VITESSE_CROISSANCE);
     }
 
     @Test
     @Transactional
-    void getAllPlantesByVitesseNotContainsSomething() throws Exception {
+    void getAllPlantesByVitesseCroissanceNotContainsSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
 
-        // Get all the planteList where vitesse does not contain DEFAULT_VITESSE
-        defaultPlanteShouldNotBeFound("vitesse.doesNotContain=" + DEFAULT_VITESSE);
+        // Get all the planteList where vitesseCroissance does not contain DEFAULT_VITESSE_CROISSANCE
+        defaultPlanteShouldNotBeFound("vitesseCroissance.doesNotContain=" + DEFAULT_VITESSE_CROISSANCE);
 
-        // Get all the planteList where vitesse does not contain UPDATED_VITESSE
-        defaultPlanteShouldBeFound("vitesse.doesNotContain=" + UPDATED_VITESSE);
+        // Get all the planteList where vitesseCroissance does not contain UPDATED_VITESSE_CROISSANCE
+        defaultPlanteShouldBeFound("vitesseCroissance.doesNotContain=" + UPDATED_VITESSE_CROISSANCE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByExpositionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        // Get all the planteList where exposition equals to DEFAULT_EXPOSITION
+        defaultPlanteShouldBeFound("exposition.equals=" + DEFAULT_EXPOSITION);
+
+        // Get all the planteList where exposition equals to UPDATED_EXPOSITION
+        defaultPlanteShouldNotBeFound("exposition.equals=" + UPDATED_EXPOSITION);
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByExpositionIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        // Get all the planteList where exposition not equals to DEFAULT_EXPOSITION
+        defaultPlanteShouldNotBeFound("exposition.notEquals=" + DEFAULT_EXPOSITION);
+
+        // Get all the planteList where exposition not equals to UPDATED_EXPOSITION
+        defaultPlanteShouldBeFound("exposition.notEquals=" + UPDATED_EXPOSITION);
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByExpositionIsInShouldWork() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        // Get all the planteList where exposition in DEFAULT_EXPOSITION or UPDATED_EXPOSITION
+        defaultPlanteShouldBeFound("exposition.in=" + DEFAULT_EXPOSITION + "," + UPDATED_EXPOSITION);
+
+        // Get all the planteList where exposition equals to UPDATED_EXPOSITION
+        defaultPlanteShouldNotBeFound("exposition.in=" + UPDATED_EXPOSITION);
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByExpositionIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        // Get all the planteList where exposition is not null
+        defaultPlanteShouldBeFound("exposition.specified=true");
+
+        // Get all the planteList where exposition is null
+        defaultPlanteShouldNotBeFound("exposition.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByExpositionContainsSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        // Get all the planteList where exposition contains DEFAULT_EXPOSITION
+        defaultPlanteShouldBeFound("exposition.contains=" + DEFAULT_EXPOSITION);
+
+        // Get all the planteList where exposition contains UPDATED_EXPOSITION
+        defaultPlanteShouldNotBeFound("exposition.contains=" + UPDATED_EXPOSITION);
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByExpositionNotContainsSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+
+        // Get all the planteList where exposition does not contain DEFAULT_EXPOSITION
+        defaultPlanteShouldNotBeFound("exposition.doesNotContain=" + DEFAULT_EXPOSITION);
+
+        // Get all the planteList where exposition does not contain UPDATED_EXPOSITION
+        defaultPlanteShouldBeFound("exposition.doesNotContain=" + UPDATED_EXPOSITION);
     }
 
     @Test
@@ -662,54 +747,28 @@ class PlanteResourceIT {
 
     @Test
     @Transactional
-    void getAllPlantesByInteractionsIsEqualToSomething() throws Exception {
+    void getAllPlantesByEnsoleillementsIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Allelopathie interactions;
-        if (TestUtil.findAll(em, Allelopathie.class).isEmpty()) {
-            interactions = AllelopathieResourceIT.createEntity(em);
-            em.persist(interactions);
+        Ensoleillement ensoleillements;
+        if (TestUtil.findAll(em, Ensoleillement.class).isEmpty()) {
+            ensoleillements = EnsoleillementResourceIT.createEntity(em);
+            em.persist(ensoleillements);
             em.flush();
         } else {
-            interactions = TestUtil.findAll(em, Allelopathie.class).get(0);
+            ensoleillements = TestUtil.findAll(em, Ensoleillement.class).get(0);
         }
-        em.persist(interactions);
+        em.persist(ensoleillements);
         em.flush();
-        plante.addInteractions(interactions);
+        plante.addEnsoleillements(ensoleillements);
         planteRepository.saveAndFlush(plante);
-        Long interactionsId = interactions.getId();
+        Long ensoleillementsId = ensoleillements.getId();
 
-        // Get all the planteList where interactions equals to interactionsId
-        defaultPlanteShouldBeFound("interactionsId.equals=" + interactionsId);
+        // Get all the planteList where ensoleillements equals to ensoleillementsId
+        defaultPlanteShouldBeFound("ensoleillementsId.equals=" + ensoleillementsId);
 
-        // Get all the planteList where interactions equals to (interactionsId + 1)
-        defaultPlanteShouldNotBeFound("interactionsId.equals=" + (interactionsId + 1));
-    }
-
-    @Test
-    @Transactional
-    void getAllPlantesByExpositionsIsEqualToSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-        Exposition expositions;
-        if (TestUtil.findAll(em, Exposition.class).isEmpty()) {
-            expositions = ExpositionResourceIT.createEntity(em);
-            em.persist(expositions);
-            em.flush();
-        } else {
-            expositions = TestUtil.findAll(em, Exposition.class).get(0);
-        }
-        em.persist(expositions);
-        em.flush();
-        plante.addExpositions(expositions);
-        planteRepository.saveAndFlush(plante);
-        Long expositionsId = expositions.getId();
-
-        // Get all the planteList where expositions equals to expositionsId
-        defaultPlanteShouldBeFound("expositionsId.equals=" + expositionsId);
-
-        // Get all the planteList where expositions equals to (expositionsId + 1)
-        defaultPlanteShouldNotBeFound("expositionsId.equals=" + (expositionsId + 1));
+        // Get all the planteList where ensoleillements equals to (ensoleillementsId + 1)
+        defaultPlanteShouldNotBeFound("ensoleillementsId.equals=" + (ensoleillementsId + 1));
     }
 
     @Test
@@ -880,7 +939,8 @@ class PlanteResourceIT {
             .andExpect(jsonPath("$.[*].nomLatin").value(hasItem(DEFAULT_NOM_LATIN)))
             .andExpect(jsonPath("$.[*].entretien").value(hasItem(DEFAULT_ENTRETIEN)))
             .andExpect(jsonPath("$.[*].histoire").value(hasItem(DEFAULT_HISTOIRE)))
-            .andExpect(jsonPath("$.[*].vitesse").value(hasItem(DEFAULT_VITESSE)));
+            .andExpect(jsonPath("$.[*].vitesseCroissance").value(hasItem(DEFAULT_VITESSE_CROISSANCE)))
+            .andExpect(jsonPath("$.[*].exposition").value(hasItem(DEFAULT_EXPOSITION)));
 
         // Check, that the count call also returns 1
         restPlanteMockMvc
@@ -928,7 +988,12 @@ class PlanteResourceIT {
         Plante updatedPlante = planteRepository.findById(plante.getId()).get();
         // Disconnect from session so that the updates on updatedPlante are not directly saved in db
         em.detach(updatedPlante);
-        updatedPlante.nomLatin(UPDATED_NOM_LATIN).entretien(UPDATED_ENTRETIEN).histoire(UPDATED_HISTOIRE).vitesse(UPDATED_VITESSE);
+        updatedPlante
+            .nomLatin(UPDATED_NOM_LATIN)
+            .entretien(UPDATED_ENTRETIEN)
+            .histoire(UPDATED_HISTOIRE)
+            .vitesseCroissance(UPDATED_VITESSE_CROISSANCE)
+            .exposition(UPDATED_EXPOSITION);
         PlanteDTO planteDTO = planteMapper.toDto(updatedPlante);
 
         restPlanteMockMvc
@@ -947,7 +1012,8 @@ class PlanteResourceIT {
         assertThat(testPlante.getNomLatin()).isEqualTo(UPDATED_NOM_LATIN);
         assertThat(testPlante.getEntretien()).isEqualTo(UPDATED_ENTRETIEN);
         assertThat(testPlante.getHistoire()).isEqualTo(UPDATED_HISTOIRE);
-        assertThat(testPlante.getVitesse()).isEqualTo(UPDATED_VITESSE);
+        assertThat(testPlante.getVitesseCroissance()).isEqualTo(UPDATED_VITESSE_CROISSANCE);
+        assertThat(testPlante.getExposition()).isEqualTo(UPDATED_EXPOSITION);
     }
 
     @Test
@@ -1034,7 +1100,7 @@ class PlanteResourceIT {
         Plante partialUpdatedPlante = new Plante();
         partialUpdatedPlante.setId(plante.getId());
 
-        partialUpdatedPlante.histoire(UPDATED_HISTOIRE);
+        partialUpdatedPlante.histoire(UPDATED_HISTOIRE).exposition(UPDATED_EXPOSITION);
 
         restPlanteMockMvc
             .perform(
@@ -1052,7 +1118,8 @@ class PlanteResourceIT {
         assertThat(testPlante.getNomLatin()).isEqualTo(DEFAULT_NOM_LATIN);
         assertThat(testPlante.getEntretien()).isEqualTo(DEFAULT_ENTRETIEN);
         assertThat(testPlante.getHistoire()).isEqualTo(UPDATED_HISTOIRE);
-        assertThat(testPlante.getVitesse()).isEqualTo(DEFAULT_VITESSE);
+        assertThat(testPlante.getVitesseCroissance()).isEqualTo(DEFAULT_VITESSE_CROISSANCE);
+        assertThat(testPlante.getExposition()).isEqualTo(UPDATED_EXPOSITION);
     }
 
     @Test
@@ -1067,7 +1134,12 @@ class PlanteResourceIT {
         Plante partialUpdatedPlante = new Plante();
         partialUpdatedPlante.setId(plante.getId());
 
-        partialUpdatedPlante.nomLatin(UPDATED_NOM_LATIN).entretien(UPDATED_ENTRETIEN).histoire(UPDATED_HISTOIRE).vitesse(UPDATED_VITESSE);
+        partialUpdatedPlante
+            .nomLatin(UPDATED_NOM_LATIN)
+            .entretien(UPDATED_ENTRETIEN)
+            .histoire(UPDATED_HISTOIRE)
+            .vitesseCroissance(UPDATED_VITESSE_CROISSANCE)
+            .exposition(UPDATED_EXPOSITION);
 
         restPlanteMockMvc
             .perform(
@@ -1085,7 +1157,8 @@ class PlanteResourceIT {
         assertThat(testPlante.getNomLatin()).isEqualTo(UPDATED_NOM_LATIN);
         assertThat(testPlante.getEntretien()).isEqualTo(UPDATED_ENTRETIEN);
         assertThat(testPlante.getHistoire()).isEqualTo(UPDATED_HISTOIRE);
-        assertThat(testPlante.getVitesse()).isEqualTo(UPDATED_VITESSE);
+        assertThat(testPlante.getVitesseCroissance()).isEqualTo(UPDATED_VITESSE_CROISSANCE);
+        assertThat(testPlante.getExposition()).isEqualTo(UPDATED_EXPOSITION);
     }
 
     @Test

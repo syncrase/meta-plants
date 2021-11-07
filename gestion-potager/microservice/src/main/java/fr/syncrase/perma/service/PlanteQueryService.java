@@ -99,8 +99,11 @@ public class PlanteQueryService extends QueryService<Plante> {
             if (criteria.getHistoire() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getHistoire(), Plante_.histoire));
             }
-            if (criteria.getVitesse() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getVitesse(), Plante_.vitesse));
+            if (criteria.getVitesseCroissance() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getVitesseCroissance(), Plante_.vitesseCroissance));
+            }
+            if (criteria.getExposition() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getExposition(), Plante_.exposition));
             }
             if (criteria.getCycleDeVieId() != null) {
                 specification =
@@ -129,21 +132,12 @@ public class PlanteQueryService extends QueryService<Plante> {
                         )
                     );
             }
-            if (criteria.getInteractionsId() != null) {
+            if (criteria.getEnsoleillementsId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getInteractionsId(),
-                            root -> root.join(Plante_.interactions, JoinType.LEFT).get(Allelopathie_.id)
-                        )
-                    );
-            }
-            if (criteria.getExpositionsId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getExpositionsId(),
-                            root -> root.join(Plante_.expositions, JoinType.LEFT).get(Exposition_.id)
+                            criteria.getEnsoleillementsId(),
+                            root -> root.join(Plante_.ensoleillements, JoinType.LEFT).get(Ensoleillement_.id)
                         )
                     );
             }

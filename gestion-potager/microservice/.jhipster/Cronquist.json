@@ -3,43 +3,39 @@
   "fields": [
     {
       "fieldName": "regne",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "sousRegne",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "division",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "classe",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "sousClasse",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "ordre",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "famille",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     },
     {
       "fieldName": "genre",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "espece",
+      "fieldType": "String"
     }
   ],
   "relationships": [],
@@ -55,5 +51,5 @@
   "microserviceName": "microservice",
   "clientRootFolder": "microservice",
   "databaseType": "sql",
-  "changelogDate": "20211104121954"
+  "changelogDate": "20211107092841"
 }

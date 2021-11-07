@@ -102,6 +102,7 @@ class AllelopathieGatlingTest extends Simulation {
             .body(StringBody("""{
                 "type":"SAMPLE_TEXT"
                 , "description":"SAMPLE_TEXT"
+                , "impact":"0"
                 }""")).asJson
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_allelopathie_url"))).exitHereIfFailed

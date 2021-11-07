@@ -16,11 +16,13 @@ public class AllelopathieDTO implements Serializable {
 
     private String description;
 
+    @Min(value = -10)
+    @Max(value = 10)
+    private Integer impact;
+
     private PlanteDTO cible;
 
     private PlanteDTO origine;
-
-    private PlanteDTO interaction;
 
     public Long getId() {
         return id;
@@ -46,6 +48,14 @@ public class AllelopathieDTO implements Serializable {
         this.description = description;
     }
 
+    public Integer getImpact() {
+        return impact;
+    }
+
+    public void setImpact(Integer impact) {
+        this.impact = impact;
+    }
+
     public PlanteDTO getCible() {
         return cible;
     }
@@ -60,14 +70,6 @@ public class AllelopathieDTO implements Serializable {
 
     public void setOrigine(PlanteDTO origine) {
         this.origine = origine;
-    }
-
-    public PlanteDTO getInteraction() {
-        return interaction;
-    }
-
-    public void setInteraction(PlanteDTO interaction) {
-        this.interaction = interaction;
     }
 
     @Override
@@ -98,9 +100,9 @@ public class AllelopathieDTO implements Serializable {
             "id=" + getId() +
             ", type='" + getType() + "'" +
             ", description='" + getDescription() + "'" +
+            ", impact=" + getImpact() +
             ", cible=" + getCible() +
             ", origine=" + getOrigine() +
-            ", interaction=" + getInteraction() +
             "}";
     }
 }

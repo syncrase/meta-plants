@@ -258,28 +258,28 @@ class RessemblanceResourceIT {
 
     @Test
     @Transactional
-    void getAllRessemblancesByConfusionIsEqualToSomething() throws Exception {
+    void getAllRessemblancesByPlanteRessemblantIsEqualToSomething() throws Exception {
         // Initialize the database
         ressemblanceRepository.saveAndFlush(ressemblance);
-        Plante confusion;
+        Plante planteRessemblant;
         if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            confusion = PlanteResourceIT.createEntity(em);
-            em.persist(confusion);
+            planteRessemblant = PlanteResourceIT.createEntity(em);
+            em.persist(planteRessemblant);
             em.flush();
         } else {
-            confusion = TestUtil.findAll(em, Plante.class).get(0);
+            planteRessemblant = TestUtil.findAll(em, Plante.class).get(0);
         }
-        em.persist(confusion);
+        em.persist(planteRessemblant);
         em.flush();
-        ressemblance.setConfusion(confusion);
+        ressemblance.setPlanteRessemblant(planteRessemblant);
         ressemblanceRepository.saveAndFlush(ressemblance);
-        Long confusionId = confusion.getId();
+        Long planteRessemblantId = planteRessemblant.getId();
 
-        // Get all the ressemblanceList where confusion equals to confusionId
-        defaultRessemblanceShouldBeFound("confusionId.equals=" + confusionId);
+        // Get all the ressemblanceList where planteRessemblant equals to planteRessemblantId
+        defaultRessemblanceShouldBeFound("planteRessemblantId.equals=" + planteRessemblantId);
 
-        // Get all the ressemblanceList where confusion equals to (confusionId + 1)
-        defaultRessemblanceShouldNotBeFound("confusionId.equals=" + (confusionId + 1));
+        // Get all the ressemblanceList where planteRessemblant equals to (planteRessemblantId + 1)
+        defaultRessemblanceShouldNotBeFound("planteRessemblantId.equals=" + (planteRessemblantId + 1));
     }
 
     /**

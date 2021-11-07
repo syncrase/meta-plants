@@ -11,9 +11,10 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "confusions",
-      "relationshipName": "confusion"
+      "relationshipName": "planteRessemblant"
     }
   ],
+  "javadoc": "Pour que la ressemblance soit réflexive il faut l'enregistrer 2 fois. Car si la ressemblance A ressemble à B est enregistrée, alors B ne ressemble pas à A",
   "entityTableName": "ressemblance",
   "dto": "mapstruct",
   "pagination": "pagination",
@@ -26,5 +27,5 @@
   "microserviceName": "microservice",
   "clientRootFolder": "microservice",
   "databaseType": "sql",
-  "changelogDate": "20211104121554"
+  "changelogDate": "20211107092441"
 }

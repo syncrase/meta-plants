@@ -15,7 +15,7 @@
         The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
     -->
     <changeSet id="00000000000001" author="jhipster">
-        <createTable tableName="gp_user">
+        <createTable tableName="perma_user">
             <column name="id" type="varchar(100)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -40,13 +40,13 @@
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
 
-        <createTable tableName="gp_authority">
+        <createTable tableName="perma_authority">
             <column name="name" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
         </createTable>
 
-        <createTable tableName="gp_user_authority">
+        <createTable tableName="perma_user_authority">
             <column name="user_id" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
@@ -55,26 +55,26 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="user_id, authority_name" tableName="gp_user_authority"/>
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="perma_user_authority"/>
 
         <addForeignKeyConstraint baseColumnNames="authority_name"
-                                 baseTableName="gp_user_authority"
+                                 baseTableName="perma_user_authority"
                                  constraintName="fk_authority_name"
                                  referencedColumnNames="name"
-                                 referencedTableName="gp_authority"/>
+                                 referencedTableName="perma_authority"/>
 
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="gp_user_authority"
+                                 baseTableName="perma_user_authority"
                                  constraintName="fk_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="gp_user"/>
+                                 referencedTableName="perma_user"/>
 
     </changeSet>
 
     <changeSet author="jhipster" id="00000000000002" context="test">
-        <createTable tableName="gp_date_time_wrapper">
+        <createTable tableName="perma_date_time_wrapper">
             <column  name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="gp_date_time_wrapperPK"/>
+                <constraints primaryKey="true" primaryKeyName="perma_date_time_wrapperPK"/>
             </column>
             <column name="instant" type="timestamp"/>
             <column name="local_date_time" type="timestamp"/>

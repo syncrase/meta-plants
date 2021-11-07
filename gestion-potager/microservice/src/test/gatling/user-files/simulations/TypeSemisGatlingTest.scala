@@ -100,7 +100,8 @@ class TypeSemisGatlingTest extends Simulation {
             .post("/services/microservice/api/type-semis")
             .headers(headers_http_authenticated)
             .body(StringBody("""{
-                "description":"SAMPLE_TEXT"
+                "type":"SAMPLE_TEXT"
+                , "description":"SAMPLE_TEXT"
                 }""")).asJson
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_typeSemis_url"))).exitHereIfFailed

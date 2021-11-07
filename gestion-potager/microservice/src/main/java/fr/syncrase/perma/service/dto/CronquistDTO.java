@@ -2,7 +2,6 @@ package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Cronquist} entity.
@@ -11,29 +10,23 @@ public class CronquistDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
     private String regne;
 
-    @NotNull
     private String sousRegne;
 
-    @NotNull
     private String division;
 
-    @NotNull
     private String classe;
 
-    @NotNull
     private String sousClasse;
 
-    @NotNull
     private String ordre;
 
-    @NotNull
     private String famille;
 
-    @NotNull
     private String genre;
+
+    private String espece;
 
     public Long getId() {
         return id;
@@ -107,6 +100,14 @@ public class CronquistDTO implements Serializable {
         this.genre = genre;
     }
 
+    public String getEspece() {
+        return espece;
+    }
+
+    public void setEspece(String espece) {
+        this.espece = espece;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -141,6 +142,7 @@ public class CronquistDTO implements Serializable {
             ", ordre='" + getOrdre() + "'" +
             ", famille='" + getFamille() + "'" +
             ", genre='" + getGenre() + "'" +
+            ", espece='" + getEspece() + "'" +
             "}";
     }
 }

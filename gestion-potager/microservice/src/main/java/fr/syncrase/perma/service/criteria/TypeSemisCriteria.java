@@ -26,6 +26,8 @@ public class TypeSemisCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
+    private StringFilter type;
+
     private StringFilter description;
 
     private Boolean distinct;
@@ -34,6 +36,7 @@ public class TypeSemisCriteria implements Serializable, Criteria {
 
     public TypeSemisCriteria(TypeSemisCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
+        this.type = other.type == null ? null : other.type.copy();
         this.description = other.description == null ? null : other.description.copy();
         this.distinct = other.distinct;
     }
@@ -56,6 +59,21 @@ public class TypeSemisCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
+    }
+
+    public StringFilter getType() {
+        return type;
+    }
+
+    public StringFilter type() {
+        if (type == null) {
+            type = new StringFilter();
+        }
+        return type;
+    }
+
+    public void setType(StringFilter type) {
+        this.type = type;
     }
 
     public StringFilter getDescription() {
@@ -90,12 +108,17 @@ public class TypeSemisCriteria implements Serializable, Criteria {
             return false;
         }
         final TypeSemisCriteria that = (TypeSemisCriteria) o;
-        return Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(distinct, that.distinct);
+        return (
+            Objects.equals(id, that.id) &&
+            Objects.equals(type, that.type) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(distinct, that.distinct)
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, distinct);
+        return Objects.hash(id, type, description, distinct);
     }
 
     // prettier-ignore
@@ -103,6 +126,7 @@ public class TypeSemisCriteria implements Serializable, Criteria {
     public String toString() {
         return "TypeSemisCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
+            (type != null ? "type=" + type + ", " : "") +
             (description != null ? "description=" + description + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";

@@ -40,6 +40,10 @@ class AllelopathieResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final Integer DEFAULT_IMPACT = -10;
+    private static final Integer UPDATED_IMPACT = -9;
+    private static final Integer SMALLER_IMPACT = -10 - 1;
+
     private static final String ENTITY_API_URL = "/api/allelopathies";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -67,7 +71,7 @@ class AllelopathieResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Allelopathie createEntity(EntityManager em) {
-        Allelopathie allelopathie = new Allelopathie().type(DEFAULT_TYPE).description(DEFAULT_DESCRIPTION);
+        Allelopathie allelopathie = new Allelopathie().type(DEFAULT_TYPE).description(DEFAULT_DESCRIPTION).impact(DEFAULT_IMPACT);
         return allelopathie;
     }
 
@@ -78,7 +82,7 @@ class AllelopathieResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Allelopathie createUpdatedEntity(EntityManager em) {
-        Allelopathie allelopathie = new Allelopathie().type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
+        Allelopathie allelopathie = new Allelopathie().type(UPDATED_TYPE).description(UPDATED_DESCRIPTION).impact(UPDATED_IMPACT);
         return allelopathie;
     }
 
@@ -108,6 +112,7 @@ class AllelopathieResourceIT {
         Allelopathie testAllelopathie = allelopathieList.get(allelopathieList.size() - 1);
         assertThat(testAllelopathie.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testAllelopathie.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testAllelopathie.getImpact()).isEqualTo(DEFAULT_IMPACT);
     }
 
     @Test
@@ -170,7 +175,8 @@ class AllelopathieResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(allelopathie.getId().intValue())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].impact").value(hasItem(DEFAULT_IMPACT)));
     }
 
     @Test
@@ -186,7 +192,8 @@ class AllelopathieResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(allelopathie.getId().intValue()))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.impact").value(DEFAULT_IMPACT));
     }
 
     @Test
@@ -365,6 +372,110 @@ class AllelopathieResourceIT {
 
     @Test
     @Transactional
+    void getAllAllelopathiesByImpactIsEqualToSomething() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact equals to DEFAULT_IMPACT
+        defaultAllelopathieShouldBeFound("impact.equals=" + DEFAULT_IMPACT);
+
+        // Get all the allelopathieList where impact equals to UPDATED_IMPACT
+        defaultAllelopathieShouldNotBeFound("impact.equals=" + UPDATED_IMPACT);
+    }
+
+    @Test
+    @Transactional
+    void getAllAllelopathiesByImpactIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact not equals to DEFAULT_IMPACT
+        defaultAllelopathieShouldNotBeFound("impact.notEquals=" + DEFAULT_IMPACT);
+
+        // Get all the allelopathieList where impact not equals to UPDATED_IMPACT
+        defaultAllelopathieShouldBeFound("impact.notEquals=" + UPDATED_IMPACT);
+    }
+
+    @Test
+    @Transactional
+    void getAllAllelopathiesByImpactIsInShouldWork() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact in DEFAULT_IMPACT or UPDATED_IMPACT
+        defaultAllelopathieShouldBeFound("impact.in=" + DEFAULT_IMPACT + "," + UPDATED_IMPACT);
+
+        // Get all the allelopathieList where impact equals to UPDATED_IMPACT
+        defaultAllelopathieShouldNotBeFound("impact.in=" + UPDATED_IMPACT);
+    }
+
+    @Test
+    @Transactional
+    void getAllAllelopathiesByImpactIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact is not null
+        defaultAllelopathieShouldBeFound("impact.specified=true");
+
+        // Get all the allelopathieList where impact is null
+        defaultAllelopathieShouldNotBeFound("impact.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllAllelopathiesByImpactIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact is greater than or equal to DEFAULT_IMPACT
+        defaultAllelopathieShouldBeFound("impact.greaterThanOrEqual=" + DEFAULT_IMPACT);
+
+        // Get all the allelopathieList where impact is greater than or equal to (DEFAULT_IMPACT + 1)
+        defaultAllelopathieShouldNotBeFound("impact.greaterThanOrEqual=" + (DEFAULT_IMPACT + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllAllelopathiesByImpactIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact is less than or equal to DEFAULT_IMPACT
+        defaultAllelopathieShouldBeFound("impact.lessThanOrEqual=" + DEFAULT_IMPACT);
+
+        // Get all the allelopathieList where impact is less than or equal to SMALLER_IMPACT
+        defaultAllelopathieShouldNotBeFound("impact.lessThanOrEqual=" + SMALLER_IMPACT);
+    }
+
+    @Test
+    @Transactional
+    void getAllAllelopathiesByImpactIsLessThanSomething() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact is less than DEFAULT_IMPACT
+        defaultAllelopathieShouldNotBeFound("impact.lessThan=" + DEFAULT_IMPACT);
+
+        // Get all the allelopathieList where impact is less than (DEFAULT_IMPACT + 1)
+        defaultAllelopathieShouldBeFound("impact.lessThan=" + (DEFAULT_IMPACT + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllAllelopathiesByImpactIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        allelopathieRepository.saveAndFlush(allelopathie);
+
+        // Get all the allelopathieList where impact is greater than DEFAULT_IMPACT
+        defaultAllelopathieShouldNotBeFound("impact.greaterThan=" + DEFAULT_IMPACT);
+
+        // Get all the allelopathieList where impact is greater than SMALLER_IMPACT
+        defaultAllelopathieShouldBeFound("impact.greaterThan=" + SMALLER_IMPACT);
+    }
+
+    @Test
+    @Transactional
     void getAllAllelopathiesByCibleIsEqualToSomething() throws Exception {
         // Initialize the database
         allelopathieRepository.saveAndFlush(allelopathie);
@@ -415,32 +526,6 @@ class AllelopathieResourceIT {
         defaultAllelopathieShouldNotBeFound("origineId.equals=" + (origineId + 1));
     }
 
-    @Test
-    @Transactional
-    void getAllAllelopathiesByInteractionIsEqualToSomething() throws Exception {
-        // Initialize the database
-        allelopathieRepository.saveAndFlush(allelopathie);
-        Plante interaction;
-        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            interaction = PlanteResourceIT.createEntity(em);
-            em.persist(interaction);
-            em.flush();
-        } else {
-            interaction = TestUtil.findAll(em, Plante.class).get(0);
-        }
-        em.persist(interaction);
-        em.flush();
-        allelopathie.setInteraction(interaction);
-        allelopathieRepository.saveAndFlush(allelopathie);
-        Long interactionId = interaction.getId();
-
-        // Get all the allelopathieList where interaction equals to interactionId
-        defaultAllelopathieShouldBeFound("interactionId.equals=" + interactionId);
-
-        // Get all the allelopathieList where interaction equals to (interactionId + 1)
-        defaultAllelopathieShouldNotBeFound("interactionId.equals=" + (interactionId + 1));
-    }
-
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -451,7 +536,8 @@ class AllelopathieResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(allelopathie.getId().intValue())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].impact").value(hasItem(DEFAULT_IMPACT)));
 
         // Check, that the count call also returns 1
         restAllelopathieMockMvc
@@ -499,7 +585,7 @@ class AllelopathieResourceIT {
         Allelopathie updatedAllelopathie = allelopathieRepository.findById(allelopathie.getId()).get();
         // Disconnect from session so that the updates on updatedAllelopathie are not directly saved in db
         em.detach(updatedAllelopathie);
-        updatedAllelopathie.type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
+        updatedAllelopathie.type(UPDATED_TYPE).description(UPDATED_DESCRIPTION).impact(UPDATED_IMPACT);
         AllelopathieDTO allelopathieDTO = allelopathieMapper.toDto(updatedAllelopathie);
 
         restAllelopathieMockMvc
@@ -517,6 +603,7 @@ class AllelopathieResourceIT {
         Allelopathie testAllelopathie = allelopathieList.get(allelopathieList.size() - 1);
         assertThat(testAllelopathie.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testAllelopathie.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testAllelopathie.getImpact()).isEqualTo(UPDATED_IMPACT);
     }
 
     @Test
@@ -620,6 +707,7 @@ class AllelopathieResourceIT {
         Allelopathie testAllelopathie = allelopathieList.get(allelopathieList.size() - 1);
         assertThat(testAllelopathie.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testAllelopathie.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testAllelopathie.getImpact()).isEqualTo(DEFAULT_IMPACT);
     }
 
     @Test
@@ -634,7 +722,7 @@ class AllelopathieResourceIT {
         Allelopathie partialUpdatedAllelopathie = new Allelopathie();
         partialUpdatedAllelopathie.setId(allelopathie.getId());
 
-        partialUpdatedAllelopathie.type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
+        partialUpdatedAllelopathie.type(UPDATED_TYPE).description(UPDATED_DESCRIPTION).impact(UPDATED_IMPACT);
 
         restAllelopathieMockMvc
             .perform(
@@ -651,6 +739,7 @@ class AllelopathieResourceIT {
         Allelopathie testAllelopathie = allelopathieList.get(allelopathieList.size() - 1);
         assertThat(testAllelopathie.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testAllelopathie.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testAllelopathie.getImpact()).isEqualTo(UPDATED_IMPACT);
     }
 
     @Test

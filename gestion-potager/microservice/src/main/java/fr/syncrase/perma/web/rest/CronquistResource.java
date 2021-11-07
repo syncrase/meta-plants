@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +63,7 @@ public class CronquistResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/cronquists")
-    public ResponseEntity<CronquistDTO> createCronquist(@Valid @RequestBody CronquistDTO cronquistDTO) throws URISyntaxException {
+    public ResponseEntity<CronquistDTO> createCronquist(@RequestBody CronquistDTO cronquistDTO) throws URISyntaxException {
         log.debug("REST request to save Cronquist : {}", cronquistDTO);
         if (cronquistDTO.getId() != null) {
             throw new BadRequestAlertException("A new cronquist cannot already have an ID", ENTITY_NAME, "idexists");
@@ -90,7 +88,7 @@ public class CronquistResource {
     @PutMapping("/cronquists/{id}")
     public ResponseEntity<CronquistDTO> updateCronquist(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody CronquistDTO cronquistDTO
+        @RequestBody CronquistDTO cronquistDTO
     ) throws URISyntaxException {
         log.debug("REST request to update Cronquist : {}, {}", id, cronquistDTO);
         if (cronquistDTO.getId() == null) {
@@ -125,7 +123,7 @@ public class CronquistResource {
     @PatchMapping(value = "/cronquists/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<CronquistDTO> partialUpdateCronquist(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody CronquistDTO cronquistDTO
+        @RequestBody CronquistDTO cronquistDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update Cronquist partially : {}, {}", id, cronquistDTO);
         if (cronquistDTO.getId() == null) {

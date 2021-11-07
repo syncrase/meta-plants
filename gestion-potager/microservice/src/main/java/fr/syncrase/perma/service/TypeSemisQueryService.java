@@ -90,6 +90,9 @@ public class TypeSemisQueryService extends QueryService<TypeSemis> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), TypeSemis_.id));
             }
+            if (criteria.getType() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getType(), TypeSemis_.type));
+            }
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), TypeSemis_.description));
             }

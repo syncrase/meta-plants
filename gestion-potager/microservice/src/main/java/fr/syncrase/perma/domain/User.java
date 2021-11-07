@@ -20,7 +20,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  * A user.
  */
 @Entity
-@Table(name = "gp_user")
+@Table(name = "perma_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends AbstractAuditingEntity implements Serializable {
 
@@ -63,7 +63,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-        name = "gp_user_authority",
+        name = "perma_user_authority",
         joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
         inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
     )

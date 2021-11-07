@@ -2,7 +2,6 @@ package fr.syncrase.perma.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -22,63 +21,36 @@ public class Cronquist implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
-    @Column(name = "regne", nullable = false)
+    @Column(name = "regne")
     private String regne;
 
-    @NotNull
-    @Column(name = "sous_regne", nullable = false)
+    @Column(name = "sous_regne")
     private String sousRegne;
 
-    @NotNull
-    @Column(name = "division", nullable = false)
+    @Column(name = "division")
     private String division;
 
-    @NotNull
-    @Column(name = "classe", nullable = false)
+    @Column(name = "classe")
     private String classe;
 
-    @NotNull
-    @Column(name = "sous_classe", nullable = false)
+    @Column(name = "sous_classe")
     private String sousClasse;
 
-    @NotNull
-    @Column(name = "ordre", nullable = false)
+    @Column(name = "ordre")
     private String ordre;
 
-    @NotNull
-    @Column(name = "famille", nullable = false)
+    @Column(name = "famille")
     private String famille;
 
-    @NotNull
-    @Column(name = "genre", nullable = false)
+    @Column(name = "genre")
     private String genre;
 
-    @NotNull
-    @Column(name = "espece", nullable = false)
+    @Column(name = "espece")
     private String espece;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-	public Cronquist(String regne, String sousRegne, String division, String classe,
-			String sousClasse, String ordre, String famille, String genre, String espece) {
-		super();
-		this.regne = regne;
-		this.sousRegne = sousRegne;
-		this.division = division;
-		this.classe = classe;
-		this.sousClasse = sousClasse;
-		this.ordre = ordre;
-		this.famille = famille;
-		this.genre = genre;
-		this.espece = espece;
-	}
-
-	public Cronquist() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -195,6 +167,19 @@ public class Cronquist implements Serializable {
         this.genre = genre;
     }
 
+    public String getEspece() {
+        return this.espece;
+    }
+
+    public Cronquist espece(String espece) {
+        this.setEspece(espece);
+        return this;
+    }
+
+    public void setEspece(String espece) {
+        this.espece = espece;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -227,6 +212,7 @@ public class Cronquist implements Serializable {
             ", ordre='" + getOrdre() + "'" +
             ", famille='" + getFamille() + "'" +
             ", genre='" + getGenre() + "'" +
+            ", espece='" + getEspece() + "'" +
             "}";
     }
 }

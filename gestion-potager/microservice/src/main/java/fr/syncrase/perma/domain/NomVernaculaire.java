@@ -39,8 +39,7 @@ public class NomVernaculaire implements Serializable {
             "cycleDeVie",
             "classification",
             "confusions",
-            "interactions",
-            "expositions",
+            "ensoleillements",
             "sols",
             "nomsVernaculaires",
             "temperature",
@@ -54,15 +53,7 @@ public class NomVernaculaire implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public NomVernaculaire(String nom) {
-		this.nom = nom;
-	}
-
-	public NomVernaculaire() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 

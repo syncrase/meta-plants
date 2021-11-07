@@ -32,17 +32,7 @@ public class Mois implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Mois(@NotNull Double numero, @NotNull String nom) {
-		super();
-		this.numero = numero;
-		this.nom = nom;
-	}
-
-	public Mois() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 

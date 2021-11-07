@@ -47,15 +47,7 @@ public class Classification implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Classification(Cronquist cronquist) {
-		this.cronquist = cronquist;
-	}
-
-	public Classification() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 

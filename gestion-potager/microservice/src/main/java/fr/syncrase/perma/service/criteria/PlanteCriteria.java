@@ -32,7 +32,9 @@ public class PlanteCriteria implements Serializable, Criteria {
 
     private StringFilter histoire;
 
-    private StringFilter vitesse;
+    private StringFilter vitesseCroissance;
+
+    private StringFilter exposition;
 
     private LongFilter cycleDeVieId;
 
@@ -40,9 +42,7 @@ public class PlanteCriteria implements Serializable, Criteria {
 
     private LongFilter confusionsId;
 
-    private LongFilter interactionsId;
-
-    private LongFilter expositionsId;
+    private LongFilter ensoleillementsId;
 
     private LongFilter solsId;
 
@@ -65,12 +65,12 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.nomLatin = other.nomLatin == null ? null : other.nomLatin.copy();
         this.entretien = other.entretien == null ? null : other.entretien.copy();
         this.histoire = other.histoire == null ? null : other.histoire.copy();
-        this.vitesse = other.vitesse == null ? null : other.vitesse.copy();
+        this.vitesseCroissance = other.vitesseCroissance == null ? null : other.vitesseCroissance.copy();
+        this.exposition = other.exposition == null ? null : other.exposition.copy();
         this.cycleDeVieId = other.cycleDeVieId == null ? null : other.cycleDeVieId.copy();
         this.classificationId = other.classificationId == null ? null : other.classificationId.copy();
         this.confusionsId = other.confusionsId == null ? null : other.confusionsId.copy();
-        this.interactionsId = other.interactionsId == null ? null : other.interactionsId.copy();
-        this.expositionsId = other.expositionsId == null ? null : other.expositionsId.copy();
+        this.ensoleillementsId = other.ensoleillementsId == null ? null : other.ensoleillementsId.copy();
         this.solsId = other.solsId == null ? null : other.solsId.copy();
         this.nomsVernaculairesId = other.nomsVernaculairesId == null ? null : other.nomsVernaculairesId.copy();
         this.temperatureId = other.temperatureId == null ? null : other.temperatureId.copy();
@@ -145,19 +145,34 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.histoire = histoire;
     }
 
-    public StringFilter getVitesse() {
-        return vitesse;
+    public StringFilter getVitesseCroissance() {
+        return vitesseCroissance;
     }
 
-    public StringFilter vitesse() {
-        if (vitesse == null) {
-            vitesse = new StringFilter();
+    public StringFilter vitesseCroissance() {
+        if (vitesseCroissance == null) {
+            vitesseCroissance = new StringFilter();
         }
-        return vitesse;
+        return vitesseCroissance;
     }
 
-    public void setVitesse(StringFilter vitesse) {
-        this.vitesse = vitesse;
+    public void setVitesseCroissance(StringFilter vitesseCroissance) {
+        this.vitesseCroissance = vitesseCroissance;
+    }
+
+    public StringFilter getExposition() {
+        return exposition;
+    }
+
+    public StringFilter exposition() {
+        if (exposition == null) {
+            exposition = new StringFilter();
+        }
+        return exposition;
+    }
+
+    public void setExposition(StringFilter exposition) {
+        this.exposition = exposition;
     }
 
     public LongFilter getCycleDeVieId() {
@@ -205,34 +220,19 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.confusionsId = confusionsId;
     }
 
-    public LongFilter getInteractionsId() {
-        return interactionsId;
+    public LongFilter getEnsoleillementsId() {
+        return ensoleillementsId;
     }
 
-    public LongFilter interactionsId() {
-        if (interactionsId == null) {
-            interactionsId = new LongFilter();
+    public LongFilter ensoleillementsId() {
+        if (ensoleillementsId == null) {
+            ensoleillementsId = new LongFilter();
         }
-        return interactionsId;
+        return ensoleillementsId;
     }
 
-    public void setInteractionsId(LongFilter interactionsId) {
-        this.interactionsId = interactionsId;
-    }
-
-    public LongFilter getExpositionsId() {
-        return expositionsId;
-    }
-
-    public LongFilter expositionsId() {
-        if (expositionsId == null) {
-            expositionsId = new LongFilter();
-        }
-        return expositionsId;
-    }
-
-    public void setExpositionsId(LongFilter expositionsId) {
-        this.expositionsId = expositionsId;
+    public void setEnsoleillementsId(LongFilter ensoleillementsId) {
+        this.ensoleillementsId = ensoleillementsId;
     }
 
     public LongFilter getSolsId() {
@@ -347,12 +347,12 @@ public class PlanteCriteria implements Serializable, Criteria {
             Objects.equals(nomLatin, that.nomLatin) &&
             Objects.equals(entretien, that.entretien) &&
             Objects.equals(histoire, that.histoire) &&
-            Objects.equals(vitesse, that.vitesse) &&
+            Objects.equals(vitesseCroissance, that.vitesseCroissance) &&
+            Objects.equals(exposition, that.exposition) &&
             Objects.equals(cycleDeVieId, that.cycleDeVieId) &&
             Objects.equals(classificationId, that.classificationId) &&
             Objects.equals(confusionsId, that.confusionsId) &&
-            Objects.equals(interactionsId, that.interactionsId) &&
-            Objects.equals(expositionsId, that.expositionsId) &&
+            Objects.equals(ensoleillementsId, that.ensoleillementsId) &&
             Objects.equals(solsId, that.solsId) &&
             Objects.equals(nomsVernaculairesId, that.nomsVernaculairesId) &&
             Objects.equals(temperatureId, that.temperatureId) &&
@@ -370,12 +370,12 @@ public class PlanteCriteria implements Serializable, Criteria {
             nomLatin,
             entretien,
             histoire,
-            vitesse,
+            vitesseCroissance,
+            exposition,
             cycleDeVieId,
             classificationId,
             confusionsId,
-            interactionsId,
-            expositionsId,
+            ensoleillementsId,
             solsId,
             nomsVernaculairesId,
             temperatureId,
@@ -394,12 +394,12 @@ public class PlanteCriteria implements Serializable, Criteria {
             (nomLatin != null ? "nomLatin=" + nomLatin + ", " : "") +
             (entretien != null ? "entretien=" + entretien + ", " : "") +
             (histoire != null ? "histoire=" + histoire + ", " : "") +
-            (vitesse != null ? "vitesse=" + vitesse + ", " : "") +
+            (vitesseCroissance != null ? "vitesseCroissance=" + vitesseCroissance + ", " : "") +
+            (exposition != null ? "exposition=" + exposition + ", " : "") +
             (cycleDeVieId != null ? "cycleDeVieId=" + cycleDeVieId + ", " : "") +
             (classificationId != null ? "classificationId=" + classificationId + ", " : "") +
             (confusionsId != null ? "confusionsId=" + confusionsId + ", " : "") +
-            (interactionsId != null ? "interactionsId=" + interactionsId + ", " : "") +
-            (expositionsId != null ? "expositionsId=" + expositionsId + ", " : "") +
+            (ensoleillementsId != null ? "ensoleillementsId=" + ensoleillementsId + ", " : "") +
             (solsId != null ? "solsId=" + solsId + ", " : "") +
             (nomsVernaculairesId != null ? "nomsVernaculairesId=" + nomsVernaculairesId + ", " : "") +
             (temperatureId != null ? "temperatureId=" + temperatureId + ", " : "") +

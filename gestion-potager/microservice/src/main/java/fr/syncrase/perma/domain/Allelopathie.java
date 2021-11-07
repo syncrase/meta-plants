@@ -30,16 +30,17 @@ public class Allelopathie implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Min(value = -10)
+    @Max(value = 10)
     @Column(name = "impact")
     private Integer impact;
-    
+
     @JsonIgnoreProperties(
         value = {
             "cycleDeVie",
             "classification",
             "confusions",
-            "interactions",
-            "expositions",
+            "ensoleillements",
             "sols",
             "nomsVernaculaires",
             "temperature",
@@ -58,8 +59,7 @@ public class Allelopathie implements Serializable {
             "cycleDeVie",
             "classification",
             "confusions",
-            "interactions",
-            "expositions",
+            "ensoleillements",
             "sols",
             "nomsVernaculaires",
             "temperature",
@@ -73,39 +73,9 @@ public class Allelopathie implements Serializable {
     @JoinColumn(unique = true)
     private Plante origine;
 
-    @ManyToOne
-    @JsonIgnoreProperties(
-        value = {
-            "cycleDeVie",
-            "classification",
-            "confusions",
-            "interactions",
-            "expositions",
-            "sols",
-            "nomsVernaculaires",
-            "temperature",
-            "racine",
-            "strate",
-            "feuillage",
-        },
-        allowSetters = true
-    )
-    private Plante interaction;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Allelopathie(Integer impact, String description, Object object, Plante origine, Plante cible) {
-    	this.impact = impact;
-    	this.description = description;
-    	this.cible = cible;
-    	this.origine = origine;
-	}
-
-	public Allelopathie() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -144,6 +114,19 @@ public class Allelopathie implements Serializable {
         this.description = description;
     }
 
+    public Integer getImpact() {
+        return this.impact;
+    }
+
+    public Allelopathie impact(Integer impact) {
+        this.setImpact(impact);
+        return this;
+    }
+
+    public void setImpact(Integer impact) {
+        this.impact = impact;
+    }
+
     public Plante getCible() {
         return this.cible;
     }
@@ -167,19 +150,6 @@ public class Allelopathie implements Serializable {
 
     public Allelopathie origine(Plante plante) {
         this.setOrigine(plante);
-        return this;
-    }
-
-    public Plante getInteraction() {
-        return this.interaction;
-    }
-
-    public void setInteraction(Plante plante) {
-        this.interaction = plante;
-    }
-
-    public Allelopathie interaction(Plante plante) {
-        this.setInteraction(plante);
         return this;
     }
 
@@ -209,6 +179,7 @@ public class Allelopathie implements Serializable {
             "id=" + getId() +
             ", type='" + getType() + "'" +
             ", description='" + getDescription() + "'" +
+            ", impact=" + getImpact() +
             "}";
     }
 }

@@ -96,6 +96,9 @@ public class AllelopathieQueryService extends QueryService<Allelopathie> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Allelopathie_.description));
             }
+            if (criteria.getImpact() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getImpact(), Allelopathie_.impact));
+            }
             if (criteria.getCibleId() != null) {
                 specification =
                     specification.and(
@@ -106,15 +109,6 @@ public class AllelopathieQueryService extends QueryService<Allelopathie> {
                 specification =
                     specification.and(
                         buildSpecification(criteria.getOrigineId(), root -> root.join(Allelopathie_.origine, JoinType.LEFT).get(Plante_.id))
-                    );
-            }
-            if (criteria.getInteractionId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getInteractionId(),
-                            root -> root.join(Allelopathie_.interaction, JoinType.LEFT).get(Plante_.id)
-                        )
                     );
             }
         }

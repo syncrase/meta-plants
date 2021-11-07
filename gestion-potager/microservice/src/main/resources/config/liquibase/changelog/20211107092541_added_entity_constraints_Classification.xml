@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+    <!--
+        Added the constraints for entity Classification.
+    -->
+    <changeSet id="20211107092541-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="raunkier_id"
+                                 baseTableName="classification"
+                                 constraintName="fk_classification__raunkier_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="raunkier"/>
+
+        <addForeignKeyConstraint baseColumnNames="cronquist_id"
+                                 baseTableName="classification"
+                                 constraintName="fk_classification__cronquist_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="cronquist"/>
+
+        <addForeignKeyConstraint baseColumnNames="apg1_id"
+                                 baseTableName="classification"
+                                 constraintName="fk_classification__apg1_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="apgi"/>
+
+        <addForeignKeyConstraint baseColumnNames="apg2_id"
+                                 baseTableName="classification"
+                                 constraintName="fk_classification__apg2_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="apgii"/>
+
+        <addForeignKeyConstraint baseColumnNames="apg3_id"
+                                 baseTableName="classification"
+                                 constraintName="fk_classification__apg3_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="apgiii"/>
+
+        <addForeignKeyConstraint baseColumnNames="apg4_id"
+                                 baseTableName="classification"
+                                 constraintName="fk_classification__apg4_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="apgiv"/>
+    </changeSet>
+</databaseChangeLog>

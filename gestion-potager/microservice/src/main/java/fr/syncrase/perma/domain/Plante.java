@@ -35,8 +35,11 @@ public class Plante implements Serializable {
     @Column(name = "histoire")
     private String histoire;
 
-    @Column(name = "vitesse")
-    private String vitesse;
+    @Column(name = "vitesse_croissance")
+    private String vitesseCroissance;
+
+    @Column(name = "exposition")
+    private String exposition;
 
     @JsonIgnoreProperties(
         value = {
@@ -53,20 +56,15 @@ public class Plante implements Serializable {
     @JoinColumn(unique = true)
     private Classification classification;
 
-    @OneToMany(mappedBy = "confusion")
+    @OneToMany(mappedBy = "planteRessemblant")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "confusion" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "planteRessemblant" }, allowSetters = true)
     private Set<Ressemblance> confusions = new HashSet<>();
-
-    @OneToMany(mappedBy = "interaction")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "cible", "origine", "interaction" }, allowSetters = true)
-    private Set<Allelopathie> interactions = new HashSet<>();
 
     @OneToMany(mappedBy = "plante")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "plante" }, allowSetters = true)
-    private Set<Exposition> expositions = new HashSet<>();
+    private Set<Ensoleillement> ensoleillements = new HashSet<>();
 
     @OneToMany(mappedBy = "plante")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -101,7 +99,7 @@ public class Plante implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -153,17 +151,30 @@ public class Plante implements Serializable {
         this.histoire = histoire;
     }
 
-    public String getVitesse() {
-        return this.vitesse;
+    public String getVitesseCroissance() {
+        return this.vitesseCroissance;
     }
 
-    public Plante vitesse(String vitesse) {
-        this.setVitesse(vitesse);
+    public Plante vitesseCroissance(String vitesseCroissance) {
+        this.setVitesseCroissance(vitesseCroissance);
         return this;
     }
 
-    public void setVitesse(String vitesse) {
-        this.vitesse = vitesse;
+    public void setVitesseCroissance(String vitesseCroissance) {
+        this.vitesseCroissance = vitesseCroissance;
+    }
+
+    public String getExposition() {
+        return this.exposition;
+    }
+
+    public Plante exposition(String exposition) {
+        this.setExposition(exposition);
+        return this;
+    }
+
+    public void setExposition(String exposition) {
+        this.exposition = exposition;
     }
 
     public CycleDeVie getCycleDeVie() {
@@ -198,10 +209,10 @@ public class Plante implements Serializable {
 
     public void setConfusions(Set<Ressemblance> ressemblances) {
         if (this.confusions != null) {
-            this.confusions.forEach(i -> i.setConfusion(null));
+            this.confusions.forEach(i -> i.setPlanteRessemblant(null));
         }
         if (ressemblances != null) {
-            ressemblances.forEach(i -> i.setConfusion(this));
+            ressemblances.forEach(i -> i.setPlanteRessemblant(this));
         }
         this.confusions = ressemblances;
     }
@@ -213,75 +224,44 @@ public class Plante implements Serializable {
 
     public Plante addConfusions(Ressemblance ressemblance) {
         this.confusions.add(ressemblance);
-        ressemblance.setConfusion(this);
+        ressemblance.setPlanteRessemblant(this);
         return this;
     }
 
     public Plante removeConfusions(Ressemblance ressemblance) {
         this.confusions.remove(ressemblance);
-        ressemblance.setConfusion(null);
+        ressemblance.setPlanteRessemblant(null);
         return this;
     }
 
-    public Set<Allelopathie> getInteractions() {
-        return this.interactions;
+    public Set<Ensoleillement> getEnsoleillements() {
+        return this.ensoleillements;
     }
 
-    public void setInteractions(Set<Allelopathie> allelopathies) {
-        if (this.interactions != null) {
-            this.interactions.forEach(i -> i.setInteraction(null));
+    public void setEnsoleillements(Set<Ensoleillement> ensoleillements) {
+        if (this.ensoleillements != null) {
+            this.ensoleillements.forEach(i -> i.setPlante(null));
         }
-        if (allelopathies != null) {
-            allelopathies.forEach(i -> i.setInteraction(this));
+        if (ensoleillements != null) {
+            ensoleillements.forEach(i -> i.setPlante(this));
         }
-        this.interactions = allelopathies;
+        this.ensoleillements = ensoleillements;
     }
 
-    public Plante interactions(Set<Allelopathie> allelopathies) {
-        this.setInteractions(allelopathies);
+    public Plante ensoleillements(Set<Ensoleillement> ensoleillements) {
+        this.setEnsoleillements(ensoleillements);
         return this;
     }
 
-    public Plante addInteractions(Allelopathie allelopathie) {
-        this.interactions.add(allelopathie);
-        allelopathie.setInteraction(this);
+    public Plante addEnsoleillements(Ensoleillement ensoleillement) {
+        this.ensoleillements.add(ensoleillement);
+        ensoleillement.setPlante(this);
         return this;
     }
 
-    public Plante removeInteractions(Allelopathie allelopathie) {
-        this.interactions.remove(allelopathie);
-        allelopathie.setInteraction(null);
-        return this;
-    }
-
-    public Set<Exposition> getExpositions() {
-        return this.expositions;
-    }
-
-    public void setExpositions(Set<Exposition> expositions) {
-        if (this.expositions != null) {
-            this.expositions.forEach(i -> i.setPlante(null));
-        }
-        if (expositions != null) {
-            expositions.forEach(i -> i.setPlante(this));
-        }
-        this.expositions = expositions;
-    }
-
-    public Plante expositions(Set<Exposition> expositions) {
-        this.setExpositions(expositions);
-        return this;
-    }
-
-    public Plante addExpositions(Exposition exposition) {
-        this.expositions.add(exposition);
-        exposition.setPlante(this);
-        return this;
-    }
-
-    public Plante removeExpositions(Exposition exposition) {
-        this.expositions.remove(exposition);
-        exposition.setPlante(null);
+    public Plante removeEnsoleillements(Ensoleillement ensoleillement) {
+        this.ensoleillements.remove(ensoleillement);
+        ensoleillement.setPlante(null);
         return this;
     }
 
@@ -420,7 +400,8 @@ public class Plante implements Serializable {
             ", nomLatin='" + getNomLatin() + "'" +
             ", entretien='" + getEntretien() + "'" +
             ", histoire='" + getHistoire() + "'" +
-            ", vitesse='" + getVitesse() + "'" +
+            ", vitesseCroissance='" + getVitesseCroissance() + "'" +
+            ", exposition='" + getExposition() + "'" +
             "}";
     }
 }

@@ -9,6 +9,13 @@
     {
       "fieldName": "description",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "impact",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMin": "-10",
+      "fieldValidateRulesMax": "10"
     }
   ],
   "relationships": [
@@ -25,12 +32,6 @@
       "otherEntityRelationshipName": "allelopathie",
       "relationshipName": "origine",
       "ownerSide": true
-    },
-    {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "plante",
-      "otherEntityRelationshipName": "interactions",
-      "relationshipName": "interaction"
     }
   ],
   "entityTableName": "allelopathie",
@@ -45,5 +46,5 @@
   "microserviceName": "microservice",
   "clientRootFolder": "microservice",
   "databaseType": "sql",
-  "changelogDate": "20211104121754"
+  "changelogDate": "20211107092641"
 }

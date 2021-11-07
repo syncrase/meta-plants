@@ -2,6 +2,7 @@ package fr.syncrase.perma.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -21,6 +22,10 @@ public class TypeSemis implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @NotNull
+    @Column(name = "type", nullable = false)
+    private String type;
+
     @Column(name = "description")
     private String description;
 
@@ -37,6 +42,19 @@ public class TypeSemis implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public TypeSemis type(String type) {
+        this.setType(type);
+        return this;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {
@@ -76,6 +94,7 @@ public class TypeSemis implements Serializable {
     public String toString() {
         return "TypeSemis{" +
             "id=" + getId() +
+            ", type='" + getType() + "'" +
             ", description='" + getDescription() + "'" +
             "}";
     }

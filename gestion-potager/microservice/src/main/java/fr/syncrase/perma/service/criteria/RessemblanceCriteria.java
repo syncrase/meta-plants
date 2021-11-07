@@ -28,7 +28,7 @@ public class RessemblanceCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
-    private LongFilter confusionId;
+    private LongFilter planteRessemblantId;
 
     private Boolean distinct;
 
@@ -37,7 +37,7 @@ public class RessemblanceCriteria implements Serializable, Criteria {
     public RessemblanceCriteria(RessemblanceCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.description = other.description == null ? null : other.description.copy();
-        this.confusionId = other.confusionId == null ? null : other.confusionId.copy();
+        this.planteRessemblantId = other.planteRessemblantId == null ? null : other.planteRessemblantId.copy();
         this.distinct = other.distinct;
     }
 
@@ -76,19 +76,19 @@ public class RessemblanceCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
-    public LongFilter getConfusionId() {
-        return confusionId;
+    public LongFilter getPlanteRessemblantId() {
+        return planteRessemblantId;
     }
 
-    public LongFilter confusionId() {
-        if (confusionId == null) {
-            confusionId = new LongFilter();
+    public LongFilter planteRessemblantId() {
+        if (planteRessemblantId == null) {
+            planteRessemblantId = new LongFilter();
         }
-        return confusionId;
+        return planteRessemblantId;
     }
 
-    public void setConfusionId(LongFilter confusionId) {
-        this.confusionId = confusionId;
+    public void setPlanteRessemblantId(LongFilter planteRessemblantId) {
+        this.planteRessemblantId = planteRessemblantId;
     }
 
     public Boolean getDistinct() {
@@ -111,14 +111,14 @@ public class RessemblanceCriteria implements Serializable, Criteria {
         return (
             Objects.equals(id, that.id) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(confusionId, that.confusionId) &&
+            Objects.equals(planteRessemblantId, that.planteRessemblantId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, confusionId, distinct);
+        return Objects.hash(id, description, planteRessemblantId, distinct);
     }
 
     // prettier-ignore
@@ -127,7 +127,7 @@ public class RessemblanceCriteria implements Serializable, Criteria {
         return "RessemblanceCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
             (description != null ? "description=" + description + ", " : "") +
-            (confusionId != null ? "confusionId=" + confusionId + ", " : "") +
+            (planteRessemblantId != null ? "planteRessemblantId=" + planteRessemblantId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

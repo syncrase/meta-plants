@@ -7,7 +7,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * A Ressemblance.
+ * Pour que la ressemblance soit réflexive il faut l'enregistrer 2 fois. Car si la ressemblance A ressemble à B est enregistrée, alors B ne ressemble pas à A
  */
 @Entity
 @Table(name = "ressemblance")
@@ -31,8 +31,7 @@ public class Ressemblance implements Serializable {
             "cycleDeVie",
             "classification",
             "confusions",
-            "interactions",
-            "expositions",
+            "ensoleillements",
             "sols",
             "nomsVernaculaires",
             "temperature",
@@ -42,7 +41,7 @@ public class Ressemblance implements Serializable {
         },
         allowSetters = true
     )
-    private Plante confusion;
+    private Plante planteRessemblant;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -72,16 +71,16 @@ public class Ressemblance implements Serializable {
         this.description = description;
     }
 
-    public Plante getConfusion() {
-        return this.confusion;
+    public Plante getPlanteRessemblant() {
+        return this.planteRessemblant;
     }
 
-    public void setConfusion(Plante plante) {
-        this.confusion = plante;
+    public void setPlanteRessemblant(Plante plante) {
+        this.planteRessemblant = plante;
     }
 
-    public Ressemblance confusion(Plante plante) {
-        this.setConfusion(plante);
+    public Ressemblance planteRessemblant(Plante plante) {
+        this.setPlanteRessemblant(plante);
         return this;
     }
 

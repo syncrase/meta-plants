@@ -40,8 +40,7 @@ public class Sol implements Serializable {
             "cycleDeVie",
             "classification",
             "confusions",
-            "interactions",
-            "expositions",
+            "ensoleillements",
             "sols",
             "nomsVernaculaires",
             "temperature",
@@ -55,20 +54,7 @@ public class Sol implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Sol(Long id, Double phMin, Double phMax, String type, String richesse) {
-		super();
-		this.id = id;
-		this.phMin = phMin;
-		this.phMax = phMax;
-		this.type = type;
-		this.richesse = richesse;
-	}
-
-	public Sol() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 

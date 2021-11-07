@@ -9,6 +9,6 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { PlanteMapper.class })
 public interface RessemblanceMapper extends EntityMapper<RessemblanceDTO, Ressemblance> {
-    @Mapping(target = "confusion", source = "confusion", qualifiedByName = "id")
+    @Mapping(target = "planteRessemblant", source = "planteRessemblant", qualifiedByName = "id")
     RessemblanceDTO toDto(Ressemblance s);
 }

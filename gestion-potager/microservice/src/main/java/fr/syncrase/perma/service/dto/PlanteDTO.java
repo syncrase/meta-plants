@@ -20,7 +20,9 @@ public class PlanteDTO implements Serializable {
 
     private String histoire;
 
-    private String vitesse;
+    private String vitesseCroissance;
+
+    private String exposition;
 
     private CycleDeVieDTO cycleDeVie;
 
@@ -68,12 +70,20 @@ public class PlanteDTO implements Serializable {
         this.histoire = histoire;
     }
 
-    public String getVitesse() {
-        return vitesse;
+    public String getVitesseCroissance() {
+        return vitesseCroissance;
     }
 
-    public void setVitesse(String vitesse) {
-        this.vitesse = vitesse;
+    public void setVitesseCroissance(String vitesseCroissance) {
+        this.vitesseCroissance = vitesseCroissance;
+    }
+
+    public String getExposition() {
+        return exposition;
+    }
+
+    public void setExposition(String exposition) {
+        this.exposition = exposition;
     }
 
     public CycleDeVieDTO getCycleDeVie() {
@@ -161,7 +171,8 @@ public class PlanteDTO implements Serializable {
             ", nomLatin='" + getNomLatin() + "'" +
             ", entretien='" + getEntretien() + "'" +
             ", histoire='" + getHistoire() + "'" +
-            ", vitesse='" + getVitesse() + "'" +
+            ", vitesseCroissance='" + getVitesseCroissance() + "'" +
+            ", exposition='" + getExposition() + "'" +
             ", cycleDeVie=" + getCycleDeVie() +
             ", classification=" + getClassification() +
             ", nomsVernaculaires=" + getNomsVernaculaires() +

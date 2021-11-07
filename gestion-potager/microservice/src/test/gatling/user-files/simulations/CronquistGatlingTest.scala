@@ -108,6 +108,7 @@ class CronquistGatlingTest extends Simulation {
                 , "ordre":"SAMPLE_TEXT"
                 , "famille":"SAMPLE_TEXT"
                 , "genre":"SAMPLE_TEXT"
+                , "espece":"SAMPLE_TEXT"
                 }""")).asJson
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_cronquist_url"))).exitHereIfFailed

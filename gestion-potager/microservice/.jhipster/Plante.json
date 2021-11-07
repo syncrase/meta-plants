@@ -15,7 +15,11 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "vitesse",
+      "fieldName": "vitesseCroissance",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "exposition",
       "fieldType": "String"
     }
   ],
@@ -37,20 +41,14 @@
     {
       "relationshipType": "one-to-many",
       "otherEntityName": "ressemblance",
-      "otherEntityRelationshipName": "confusion",
+      "otherEntityRelationshipName": "planteRessemblant",
       "relationshipName": "confusions"
     },
     {
       "relationshipType": "one-to-many",
-      "otherEntityName": "allelopathie",
-      "otherEntityRelationshipName": "interaction",
-      "relationshipName": "interactions"
-    },
-    {
-      "relationshipType": "one-to-many",
-      "otherEntityName": "exposition",
+      "otherEntityName": "ensoleillement",
       "otherEntityRelationshipName": "plante",
-      "relationshipName": "expositions"
+      "relationshipName": "ensoleillements"
     },
     {
       "relationshipType": "one-to-many",
@@ -102,5 +100,5 @@
   "microserviceName": "microservice",
   "clientRootFolder": "microservice",
   "databaseType": "sql",
-  "changelogDate": "20211104120354"
+  "changelogDate": "20211107091341"
 }

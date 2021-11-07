@@ -11,6 +11,5 @@ import org.mapstruct.*;
 public interface AllelopathieMapper extends EntityMapper<AllelopathieDTO, Allelopathie> {
     @Mapping(target = "cible", source = "cible", qualifiedByName = "id")
     @Mapping(target = "origine", source = "origine", qualifiedByName = "id")
-    @Mapping(target = "interaction", source = "interaction", qualifiedByName = "id")
     AllelopathieDTO toDto(Allelopathie s);
 }

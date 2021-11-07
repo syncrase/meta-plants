@@ -93,12 +93,12 @@ public class RessemblanceQueryService extends QueryService<Ressemblance> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Ressemblance_.description));
             }
-            if (criteria.getConfusionId() != null) {
+            if (criteria.getPlanteRessemblantId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getConfusionId(),
-                            root -> root.join(Ressemblance_.confusion, JoinType.LEFT).get(Plante_.id)
+                            criteria.getPlanteRessemblantId(),
+                            root -> root.join(Ressemblance_.planteRessemblant, JoinType.LEFT).get(Plante_.id)
                         )
                     );
             }

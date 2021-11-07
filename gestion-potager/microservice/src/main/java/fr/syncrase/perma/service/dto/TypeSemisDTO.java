@@ -2,6 +2,7 @@ package fr.syncrase.perma.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.TypeSemis} entity.
@@ -9,6 +10,9 @@ import java.util.Objects;
 public class TypeSemisDTO implements Serializable {
 
     private Long id;
+
+    @NotNull
+    private String type;
 
     private String description;
 
@@ -18,6 +22,14 @@ public class TypeSemisDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {
@@ -54,6 +66,7 @@ public class TypeSemisDTO implements Serializable {
     public String toString() {
         return "TypeSemisDTO{" +
             "id=" + getId() +
+            ", type='" + getType() + "'" +
             ", description='" + getDescription() + "'" +
             "}";
     }

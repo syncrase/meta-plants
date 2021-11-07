@@ -33,6 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class TypeSemisResourceIT {
 
+    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_TYPE = "BBBBBBBBBB";
+
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
@@ -63,7 +66,7 @@ class TypeSemisResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TypeSemis createEntity(EntityManager em) {
-        TypeSemis typeSemis = new TypeSemis().description(DEFAULT_DESCRIPTION);
+        TypeSemis typeSemis = new TypeSemis().type(DEFAULT_TYPE).description(DEFAULT_DESCRIPTION);
         return typeSemis;
     }
 
@@ -74,7 +77,7 @@ class TypeSemisResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TypeSemis createUpdatedEntity(EntityManager em) {
-        TypeSemis typeSemis = new TypeSemis().description(UPDATED_DESCRIPTION);
+        TypeSemis typeSemis = new TypeSemis().type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
         return typeSemis;
     }
 
@@ -102,6 +105,7 @@ class TypeSemisResourceIT {
         List<TypeSemis> typeSemisList = typeSemisRepository.findAll();
         assertThat(typeSemisList).hasSize(databaseSizeBeforeCreate + 1);
         TypeSemis testTypeSemis = typeSemisList.get(typeSemisList.size() - 1);
+        assertThat(testTypeSemis.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testTypeSemis.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
@@ -131,6 +135,29 @@ class TypeSemisResourceIT {
 
     @Test
     @Transactional
+    void checkTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = typeSemisRepository.findAll().size();
+        // set the field null
+        typeSemis.setType(null);
+
+        // Create the TypeSemis, which fails.
+        TypeSemisDTO typeSemisDTO = typeSemisMapper.toDto(typeSemis);
+
+        restTypeSemisMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(typeSemisDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<TypeSemis> typeSemisList = typeSemisRepository.findAll();
+        assertThat(typeSemisList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllTypeSemis() throws Exception {
         // Initialize the database
         typeSemisRepository.saveAndFlush(typeSemis);
@@ -141,6 +168,7 @@ class TypeSemisResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(typeSemis.getId().intValue())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
 
@@ -156,6 +184,7 @@ class TypeSemisResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(typeSemis.getId().intValue()))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
 
@@ -175,6 +204,84 @@ class TypeSemisResourceIT {
 
         defaultTypeSemisShouldBeFound("id.lessThanOrEqual=" + id);
         defaultTypeSemisShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllTypeSemisByTypeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        typeSemisRepository.saveAndFlush(typeSemis);
+
+        // Get all the typeSemisList where type equals to DEFAULT_TYPE
+        defaultTypeSemisShouldBeFound("type.equals=" + DEFAULT_TYPE);
+
+        // Get all the typeSemisList where type equals to UPDATED_TYPE
+        defaultTypeSemisShouldNotBeFound("type.equals=" + UPDATED_TYPE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTypeSemisByTypeIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        typeSemisRepository.saveAndFlush(typeSemis);
+
+        // Get all the typeSemisList where type not equals to DEFAULT_TYPE
+        defaultTypeSemisShouldNotBeFound("type.notEquals=" + DEFAULT_TYPE);
+
+        // Get all the typeSemisList where type not equals to UPDATED_TYPE
+        defaultTypeSemisShouldBeFound("type.notEquals=" + UPDATED_TYPE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTypeSemisByTypeIsInShouldWork() throws Exception {
+        // Initialize the database
+        typeSemisRepository.saveAndFlush(typeSemis);
+
+        // Get all the typeSemisList where type in DEFAULT_TYPE or UPDATED_TYPE
+        defaultTypeSemisShouldBeFound("type.in=" + DEFAULT_TYPE + "," + UPDATED_TYPE);
+
+        // Get all the typeSemisList where type equals to UPDATED_TYPE
+        defaultTypeSemisShouldNotBeFound("type.in=" + UPDATED_TYPE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTypeSemisByTypeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        typeSemisRepository.saveAndFlush(typeSemis);
+
+        // Get all the typeSemisList where type is not null
+        defaultTypeSemisShouldBeFound("type.specified=true");
+
+        // Get all the typeSemisList where type is null
+        defaultTypeSemisShouldNotBeFound("type.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTypeSemisByTypeContainsSomething() throws Exception {
+        // Initialize the database
+        typeSemisRepository.saveAndFlush(typeSemis);
+
+        // Get all the typeSemisList where type contains DEFAULT_TYPE
+        defaultTypeSemisShouldBeFound("type.contains=" + DEFAULT_TYPE);
+
+        // Get all the typeSemisList where type contains UPDATED_TYPE
+        defaultTypeSemisShouldNotBeFound("type.contains=" + UPDATED_TYPE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTypeSemisByTypeNotContainsSomething() throws Exception {
+        // Initialize the database
+        typeSemisRepository.saveAndFlush(typeSemis);
+
+        // Get all the typeSemisList where type does not contain DEFAULT_TYPE
+        defaultTypeSemisShouldNotBeFound("type.doesNotContain=" + DEFAULT_TYPE);
+
+        // Get all the typeSemisList where type does not contain UPDATED_TYPE
+        defaultTypeSemisShouldBeFound("type.doesNotContain=" + UPDATED_TYPE);
     }
 
     @Test
@@ -264,6 +371,7 @@ class TypeSemisResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(typeSemis.getId().intValue())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
 
         // Check, that the count call also returns 1
@@ -312,7 +420,7 @@ class TypeSemisResourceIT {
         TypeSemis updatedTypeSemis = typeSemisRepository.findById(typeSemis.getId()).get();
         // Disconnect from session so that the updates on updatedTypeSemis are not directly saved in db
         em.detach(updatedTypeSemis);
-        updatedTypeSemis.description(UPDATED_DESCRIPTION);
+        updatedTypeSemis.type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
         TypeSemisDTO typeSemisDTO = typeSemisMapper.toDto(updatedTypeSemis);
 
         restTypeSemisMockMvc
@@ -328,6 +436,7 @@ class TypeSemisResourceIT {
         List<TypeSemis> typeSemisList = typeSemisRepository.findAll();
         assertThat(typeSemisList).hasSize(databaseSizeBeforeUpdate);
         TypeSemis testTypeSemis = typeSemisList.get(typeSemisList.size() - 1);
+        assertThat(testTypeSemis.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testTypeSemis.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
@@ -415,7 +524,7 @@ class TypeSemisResourceIT {
         TypeSemis partialUpdatedTypeSemis = new TypeSemis();
         partialUpdatedTypeSemis.setId(typeSemis.getId());
 
-        partialUpdatedTypeSemis.description(UPDATED_DESCRIPTION);
+        partialUpdatedTypeSemis.type(UPDATED_TYPE);
 
         restTypeSemisMockMvc
             .perform(
@@ -430,7 +539,8 @@ class TypeSemisResourceIT {
         List<TypeSemis> typeSemisList = typeSemisRepository.findAll();
         assertThat(typeSemisList).hasSize(databaseSizeBeforeUpdate);
         TypeSemis testTypeSemis = typeSemisList.get(typeSemisList.size() - 1);
-        assertThat(testTypeSemis.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testTypeSemis.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testTypeSemis.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -445,7 +555,7 @@ class TypeSemisResourceIT {
         TypeSemis partialUpdatedTypeSemis = new TypeSemis();
         partialUpdatedTypeSemis.setId(typeSemis.getId());
 
-        partialUpdatedTypeSemis.description(UPDATED_DESCRIPTION);
+        partialUpdatedTypeSemis.type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
 
         restTypeSemisMockMvc
             .perform(
@@ -460,6 +570,7 @@ class TypeSemisResourceIT {
         List<TypeSemis> typeSemisList = typeSemisRepository.findAll();
         assertThat(typeSemisList).hasSize(databaseSizeBeforeUpdate);
         TypeSemis testTypeSemis = typeSemisList.get(typeSemisList.size() - 1);
+        assertThat(testTypeSemis.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testTypeSemis.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 

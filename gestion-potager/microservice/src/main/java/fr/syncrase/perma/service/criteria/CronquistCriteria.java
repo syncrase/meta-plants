@@ -42,6 +42,8 @@ public class CronquistCriteria implements Serializable, Criteria {
 
     private StringFilter genre;
 
+    private StringFilter espece;
+
     private Boolean distinct;
 
     public CronquistCriteria() {}
@@ -56,6 +58,7 @@ public class CronquistCriteria implements Serializable, Criteria {
         this.ordre = other.ordre == null ? null : other.ordre.copy();
         this.famille = other.famille == null ? null : other.famille.copy();
         this.genre = other.genre == null ? null : other.genre.copy();
+        this.espece = other.espece == null ? null : other.espece.copy();
         this.distinct = other.distinct;
     }
 
@@ -199,6 +202,21 @@ public class CronquistCriteria implements Serializable, Criteria {
         this.genre = genre;
     }
 
+    public StringFilter getEspece() {
+        return espece;
+    }
+
+    public StringFilter espece() {
+        if (espece == null) {
+            espece = new StringFilter();
+        }
+        return espece;
+    }
+
+    public void setEspece(StringFilter espece) {
+        this.espece = espece;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -226,13 +244,14 @@ public class CronquistCriteria implements Serializable, Criteria {
             Objects.equals(ordre, that.ordre) &&
             Objects.equals(famille, that.famille) &&
             Objects.equals(genre, that.genre) &&
+            Objects.equals(espece, that.espece) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, regne, sousRegne, division, classe, sousClasse, ordre, famille, genre, distinct);
+        return Objects.hash(id, regne, sousRegne, division, classe, sousClasse, ordre, famille, genre, espece, distinct);
     }
 
     // prettier-ignore
@@ -248,6 +267,7 @@ public class CronquistCriteria implements Serializable, Criteria {
             (ordre != null ? "ordre=" + ordre + ", " : "") +
             (famille != null ? "famille=" + famille + ", " : "") +
             (genre != null ? "genre=" + genre + ", " : "") +
+            (espece != null ? "espece=" + espece + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

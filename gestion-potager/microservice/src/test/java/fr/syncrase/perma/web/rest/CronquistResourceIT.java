@@ -57,6 +57,9 @@ class CronquistResourceIT {
     private static final String DEFAULT_GENRE = "AAAAAAAAAA";
     private static final String UPDATED_GENRE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_ESPECE = "AAAAAAAAAA";
+    private static final String UPDATED_ESPECE = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/cronquists";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -92,7 +95,8 @@ class CronquistResourceIT {
             .sousClasse(DEFAULT_SOUS_CLASSE)
             .ordre(DEFAULT_ORDRE)
             .famille(DEFAULT_FAMILLE)
-            .genre(DEFAULT_GENRE);
+            .genre(DEFAULT_GENRE)
+            .espece(DEFAULT_ESPECE);
         return cronquist;
     }
 
@@ -111,7 +115,8 @@ class CronquistResourceIT {
             .sousClasse(UPDATED_SOUS_CLASSE)
             .ordre(UPDATED_ORDRE)
             .famille(UPDATED_FAMILLE)
-            .genre(UPDATED_GENRE);
+            .genre(UPDATED_GENRE)
+            .espece(UPDATED_ESPECE);
         return cronquist;
     }
 
@@ -147,6 +152,7 @@ class CronquistResourceIT {
         assertThat(testCronquist.getOrdre()).isEqualTo(DEFAULT_ORDRE);
         assertThat(testCronquist.getFamille()).isEqualTo(DEFAULT_FAMILLE);
         assertThat(testCronquist.getGenre()).isEqualTo(DEFAULT_GENRE);
+        assertThat(testCronquist.getEspece()).isEqualTo(DEFAULT_ESPECE);
     }
 
     @Test
@@ -175,190 +181,6 @@ class CronquistResourceIT {
 
     @Test
     @Transactional
-    void checkRegneIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setRegne(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkSousRegneIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setSousRegne(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkDivisionIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setDivision(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkClasseIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setClasse(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkSousClasseIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setSousClasse(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkOrdreIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setOrdre(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkFamilleIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setFamille(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkGenreIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cronquistRepository.findAll().size();
-        // set the field null
-        cronquist.setGenre(null);
-
-        // Create the Cronquist, which fails.
-        CronquistDTO cronquistDTO = cronquistMapper.toDto(cronquist);
-
-        restCronquistMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(cronquistDTO))
-            )
-            .andExpect(status().isBadRequest());
-
-        List<Cronquist> cronquistList = cronquistRepository.findAll();
-        assertThat(cronquistList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllCronquists() throws Exception {
         // Initialize the database
         cronquistRepository.saveAndFlush(cronquist);
@@ -376,7 +198,8 @@ class CronquistResourceIT {
             .andExpect(jsonPath("$.[*].sousClasse").value(hasItem(DEFAULT_SOUS_CLASSE)))
             .andExpect(jsonPath("$.[*].ordre").value(hasItem(DEFAULT_ORDRE)))
             .andExpect(jsonPath("$.[*].famille").value(hasItem(DEFAULT_FAMILLE)))
-            .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE)));
+            .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE)))
+            .andExpect(jsonPath("$.[*].espece").value(hasItem(DEFAULT_ESPECE)));
     }
 
     @Test
@@ -398,7 +221,8 @@ class CronquistResourceIT {
             .andExpect(jsonPath("$.sousClasse").value(DEFAULT_SOUS_CLASSE))
             .andExpect(jsonPath("$.ordre").value(DEFAULT_ORDRE))
             .andExpect(jsonPath("$.famille").value(DEFAULT_FAMILLE))
-            .andExpect(jsonPath("$.genre").value(DEFAULT_GENRE));
+            .andExpect(jsonPath("$.genre").value(DEFAULT_GENRE))
+            .andExpect(jsonPath("$.espece").value(DEFAULT_ESPECE));
     }
 
     @Test
@@ -1043,6 +867,84 @@ class CronquistResourceIT {
         defaultCronquistShouldBeFound("genre.doesNotContain=" + UPDATED_GENRE);
     }
 
+    @Test
+    @Transactional
+    void getAllCronquistsByEspeceIsEqualToSomething() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        // Get all the cronquistList where espece equals to DEFAULT_ESPECE
+        defaultCronquistShouldBeFound("espece.equals=" + DEFAULT_ESPECE);
+
+        // Get all the cronquistList where espece equals to UPDATED_ESPECE
+        defaultCronquistShouldNotBeFound("espece.equals=" + UPDATED_ESPECE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCronquistsByEspeceIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        // Get all the cronquistList where espece not equals to DEFAULT_ESPECE
+        defaultCronquistShouldNotBeFound("espece.notEquals=" + DEFAULT_ESPECE);
+
+        // Get all the cronquistList where espece not equals to UPDATED_ESPECE
+        defaultCronquistShouldBeFound("espece.notEquals=" + UPDATED_ESPECE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCronquistsByEspeceIsInShouldWork() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        // Get all the cronquistList where espece in DEFAULT_ESPECE or UPDATED_ESPECE
+        defaultCronquistShouldBeFound("espece.in=" + DEFAULT_ESPECE + "," + UPDATED_ESPECE);
+
+        // Get all the cronquistList where espece equals to UPDATED_ESPECE
+        defaultCronquistShouldNotBeFound("espece.in=" + UPDATED_ESPECE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCronquistsByEspeceIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        // Get all the cronquistList where espece is not null
+        defaultCronquistShouldBeFound("espece.specified=true");
+
+        // Get all the cronquistList where espece is null
+        defaultCronquistShouldNotBeFound("espece.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllCronquistsByEspeceContainsSomething() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        // Get all the cronquistList where espece contains DEFAULT_ESPECE
+        defaultCronquistShouldBeFound("espece.contains=" + DEFAULT_ESPECE);
+
+        // Get all the cronquistList where espece contains UPDATED_ESPECE
+        defaultCronquistShouldNotBeFound("espece.contains=" + UPDATED_ESPECE);
+    }
+
+    @Test
+    @Transactional
+    void getAllCronquistsByEspeceNotContainsSomething() throws Exception {
+        // Initialize the database
+        cronquistRepository.saveAndFlush(cronquist);
+
+        // Get all the cronquistList where espece does not contain DEFAULT_ESPECE
+        defaultCronquistShouldNotBeFound("espece.doesNotContain=" + DEFAULT_ESPECE);
+
+        // Get all the cronquistList where espece does not contain UPDATED_ESPECE
+        defaultCronquistShouldBeFound("espece.doesNotContain=" + UPDATED_ESPECE);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -1059,7 +961,8 @@ class CronquistResourceIT {
             .andExpect(jsonPath("$.[*].sousClasse").value(hasItem(DEFAULT_SOUS_CLASSE)))
             .andExpect(jsonPath("$.[*].ordre").value(hasItem(DEFAULT_ORDRE)))
             .andExpect(jsonPath("$.[*].famille").value(hasItem(DEFAULT_FAMILLE)))
-            .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE)));
+            .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE)))
+            .andExpect(jsonPath("$.[*].espece").value(hasItem(DEFAULT_ESPECE)));
 
         // Check, that the count call also returns 1
         restCronquistMockMvc
@@ -1115,7 +1018,8 @@ class CronquistResourceIT {
             .sousClasse(UPDATED_SOUS_CLASSE)
             .ordre(UPDATED_ORDRE)
             .famille(UPDATED_FAMILLE)
-            .genre(UPDATED_GENRE);
+            .genre(UPDATED_GENRE)
+            .espece(UPDATED_ESPECE);
         CronquistDTO cronquistDTO = cronquistMapper.toDto(updatedCronquist);
 
         restCronquistMockMvc
@@ -1139,6 +1043,7 @@ class CronquistResourceIT {
         assertThat(testCronquist.getOrdre()).isEqualTo(UPDATED_ORDRE);
         assertThat(testCronquist.getFamille()).isEqualTo(UPDATED_FAMILLE);
         assertThat(testCronquist.getGenre()).isEqualTo(UPDATED_GENRE);
+        assertThat(testCronquist.getEspece()).isEqualTo(UPDATED_ESPECE);
     }
 
     @Test
@@ -1248,6 +1153,7 @@ class CronquistResourceIT {
         assertThat(testCronquist.getOrdre()).isEqualTo(DEFAULT_ORDRE);
         assertThat(testCronquist.getFamille()).isEqualTo(DEFAULT_FAMILLE);
         assertThat(testCronquist.getGenre()).isEqualTo(DEFAULT_GENRE);
+        assertThat(testCronquist.getEspece()).isEqualTo(DEFAULT_ESPECE);
     }
 
     @Test
@@ -1270,7 +1176,8 @@ class CronquistResourceIT {
             .sousClasse(UPDATED_SOUS_CLASSE)
             .ordre(UPDATED_ORDRE)
             .famille(UPDATED_FAMILLE)
-            .genre(UPDATED_GENRE);
+            .genre(UPDATED_GENRE)
+            .espece(UPDATED_ESPECE);
 
         restCronquistMockMvc
             .perform(
@@ -1293,6 +1200,7 @@ class CronquistResourceIT {
         assertThat(testCronquist.getOrdre()).isEqualTo(UPDATED_ORDRE);
         assertThat(testCronquist.getFamille()).isEqualTo(UPDATED_FAMILLE);
         assertThat(testCronquist.getGenre()).isEqualTo(UPDATED_GENRE);
+        assertThat(testCronquist.getEspece()).isEqualTo(UPDATED_ESPECE);
     }
 
     @Test

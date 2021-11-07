@@ -114,6 +114,9 @@ public class CronquistQueryService extends QueryService<Cronquist> {
             if (criteria.getGenre() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getGenre(), Cronquist_.genre));
             }
+            if (criteria.getEspece() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getEspece(), Cronquist_.espece));
+            }
         }
         return specification;
     }

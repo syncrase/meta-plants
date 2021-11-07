@@ -1,18 +1,22 @@
 package fr.syncrase.perma.service.dto;
 
+import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * A DTO for the {@link fr.syncrase.perma.domain.Ressemblance} entity.
  */
+@ApiModel(
+    description = "Pour que la ressemblance soit réflexive il faut l'enregistrer 2 fois. Car si la ressemblance A ressemble à B est enregistrée, alors B ne ressemble pas à A"
+)
 public class RessemblanceDTO implements Serializable {
 
     private Long id;
 
     private String description;
 
-    private PlanteDTO confusion;
+    private PlanteDTO planteRessemblant;
 
     public Long getId() {
         return id;
@@ -30,12 +34,12 @@ public class RessemblanceDTO implements Serializable {
         this.description = description;
     }
 
-    public PlanteDTO getConfusion() {
-        return confusion;
+    public PlanteDTO getPlanteRessemblant() {
+        return planteRessemblant;
     }
 
-    public void setConfusion(PlanteDTO confusion) {
-        this.confusion = confusion;
+    public void setPlanteRessemblant(PlanteDTO planteRessemblant) {
+        this.planteRessemblant = planteRessemblant;
     }
 
     @Override
@@ -65,7 +69,7 @@ public class RessemblanceDTO implements Serializable {
         return "RessemblanceDTO{" +
             "id=" + getId() +
             ", description='" + getDescription() + "'" +
-            ", confusion=" + getConfusion() +
+            ", planteRessemblant=" + getPlanteRessemblant() +
             "}";
     }
 }

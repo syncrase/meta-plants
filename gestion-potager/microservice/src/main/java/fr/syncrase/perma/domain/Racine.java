@@ -34,8 +34,7 @@ public class Racine implements Serializable {
             "cycleDeVie",
             "classification",
             "confusions",
-            "interactions",
-            "expositions",
+            "ensoleillements",
             "sols",
             "nomsVernaculaires",
             "temperature",
@@ -47,18 +46,9 @@ public class Racine implements Serializable {
     )
     private Set<Plante> plantes = new HashSet<>();
 
-    public Racine(String type) {
-//		super();
-		this.type = type;
-	}
+    // jhipster-needle-entity-add-field - JHipster will add fields here
 
-	// jhipster-needle-entity-add-field - JHipster will add fields here
-
-    public Racine() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Long getId() {
+    public Long getId() {
         return this.id;
     }
 

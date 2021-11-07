@@ -103,7 +103,8 @@ class PlanteGatlingTest extends Simulation {
                 "nomLatin":"SAMPLE_TEXT"
                 , "entretien":"SAMPLE_TEXT"
                 , "histoire":"SAMPLE_TEXT"
-                , "vitesse":"SAMPLE_TEXT"
+                , "vitesseCroissance":"SAMPLE_TEXT"
+                , "exposition":"SAMPLE_TEXT"
                 }""")).asJson
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_plante_url"))).exitHereIfFailed
