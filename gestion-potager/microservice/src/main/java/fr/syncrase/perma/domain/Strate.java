@@ -49,7 +49,15 @@ public class Strate implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
+    public Strate(String type) {
+    	this.type = type;
+	}
+
+	public Strate() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getId() {
         return this.id;
     }
 

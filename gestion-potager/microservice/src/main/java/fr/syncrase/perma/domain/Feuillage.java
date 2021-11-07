@@ -49,7 +49,15 @@ public class Feuillage implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
+    public Feuillage(String type) {
+    	this.type = type;
+	}
+
+	public Feuillage() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getId() {
         return this.id;
     }
 

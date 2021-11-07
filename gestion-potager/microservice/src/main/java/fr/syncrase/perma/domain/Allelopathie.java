@@ -30,6 +30,9 @@ public class Allelopathie implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "impact")
+    private Integer impact;
+    
     @JsonIgnoreProperties(
         value = {
             "cycleDeVie",
@@ -91,7 +94,18 @@ public class Allelopathie implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
+    public Allelopathie(Integer impact, String description, Object object, Plante origine, Plante cible) {
+    	this.impact = impact;
+    	this.description = description;
+    	this.cible = cible;
+    	this.origine = origine;
+	}
+
+	public Allelopathie() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getId() {
         return this.id;
     }
 

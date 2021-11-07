@@ -54,9 +54,31 @@ public class Cronquist implements Serializable {
     @Column(name = "genre", nullable = false)
     private String genre;
 
+    @NotNull
+    @Column(name = "espece", nullable = false)
+    private String espece;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
+	public Cronquist(String regne, String sousRegne, String division, String classe,
+			String sousClasse, String ordre, String famille, String genre, String espece) {
+		super();
+		this.regne = regne;
+		this.sousRegne = sousRegne;
+		this.division = division;
+		this.classe = classe;
+		this.sousClasse = sousClasse;
+		this.ordre = ordre;
+		this.famille = famille;
+		this.genre = genre;
+		this.espece = espece;
+	}
+
+	public Cronquist() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getId() {
         return this.id;
     }
 

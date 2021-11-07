@@ -12,9 +12,18 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
+import fr.syncrase.perma.domain.Allelopathie;
+import fr.syncrase.perma.domain.Classification;
+import fr.syncrase.perma.domain.Cronquist;
+import fr.syncrase.perma.domain.Feuillage;
 import fr.syncrase.perma.domain.Mois;
+import fr.syncrase.perma.domain.NomVernaculaire;
 import fr.syncrase.perma.domain.Plante;
+import fr.syncrase.perma.domain.Racine;
+import fr.syncrase.perma.domain.Sol;
+import fr.syncrase.perma.domain.Strate;
 import fr.syncrase.perma.repository.AllelopathieRepository;
+import fr.syncrase.perma.repository.ClassificationRepository;
 import fr.syncrase.perma.repository.FeuillageRepository;
 import fr.syncrase.perma.repository.MoisRepository;
 import fr.syncrase.perma.repository.PlanteRepository;
@@ -41,11 +50,12 @@ public class AppLoading implements ApplicationListener<ContextRefreshedEvent> {
 	private PlanteRepository planteRepository;
 	@Autowired
 	private AllelopathieRepository allelopathieRepository;
-
+	@Autowired
+	ClassificationRepository classificationRepository;
 //	@Autowired
-//	public void setInteractionPlantePlanteRepository(
-//			InteractionPlantePlanteRepository interactionPlantePlanteRepository) {
-//		this.interactionPlantePlanteRepository = interactionPlantePlanteRepository;
+//	public void setAllelopathieRepository(
+//			AllelopathieRepository allelopathieRepository) {
+//		this.allelopathieRepository = allelopathieRepository;
 //	}
 
 	@Override
@@ -55,10 +65,10 @@ public class AppLoading implements ApplicationListener<ContextRefreshedEvent> {
 		insertTypeRacine();
 		insertStrate();
 		insertTypeFeuillage();
-		insertTypeTerre();
+//		insertTypeTerre();
 		insertRichesseSol();
-		insertEnsoleillement();
-		insertVitesseCroissance();
+//		insertEnsoleillement();
+//		insertVitesseCroissance();
 
 		Map<String, Plante> insertedPlants = new HashMap<>();
 		Map<String, String> data = new HashMap<>();
@@ -636,1028 +646,1013 @@ public class AppLoading implements ApplicationListener<ContextRefreshedEvent> {
 
 	private void interactionContreAubergine(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreAubergine"); // Contre aubergine
-		InteractionPlantePlante interactionContreAubergine1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("aubergine"));
-		interactionPlantePlanteRepository.save(interactionContreAubergine1);
+		Allelopathie interactionContreAubergine1 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("aubergine"));
+		allelopathieRepository.save(interactionContreAubergine1);
 	}
 
 	private void interactionContreAsperge(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreAsperge"); // Contre asperge
-		InteractionPlantePlante interactionContreAsperge1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("asperge"));
-		interactionPlantePlanteRepository.save(interactionContreAsperge1);
-		InteractionPlantePlante interactionContreAsperge2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("asperge"));
-		interactionPlantePlanteRepository.save(interactionContreAsperge2);
-		InteractionPlantePlante interactionContreAsperge3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("persil"), insertedPlants.get("asperge"));
-		interactionPlantePlanteRepository.save(interactionContreAsperge3);
+		Allelopathie interactionContreAsperge1 = new Allelopathie(-5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("asperge"));
+		allelopathieRepository.save(interactionContreAsperge1);
+		Allelopathie interactionContreAsperge2 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("asperge"));
+		allelopathieRepository.save(interactionContreAsperge2);
+		Allelopathie interactionContreAsperge3 = new Allelopathie(-5, "", null, insertedPlants.get("persil"),
+				insertedPlants.get("asperge"));
+		allelopathieRepository.save(interactionContreAsperge3);
 	}
 
 	private void interactionContreFraisier(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreFraisier"); // Contre fraisier
-		InteractionPlantePlante interactionContreFraisier1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("chou commun"), insertedPlants.get("fraisier des bois"));
-		interactionPlantePlanteRepository.save(interactionContreFraisier1);
+		Allelopathie interactionContreFraisier1 = new Allelopathie(-5, "", null, insertedPlants.get("chou commun"),
+				insertedPlants.get("fraisier des bois"));
+		allelopathieRepository.save(interactionContreFraisier1);
 	}
 
 	private void interactionContrePersil(Map<String, Plante> insertedPlants) {
 		log.info("interactionContrePersil"); // Contre persil
-		InteractionPlantePlante interactionContrePersil1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("laitue"), insertedPlants.get("persil"));
-		interactionPlantePlanteRepository.save(interactionContrePersil1);
+		Allelopathie interactionContrePersil1 = new Allelopathie(-5, "", null, insertedPlants.get("laitue"),
+				insertedPlants.get("persil"));
+		allelopathieRepository.save(interactionContrePersil1);
 	}
 
 	private void interactionContreSauge(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreSauge"); // Contre sauge
-		InteractionPlantePlante interactionContreSauge1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("sauge"));
-		interactionPlantePlanteRepository.save(interactionContreSauge1);
+		Allelopathie interactionContreSauge1 = new Allelopathie(-5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("sauge"));
+		allelopathieRepository.save(interactionContreSauge1);
 	}
 
 	private void interactionContreTomate(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreTomate"); // Contre tomate
-		InteractionPlantePlante interactionContreTomate1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionContreTomate1);
-		InteractionPlantePlante interactionContreTomate2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionContreTomate2);
-		InteractionPlantePlante interactionContreTomate3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("chou-rave"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionContreTomate3);
-		InteractionPlantePlante interactionContreTomate4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("chou commun"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionContreTomate4);
-		InteractionPlantePlante interactionContreTomate5 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionContreTomate5);
-		InteractionPlantePlante interactionContreTomate6 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("betterave"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionContreTomate6);
-		InteractionPlantePlante interactionContreTomate7 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionContreTomate7);
+		Allelopathie interactionContreTomate1 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionContreTomate1);
+		Allelopathie interactionContreTomate2 = new Allelopathie(-5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionContreTomate2);
+		Allelopathie interactionContreTomate3 = new Allelopathie(-5, "", null, insertedPlants.get("chou-rave"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionContreTomate3);
+		Allelopathie interactionContreTomate4 = new Allelopathie(-5, "", null, insertedPlants.get("chou commun"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionContreTomate4);
+		Allelopathie interactionContreTomate5 = new Allelopathie(-5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionContreTomate5);
+		Allelopathie interactionContreTomate6 = new Allelopathie(-5, "", null, insertedPlants.get("betterave"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionContreTomate6);
+		Allelopathie interactionContreTomate7 = new Allelopathie(-5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionContreTomate7);
 	}
 
 	private void interactionContrePommeDeTerre(Map<String, Plante> insertedPlants) {
 		log.info("interactionContrePommeDeTerre"); // Contre pommeDeTerre
-		InteractionPlantePlante interactionContrePommeDeTerre1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre1);
-		InteractionPlantePlante interactionContrePommeDeTerre2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("courge"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre2);
-		InteractionPlantePlante interactionContrePommeDeTerre3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre3);
-		InteractionPlantePlante interactionContrePommeDeTerre4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre4);
-		InteractionPlantePlante interactionContrePommeDeTerre5 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("framboisier"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre5);
-		InteractionPlantePlante interactionContrePommeDeTerre6 = new InteractionPlantePlante("-", "", null,
+		Allelopathie interactionContrePommeDeTerre1 = new Allelopathie(-5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionContrePommeDeTerre1);
+		Allelopathie interactionContrePommeDeTerre2 = new Allelopathie(-5, "", null, insertedPlants.get("courge"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionContrePommeDeTerre2);
+		Allelopathie interactionContrePommeDeTerre3 = new Allelopathie(-5, "", null, insertedPlants.get("carotte"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionContrePommeDeTerre3);
+		Allelopathie interactionContrePommeDeTerre4 = new Allelopathie(-5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionContrePommeDeTerre4);
+		Allelopathie interactionContrePommeDeTerre5 = new Allelopathie(-5, "", null, insertedPlants.get("framboisier"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionContrePommeDeTerre5);
+		Allelopathie interactionContrePommeDeTerre6 = new Allelopathie(-5, "", null,
 				insertedPlants.get("arroche des jardins"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre6);
-		InteractionPlantePlante interactionContrePommeDeTerre7 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tournesol"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre7);
-		InteractionPlantePlante interactionContrePommeDeTerre8 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("melon"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionContrePommeDeTerre8);
+		allelopathieRepository.save(interactionContrePommeDeTerre6);
+		Allelopathie interactionContrePommeDeTerre7 = new Allelopathie(-5, "", null, insertedPlants.get("tournesol"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionContrePommeDeTerre7);
+		Allelopathie interactionContrePommeDeTerre8 = new Allelopathie(-5, "", null, insertedPlants.get("melon"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionContrePommeDeTerre8);
 	}
 
 	private void interactionContrePois(Map<String, Plante> insertedPlants) {
 		log.info("interactionContrePois"); // Contre pois
-		InteractionPlantePlante interactionContrePois1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("ail"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionContrePois1);
-		InteractionPlantePlante interactionContrePois2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("échalotte"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionContrePois2);
-		InteractionPlantePlante interactionContrePois3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionContrePois3);
-		InteractionPlantePlante interactionContrePois4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("poireau"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionContrePois4);
-		InteractionPlantePlante interactionContrePois5 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionContrePois5);
+		Allelopathie interactionContrePois1 = new Allelopathie(-5, "", null, insertedPlants.get("ail"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionContrePois1);
+		Allelopathie interactionContrePois2 = new Allelopathie(-5, "", null, insertedPlants.get("échalotte"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionContrePois2);
+		Allelopathie interactionContrePois3 = new Allelopathie(-5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionContrePois3);
+		Allelopathie interactionContrePois4 = new Allelopathie(-5, "", null, insertedPlants.get("poireau"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionContrePois4);
+		Allelopathie interactionContrePois5 = new Allelopathie(-5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionContrePois5);
 	}
 
 	private void interactionContrePoireau(Map<String, Plante> insertedPlants) {
 		log.info("interactionContrePoireau"); // Contre poireau
-		InteractionPlantePlante interactionContrePoireau1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("brocoli"), insertedPlants.get("poireau"));
-		interactionPlantePlanteRepository.save(interactionContrePoireau1);
-		InteractionPlantePlante interactionContrePoireau2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("poireau"));
-		interactionPlantePlanteRepository.save(interactionContrePoireau2);
-		InteractionPlantePlante interactionContrePoireau3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fève"), insertedPlants.get("poireau"));
-		interactionPlantePlanteRepository.save(interactionContrePoireau3);
+		Allelopathie interactionContrePoireau1 = new Allelopathie(-5, "", null, insertedPlants.get("brocoli"),
+				insertedPlants.get("poireau"));
+		allelopathieRepository.save(interactionContrePoireau1);
+		Allelopathie interactionContrePoireau2 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("poireau"));
+		allelopathieRepository.save(interactionContrePoireau2);
+		Allelopathie interactionContrePoireau3 = new Allelopathie(-5, "", null, insertedPlants.get("fève"),
+				insertedPlants.get("poireau"));
+		allelopathieRepository.save(interactionContrePoireau3);
 	}
 
 	private void interactionContreOignon(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreOignon"); // Contre oignon
-		InteractionPlantePlante interactionContreOignon1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("oignon"));
-		interactionPlantePlanteRepository.save(interactionContreOignon1);
-		InteractionPlantePlante interactionContreOignon2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("oignon"));
-		interactionPlantePlanteRepository.save(interactionContreOignon2);
-		InteractionPlantePlante interactionContreOignon3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fève"), insertedPlants.get("oignon"));
-		interactionPlantePlanteRepository.save(interactionContreOignon3);
-		InteractionPlantePlante interactionContreOignon4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("lentille"), insertedPlants.get("oignon"));
-		interactionPlantePlanteRepository.save(interactionContreOignon4);
+		Allelopathie interactionContreOignon1 = new Allelopathie(-5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("oignon"));
+		allelopathieRepository.save(interactionContreOignon1);
+		Allelopathie interactionContreOignon2 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("oignon"));
+		allelopathieRepository.save(interactionContreOignon2);
+		Allelopathie interactionContreOignon3 = new Allelopathie(-5, "", null, insertedPlants.get("fève"),
+				insertedPlants.get("oignon"));
+		allelopathieRepository.save(interactionContreOignon3);
+		Allelopathie interactionContreOignon4 = new Allelopathie(-5, "", null, insertedPlants.get("lentille"),
+				insertedPlants.get("oignon"));
+		allelopathieRepository.save(interactionContreOignon4);
 	}
 
 	private void interactionContreMelon(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreMelon"); // Contre melon
-		InteractionPlantePlante interactionContreMelon1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("melon"));
-		interactionPlantePlanteRepository.save(interactionContreMelon1);
-		InteractionPlantePlante interactionContreMelon2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("courge"), insertedPlants.get("melon"));
-		interactionPlantePlanteRepository.save(interactionContreMelon2);
+		Allelopathie interactionContreMelon1 = new Allelopathie(-5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("melon"));
+		allelopathieRepository.save(interactionContreMelon1);
+		Allelopathie interactionContreMelon2 = new Allelopathie(-5, "", null, insertedPlants.get("courge"),
+				insertedPlants.get("melon"));
+		allelopathieRepository.save(interactionContreMelon2);
 	}
 
 	private void interactionContreLaitue(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreLaitue"); // Contre laitue
-		InteractionPlantePlante interactionContreLaitue1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tournesol"), insertedPlants.get("laitue"));
-		interactionPlantePlanteRepository.save(interactionContreLaitue1);
-		InteractionPlantePlante interactionContreLaitue2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("persil"), insertedPlants.get("laitue"));
-		interactionPlantePlanteRepository.save(interactionContreLaitue2);
+		Allelopathie interactionContreLaitue1 = new Allelopathie(-5, "", null, insertedPlants.get("tournesol"),
+				insertedPlants.get("laitue"));
+		allelopathieRepository.save(interactionContreLaitue1);
+		Allelopathie interactionContreLaitue2 = new Allelopathie(-5, "", null, insertedPlants.get("persil"),
+				insertedPlants.get("laitue"));
+		allelopathieRepository.save(interactionContreLaitue2);
 	}
 
 	private void interactionContreHaricot(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreHaricot"); // Contre haricot
-		InteractionPlantePlante interactionContreHaricot1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionContreHaricot1);
-		InteractionPlantePlante interactionContreHaricot2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("ail"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionContreHaricot2);
-		InteractionPlantePlante interactionContreHaricot3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("échalotte"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionContreHaricot3);
-		InteractionPlantePlante interactionContreHaricot4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionContreHaricot4);
-		InteractionPlantePlante interactionContreHaricot5 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fenouil"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionContreHaricot5);
-		InteractionPlantePlante interactionContreHaricot6 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionContreHaricot6);
+		Allelopathie interactionContreHaricot1 = new Allelopathie(-5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionContreHaricot1);
+		Allelopathie interactionContreHaricot2 = new Allelopathie(-5, "", null, insertedPlants.get("ail"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionContreHaricot2);
+		Allelopathie interactionContreHaricot3 = new Allelopathie(-5, "", null, insertedPlants.get("échalotte"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionContreHaricot3);
+		Allelopathie interactionContreHaricot4 = new Allelopathie(-5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionContreHaricot4);
+		Allelopathie interactionContreHaricot5 = new Allelopathie(-5, "", null, insertedPlants.get("fenouil"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionContreHaricot5);
+		Allelopathie interactionContreHaricot6 = new Allelopathie(-5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionContreHaricot6);
 	}
 
 	private void interactionContreFenouil(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreFenouil"); // Contre fenouil
-		InteractionPlantePlante interactionContreFenouil1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil1);
-		InteractionPlantePlante interactionContreFenouil2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("chou-rave"), insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil2);
+		Allelopathie interactionContreFenouil1 = new Allelopathie(-5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("fenouil"));
+		allelopathieRepository.save(interactionContreFenouil1);
+		Allelopathie interactionContreFenouil2 = new Allelopathie(-5, "", null, insertedPlants.get("chou-rave"),
+				insertedPlants.get("fenouil"));
+		allelopathieRepository.save(interactionContreFenouil2);
 
-		InteractionPlantePlante interactionContreFenouil4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("carvi"), insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil4);
-		InteractionPlantePlante interactionContreFenouil5 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil5);
-		InteractionPlantePlante interactionContreFenouil6 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil6);
-		InteractionPlantePlante interactionContreFenouil7 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("échalotte"), insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil7);
-		InteractionPlantePlante interactionContreFenouil8 = new InteractionPlantePlante("-",
+		Allelopathie interactionContreFenouil4 = new Allelopathie(-5, "", null, insertedPlants.get("carvi"),
+				insertedPlants.get("fenouil"));
+		allelopathieRepository.save(interactionContreFenouil4);
+		Allelopathie interactionContreFenouil5 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("fenouil"));
+		allelopathieRepository.save(interactionContreFenouil5);
+		Allelopathie interactionContreFenouil6 = new Allelopathie(-5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("fenouil"));
+		allelopathieRepository.save(interactionContreFenouil6);
+		Allelopathie interactionContreFenouil7 = new Allelopathie(-5, "", null, insertedPlants.get("échalotte"),
+				insertedPlants.get("fenouil"));
+		allelopathieRepository.save(interactionContreFenouil7);
+		Allelopathie interactionContreFenouil8 = new Allelopathie(-5,
 				"L'absinthe semble gêner la formation des graines", null, insertedPlants.get("absinthe"),
 				insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil8);
-		InteractionPlantePlante interactionContreFenouil9 = new InteractionPlantePlante("-",
+		allelopathieRepository.save(interactionContreFenouil8);
+		Allelopathie interactionContreFenouil9 = new Allelopathie(-5,
 				"La coriandre semble gêner la formation des graines", null, insertedPlants.get("coriandre"),
 				insertedPlants.get("fenouil"));
-		interactionPlantePlanteRepository.save(interactionContreFenouil9);
+		allelopathieRepository.save(interactionContreFenouil9);
 	}
 
 	private void interactionContreEpinard(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreEpinard"); // Contre epinard
-		InteractionPlantePlante interactionContreEpinard1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("épinard"));
-		interactionPlantePlanteRepository.save(interactionContreEpinard1);
-		InteractionPlantePlante interactionContreEpinard2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("betterave"), insertedPlants.get("épinard"));
-		interactionPlantePlanteRepository.save(interactionContreEpinard2);
+		Allelopathie interactionContreEpinard1 = new Allelopathie(-5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("épinard"));
+		allelopathieRepository.save(interactionContreEpinard1);
+		Allelopathie interactionContreEpinard2 = new Allelopathie(-5, "", null, insertedPlants.get("betterave"),
+				insertedPlants.get("épinard"));
+		allelopathieRepository.save(interactionContreEpinard2);
 	}
 
 	private void interactionContreEchalotte(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreEchalotte"); // Contre echalotte
-		InteractionPlantePlante interactionContreEchalotte1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("échalotte"));
-		interactionPlantePlanteRepository.save(interactionContreEchalotte1);
-		InteractionPlantePlante interactionContreEchalotte2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("échalotte"));
-		interactionPlantePlanteRepository.save(interactionContreEchalotte2);
-		InteractionPlantePlante interactionContreEchalotte3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fève"), insertedPlants.get("échalotte"));
-		interactionPlantePlanteRepository.save(interactionContreEchalotte3);
-		InteractionPlantePlante interactionContreEchalotte4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("lentille"), insertedPlants.get("échalotte"));
-		interactionPlantePlanteRepository.save(interactionContreEchalotte4);
+		Allelopathie interactionContreEchalotte1 = new Allelopathie(-5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("échalotte"));
+		allelopathieRepository.save(interactionContreEchalotte1);
+		Allelopathie interactionContreEchalotte2 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("échalotte"));
+		allelopathieRepository.save(interactionContreEchalotte2);
+		Allelopathie interactionContreEchalotte3 = new Allelopathie(-5, "", null, insertedPlants.get("fève"),
+				insertedPlants.get("échalotte"));
+		allelopathieRepository.save(interactionContreEchalotte3);
+		Allelopathie interactionContreEchalotte4 = new Allelopathie(-5, "", null, insertedPlants.get("lentille"),
+				insertedPlants.get("échalotte"));
+		allelopathieRepository.save(interactionContreEchalotte4);
 	}
 
 	private void interactionContreCourge(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreCourge"); // Contre courge
-		InteractionPlantePlante interactionContreCourge1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionContreCourge1);
+		Allelopathie interactionContreCourge1 = new Allelopathie(-5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionContreCourge1);
 	}
 
 	private void interactionContreConcombre(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreConcombre"); // Contre concombre
-		InteractionPlantePlante interactionContreConcombre1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionContreConcombre1);
-		InteractionPlantePlante interactionContreConcombre2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionContreConcombre2);
-		InteractionPlantePlante interactionContreConcombre3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("courgette"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionContreConcombre3);
+		Allelopathie interactionContreConcombre1 = new Allelopathie(-5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionContreConcombre1);
+		Allelopathie interactionContreConcombre2 = new Allelopathie(-5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionContreConcombre2);
+		Allelopathie interactionContreConcombre3 = new Allelopathie(-5, "", null, insertedPlants.get("courgette"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionContreConcombre3);
 	}
 
 	private void interactionContreChou(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreChou"); // Contre chou
-		InteractionPlantePlante interactionContreChou1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fraisier des bois"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionContreChou1);
-		InteractionPlantePlante interactionContreChou2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionContreChou2);
-		InteractionPlantePlante interactionContreChou3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionContreChou3);
+		Allelopathie interactionContreChou1 = new Allelopathie(-5, "", null, insertedPlants.get("fraisier des bois"),
+				insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionContreChou1);
+		Allelopathie interactionContreChou2 = new Allelopathie(-5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionContreChou2);
+		Allelopathie interactionContreChou3 = new Allelopathie(-5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionContreChou3);
 	}
 
 	private void interactionContreRadis(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreRadis"); // Contre radis
-		InteractionPlantePlante interactionContreRadis1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("cerfeuil"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionContreRadis1);
+		Allelopathie interactionContreRadis1 = new Allelopathie(-5, "", null, insertedPlants.get("cerfeuil"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionContreRadis1);
 	}
 
 	private void interactionContreBetterave(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreBetterave"); // Contre betterave
-		InteractionPlantePlante interactionContreBetterave1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionContreBetterave1);
-		InteractionPlantePlante interactionContreBetterave2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("épinard"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionContreBetterave2);
+		Allelopathie interactionContreBetterave1 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionContreBetterave1);
+		Allelopathie interactionContreBetterave2 = new Allelopathie(-5, "", null, insertedPlants.get("épinard"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionContreBetterave2);
 	}
 
 	private void interactionContreBasilic(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreBasilic"); // Contre basilic
-		InteractionPlantePlante interactionContreBasilic1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("rue officinale"), insertedPlants.get("basilic"));
-		interactionPlantePlanteRepository.save(interactionContreBasilic1);
+		Allelopathie interactionContreBasilic1 = new Allelopathie(-5, "", null, insertedPlants.get("rue officinale"),
+				insertedPlants.get("basilic"));
+		allelopathieRepository.save(interactionContreBasilic1);
 	}
 
 	private void interactionContreArtichaut(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreArtichaut"); // Contre artichaut
-		InteractionPlantePlante interactionContreArtichaut1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fève"), insertedPlants.get("artichaut"));
-		interactionPlantePlanteRepository.save(interactionContreArtichaut1);
+		Allelopathie interactionContreArtichaut1 = new Allelopathie(-5, "", null, insertedPlants.get("fève"),
+				insertedPlants.get("artichaut"));
+		allelopathieRepository.save(interactionContreArtichaut1);
 	}
 
 	private void interactionContreAbsinthe(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreAbsinthe"); // Contre absinthe
-		InteractionPlantePlante interactionContreAbsinthe1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("carvi"), insertedPlants.get("absinthe"));
-		interactionPlantePlanteRepository.save(interactionContreAbsinthe1);
-		InteractionPlantePlante interactionContreAbsinthe2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("sauge"), insertedPlants.get("absinthe"));
-		interactionPlantePlanteRepository.save(interactionContreAbsinthe2);
-		InteractionPlantePlante interactionContreAbsinthe3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("anis vert"), insertedPlants.get("absinthe"));
-		interactionPlantePlanteRepository.save(interactionContreAbsinthe3);
-		InteractionPlantePlante interactionContreAbsinthe4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fenouil"), insertedPlants.get("absinthe"));
-		interactionPlantePlanteRepository.save(interactionContreAbsinthe4);
+		Allelopathie interactionContreAbsinthe1 = new Allelopathie(-5, "", null, insertedPlants.get("carvi"),
+				insertedPlants.get("absinthe"));
+		allelopathieRepository.save(interactionContreAbsinthe1);
+		Allelopathie interactionContreAbsinthe2 = new Allelopathie(-5, "", null, insertedPlants.get("sauge"),
+				insertedPlants.get("absinthe"));
+		allelopathieRepository.save(interactionContreAbsinthe2);
+		Allelopathie interactionContreAbsinthe3 = new Allelopathie(-5, "", null, insertedPlants.get("anis vert"),
+				insertedPlants.get("absinthe"));
+		allelopathieRepository.save(interactionContreAbsinthe3);
+		Allelopathie interactionContreAbsinthe4 = new Allelopathie(-5, "", null, insertedPlants.get("fenouil"),
+				insertedPlants.get("absinthe"));
+		allelopathieRepository.save(interactionContreAbsinthe4);
 	}
 
 	private void interactionContreCarotte(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreCarotte"); // Contre carotte
-		InteractionPlantePlante interactionContreCarotte1 = new InteractionPlantePlante("-",
+		Allelopathie interactionContreCarotte1 = new Allelopathie(-5,
 				"En compagnie d'aneth la carotte est sensible aux maladies et aux ravageurs et au mieux végètera. "
 						+ "Elle ne poussent pas là où auparavant il y en avait déjà",
 				null, insertedPlants.get("aneth"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionContreCarotte1);
+		allelopathieRepository.save(interactionContreCarotte1);
 	}
 
 	private void interactionContreAil(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreAil"); // Contre insertedPlants.get("ail")
-		InteractionPlantePlante interactionContreAil1 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("fève"), insertedPlants.get("ail"));
-		interactionPlantePlanteRepository.save(interactionContreAil1);
-		InteractionPlantePlante interactionContreAil2 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("lentille"), insertedPlants.get("ail"));
-		interactionPlantePlanteRepository.save(interactionContreAil2);
-		InteractionPlantePlante interactionContreAil3 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("ail"));
-		interactionPlantePlanteRepository.save(interactionContreAil3);
-		InteractionPlantePlante interactionContreAil4 = new InteractionPlantePlante("-", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("ail"));
-		interactionPlantePlanteRepository.save(interactionContreAil4);
+		Allelopathie interactionContreAil1 = new Allelopathie(-5, "", null, insertedPlants.get("fève"),
+				insertedPlants.get("ail"));
+		allelopathieRepository.save(interactionContreAil1);
+		Allelopathie interactionContreAil2 = new Allelopathie(-5, "", null, insertedPlants.get("lentille"),
+				insertedPlants.get("ail"));
+		allelopathieRepository.save(interactionContreAil2);
+		Allelopathie interactionContreAil3 = new Allelopathie(-5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("ail"));
+		allelopathieRepository.save(interactionContreAil3);
+		Allelopathie interactionContreAil4 = new Allelopathie(-5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("ail"));
+		allelopathieRepository.save(interactionContreAil4);
 	}
 
 	private void interactionContreChouFleur(Map<String, Plante> insertedPlants) {
 		log.info("interactionContreChouFleur"); // Contre chouFleur
-		InteractionPlantePlante interactionContreChouFleur1 = new InteractionPlantePlante("-",
+		Allelopathie interactionContreChouFleur1 = new Allelopathie(-5,
 				"Le chou fleur utilise mieux les nutriments présents dans le sols lorsqu'il accompagné du céleri, de même pour ce dernier.",
 				null, insertedPlants.get("céleri"), insertedPlants.get("chou fleur"));
-		interactionPlantePlanteRepository.save(interactionContreChouFleur1);
+		allelopathieRepository.save(interactionContreChouFleur1);
 	}
 
 	private void interactionPourCeleri(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourCeleri"); // Pour celeri
-		InteractionPlantePlante interactionPourCeleri1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("poireau"), insertedPlants.get("céleri"));
-		interactionPlantePlanteRepository.save(interactionPourCeleri1);
-		InteractionPlantePlante interactionPourCeleri2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("céleri"));
-		interactionPlantePlanteRepository.save(interactionPourCeleri2);
-		InteractionPlantePlante interactionPourCeleri3 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourCeleri1 = new Allelopathie(5, "", null, insertedPlants.get("poireau"),
+				insertedPlants.get("céleri"));
+		allelopathieRepository.save(interactionPourCeleri1);
+		Allelopathie interactionPourCeleri2 = new Allelopathie(5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("céleri"));
+		allelopathieRepository.save(interactionPourCeleri2);
+		Allelopathie interactionPourCeleri3 = new Allelopathie(5,
 				"Le céleri cultivé seul n'utilise qu'une partie des substances nutritives trouvées dans le sol. Quand on le plante avec du chou-fleur, "
 						+ "il les utilise mieux, de même que ce dernier. La récolte est alors meilleure pour les deux plantes.\r\n",
 				null, insertedPlants.get("chou fleur"), insertedPlants.get("céleri"));
-		interactionPlantePlanteRepository.save(interactionPourCeleri3);
-		InteractionPlantePlante interactionPourCeleri4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("épinard"), insertedPlants.get("céleri"));
-		interactionPlantePlanteRepository.save(interactionPourCeleri4);
-		InteractionPlantePlante interactionPourCeleri5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("céleri"));
-		interactionPlantePlanteRepository.save(interactionPourCeleri5);
-		InteractionPlantePlante interactionPourCeleri6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("céleri"));
-		interactionPlantePlanteRepository.save(interactionPourCeleri6);
+		allelopathieRepository.save(interactionPourCeleri3);
+		Allelopathie interactionPourCeleri4 = new Allelopathie(5, "", null, insertedPlants.get("épinard"),
+				insertedPlants.get("céleri"));
+		allelopathieRepository.save(interactionPourCeleri4);
+		Allelopathie interactionPourCeleri5 = new Allelopathie(5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("céleri"));
+		allelopathieRepository.save(interactionPourCeleri5);
+		Allelopathie interactionPourCeleri6 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("céleri"));
+		allelopathieRepository.save(interactionPourCeleri6);
 	}
 
 	private void interactionPourBette(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourBette"); // Pour bette
-		InteractionPlantePlante interactionPourBette1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("radis"), insertedPlants.get("bette"));
-		interactionPlantePlanteRepository.save(interactionPourBette1);
-		InteractionPlantePlante interactionPourBette2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("bette"));
-		interactionPlantePlanteRepository.save(interactionPourBette2);
-		InteractionPlantePlante interactionPourBette3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("bette"));
-		interactionPlantePlanteRepository.save(interactionPourBette3);
-		InteractionPlantePlante interactionPourBette4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("raifort"), insertedPlants.get("bette"));
-		interactionPlantePlanteRepository.save(interactionPourBette4);
+		Allelopathie interactionPourBette1 = new Allelopathie(5, "", null, insertedPlants.get("radis"),
+				insertedPlants.get("bette"));
+		allelopathieRepository.save(interactionPourBette1);
+		Allelopathie interactionPourBette2 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
+				insertedPlants.get("bette"));
+		allelopathieRepository.save(interactionPourBette2);
+		Allelopathie interactionPourBette3 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("bette"));
+		allelopathieRepository.save(interactionPourBette3);
+		Allelopathie interactionPourBette4 = new Allelopathie(5, "", null, insertedPlants.get("raifort"),
+				insertedPlants.get("bette"));
+		allelopathieRepository.save(interactionPourBette4);
 	}
 
 	private void interactionPourArtichaut(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourArtichaut"); // Pour artichaut
-		InteractionPlantePlante interactionPourArtichaut1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("fève"), insertedPlants.get("artichaut"));
-		interactionPlantePlanteRepository.save(interactionPourArtichaut1);
+		Allelopathie interactionPourArtichaut1 = new Allelopathie(5, "", null, insertedPlants.get("fève"),
+				insertedPlants.get("artichaut"));
+		allelopathieRepository.save(interactionPourArtichaut1);
 	}
 
 	private void interactionPourPoivron(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPoivron"); // Pour poivron
-		InteractionPlantePlante interactionPourPoivron1 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourPoivron1 = new Allelopathie(5,
 				"Le basilic s'associe parfaitement avec le genre capsicum", null, insertedPlants.get("basilic"),
 				insertedPlants.get("poivron"));
-		interactionPlantePlanteRepository.save(interactionPourPoivron1);
+		allelopathieRepository.save(interactionPourPoivron1);
 	}
 
 	private void interactionPourPiment(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPiment"); // Pour piment
-		InteractionPlantePlante interactionPourPiment1 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourPiment1 = new Allelopathie(5,
 				"Le basilic s'associe parfaitement avec le genre capsicum", null, insertedPlants.get("basilic"),
 				insertedPlants.get("piment"));
-		interactionPlantePlanteRepository.save(interactionPourPiment1);
+		allelopathieRepository.save(interactionPourPiment1);
 	}
 
 	private void interactionPourRosier(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourRosier"); // Pour rosiers
-		InteractionPlantePlante interactionPourRosier1 = new InteractionPlantePlante("+",
-				"Les géraniums protègent les rosiers", null, insertedPlants.get("géranium des prés"),
-				insertedPlants.get("rosier de france"));
-		interactionPlantePlanteRepository.save(interactionPourRosier1);
-		InteractionPlantePlante interactionPourRosier2 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourRosier1 = new Allelopathie(5, "Les géraniums protègent les rosiers", null,
+				insertedPlants.get("géranium des prés"), insertedPlants.get("rosier de france"));
+		allelopathieRepository.save(interactionPourRosier1);
+		Allelopathie interactionPourRosier2 = new Allelopathie(5,
 				"L'ail planté au pied des rosiersles rends plus beaux et résistants", null, insertedPlants.get("ail"),
 				insertedPlants.get("rosier de france"));
-		interactionPlantePlanteRepository.save(interactionPourRosier2);
-		InteractionPlantePlante interactionPourRosier3 = new InteractionPlantePlante("+",
+		allelopathieRepository.save(interactionPourRosier2);
+		Allelopathie interactionPourRosier3 = new Allelopathie(5,
 				"Les pucerons noirs des rosiers sont repoussés par la menthe verte ou poivrée", null,
 				insertedPlants.get("menthe poivrée"), insertedPlants.get("rosier de france"));
-		interactionPlantePlanteRepository.save(interactionPourRosier3);
+		allelopathieRepository.save(interactionPourRosier3);
 	}
 
 	private void interactionPourRadis(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourRadis"); // Pour radis
-		InteractionPlantePlante interactionPourRadis1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("épinard"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionPourRadis1);
-		InteractionPlantePlante interactionPourRadis2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("menthe poivrée"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionPourRadis2);
-		InteractionPlantePlante interactionPourRadis3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionPourRadis3);
-		InteractionPlantePlante interactionPourRadis4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("grande capucine"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionPourRadis4);
-		InteractionPlantePlante interactionPourRadis5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionPourRadis5);
-		InteractionPlantePlante interactionPourRadis6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("laitue"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionPourRadis6);
-		InteractionPlantePlante interactionPourRadis7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("radis"));
-		interactionPlantePlanteRepository.save(interactionPourRadis7);
+		Allelopathie interactionPourRadis1 = new Allelopathie(5, "", null, insertedPlants.get("épinard"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionPourRadis1);
+		Allelopathie interactionPourRadis2 = new Allelopathie(5, "", null, insertedPlants.get("menthe poivrée"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionPourRadis2);
+		Allelopathie interactionPourRadis3 = new Allelopathie(5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionPourRadis3);
+		Allelopathie interactionPourRadis4 = new Allelopathie(5, "", null, insertedPlants.get("grande capucine"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionPourRadis4);
+		Allelopathie interactionPourRadis5 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionPourRadis5);
+		Allelopathie interactionPourRadis6 = new Allelopathie(5, "", null, insertedPlants.get("laitue"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionPourRadis6);
+		Allelopathie interactionPourRadis7 = new Allelopathie(5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("radis"));
+		allelopathieRepository.save(interactionPourRadis7);
 	}
 
 	private void interactionPourPois(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPois"); // Pour pois
-		InteractionPlantePlante interactionPourPois1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("radis"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionPourPois1);
-		InteractionPlantePlante interactionPourPois2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionPourPois2);
-		InteractionPlantePlante interactionPourPois3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionPourPois3);
-		InteractionPlantePlante interactionPourPois4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("maïs"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionPourPois4);
-		InteractionPlantePlante interactionPourPois5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("pois"));
-		interactionPlantePlanteRepository.save(interactionPourPois5);
+		Allelopathie interactionPourPois1 = new Allelopathie(5, "", null, insertedPlants.get("radis"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionPourPois1);
+		Allelopathie interactionPourPois2 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionPourPois2);
+		Allelopathie interactionPourPois3 = new Allelopathie(5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionPourPois3);
+		Allelopathie interactionPourPois4 = new Allelopathie(5, "", null, insertedPlants.get("maïs"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionPourPois4);
+		Allelopathie interactionPourPois5 = new Allelopathie(5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("pois"));
+		allelopathieRepository.save(interactionPourPois5);
 	}
 
 	private void interactionPourPommier(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPommier"); // Pour pommier
-		InteractionPlantePlante interactionPourPommier1 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourPommier1 = new Allelopathie(5,
 				"La ciboulette se plante près des pommiers pour prévenir de la tavelure, de la gale et des chancres",
 				null, insertedPlants.get("ciboulette"), insertedPlants.get("pommier"));
-		interactionPlantePlanteRepository.save(interactionPourPommier1);
-		InteractionPlantePlante interactionPourPommier2 = new InteractionPlantePlante("+",
+		allelopathieRepository.save(interactionPourPommier1);
+		Allelopathie interactionPourPommier2 = new Allelopathie(5,
 				"Plantée au pied des pommiers, elle prévient contre le puceron lanigère", null,
 				insertedPlants.get("grande capucine"), insertedPlants.get("pommier"));
-		interactionPlantePlanteRepository.save(interactionPourPommier2);
+		allelopathieRepository.save(interactionPourPommier2);
 	}
 
 	private void interactionPourPoirier(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPoirier"); // Pour poirier
-		InteractionPlantePlante interactionPourPoirier1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("sauge"), insertedPlants.get("poirier"));
-		interactionPlantePlanteRepository.save(interactionPourPoirier1);
+		Allelopathie interactionPourPoirier1 = new Allelopathie(5, "", null, insertedPlants.get("sauge"),
+				insertedPlants.get("poirier"));
+		allelopathieRepository.save(interactionPourPoirier1);
 	}
 
 	private void interactionPourPecher(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPecher"); // Pour pecher
-		InteractionPlantePlante interactionPourPecher1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("tanaisie"), insertedPlants.get("pêcher"));
-		interactionPlantePlanteRepository.save(interactionPourPecher1);
-		InteractionPlantePlante interactionPourPecher2 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourPecher1 = new Allelopathie(5, "", null, insertedPlants.get("tanaisie"),
+				insertedPlants.get("pêcher"));
+		allelopathieRepository.save(interactionPourPecher1);
+		Allelopathie interactionPourPecher2 = new Allelopathie(5,
 				"L'ail planté aux pieds des pêchers pour protéger de la cloque", null, insertedPlants.get("ail"),
 				insertedPlants.get("pêcher"));
-		interactionPlantePlanteRepository.save(interactionPourPecher2);
-		InteractionPlantePlante interactionPourPecher3 = new InteractionPlantePlante("+",
+		allelopathieRepository.save(interactionPourPecher2);
+		Allelopathie interactionPourPecher3 = new Allelopathie(5,
 				"L'oignon planté aux pieds des pêchers pour protéger de la cloque", null, insertedPlants.get("oignon"),
 				insertedPlants.get("pêcher"));
-		interactionPlantePlanteRepository.save(interactionPourPecher3);
+		allelopathieRepository.save(interactionPourPecher3);
 	}
 
 	private void interactionPourPoireau(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPoireau"); // Pour poireau
-		InteractionPlantePlante interactionPourPoireau1 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourPoireau1 = new Allelopathie(5,
 				"Les carottes contribues à la lutte contre la teigne du poireau", null, insertedPlants.get("carotte"),
 				insertedPlants.get("poireau"));
-		interactionPlantePlanteRepository.save(interactionPourPoireau1);
+		allelopathieRepository.save(interactionPourPoireau1);
 	}
 
 	private void interactionPourOignon(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourOignon"); // Pour oignon
-		InteractionPlantePlante interactionPourOignon1 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourOignon1 = new Allelopathie(5,
 				"La mouche de l’oignon est repoussée par les carottes. Leur odeur repousse les mouches.", null,
 				insertedPlants.get("carotte"), insertedPlants.get("oignon"));
-		interactionPlantePlanteRepository.save(interactionPourOignon1);
-		InteractionPlantePlante interactionPourOignon2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("fraisier des bois"), insertedPlants.get("oignon"));
-		interactionPlantePlanteRepository.save(interactionPourOignon2);
+		allelopathieRepository.save(interactionPourOignon1);
+		Allelopathie interactionPourOignon2 = new Allelopathie(5, "", null, insertedPlants.get("fraisier des bois"),
+				insertedPlants.get("oignon"));
+		allelopathieRepository.save(interactionPourOignon2);
 	}
 
 	private void interactionPourMelon(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourMelon"); // Pour melon
-		InteractionPlantePlante interactionPourMelon1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("origan"), insertedPlants.get("melon"));
-		interactionPlantePlanteRepository.save(interactionPourMelon1);
+		Allelopathie interactionPourMelon1 = new Allelopathie(5, "", null, insertedPlants.get("origan"),
+				insertedPlants.get("melon"));
+		allelopathieRepository.save(interactionPourMelon1);
 	}
 
 	private void interactionPourMais(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourMais"); // Pour mais
-		InteractionPlantePlante interactionPourMais1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("maïs"));
-		interactionPlantePlanteRepository.save(interactionPourMais1);
-		InteractionPlantePlante interactionPourMais2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("maïs"));
-		interactionPlantePlanteRepository.save(interactionPourMais2);
-		InteractionPlantePlante interactionPourMais3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("maïs"));
-		interactionPlantePlanteRepository.save(interactionPourMais3);
-		InteractionPlantePlante interactionPourMais4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("courge"), insertedPlants.get("maïs"));
-		interactionPlantePlanteRepository.save(interactionPourMais4);
-		InteractionPlantePlante interactionPourMais5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("potiron"), insertedPlants.get("maïs"));
-		interactionPlantePlanteRepository.save(interactionPourMais5);
+		Allelopathie interactionPourMais1 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("maïs"));
+		allelopathieRepository.save(interactionPourMais1);
+		Allelopathie interactionPourMais2 = new Allelopathie(5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("maïs"));
+		allelopathieRepository.save(interactionPourMais2);
+		Allelopathie interactionPourMais3 = new Allelopathie(5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("maïs"));
+		allelopathieRepository.save(interactionPourMais3);
+		Allelopathie interactionPourMais4 = new Allelopathie(5, "", null, insertedPlants.get("courge"),
+				insertedPlants.get("maïs"));
+		allelopathieRepository.save(interactionPourMais4);
+		Allelopathie interactionPourMais5 = new Allelopathie(5, "", null, insertedPlants.get("potiron"),
+				insertedPlants.get("maïs"));
+		allelopathieRepository.save(interactionPourMais5);
 	}
 
 	private void interactionPourLaitue(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourLaitue"); // Pour laitue
-		InteractionPlantePlante interactionPourLaitue1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("fraisier des bois"), insertedPlants.get("laitue"));
-		interactionPlantePlanteRepository.save(interactionPourLaitue1);
-		InteractionPlantePlante interactionPourLaitue2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("laitue"));
-		interactionPlantePlanteRepository.save(interactionPourLaitue2);
-		InteractionPlantePlante interactionPourLaitue3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("radis"), insertedPlants.get("laitue"));
-		interactionPlantePlanteRepository.save(interactionPourLaitue3);
+		Allelopathie interactionPourLaitue1 = new Allelopathie(5, "", null, insertedPlants.get("fraisier des bois"),
+				insertedPlants.get("laitue"));
+		allelopathieRepository.save(interactionPourLaitue1);
+		Allelopathie interactionPourLaitue2 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
+				insertedPlants.get("laitue"));
+		allelopathieRepository.save(interactionPourLaitue2);
+		Allelopathie interactionPourLaitue3 = new Allelopathie(5, "", null, insertedPlants.get("radis"),
+				insertedPlants.get("laitue"));
+		allelopathieRepository.save(interactionPourLaitue3);
 	}
 
 	private void interactionPourFraisier(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourFraisier"); // Pour fraisier
-		InteractionPlantePlante interactionPourFraisier1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("fraisier des bois"));
-		interactionPlantePlanteRepository.save(interactionPourFraisier1);
-		InteractionPlantePlante interactionPourFraisier2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("bourrache"), insertedPlants.get("fraisier des bois"));
-		interactionPlantePlanteRepository.save(interactionPourFraisier2);
-		InteractionPlantePlante interactionPourFraisier3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("épinard"), insertedPlants.get("fraisier des bois"));
-		interactionPlantePlanteRepository.save(interactionPourFraisier3);
-		InteractionPlantePlante interactionPourFraisier4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("laitue"), insertedPlants.get("fraisier des bois"));
-		interactionPlantePlanteRepository.save(interactionPourFraisier4);
+		Allelopathie interactionPourFraisier1 = new Allelopathie(5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("fraisier des bois"));
+		allelopathieRepository.save(interactionPourFraisier1);
+		Allelopathie interactionPourFraisier2 = new Allelopathie(5, "", null, insertedPlants.get("bourrache"),
+				insertedPlants.get("fraisier des bois"));
+		allelopathieRepository.save(interactionPourFraisier2);
+		Allelopathie interactionPourFraisier3 = new Allelopathie(5, "", null, insertedPlants.get("épinard"),
+				insertedPlants.get("fraisier des bois"));
+		allelopathieRepository.save(interactionPourFraisier3);
+		Allelopathie interactionPourFraisier4 = new Allelopathie(5, "", null, insertedPlants.get("laitue"),
+				insertedPlants.get("fraisier des bois"));
+		allelopathieRepository.save(interactionPourFraisier4);
 	}
 
 	private void interactionPourPotiron(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPotiron"); // Pour potiron
-		InteractionPlantePlante interactionPourPotiron1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("grande capucine"), insertedPlants.get("potiron"));
-		interactionPlantePlanteRepository.save(interactionPourPotiron1);
-		InteractionPlantePlante interactionPourPotiron2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("potiron"));
-		interactionPlantePlanteRepository.save(interactionPourPotiron2);
-		InteractionPlantePlante interactionPourPotiron3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("épinard"), insertedPlants.get("potiron"));
-		interactionPlantePlanteRepository.save(interactionPourPotiron3);
-		InteractionPlantePlante interactionPourPotiron4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("fraisier des bois"), insertedPlants.get("potiron"));
-		interactionPlantePlanteRepository.save(interactionPourPotiron4);
-		InteractionPlantePlante interactionPourPotiron5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("maïs"), insertedPlants.get("potiron"));
-		interactionPlantePlanteRepository.save(interactionPourPotiron5);
-		InteractionPlantePlante interactionPourPotiron6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("radis"), insertedPlants.get("potiron"));
-		interactionPlantePlanteRepository.save(interactionPourPotiron6);
+		Allelopathie interactionPourPotiron1 = new Allelopathie(5, "", null, insertedPlants.get("grande capucine"),
+				insertedPlants.get("potiron"));
+		allelopathieRepository.save(interactionPourPotiron1);
+		Allelopathie interactionPourPotiron2 = new Allelopathie(5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("potiron"));
+		allelopathieRepository.save(interactionPourPotiron2);
+		Allelopathie interactionPourPotiron3 = new Allelopathie(5, "", null, insertedPlants.get("épinard"),
+				insertedPlants.get("potiron"));
+		allelopathieRepository.save(interactionPourPotiron3);
+		Allelopathie interactionPourPotiron4 = new Allelopathie(5, "", null, insertedPlants.get("fraisier des bois"),
+				insertedPlants.get("potiron"));
+		allelopathieRepository.save(interactionPourPotiron4);
+		Allelopathie interactionPourPotiron5 = new Allelopathie(5, "", null, insertedPlants.get("maïs"),
+				insertedPlants.get("potiron"));
+		allelopathieRepository.save(interactionPourPotiron5);
+		Allelopathie interactionPourPotiron6 = new Allelopathie(5, "", null, insertedPlants.get("radis"),
+				insertedPlants.get("potiron"));
+		allelopathieRepository.save(interactionPourPotiron6);
 	}
 
 	private void interactionPourCourge(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourCourge"); // Pour courge
-		InteractionPlantePlante interactionPourCourge1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("grande capucine"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge1);
-		InteractionPlantePlante interactionPourCourge2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge2);
-		InteractionPlantePlante interactionPourCourge3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("épinard"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge3);
-		InteractionPlantePlante interactionPourCourge4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("fraisier des bois"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge4);
-		InteractionPlantePlante interactionPourCourge5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("maïs"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge5);
-		InteractionPlantePlante interactionPourCourge6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("radis"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge6);
-		InteractionPlantePlante interactionPourCourge7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("bourrache"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge7);
-		InteractionPlantePlante interactionPourCourge8 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourCourge1 = new Allelopathie(5, "", null, insertedPlants.get("grande capucine"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionPourCourge1);
+		Allelopathie interactionPourCourge2 = new Allelopathie(5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionPourCourge2);
+		Allelopathie interactionPourCourge3 = new Allelopathie(5, "", null, insertedPlants.get("épinard"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionPourCourge3);
+		Allelopathie interactionPourCourge4 = new Allelopathie(5, "", null, insertedPlants.get("fraisier des bois"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionPourCourge4);
+		Allelopathie interactionPourCourge5 = new Allelopathie(5, "", null, insertedPlants.get("maïs"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionPourCourge5);
+		Allelopathie interactionPourCourge6 = new Allelopathie(5, "", null, insertedPlants.get("radis"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionPourCourge6);
+		Allelopathie interactionPourCourge7 = new Allelopathie(5, "", null, insertedPlants.get("bourrache"),
+				insertedPlants.get("courge"));
+		allelopathieRepository.save(interactionPourCourge7);
+		Allelopathie interactionPourCourge8 = new Allelopathie(5,
 				"La capucine éloigne les punaises des courgettes et citrouilles", null,
 				insertedPlants.get("grande capucine"), insertedPlants.get("courge"));
-		interactionPlantePlanteRepository.save(interactionPourCourge8);
+		allelopathieRepository.save(interactionPourCourge8);
 	}
 
 	private void interactionPourAubergine(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourAubergine"); // Pour aubergine
-		InteractionPlantePlante interactionPourAubergine1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("aubergine"));
-		interactionPlantePlanteRepository.save(interactionPourAubergine1);
-		InteractionPlantePlante interactionPourAubergine2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("basilic"), insertedPlants.get("aubergine"));
-		interactionPlantePlanteRepository.save(interactionPourAubergine2);
+		Allelopathie interactionPourAubergine1 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("aubergine"));
+		allelopathieRepository.save(interactionPourAubergine1);
+		Allelopathie interactionPourAubergine2 = new Allelopathie(5, "", null, insertedPlants.get("basilic"),
+				insertedPlants.get("aubergine"));
+		allelopathieRepository.save(interactionPourAubergine2);
 	}
 
 	private void interactionPourFramboisier(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourFramboisier");
-		InteractionPlantePlante interactionPourFramboisier1 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourFramboisier1 = new Allelopathie(5,
 				"Le vers de framboisier est repoussé par la myosotis. Il empêche le vers de proliférer", null,
 				insertedPlants.get("myosotis des champs"), insertedPlants.get("framboisier"));
-		interactionPlantePlanteRepository.save(interactionPourFramboisier1);
+		allelopathieRepository.save(interactionPourFramboisier1);
 	}
 
 	private void interactionPourBetterave(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourBetterave"); // Pour betterave
-		InteractionPlantePlante interactionPourBetterave1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("coriandre"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave1);
-		InteractionPlantePlante interactionPourBetterave2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("chou commun"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave2);
-		InteractionPlantePlante interactionPourBetterave3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave3);
-		InteractionPlantePlante interactionPourBetterave4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave4);
-		InteractionPlantePlante interactionPourBetterave5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("laitue"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave5);
-		InteractionPlantePlante interactionPourBetterave6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("fraisier des bois"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave6);
-		InteractionPlantePlante interactionPourBetterave7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("chou-rave"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave7);
-		InteractionPlantePlante interactionPourBetterave8 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("betterave"));
-		interactionPlantePlanteRepository.save(interactionPourBetterave8);
+		Allelopathie interactionPourBetterave1 = new Allelopathie(5, "", null, insertedPlants.get("coriandre"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave1);
+		Allelopathie interactionPourBetterave2 = new Allelopathie(5, "", null, insertedPlants.get("chou commun"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave2);
+		Allelopathie interactionPourBetterave3 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave3);
+		Allelopathie interactionPourBetterave4 = new Allelopathie(5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave4);
+		Allelopathie interactionPourBetterave5 = new Allelopathie(5, "", null, insertedPlants.get("laitue"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave5);
+		Allelopathie interactionPourBetterave6 = new Allelopathie(5, "", null, insertedPlants.get("fraisier des bois"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave6);
+		Allelopathie interactionPourBetterave7 = new Allelopathie(5, "", null, insertedPlants.get("chou-rave"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave7);
+		Allelopathie interactionPourBetterave8 = new Allelopathie(5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("betterave"));
+		allelopathieRepository.save(interactionPourBetterave8);
 	}
 
 	private void interactionPourAsperge(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourAsperge"); // Pour asperge
-		InteractionPlantePlante interactionPourAsperge1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("asperge"));
-		interactionPlantePlanteRepository.save(interactionPourAsperge1);
-		InteractionPlantePlante interactionPourAsperge2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("persil"), insertedPlants.get("asperge"));
-		interactionPlantePlanteRepository.save(interactionPourAsperge2);
-		InteractionPlantePlante interactionPourAsperge3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("basilic"), insertedPlants.get("asperge"));
-		interactionPlantePlanteRepository.save(interactionPourAsperge3);
-		InteractionPlantePlante interactionPourAsperge4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("asperge"));
-		interactionPlantePlanteRepository.save(interactionPourAsperge4);
+		Allelopathie interactionPourAsperge1 = new Allelopathie(5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("asperge"));
+		allelopathieRepository.save(interactionPourAsperge1);
+		Allelopathie interactionPourAsperge2 = new Allelopathie(5, "", null, insertedPlants.get("persil"),
+				insertedPlants.get("asperge"));
+		allelopathieRepository.save(interactionPourAsperge2);
+		Allelopathie interactionPourAsperge3 = new Allelopathie(5, "", null, insertedPlants.get("basilic"),
+				insertedPlants.get("asperge"));
+		allelopathieRepository.save(interactionPourAsperge3);
+		Allelopathie interactionPourAsperge4 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("asperge"));
+		allelopathieRepository.save(interactionPourAsperge4);
 	}
 
 	private void interactionPourTomate(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourTomate"); // Pour tomate
-		InteractionPlantePlante interactionPourTomate1 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourTomate1 = new Allelopathie(5,
 				"Le persil rend la tomate plus résistante aux maladies", null, insertedPlants.get("persil"),
 				insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate1);
-		InteractionPlantePlante interactionPourTomate2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("oignon"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate2);
-		InteractionPlantePlante interactionPourTomate3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("poireau"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate3);
-		InteractionPlantePlante interactionPourTomate4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("oeillet d'inde"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate4);
-		InteractionPlantePlante interactionPourTomate5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate5);
-		InteractionPlantePlante interactionPourTomate6 = new InteractionPlantePlante("+",
+		allelopathieRepository.save(interactionPourTomate1);
+		Allelopathie interactionPourTomate2 = new Allelopathie(5, "", null, insertedPlants.get("oignon"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate2);
+		Allelopathie interactionPourTomate3 = new Allelopathie(5, "", null, insertedPlants.get("poireau"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate3);
+		Allelopathie interactionPourTomate4 = new Allelopathie(5, "", null, insertedPlants.get("oeillet d'inde"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate4);
+		Allelopathie interactionPourTomate5 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate5);
+		Allelopathie interactionPourTomate6 = new Allelopathie(5,
 				"Le basilic rend la tomate plus résistante aux maladies", null, insertedPlants.get("basilic"),
 				insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate6);
-		InteractionPlantePlante interactionPourTomate7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("asperge"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate7);
-		InteractionPlantePlante interactionPourTomate8 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("souci officinal"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate8);
-		InteractionPlantePlante interactionPourTomate9 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("bourrache"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate9);
-		InteractionPlantePlante interactionPourTomate10 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("grande capucine"), insertedPlants.get("tomate"));
-		interactionPlantePlanteRepository.save(interactionPourTomate10);
+		allelopathieRepository.save(interactionPourTomate6);
+		Allelopathie interactionPourTomate7 = new Allelopathie(5, "", null, insertedPlants.get("asperge"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate7);
+		Allelopathie interactionPourTomate8 = new Allelopathie(5, "", null, insertedPlants.get("souci officinal"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate8);
+		Allelopathie interactionPourTomate9 = new Allelopathie(5, "", null, insertedPlants.get("bourrache"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate9);
+		Allelopathie interactionPourTomate10 = new Allelopathie(5, "", null, insertedPlants.get("grande capucine"),
+				insertedPlants.get("tomate"));
+		allelopathieRepository.save(interactionPourTomate10);
 	}
 
 	private void interactionPourPommeDeTerre(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourPommeDeTerre"); // Pour pommeDeTerre
-		InteractionPlantePlante interactionPourPommeDeTerre1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("chou commun"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre1);
-		InteractionPlantePlante interactionPourPommeDeTerre2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("fève"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre2);
-		InteractionPlantePlante interactionPourPommeDeTerre3 = new InteractionPlantePlante("+",
+		Allelopathie interactionPourPommeDeTerre1 = new Allelopathie(5, "", null, insertedPlants.get("chou commun"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre1);
+		Allelopathie interactionPourPommeDeTerre2 = new Allelopathie(5, "", null, insertedPlants.get("fève"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre2);
+		Allelopathie interactionPourPommeDeTerre3 = new Allelopathie(5,
 				"Le doryphore de la pomme de terre est repoussé par le pois", null, insertedPlants.get("pois"),
 				insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre3);
-		InteractionPlantePlante interactionPourPommeDeTerre4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("courge"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre4);
-		InteractionPlantePlante interactionPourPommeDeTerre5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("potiron"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre5);
-		InteractionPlantePlante interactionPourPommeDeTerre6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre6);
-		InteractionPlantePlante interactionPourPommeDeTerre7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("oeillet d'inde"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre7);
-		InteractionPlantePlante interactionPourPommeDeTerre8 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("souci officinal"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre8);
-		InteractionPlantePlante interactionPourPommeDeTerre9 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre9);
-		InteractionPlantePlante interactionPourPommeDeTerre10 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("bourrache"), insertedPlants.get("pomme de terre"));
-		interactionPlantePlanteRepository.save(interactionPourPommeDeTerre10);
+		allelopathieRepository.save(interactionPourPommeDeTerre3);
+		Allelopathie interactionPourPommeDeTerre4 = new Allelopathie(5, "", null, insertedPlants.get("courge"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre4);
+		Allelopathie interactionPourPommeDeTerre5 = new Allelopathie(5, "", null, insertedPlants.get("potiron"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre5);
+		Allelopathie interactionPourPommeDeTerre6 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre6);
+		Allelopathie interactionPourPommeDeTerre7 = new Allelopathie(5, "", null, insertedPlants.get("oeillet d'inde"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre7);
+		Allelopathie interactionPourPommeDeTerre8 = new Allelopathie(5, "", null, insertedPlants.get("souci officinal"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre8);
+		Allelopathie interactionPourPommeDeTerre9 = new Allelopathie(5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre9);
+		Allelopathie interactionPourPommeDeTerre10 = new Allelopathie(5, "", null, insertedPlants.get("bourrache"),
+				insertedPlants.get("pomme de terre"));
+		allelopathieRepository.save(interactionPourPommeDeTerre10);
 	}
 
 	private void interactionPourConcombre(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourConcombre"); // Pour concombre
-		InteractionPlantePlante interactionPourConcombre1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("basilic"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre1);
-		InteractionPlantePlante interactionPourConcombre2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("chou commun"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre2);
-		InteractionPlantePlante interactionPourConcombre3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("haricot"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre3);
-		InteractionPlantePlante interactionPourConcombre4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("laitue"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre4);
-		InteractionPlantePlante interactionPourConcombre5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("maïs"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre5);
-		InteractionPlantePlante interactionPourConcombre6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("tournesol"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre6);
-		InteractionPlantePlante interactionPourConcombre7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre7);
-		InteractionPlantePlante interactionPourConcombre8 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("radis"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre8);
-		InteractionPlantePlante interactionPourConcombre9 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("origan"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre9);
-		InteractionPlantePlante interactionPourConcombre10 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre10);
-		InteractionPlantePlante interactionPourConcombre11 = new InteractionPlantePlante("+",
-				"L’aneth protège les concombres", null, insertedPlants.get("aneth"), insertedPlants.get("concombre"));
-		interactionPlantePlanteRepository.save(interactionPourConcombre11);
+		Allelopathie interactionPourConcombre1 = new Allelopathie(5, "", null, insertedPlants.get("basilic"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre1);
+		Allelopathie interactionPourConcombre2 = new Allelopathie(5, "", null, insertedPlants.get("chou commun"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre2);
+		Allelopathie interactionPourConcombre3 = new Allelopathie(5, "", null, insertedPlants.get("haricot"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre3);
+		Allelopathie interactionPourConcombre4 = new Allelopathie(5, "", null, insertedPlants.get("laitue"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre4);
+		Allelopathie interactionPourConcombre5 = new Allelopathie(5, "", null, insertedPlants.get("maïs"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre5);
+		Allelopathie interactionPourConcombre6 = new Allelopathie(5, "", null, insertedPlants.get("tournesol"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre6);
+		Allelopathie interactionPourConcombre7 = new Allelopathie(5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre7);
+		Allelopathie interactionPourConcombre8 = new Allelopathie(5, "", null, insertedPlants.get("radis"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre8);
+		Allelopathie interactionPourConcombre9 = new Allelopathie(5, "", null, insertedPlants.get("origan"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre9);
+		Allelopathie interactionPourConcombre10 = new Allelopathie(5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre10);
+		Allelopathie interactionPourConcombre11 = new Allelopathie(5, "L’aneth protège les concombres", null,
+				insertedPlants.get("aneth"), insertedPlants.get("concombre"));
+		allelopathieRepository.save(interactionPourConcombre11);
 	}
 
 	private void interactionPourHaricot(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourHaricot"); // Pour haricot
-		InteractionPlantePlante interactionPourHaricot1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("concombre"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot1);
-		InteractionPlantePlante interactionPourHaricot2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("laitue"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot2);
-		InteractionPlantePlante interactionPourHaricot3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot3);
-		InteractionPlantePlante interactionPourHaricot4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot4);
-		InteractionPlantePlante interactionPourHaricot5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("aubergine"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot5);
-		InteractionPlantePlante interactionPourHaricot6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("oeillet d'inde"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot6);
-		InteractionPlantePlante interactionPourHaricot7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("souci officinal"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot7);
-		InteractionPlantePlante interactionPourHaricot8 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("betterave"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot8);
-		InteractionPlantePlante interactionPourHaricot9 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("maïs"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot9);
-		InteractionPlantePlante interactionPourHaricot10 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("haricot"));
-		interactionPlantePlanteRepository.save(interactionPourHaricot10);
+		Allelopathie interactionPourHaricot1 = new Allelopathie(5, "", null, insertedPlants.get("concombre"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot1);
+		Allelopathie interactionPourHaricot2 = new Allelopathie(5, "", null, insertedPlants.get("laitue"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot2);
+		Allelopathie interactionPourHaricot3 = new Allelopathie(5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot3);
+		Allelopathie interactionPourHaricot4 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot4);
+		Allelopathie interactionPourHaricot5 = new Allelopathie(5, "", null, insertedPlants.get("aubergine"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot5);
+		Allelopathie interactionPourHaricot6 = new Allelopathie(5, "", null, insertedPlants.get("oeillet d'inde"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot6);
+		Allelopathie interactionPourHaricot7 = new Allelopathie(5, "", null, insertedPlants.get("souci officinal"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot7);
+		Allelopathie interactionPourHaricot8 = new Allelopathie(5, "", null, insertedPlants.get("betterave"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot8);
+		Allelopathie interactionPourHaricot9 = new Allelopathie(5, "", null, insertedPlants.get("maïs"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot9);
+		Allelopathie interactionPourHaricot10 = new Allelopathie(5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("haricot"));
+		allelopathieRepository.save(interactionPourHaricot10);
 	}
 
 	private void interactionPourChouCommun(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourChouCommun"); // Pour chouCommun
-		InteractionPlantePlante interactionPourChouCommun1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("sarriette"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun1);
-		InteractionPlantePlante interactionPourChouCommun2 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("betterave"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun2);
-		InteractionPlantePlante interactionPourChouCommun3 = new InteractionPlantePlante("+",
-				"La piéride du chou est repoussée par la tomate", null, insertedPlants.get("tomate"),
+		Allelopathie interactionPourChouCommun1 = new Allelopathie(5, "", null, insertedPlants.get("sarriette"),
 				insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun3);
-		InteractionPlantePlante interactionPourChouCommun4 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("romarin"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun4);
-		InteractionPlantePlante interactionPourChouCommun5 = new InteractionPlantePlante("+",
-				"La menthe protège les choux des papillons", null, insertedPlants.get("menthe poivrée"),
+		allelopathieRepository.save(interactionPourChouCommun1);
+		Allelopathie interactionPourChouCommun2 = new Allelopathie(5, "", null, insertedPlants.get("betterave"),
 				insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun5);
-		InteractionPlantePlante interactionPourChouCommun6 = new InteractionPlantePlante("+",
-				"La sauge protège les choux des papillons", null, insertedPlants.get("sauge"),
+		allelopathieRepository.save(interactionPourChouCommun2);
+		Allelopathie interactionPourChouCommun3 = new Allelopathie(5, "La piéride du chou est repoussée par la tomate",
+				null, insertedPlants.get("tomate"), insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun3);
+		Allelopathie interactionPourChouCommun4 = new Allelopathie(5, "", null, insertedPlants.get("romarin"),
 				insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun6);
-		InteractionPlantePlante interactionPourChouCommun7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("thym commun"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun7);
-		InteractionPlantePlante interactionPourChouCommun8 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("grande capucine"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun8);
-		InteractionPlantePlante interactionPourChouCommun9 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pomme de terre"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun9);
-		InteractionPlantePlante interactionPourChouCommun10 = new InteractionPlantePlante("+",
+		allelopathieRepository.save(interactionPourChouCommun4);
+		Allelopathie interactionPourChouCommun5 = new Allelopathie(5, "La menthe protège les choux des papillons", null,
+				insertedPlants.get("menthe poivrée"), insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun5);
+		Allelopathie interactionPourChouCommun6 = new Allelopathie(5, "La sauge protège les choux des papillons", null,
+				insertedPlants.get("sauge"), insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun6);
+		Allelopathie interactionPourChouCommun7 = new Allelopathie(5, "", null, insertedPlants.get("thym commun"),
+				insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun7);
+		Allelopathie interactionPourChouCommun8 = new Allelopathie(5, "", null, insertedPlants.get("grande capucine"),
+				insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun8);
+		Allelopathie interactionPourChouCommun9 = new Allelopathie(5, "", null, insertedPlants.get("pomme de terre"),
+				insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun9);
+		Allelopathie interactionPourChouCommun10 = new Allelopathie(5,
 				"L'hysope empêche les mouches blanche de pondre dans les choux", null, insertedPlants.get("hysope"),
 				insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun10);
-		InteractionPlantePlante interactionPourChouCommun11 = new InteractionPlantePlante("+",
-				"La piéride du chou est repoussée par le céleri", null, insertedPlants.get("céleri"),
+		allelopathieRepository.save(interactionPourChouCommun10);
+		Allelopathie interactionPourChouCommun11 = new Allelopathie(5, "La piéride du chou est repoussée par le céleri",
+				null, insertedPlants.get("céleri"), insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun11);
+		Allelopathie interactionPourChouCommun12 = new Allelopathie(5, "", null, insertedPlants.get("bourrache"),
 				insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun11);
-		InteractionPlantePlante interactionPourChouCommun12 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("bourrache"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun12);
-		InteractionPlantePlante interactionPourChouCommun13 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("oeillet d'inde"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun13);
-		InteractionPlantePlante interactionPourChouCommun14 = new InteractionPlantePlante("+",
+		allelopathieRepository.save(interactionPourChouCommun12);
+		Allelopathie interactionPourChouCommun13 = new Allelopathie(5, "", null, insertedPlants.get("oeillet d'inde"),
+				insertedPlants.get("chou commun"));
+		allelopathieRepository.save(interactionPourChouCommun13);
+		Allelopathie interactionPourChouCommun14 = new Allelopathie(5,
 				"La piéride du chou n'aime pas l'odeur de la tomate. "
 						+ "L'effet protecteur est renforcé lorsqu'on met entre les plantes menacées, les gourmands des tomates.",
 				null, insertedPlants.get("tomate"), insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun14);
-		InteractionPlantePlante interactionPourChouCommun15 = new InteractionPlantePlante("+",
+		allelopathieRepository.save(interactionPourChouCommun14);
+		Allelopathie interactionPourChouCommun15 = new Allelopathie(5,
 				"La piéride du chou n'aime pas l'odeur du céleri", null, insertedPlants.get("céleri"),
 				insertedPlants.get("chou commun"));
-		interactionPlantePlanteRepository.save(interactionPourChouCommun15);
+		allelopathieRepository.save(interactionPourChouCommun15);
 	}
 
 	private void interactionPourCarotte(Map<String, Plante> insertedPlants) {
 		log.info("interactionPourCarotte"); // Pour carotte
-		InteractionPlantePlante interactionPourCarotte1 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("ail"), insertedPlants.get("carotte"));
-
-		interactionPlantePlanteRepository.save(interactionPourCarotte1);
-
-		InteractionPlantePlante interactionPourCarotte2 = new InteractionPlantePlante("+",
-				"L’aneth protège les carottes et aide à la levée", null, insertedPlants.get("aneth"),
+		Allelopathie interactionPourCarotte1 = new Allelopathie(5, "", null, insertedPlants.get("ail"),
 				insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte2);
 
-		InteractionPlantePlante interactionPourCarotte3 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("échalotte"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte3);
-		InteractionPlantePlante interactionPourCarotte4 = new InteractionPlantePlante("+", "", null,
+		allelopathieRepository.save(interactionPourCarotte1);
+
+		Allelopathie interactionPourCarotte2 = new Allelopathie(5, "L’aneth protège les carottes et aide à la levée",
+				null, insertedPlants.get("aneth"), insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte2);
+
+		Allelopathie interactionPourCarotte3 = new Allelopathie(5, "", null, insertedPlants.get("échalotte"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte3);
+		Allelopathie interactionPourCarotte4 = new Allelopathie(5, "", null, insertedPlants.get("poireau"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte4);
+		Allelopathie interactionPourCarotte5 = new Allelopathie(5, "", null, insertedPlants.get("tomate"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte5);
+		Allelopathie interactionPourCarotte6 = new Allelopathie(5, "", null, insertedPlants.get("laitue"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte6);
+		Allelopathie interactionPourCarotte7 = new Allelopathie(5, "", null, insertedPlants.get("ciboulette"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte7);
+		Allelopathie interactionPourCarotte8 = new Allelopathie(5, "", null, insertedPlants.get("radis"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte8);
+		Allelopathie interactionPourCarotte9 = new Allelopathie(5, "L'oignon repousse la mouche de la carotte", null,
+				insertedPlants.get("oignon"), insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte9);
+		Allelopathie interactionPourCarotte10 = new Allelopathie(5, "", null, insertedPlants.get("pois"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte10);
+		Allelopathie interactionPourCarotte11 = new Allelopathie(5, "Le poireau repousse la mouche de la carotte", null,
 				insertedPlants.get("poireau"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte4);
-		InteractionPlantePlante interactionPourCarotte5 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("tomate"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte5);
-		InteractionPlantePlante interactionPourCarotte6 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("laitue"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte6);
-		InteractionPlantePlante interactionPourCarotte7 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("ciboulette"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte7);
-		InteractionPlantePlante interactionPourCarotte8 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("radis"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte8);
-		InteractionPlantePlante interactionPourCarotte9 = new InteractionPlantePlante("+",
-				"L'oignon repousse la mouche de la carotte", null, insertedPlants.get("oignon"),
+		allelopathieRepository.save(interactionPourCarotte11);
+		Allelopathie interactionPourCarotte12 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
 				insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte9);
-		InteractionPlantePlante interactionPourCarotte10 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("pois"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte10);
-		InteractionPlantePlante interactionPourCarotte11 = new InteractionPlantePlante("+",
-				"Le poireau repousse la mouche de la carotte", null, insertedPlants.get("poireau"),
+		allelopathieRepository.save(interactionPourCarotte12);
+		Allelopathie interactionPourCarotte13 = new Allelopathie(5, "", null, insertedPlants.get("carotte"),
 				insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte11);
-		InteractionPlantePlante interactionPourCarotte12 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte12);
-		InteractionPlantePlante interactionPourCarotte13 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("carotte"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte13);
-		InteractionPlantePlante interactionPourCarotte14 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("romarin"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte14);
-		InteractionPlantePlante interactionPourCarotte15 = new InteractionPlantePlante("+", "", null,
-				insertedPlants.get("scorsonère des prés"), insertedPlants.get("carotte"));
-		interactionPlantePlanteRepository.save(interactionPourCarotte15);
+		allelopathieRepository.save(interactionPourCarotte13);
+		Allelopathie interactionPourCarotte14 = new Allelopathie(5, "", null, insertedPlants.get("romarin"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte14);
+		Allelopathie interactionPourCarotte15 = new Allelopathie(5, "", null, insertedPlants.get("scorsonère des prés"),
+				insertedPlants.get("carotte"));
+		allelopathieRepository.save(interactionPourCarotte15);
 	}
 
-	private void insertVitesseCroissance() {
-		try {
-			VitesseCroissance tresLente = new VitesseCroissance("tresLente");
-			VitesseCroissance lente = new VitesseCroissance("lente");
-			VitesseCroissance vcNormale = new VitesseCroissance("normale");
-			VitesseCroissance rapide = new VitesseCroissance("rapide");
-			VitesseCroissance tresRapide = new VitesseCroissance("tresRapide");
-			vitesseCroissanceRepository.save(tresLente);
-			vitesseCroissanceRepository.save(lente);
-			vitesseCroissanceRepository.save(vcNormale);
-			vitesseCroissanceRepository.save(rapide);
-			vitesseCroissanceRepository.save(tresRapide);
-		} catch (Exception e) {
-			log.error("Error when trying to insert in table VitesseCroissance. {" + e.getMessage() + "}");
-		}
-	}
+//	private void insertVitesseCroissance() {
+//		try {
+//			VitesseCroissance tresLente = new VitesseCroissance("tresLente");
+//			VitesseCroissance lente = new VitesseCroissance("lente");
+//			VitesseCroissance vcNormale = new VitesseCroissance("normale");
+//			VitesseCroissance rapide = new VitesseCroissance("rapide");
+//			VitesseCroissance tresRapide = new VitesseCroissance("tresRapide");
+//			vitesseCroissanceRepository.save(tresLente);
+//			vitesseCroissanceRepository.save(lente);
+//			vitesseCroissanceRepository.save(vcNormale);
+//			vitesseCroissanceRepository.save(rapide);
+//			vitesseCroissanceRepository.save(tresRapide);
+//		} catch (Exception e) {
+//			log.error("Error when trying to insert in table VitesseCroissance. {" + e.getMessage() + "}");
+//		}
+//	}
 
-	private void insertEnsoleillement() {
-		try {
-			Ensoleillement soleil = new Ensoleillement("soleil");
-			Ensoleillement miOmbre = new Ensoleillement("miOmbre");
-			Ensoleillement ombre = new Ensoleillement("ombre");
-			ensoleillementRepository.save(soleil);
-			ensoleillementRepository.save(miOmbre);
-			ensoleillementRepository.save(ombre);
-		} catch (Exception e) {
-			log.error("Error when trying to insert in table Ensoleillement. {" + e.getMessage() + "}");
-		}
-	}
+//	private void insertEnsoleillement() {
+//		try {
+//			Ensoleillement soleil = new Ensoleillement("soleil");
+//			Ensoleillement miOmbre = new Ensoleillement("miOmbre");
+//			Ensoleillement ombre = new Ensoleillement("ombre");
+//			ensoleillementRepository.save(soleil);
+//			ensoleillementRepository.save(miOmbre);
+//			ensoleillementRepository.save(ombre);
+//		} catch (Exception e) {
+//			log.error("Error when trying to insert in table Ensoleillement. {" + e.getMessage() + "}");
+//		}
+//	}
 
 	private void insertRichesseSol() {
 		try {
-			RichesseSol tresPauvre = new RichesseSol("tresPauvre");
-			RichesseSol pauvre = new RichesseSol("pauvre");
-			RichesseSol normale = new RichesseSol("normale");
-			RichesseSol riche = new RichesseSol("riche");
-			RichesseSol tresRiche = new RichesseSol("tresRiche");
-			richesseSolRepository.save(tresPauvre);
-			richesseSolRepository.save(pauvre);
-			richesseSolRepository.save(normale);
-			richesseSolRepository.save(riche);
-			richesseSolRepository.save(tresRiche);
+			Sol tresPauvre = new Sol(null, null, null, null, "tresPauvre");
+			Sol pauvre = new Sol(null, null, null, null, "pauvre");
+			Sol normale = new Sol(null, null, null, null, "normale");
+			Sol riche = new Sol(null, null, null, null, "riche");
+			Sol tresRiche = new Sol(null, null, null, null, "tresRiche");
+			solRepository.save(tresPauvre);
+			solRepository.save(pauvre);
+			solRepository.save(normale);
+			solRepository.save(riche);
+			solRepository.save(tresRiche);
+			Sol argileuse = new Sol(null, null, null, "argileuse", "");
+			Sol calcaire = new Sol(null, null, null, "calcaire", "");
+			Sol humifere = new Sol(null, null, null, "humifere", "");
+			Sol sableuse = new Sol(null, null, null, "sableuse", "");
+			solRepository.save(argileuse);
+			solRepository.save(calcaire);
+			solRepository.save(humifere);
+			solRepository.save(sableuse);
 		} catch (Exception e) {
 			log.error("Error when trying to insert in table RichesseSol. {" + e.getMessage() + "}");
 		}
 	}
 
-	private void insertTypeTerre() {
-		try {
-			TypeTerre argileuse = new TypeTerre("argileuse");
-			TypeTerre calcaire = new TypeTerre("calcaire");
-			TypeTerre humifere = new TypeTerre("humifere");
-			TypeTerre sableuse = new TypeTerre("sableuse");
-			typeTerreRepository.save(argileuse);
-			typeTerreRepository.save(calcaire);
-			typeTerreRepository.save(humifere);
-			typeTerreRepository.save(sableuse);
-		} catch (Exception e) {
-			log.error("Error when trying to insert in table TypeTerre. {" + e.getMessage() + "}");
-		}
-	}
-
 	private void insertTypeFeuillage() {
 		try {
-			TypeFeuillage persistant = new TypeFeuillage("persistant");
-			TypeFeuillage semiPersistant = new TypeFeuillage("semiPersistant");
-			TypeFeuillage marcescent = new TypeFeuillage("marcescent");
-			TypeFeuillage caduc = new TypeFeuillage("caduc");
-			typeFeuillageRepository.save(persistant);
-			typeFeuillageRepository.save(semiPersistant);
-			typeFeuillageRepository.save(marcescent);
-			typeFeuillageRepository.save(caduc);
+			Feuillage persistant = new Feuillage("persistant");
+			Feuillage semiPersistant = new Feuillage("semiPersistant");
+			Feuillage marcescent = new Feuillage("marcescent");
+			Feuillage caduc = new Feuillage("caduc");
+			feuillageRepository.save(persistant);
+			feuillageRepository.save(semiPersistant);
+			feuillageRepository.save(marcescent);
+			feuillageRepository.save(caduc);
 		} catch (Exception e) {
 			log.error("Error when trying to insert in table TypeFeuillage. {" + e.getMessage() + "}");
 		}
@@ -1682,28 +1677,28 @@ public class AppLoading implements ApplicationListener<ContextRefreshedEvent> {
 
 	private void insertTypeRacine() {
 		try {
-			TypeRacine pivotante = new TypeRacine("pivotante");
-			TypeRacine fasciculaire = new TypeRacine("fasciculaire");
-			TypeRacine adventice = new TypeRacine("adventice");
-			TypeRacine tracante = new TypeRacine("tracante");
-			TypeRacine contrefort = new TypeRacine("contrefort");
-			TypeRacine crampon = new TypeRacine("crampon");
-			TypeRacine echasse = new TypeRacine("echasse");
-			TypeRacine aerienne = new TypeRacine("aerienne");
-			TypeRacine liane = new TypeRacine("liane");
-			TypeRacine ventouse = new TypeRacine("ventouse");
-			TypeRacine pneumatophore = new TypeRacine("pneumatophore");
-			typeRacineRepository.save(pivotante);
-			typeRacineRepository.save(fasciculaire);
-			typeRacineRepository.save(adventice);
-			typeRacineRepository.save(tracante);
-			typeRacineRepository.save(contrefort);
-			typeRacineRepository.save(crampon);
-			typeRacineRepository.save(echasse);
-			typeRacineRepository.save(aerienne);
-			typeRacineRepository.save(liane);
-			typeRacineRepository.save(ventouse);
-			typeRacineRepository.save(pneumatophore);
+			Racine pivotante = new Racine("pivotante");
+			Racine fasciculaire = new Racine("fasciculaire");
+			Racine adventice = new Racine("adventice");
+			Racine tracante = new Racine("tracante");
+			Racine contrefort = new Racine("contrefort");
+			Racine crampon = new Racine("crampon");
+			Racine echasse = new Racine("echasse");
+			Racine aerienne = new Racine("aerienne");
+			Racine liane = new Racine("liane");
+			Racine ventouse = new Racine("ventouse");
+			Racine pneumatophore = new Racine("pneumatophore");
+			racineRepository.save(pivotante);
+			racineRepository.save(fasciculaire);
+			racineRepository.save(adventice);
+			racineRepository.save(tracante);
+			racineRepository.save(contrefort);
+			racineRepository.save(crampon);
+			racineRepository.save(echasse);
+			racineRepository.save(aerienne);
+			racineRepository.save(liane);
+			racineRepository.save(ventouse);
+			racineRepository.save(pneumatophore);
 		} catch (Exception e) {
 			log.error("Error when trying to insert in table TypeRacine. {" + e.getMessage() + "}");
 		}
@@ -1711,18 +1706,18 @@ public class AppLoading implements ApplicationListener<ContextRefreshedEvent> {
 
 	private void insertMois() {
 		try {
-			Mois janvier = new Mois("Janvier");
-			Mois fevrier = new Mois("fevrier");
-			Mois mars = new Mois("mars");
-			Mois avril = new Mois("avril");
-			Mois mai = new Mois("mai");
-			Mois juin = new Mois("juin");
-			Mois juillet = new Mois("juillet");
-			Mois aout = new Mois("aout");
-			Mois septembre = new Mois("septembre");
-			Mois octobre = new Mois("octobre");
-			Mois novembre = new Mois("novembre");
-			Mois decembre = new Mois("decembre");
+			Mois janvier = new Mois(1.0, "Janvier");
+			Mois fevrier = new Mois(2.0, "fevrier");
+			Mois mars = new Mois(3.0, "mars");
+			Mois avril = new Mois(4.0, "avril");
+			Mois mai = new Mois(5.0, "mai");
+			Mois juin = new Mois(6.0, "juin");
+			Mois juillet = new Mois(7.0, "juillet");
+			Mois aout = new Mois(8.0, "aout");
+			Mois septembre = new Mois(9.0, "septembre");
+			Mois octobre = new Mois(10.0, "octobre");
+			Mois novembre = new Mois(11.0, "novembre");
+			Mois decembre = new Mois(12.0, "decembre");
 			moisRepository.save(janvier);
 			moisRepository.save(fevrier);
 			moisRepository.save(mars);
@@ -1745,82 +1740,32 @@ public class AppLoading implements ApplicationListener<ContextRefreshedEvent> {
 	 * @return
 	 */
 	private Plante insertPlant(Map<String, String> data) {
-		Ordre ordre = new Ordre(data.get("Ordre"));
-		Famille famille = new Famille(data.get("Famille"));
-		Genre genre = new Genre(data.get("Genre"));
-		Espece espece = new Espece(data.get("Espece"));
-		String plantName = data.get("Plante");
 
 		Plante plante;
+		NomVernaculaire nom = new NomVernaculaire(data.get("Plante"));
 		try {
-			if (!ordreRepository.exists(Example.of(ordre))) {
-				ordreRepository.save(ordre);
+
+			Cronquist cronquist = new Cronquist(null, null, null, null, null, //
+					data.get("Ordre"), //
+					data.get("Famille"), //
+					data.get("Genre"), //
+					data.get("Espece")//
+			);
+			Classification classification = new Classification(cronquist);
+			if (!classificationRepository.exists(Example.of(classification))) {
+				classificationRepository.save(classification);
 			} else {
-				Optional<Ordre> returned = ordreRepository.findOne(Example.of(ordre));
+				Optional<Classification> returned = classificationRepository.findOne(Example.of(classification));
 				if (returned.isPresent()) {
-					ordre = returned.get();
-					log.info("Existing order : " + ordre.toString());
+					classification = returned.get();
+					log.info("Existing classification : " + classification.toString());
 				} else {
-					log.error("Unable to get instance of : " + ordre.toString());
-				}
-
-			}
-
-			if (!familleRepository.exists(Example.of(famille))) {
-				familleRepository.save(famille);
-			} else {
-				Optional<Famille> returned = familleRepository.findOne(Example.of(famille));
-				if (returned.isPresent()) {
-					famille = returned.get();
-					log.info("Existing familly : " + famille.toString());
-				} else {
-					log.error("Unable to get instance of : " + famille.toString());
-				}
-
-			}
-
-			if (!genreRepository.exists(Example.of(genre))) {
-				genreRepository.save(genre);
-			} else {
-				Optional<Genre> returned = genreRepository.findOne(Example.of(genre));
-				if (returned.isPresent()) {
-					genre = returned.get();
-					log.info("Existing genre : " + genre.toString());
-				} else {
-					log.error("Unable to get instance of : " + genre.toString());
-				}
-
-			}
-
-			if (!especeRepository.exists(Example.of(espece))) {
-				especeRepository.save(espece);
-			} else {
-				Optional<Espece> returned = especeRepository.findOne(Example.of(espece));
-				if (returned.isPresent()) {
-					espece = returned.get();
-					log.info("Existing espece : " + espece.toString());
-				} else {
-					log.error("Unable to get instance of : " + espece.toString());
-				}
-
-			}
-
-			ClassificationCronquist classificationCronquist = new ClassificationCronquist(ordre, famille, genre,
-					espece);
-			if (!classificationCronquistRepository.exists(Example.of(classificationCronquist))) {
-				classificationCronquistRepository.save(classificationCronquist);
-			} else {
-				Optional<ClassificationCronquist> returned = classificationCronquistRepository
-						.findOne(Example.of(classificationCronquist));
-				if (returned.isPresent()) {
-					classificationCronquist = returned.get();
-					log.info("Existing classification : " + classificationCronquist.toString());
-				} else {
-					log.error("Unable to get instance of : " + classificationCronquist.toString());
+					log.error("Unable to get instance of : " + classification.toString());
 				}
 			}
-			plante = new Plante(null, null, null, null, plantName, classificationCronquist, null, null, null, null,
-					null, null, null, null, null);
+			plante = new Plante();
+			plante.addNomsVernaculaires(nom);
+			plante.setClassification(classification);
 			if (!planteRepository.exists(Example.of(plante))) {
 				planteRepository.save(plante);
 			} else {
@@ -1834,7 +1779,7 @@ public class AppLoading implements ApplicationListener<ContextRefreshedEvent> {
 			log.info("Plant saved : " + plante.toString());
 			return plante;
 		} catch (Exception e) {
-			log.error("Unable to insert {" + plantName + "}");
+			log.error("Unable to insert {" + nom.getNom() + "}");
 		}
 		return null;
 	}

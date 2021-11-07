@@ -54,7 +54,15 @@ public class NomVernaculaire implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
+    public NomVernaculaire(String nom) {
+		this.nom = nom;
+	}
+
+	public NomVernaculaire() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getId() {
         return this.id;
     }
 

@@ -47,9 +47,18 @@ public class Racine implements Serializable {
     )
     private Set<Plante> plantes = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    public Racine(String type) {
+//		super();
+		this.type = type;
+	}
 
-    public Long getId() {
+	// jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public Racine() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getId() {
         return this.id;
     }
 
