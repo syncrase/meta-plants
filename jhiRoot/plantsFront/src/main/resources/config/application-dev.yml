@@ -59,7 +59,7 @@ spring:
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/plantsFront
     username: plantsFront
-    password:
+    password: plantsFront
   thymeleaf:
     cache: false
   sleuth:
