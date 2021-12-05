@@ -1,0 +1,77 @@
+
+application {
+	config {
+	  	baseName microservice,
+		applicationType microservice,
+		packageName fr.syncrase.perma,
+		serverPort 8081,
+		cacheProvider hazelcast,
+		enableHibernateCache true,
+		websocket false,
+		databaseType sql,
+		devDatabaseType postgresql,
+		prodDatabaseType postgresql,
+		searchEngine false,
+		messageBroker false,
+		serviceDiscoveryType eureka,
+		buildTool maven,
+		enableSwaggerCodegen true,
+		testFrameworks [gatling, cucumber],
+		jhiPrefix perma,
+		dtoSuffix DTO,
+		enableTranslation false,
+		nativeLanguage fr,
+		skipClient true,
+		skipUserManagement true,
+		clientPackageManager npm,
+		embeddableLaunchScript false
+	}
+	
+	entities *
+}
+
+application {
+	config {
+	  	baseName gateway,
+		applicationType gateway,
+		packageName fr.syncrase.perma,
+		serverPort 8080,
+		cacheProvider hazelcast,
+		enableHibernateCache true,
+		websocket false,
+		databaseType sql,
+		devDatabaseType postgresql,
+		prodDatabaseType postgresql,
+		searchEngine false,
+		messageBroker false,
+		serviceDiscoveryType eureka,
+		buildTool maven,
+		enableSwaggerCodegen false,
+		embeddableLaunchScript false
+		clientPackageManager npm,
+		clientFramework angularX,
+		clientTheme sketchy,
+    		clientThemeVariant dark,
+		testFrameworks [gatling, cucumber, protractor],
+		jhiPrefix perma,
+		dtoSuffix DTO,
+		enableTranslation false,
+		nativeLanguage fr,
+		skipClient false,
+		skipUserManagement false
+	}
+	
+	entities *
+	
+	// Toutes les entités viennent du microservice 'microservice'
+	microservice * with microservice
+}
+
+// https://www.jhipster.tech/jdl/deployments
+deployment {
+	deploymentType docker-compose
+	appsFolders [gateway, microservice]
+}
+
+
+
