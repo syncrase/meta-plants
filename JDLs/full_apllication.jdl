@@ -1,10 +1,11 @@
 
 application {
 	config {
-	  	baseName microservice,
+	  	baseName plantsMS,
 		applicationType microservice,
-		packageName fr.syncrase.perma,
+		packageName fr.syncrase.ecosyst,
 		serverPort 8081,
+    	authenticationType jwt,
 		cacheProvider hazelcast,
 		enableHibernateCache true,
 		websocket false,
@@ -32,10 +33,11 @@ application {
 
 application {
 	config {
-	  	baseName gateway,
+	  	baseName plantsFront,
 		applicationType gateway,
-		packageName fr.syncrase.perma,
+		packageName fr.syncrase.ecosyst,
 		serverPort 8080,
+    	authenticationType jwt,
 		cacheProvider hazelcast,
 		enableHibernateCache true,
 		websocket false,
@@ -49,14 +51,17 @@ application {
 		enableSwaggerCodegen false,
 		embeddableLaunchScript false
 		clientPackageManager npm,
+    	enableGradleEnterprise false,
 		clientFramework angularX,
+    	withAdminUi true,
 		clientTheme sketchy,
-    		clientThemeVariant dark,
+    	clientThemeVariant dark,
 		testFrameworks [gatling, cucumber, protractor],
 		jhiPrefix perma,
 		dtoSuffix DTO,
 		enableTranslation false,
 		nativeLanguage fr,
+    	languages [en, fr],
 		skipClient false,
 		skipUserManagement false
 	}
@@ -70,7 +75,8 @@ application {
 // https://www.jhipster.tech/jdl/deployments
 deployment {
 	deploymentType docker-compose
-	appsFolders [gateway, microservice]
+	dockerRepositoryName "dockerRepo"
+	appsFolders [plantsFront, plantsMS]
 }
 
 
