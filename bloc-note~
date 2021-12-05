@@ -1,6 +1,0 @@
-ng new -p ptg --routing --strict true --style scss --package-manager npm --collection
-
-ng g m --routing home
-
-ng g c home/menu
-
