@@ -1,0 +1,60 @@
+{
+  "name": "Classification",
+  "fields": [
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "raunkier",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "raunkier"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "cronquist",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "cronquist"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aPGI",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg1"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aPGII",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg2"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aPGIII",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg3"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aPGIV",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "apg4"
+    }
+  ],
+  "entityTableName": "classification",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211206111341"
+}

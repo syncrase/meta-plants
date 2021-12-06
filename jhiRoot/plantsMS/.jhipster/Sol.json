@@ -1,0 +1,42 @@
+{
+  "name": "Sol",
+  "fields": [
+    {
+      "fieldName": "phMin",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "phMax",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "richesse",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "sols",
+      "relationshipName": "plante"
+    }
+  ],
+  "entityTableName": "sol",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211206111339"
+}

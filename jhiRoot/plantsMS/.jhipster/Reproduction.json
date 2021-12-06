@@ -1,0 +1,34 @@
+{
+  "name": "Reproduction",
+  "fields": [
+    {
+      "fieldName": "vitesse",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "cycleDeVie",
+      "otherEntityRelationshipName": "reproduction",
+      "relationshipName": "cycleDeVie"
+    }
+  ],
+  "entityTableName": "reproduction",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211206111338"
+}

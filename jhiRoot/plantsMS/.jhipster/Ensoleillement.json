@@ -1,0 +1,34 @@
+{
+  "name": "Ensoleillement",
+  "fields": [
+    {
+      "fieldName": "orientation",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ensoleilement",
+      "fieldType": "Double"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "ensoleillements",
+      "relationshipName": "plante"
+    }
+  ],
+  "entityTableName": "ensoleillement",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211206111354"
+}

@@ -1,0 +1,37 @@
+{
+  "name": "PeriodeAnnee",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "mois",
+      "otherEntityRelationshipName": "periodeAnnee",
+      "relationshipValidateRules": "required",
+      "relationshipName": "debut",
+      "otherEntityField": "nom",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "mois",
+      "otherEntityRelationshipName": "periodeAnnee",
+      "relationshipValidateRules": "required",
+      "relationshipName": "fin",
+      "otherEntityField": "nom",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "periode_annee",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211206111336"
+}

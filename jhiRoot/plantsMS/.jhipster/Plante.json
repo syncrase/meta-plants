@@ -1,0 +1,98 @@
+{
+  "name": "Plante",
+  "fields": [
+    {
+      "fieldName": "entretien",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "histoire",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "vitesseCroissance",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "exposition",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "cycleDeVie",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "cycleDeVie",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "ressemblance",
+      "otherEntityRelationshipName": "planteRessemblant",
+      "relationshipName": "confusions"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "ensoleillement",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "ensoleillements"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sol",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "sols"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "classification",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "classification"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "nomVernaculaire",
+      "otherEntityRelationshipName": "plantes",
+      "relationshipName": "nomsVernaculaires",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "temperature",
+      "otherEntityRelationshipName": "plantes",
+      "relationshipName": "temperature"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "racine",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "racine"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "strate",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "strate"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "feuillage",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "feuillage"
+    }
+  ],
+  "entityTableName": "plante",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211206111337"
+}
