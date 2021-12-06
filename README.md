@@ -47,3 +47,4 @@ For the backend, just run `sudo ./mvnw`.
 For the front, first run `sudo ./mvnw` and then `npm start`
 
 ## Run with Docker
+Run `docker-compose up -d` in the jhiRoot/docker-compose directory
