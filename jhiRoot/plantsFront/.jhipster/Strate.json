@@ -1,0 +1,28 @@
+{
+  "name": "Strate",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "strate",
+      "relationshipName": "plante"
+    }
+  ],
+  "entityTableName": "strate",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "databaseType": "sql",
+  "changelogDate": "20211206113838"
+}

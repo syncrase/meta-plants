@@ -1,0 +1,46 @@
+{
+  "name": "Allelopathie",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "impact",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMin": "-10",
+      "fieldValidateRulesMax": "10"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "allelopathie",
+      "relationshipName": "cible"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "allelopathie",
+      "relationshipName": "origine"
+    }
+  ],
+  "entityTableName": "allelopathie",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "databaseType": "sql",
+  "changelogDate": "20211206113833"
+}

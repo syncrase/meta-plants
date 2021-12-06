@@ -1,0 +1,87 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="plante">
+      <h2 data-cy="planteDetailsHeading"><span>Plante</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ plante.id }}</span>
+        </dd>
+        <dt><span>Entretien</span></dt>
+        <dd>
+          <span>{{ plante.entretien }}</span>
+        </dd>
+        <dt><span>Histoire</span></dt>
+        <dd>
+          <span>{{ plante.histoire }}</span>
+        </dd>
+        <dt><span>Vitesse Croissance</span></dt>
+        <dd>
+          <span>{{ plante.vitesseCroissance }}</span>
+        </dd>
+        <dt><span>Exposition</span></dt>
+        <dd>
+          <span>{{ plante.exposition }}</span>
+        </dd>
+        <dt><span>Cycle De Vie</span></dt>
+        <dd>
+          <div *ngIf="plante.cycleDeVie">
+            <a [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Classification</span></dt>
+        <dd>
+          <div *ngIf="plante.classification">
+            <a [routerLink]="['/classification', plante.classification?.id, 'view']">{{ plante.classification?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Noms Vernaculaires</span></dt>
+        <dd>
+          <span *ngFor="let nomsVernaculaires of plante.nomsVernaculaires; let last = last">
+            <a [routerLink]="['/nom-vernaculaire', nomsVernaculaires?.id, 'view']">{{ nomsVernaculaires.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span>Temperature</span></dt>
+        <dd>
+          <div *ngIf="plante.temperature">
+            <a [routerLink]="['/temperature', plante.temperature?.id, 'view']">{{ plante.temperature?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Racine</span></dt>
+        <dd>
+          <div *ngIf="plante.racine">
+            <a [routerLink]="['/racine', plante.racine?.id, 'view']">{{ plante.racine?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Strate</span></dt>
+        <dd>
+          <div *ngIf="plante.strate">
+            <a [routerLink]="['/strate', plante.strate?.id, 'view']">{{ plante.strate?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Feuillage</span></dt>
+        <dd>
+          <div *ngIf="plante.feuillage">
+            <a [routerLink]="['/feuillage', plante.feuillage?.id, 'view']">{{ plante.feuillage?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/plante', plante.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

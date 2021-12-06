@@ -1,0 +1,28 @@
+{
+  "name": "Racine",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "racine",
+      "relationshipName": "plante"
+    }
+  ],
+  "entityTableName": "racine",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "databaseType": "sql",
+  "changelogDate": "20211206113837"
+}

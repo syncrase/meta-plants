@@ -1,0 +1,64 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cronquist">
+      <h2 data-cy="cronquistDetailsHeading"><span>Cronquist</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ cronquist.id }}</span>
+        </dd>
+        <dt><span>Regne</span></dt>
+        <dd>
+          <span>{{ cronquist.regne }}</span>
+        </dd>
+        <dt><span>Sous Regne</span></dt>
+        <dd>
+          <span>{{ cronquist.sousRegne }}</span>
+        </dd>
+        <dt><span>Division</span></dt>
+        <dd>
+          <span>{{ cronquist.division }}</span>
+        </dd>
+        <dt><span>Classe</span></dt>
+        <dd>
+          <span>{{ cronquist.classe }}</span>
+        </dd>
+        <dt><span>Sous Classe</span></dt>
+        <dd>
+          <span>{{ cronquist.sousClasse }}</span>
+        </dd>
+        <dt><span>Ordre</span></dt>
+        <dd>
+          <span>{{ cronquist.ordre }}</span>
+        </dd>
+        <dt><span>Famille</span></dt>
+        <dd>
+          <span>{{ cronquist.famille }}</span>
+        </dd>
+        <dt><span>Genre</span></dt>
+        <dd>
+          <span>{{ cronquist.genre }}</span>
+        </dd>
+        <dt><span>Espece</span></dt>
+        <dd>
+          <span>{{ cronquist.espece }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/cronquist', cronquist.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

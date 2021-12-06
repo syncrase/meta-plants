@@ -1,0 +1,40 @@
+{
+  "name": "Temperature",
+  "fields": [
+    {
+      "fieldName": "min",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "max",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "rusticite",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "temperature",
+      "relationshipName": "plantes"
+    }
+  ],
+  "entityTableName": "temperature",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "databaseType": "sql",
+  "changelogDate": "20211206113836"
+}

@@ -42,6 +42,33 @@
     "devServerPort": 4200,
     "clientPackageManager": "npm",
     "enableGradleEnterprise": false,
-    "languages": ["en", "fr"]
+    "languages": ["en", "fr"],
+    "entities": [
+      "Mois",
+      "PeriodeAnnee",
+      "Plante",
+      "Reproduction",
+      "Sol",
+      "NomVernaculaire",
+      "Classification",
+      "Cronquist",
+      "Raunkier",
+      "APGI",
+      "APGII",
+      "APGIII",
+      "APGIV",
+      "Semis",
+      "TypeSemis",
+      "CycleDeVie",
+      "Germination",
+      "Allelopathie",
+      "Ressemblance",
+      "Ensoleillement",
+      "Temperature",
+      "Racine",
+      "Strate",
+      "Feuillage"
+    ],
+    "lastLiquibaseTimestamp": 1638790719000
   }
 }

@@ -1,0 +1,84 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-cronquist-heading" data-cy="CronquistCreateUpdateHeading">Create or edit a Cronquist</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_regne">Regne</label>
+          <input type="text" class="form-control" name="regne" id="field_regne" data-cy="regne" formControlName="regne" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousRegne">Sous Regne</label>
+          <input type="text" class="form-control" name="sousRegne" id="field_sousRegne" data-cy="sousRegne" formControlName="sousRegne" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_division">Division</label>
+          <input type="text" class="form-control" name="division" id="field_division" data-cy="division" formControlName="division" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_classe">Classe</label>
+          <input type="text" class="form-control" name="classe" id="field_classe" data-cy="classe" formControlName="classe" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousClasse">Sous Classe</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousClasse"
+            id="field_sousClasse"
+            data-cy="sousClasse"
+            formControlName="sousClasse"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_ordre">Ordre</label>
+          <input type="text" class="form-control" name="ordre" id="field_ordre" data-cy="ordre" formControlName="ordre" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_famille">Famille</label>
+          <input type="text" class="form-control" name="famille" id="field_famille" data-cy="famille" formControlName="famille" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_genre">Genre</label>
+          <input type="text" class="form-control" name="genre" id="field_genre" data-cy="genre" formControlName="genre" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_espece">Espece</label>
+          <input type="text" class="form-control" name="espece" id="field_espece" data-cy="espece" formControlName="espece" />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

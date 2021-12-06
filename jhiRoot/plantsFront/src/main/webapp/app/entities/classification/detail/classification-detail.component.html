@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="classification">
+      <h2 data-cy="classificationDetailsHeading"><span>Classification</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ classification.id }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ classification.nomLatin }}</span>
+        </dd>
+        <dt><span>Raunkier</span></dt>
+        <dd>
+          <div *ngIf="classification.raunkier">
+            <a [routerLink]="['/raunkier', classification.raunkier?.id, 'view']">{{ classification.raunkier?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Cronquist</span></dt>
+        <dd>
+          <div *ngIf="classification.cronquist">
+            <a [routerLink]="['/cronquist', classification.cronquist?.id, 'view']">{{ classification.cronquist?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Apg 1</span></dt>
+        <dd>
+          <div *ngIf="classification.apg1">
+            <a [routerLink]="['/apgi', classification.apg1?.id, 'view']">{{ classification.apg1?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Apg 2</span></dt>
+        <dd>
+          <div *ngIf="classification.apg2">
+            <a [routerLink]="['/apgii', classification.apg2?.id, 'view']">{{ classification.apg2?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Apg 3</span></dt>
+        <dd>
+          <div *ngIf="classification.apg3">
+            <a [routerLink]="['/apgiii', classification.apg3?.id, 'view']">{{ classification.apg3?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Apg 4</span></dt>
+        <dd>
+          <div *ngIf="classification.apg4">
+            <a [routerLink]="['/apgiv', classification.apg4?.id, 'view']">{{ classification.apg4?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/classification', classification.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

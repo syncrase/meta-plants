@@ -1,0 +1,112 @@
+<div>
+  <h2 id="page-heading" data-cy="AllelopathieHeading">
+    <span>Allelopathies</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-allelopathie"
+        [routerLink]="['/allelopathie/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Allelopathie </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="allelopathies?.length === 0">
+    <span>No allelopathies found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="allelopathies && allelopathies.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="type"><span>Type</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="description"><span>Description</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="impact"><span>Impact</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="cible.id"><span>Cible</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="origine.id"><span>Origine</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let allelopathie of allelopathies; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/allelopathie', allelopathie.id, 'view']">{{ allelopathie.id }}</a>
+          </td>
+          <td>{{ allelopathie.type }}</td>
+          <td>{{ allelopathie.description }}</td>
+          <td>{{ allelopathie.impact }}</td>
+          <td>
+            <div *ngIf="allelopathie.cible">
+              <a [routerLink]="['/plante', allelopathie.cible?.id, 'view']">{{ allelopathie.cible?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="allelopathie.origine">
+              <a [routerLink]="['/plante', allelopathie.origine?.id, 'view']">{{ allelopathie.origine?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/allelopathie', allelopathie.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/allelopathie', allelopathie.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(allelopathie)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="allelopathies && allelopathies.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

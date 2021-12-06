@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="aPGIII">
+      <h2 data-cy="aPGIIIDetailsHeading"><span>APGIII</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ aPGIII.id }}</span>
+        </dd>
+        <dt><span>Ordre</span></dt>
+        <dd>
+          <span>{{ aPGIII.ordre }}</span>
+        </dd>
+        <dt><span>Famille</span></dt>
+        <dd>
+          <span>{{ aPGIII.famille }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/apgiii', aPGIII.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
