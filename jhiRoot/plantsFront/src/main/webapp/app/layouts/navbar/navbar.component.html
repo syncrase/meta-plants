@@ -26,6 +26,35 @@
           </span>
         </a>
       </li>
+      <li
+        *ngSwitchCase="true"
+        ngbDropdown
+        class="nav-item dropdown pointer"
+        display="dynamic"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="features-menu" data-cy="features">
+          <span>
+            <fa-icon icon="th-list"></fa-icon>
+            <span>Features</span>
+          </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="features-menu">
+          <li>
+            <a
+              class="dropdown-item"
+              routerLink="tableausemis"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span>Tableau des semis</span>
+            </a>
+          </li>
+        </ul>
+      </li>
       <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
       <li
         *ngSwitchCase="true"
