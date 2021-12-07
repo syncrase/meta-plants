@@ -1,35 +1,4 @@
 
-application {
-	config {
-	  	baseName plantsMS,
-		applicationType microservice,
-		packageName fr.syncrase.ecosyst,
-		serverPort 8081,
-    	authenticationType jwt,
-		cacheProvider hazelcast,
-		enableHibernateCache true,
-		websocket false,
-		databaseType sql,
-		devDatabaseType postgresql,
-		prodDatabaseType postgresql,
-		searchEngine false,
-		messageBroker false,
-		serviceDiscoveryType eureka,
-		buildTool maven,
-		enableSwaggerCodegen true,
-		testFrameworks [gatling, cucumber],
-		jhiPrefix perma,
-		dtoSuffix DTO,
-		enableTranslation false,
-		nativeLanguage fr,
-		skipClient true,
-		skipUserManagement true,
-		clientPackageManager npm,
-		embeddableLaunchScript false
-	}
-	
-	entities *
-}
 
 application {
 	config {
@@ -69,7 +38,39 @@ application {
 	entities *
 	
 	// Toutes les entités viennent du microservice 'microservice'
-	microservice * with microservice
+	microservice * with plantsms
+}
+
+application {
+	config {
+	  	baseName plantsMS,
+		applicationType microservice,
+		packageName fr.syncrase.ecosyst,
+		serverPort 8081,
+    	authenticationType jwt,
+		cacheProvider hazelcast,
+		enableHibernateCache true,
+		websocket false,
+		databaseType sql,
+		devDatabaseType postgresql,
+		prodDatabaseType postgresql,
+		searchEngine false,
+		messageBroker false,
+		serviceDiscoveryType eureka,
+		buildTool maven,
+		enableSwaggerCodegen true,
+		testFrameworks [gatling, cucumber],
+		jhiPrefix perma,
+		dtoSuffix DTO,
+		enableTranslation false,
+		nativeLanguage fr,
+		skipClient true,
+		skipUserManagement true,
+		clientPackageManager npm,
+		embeddableLaunchScript false
+	}
+	
+	entities *
 }
 
 // https://www.jhipster.tech/jdl/deployments

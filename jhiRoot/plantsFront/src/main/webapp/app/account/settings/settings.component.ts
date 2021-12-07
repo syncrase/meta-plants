@@ -5,7 +5,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 
 @Component({
-  selector: 'jhi-settings',
+  selector: 'perma-settings',
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {

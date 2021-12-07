@@ -6,10 +6,10 @@
     "skipUserManagement": false,
     "skipCheckLengthOfIdentifier": false,
     "skipFakeData": false,
-    "jhiPrefix": "jhi",
+    "jhiPrefix": "perma",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
-    "testFrameworks": [],
+    "testFrameworks": ["gatling", "cucumber", "protractor"],
     "blueprints": [],
     "otherModules": [],
     "pages": [],
@@ -32,7 +32,7 @@
     "enableSwaggerCodegen": false,
     "clientFramework": "angularX",
     "withAdminUi": true,
-    "clientTheme": "cerulean",
+    "clientTheme": "sketchy",
     "clientThemeVariant": "dark",
     "enableTranslation": false,
     "nativeLanguage": "fr",
@@ -69,6 +69,11 @@
       "Strate",
       "Feuillage"
     ],
-    "lastLiquibaseTimestamp": 1638790719000
+    "lastLiquibaseTimestamp": 1638790719000,
+    "gradleEnterpriseHost": "",
+    "packageFolder": "fr/syncrase/ecosyst",
+    "embeddableLaunchScript": false,
+    "skipClient": false,
+    "applicationIndex": 0
   }
 }

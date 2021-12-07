@@ -13,22 +13,22 @@
     </div>
   </h2>
 
-  <jhi-alert-error></jhi-alert-error>
+  <perma-alert-error></perma-alert-error>
 
-  <jhi-alert></jhi-alert>
+  <perma-alert></perma-alert>
 
   <div class="table-responsive" *ngIf="users">
     <table class="table table-striped" aria-describedby="user-management-page-heading">
       <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="transition()">
-          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="login"><span>Login</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="email"><span>Email</span> <fa-icon icon="sort"></fa-icon></th>
+        <tr permaSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="transition()">
+          <th scope="col" permaSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="login"><span>Login</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="email"><span>Email</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
           <th scope="col"><span>Profiles</span></th>
-          <th scope="col" jhiSortBy="createdDate"><span>Created Date</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="lastModifiedBy"><span>Last Modified By</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="lastModifiedDate"><span>Last Modified Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="createdDate"><span>Created Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="lastModifiedBy"><span>Last Modified By</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="lastModifiedDate"><span>Last Modified Date</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -88,7 +88,7 @@
 
   <div *ngIf="users">
     <div class="row justify-content-center">
-      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+      <perma-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></perma-item-count>
     </div>
 
     <div class="row justify-content-center">

@@ -1,0 +1,32 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="raunkier">
+      <h2 data-cy="raunkierDetailsHeading"><span>Raunkier</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ raunkier.id }}</span>
+        </dd>
+        <dt><span>Type</span></dt>
+        <dd>
+          <span>{{ raunkier.type }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/raunkier', raunkier.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -15,40 +15,7 @@
     <property name="datetimeType" value="datetime" dbms="oracle, mssql, postgresql, h2"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113816_added_entity_Mois.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113817_added_entity_PeriodeAnnee.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113818_added_entity_Plante.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113819_added_entity_Reproduction.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113820_added_entity_Sol.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113821_added_entity_NomVernaculaire.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113822_added_entity_Classification.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113823_added_entity_Cronquist.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113824_added_entity_Raunkier.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113825_added_entity_APGI.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113826_added_entity_APGII.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113827_added_entity_APGIII.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113828_added_entity_APGIV.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113829_added_entity_Semis.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113830_added_entity_TypeSemis.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113831_added_entity_CycleDeVie.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113832_added_entity_Germination.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113833_added_entity_Allelopathie.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113834_added_entity_Ressemblance.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113835_added_entity_Ensoleillement.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113836_added_entity_Temperature.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113837_added_entity_Racine.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113838_added_entity_Strate.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113839_added_entity_Feuillage.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20211206113817_added_entity_constraints_PeriodeAnnee.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113818_added_entity_constraints_Plante.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113820_added_entity_constraints_Sol.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113822_added_entity_constraints_Classification.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113829_added_entity_constraints_Semis.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113831_added_entity_constraints_CycleDeVie.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113833_added_entity_constraints_Allelopathie.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113834_added_entity_constraints_Ressemblance.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20211206113835_added_entity_constraints_Ensoleillement.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

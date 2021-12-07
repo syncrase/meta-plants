@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 
 @Directive({
-  selector: '[jhiSort]',
+  selector: '[permaSort]',
 })
 export class SortDirective<T> {
   @Input()

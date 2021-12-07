@@ -57,39 +57,5 @@ services:
       # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
       # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=https://github.com/jhipster/jhipster-registry/
       # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS=central-config
-      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
     ports:
       - 8761:8761
-
-  prometheus:
-    image: prom/prometheus:v2.31.1
-    volumes:
-      - ./prometheus-conf/:/etc/prometheus/
-      - prometheus_data:/prometheus
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    ports:
-      - 9090:9090
-  alertmanager:
-    image: prom/alertmanager:v0.23.0
-    ports:
-      - 9093:9093
-    volumes:
-      - ./alertmanager-conf/:/etc/alertmanager/
-    command:
-      - "--config.file=/etc/alertmanager/config.yml"
-      - "--storage.path=/alertmanager"
-
-  grafana:
-    image: grafana/grafana:8.2.4
-    ports:
-      - 3000:3000
-    volumes:
-      - grafana_data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-
-volumes:
-  prometheus_data: {}
-  grafana_data: {}

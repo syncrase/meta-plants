@@ -5,7 +5,7 @@ import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router';
 import { AccountService } from 'app/core/auth/account.service';
 
 @Component({
-  selector: 'jhi-main',
+  selector: 'perma-main',
   templateUrl: './main.component.html',
 })
 export class MainComponent implements OnInit {

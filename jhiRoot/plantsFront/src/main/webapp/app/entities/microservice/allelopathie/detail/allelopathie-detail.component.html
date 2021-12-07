@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="allelopathie">
+      <h2 data-cy="allelopathieDetailsHeading"><span>Allelopathie</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ allelopathie.id }}</span>
+        </dd>
+        <dt><span>Type</span></dt>
+        <dd>
+          <span>{{ allelopathie.type }}</span>
+        </dd>
+        <dt><span>Description</span></dt>
+        <dd>
+          <span>{{ allelopathie.description }}</span>
+        </dd>
+        <dt><span>Impact</span></dt>
+        <dd>
+          <span>{{ allelopathie.impact }}</span>
+        </dd>
+        <dt><span>Cible</span></dt>
+        <dd>
+          <div *ngIf="allelopathie.cible">
+            <a [routerLink]="['/plante', allelopathie.cible?.id, 'view']">{{ allelopathie.cible?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Origine</span></dt>
+        <dd>
+          <div *ngIf="allelopathie.origine">
+            <a [routerLink]="['/plante', allelopathie.origine?.id, 'view']">{{ allelopathie.origine?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/allelopathie', allelopathie.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

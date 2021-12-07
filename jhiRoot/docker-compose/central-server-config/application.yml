@@ -8,11 +8,6 @@ jhipster:
     authentication:
       jwt:
         base64-secret: NTljZTFjOGEzMmUxZWQ3OWQzMmY0ZDQzMmY0YzU4NjNjN2Q1NDcxNmM3ODA1MDllYzAzMGNmMDA5NmRlMTQ5MDU5YWIzMjhiNmUzNDg4ZDlmNjJiNmY3MzFiZTc0MmNlMmY1Yw==
-management:
-  metrics:
-    export:
-      prometheus:
-        enabled: true
 eureka:
   client:
     service-url:

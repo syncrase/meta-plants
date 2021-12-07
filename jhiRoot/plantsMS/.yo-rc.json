@@ -8,10 +8,10 @@
     "skipUserManagement": true,
     "skipCheckLengthOfIdentifier": false,
     "skipFakeData": false,
-    "jhiPrefix": "jhi",
+    "jhiPrefix": "perma",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
-    "testFrameworks": [],
+    "testFrameworks": ["gatling", "cucumber"],
     "blueprints": [],
     "otherModules": [],
     "pages": [],
@@ -31,14 +31,14 @@
     "websocket": false,
     "searchEngine": false,
     "messageBroker": false,
-    "enableSwaggerCodegen": false,
+    "enableSwaggerCodegen": true,
     "enableTranslation": false,
     "nativeLanguage": "fr",
     "monorepository": true,
     "skipCommitHook": true,
     "jwtSecretKey": "NmMzZjEyZjEwYTJlMWY4YmVlZTM2Njk1YjZiOTVkMDRhZjY0NzkyMGM5Yjg0NmNkYjI3ZWM1NjA0YjRjZTAzZjM2ZTI2MmMwYjJiOTY4ZmUzZThmNGJhZmU2NGU3YmZmMzA1ODllOTk2ZDk1YTIyZTg4YmE0YWUyZGUyYzE0NzA=",
     "enableGradleEnterprise": false,
-    "languages": ["en", "fr"],
+    "languages": [],
     "entities": [
       "Mois",
       "PeriodeAnnee",
@@ -65,6 +65,11 @@
       "Strate",
       "Feuillage"
     ],
-    "lastLiquibaseTimestamp": 1638789238000
+    "lastLiquibaseTimestamp": 1638789238000,
+    "gradleEnterpriseHost": "",
+    "packageFolder": "fr/syncrase/ecosyst",
+    "clientPackageManager": "npm",
+    "embeddableLaunchScript": false,
+    "applicationIndex": 1
   }
 }

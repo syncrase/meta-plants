@@ -8,8 +8,8 @@
 
   <table class="table table-striped table-bordered table-responsive d-table" aria-describedby="spring-configuration">
     <thead>
-      <tr jhiSort predicate="prefix" [(ascending)]="beansAscending" (sortChange)="filterAndSortBeans()">
-        <th jhiSortBy="prefix" scope="col" class="w-40"><span>Prefix</span> <fa-icon icon="sort"></fa-icon></th>
+      <tr permaSort predicate="prefix" [(ascending)]="beansAscending" (sortChange)="filterAndSortBeans()">
+        <th permaSortBy="prefix" scope="col" class="w-40"><span>Prefix</span> <fa-icon icon="sort"></fa-icon></th>
         <th scope="col" class="w-60"><span>Properties</span></th>
       </tr>
     </thead>

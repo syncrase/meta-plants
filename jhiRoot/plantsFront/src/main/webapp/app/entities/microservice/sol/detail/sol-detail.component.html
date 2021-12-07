@@ -1,0 +1,50 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sol">
+      <h2 data-cy="solDetailsHeading"><span>Sol</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ sol.id }}</span>
+        </dd>
+        <dt><span>Ph Min</span></dt>
+        <dd>
+          <span>{{ sol.phMin }}</span>
+        </dd>
+        <dt><span>Ph Max</span></dt>
+        <dd>
+          <span>{{ sol.phMax }}</span>
+        </dd>
+        <dt><span>Type</span></dt>
+        <dd>
+          <span>{{ sol.type }}</span>
+        </dd>
+        <dt><span>Richesse</span></dt>
+        <dd>
+          <span>{{ sol.richesse }}</span>
+        </dd>
+        <dt><span>Plante</span></dt>
+        <dd>
+          <div *ngIf="sol.plante">
+            <a [routerLink]="['/plante', sol.plante?.id, 'view']">{{ sol.plante?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sol', sol.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

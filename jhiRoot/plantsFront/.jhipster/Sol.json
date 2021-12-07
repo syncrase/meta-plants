@@ -34,7 +34,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
+  "applications": ["plantsFront", "plantsMS"],
   "databaseType": "sql",
-  "changelogDate": "20211206113820"
+  "changelogDate": "20211206113820",
+  "microserviceName": "plantsms",
+  "clientRootFolder": "microservice"
 }

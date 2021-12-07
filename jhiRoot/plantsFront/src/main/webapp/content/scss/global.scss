@@ -1,6 +1,6 @@
 @import 'bootstrap-variables';
 @import '~bootstrap/scss/functions';
-@import '~bootswatch/dist/cerulean/variables';
+@import '~bootswatch/dist/sketchy/variables';
 @import '~bootstrap/scss/variables';
 
 /* ==============================================================
@@ -78,7 +78,7 @@ Generic styles
 }
 
 .hand,
-[jhisortby] {
+[permasortby] {
   cursor: pointer;
 }
 

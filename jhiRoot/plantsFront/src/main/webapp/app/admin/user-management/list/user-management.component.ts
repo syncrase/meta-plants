@@ -12,7 +12,7 @@ import { User } from '../user-management.model';
 import { UserManagementDeleteDialogComponent } from '../delete/user-management-delete-dialog.component';
 
 @Component({
-  selector: 'jhi-user-mgmt',
+  selector: 'perma-user-mgmt',
   templateUrl: './user-management.component.html',
 })
 export class UserManagementComponent implements OnInit {
