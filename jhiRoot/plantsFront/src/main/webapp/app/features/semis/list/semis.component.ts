@@ -5,8 +5,8 @@ import { combineLatest } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from "app/config/pagination.constants";
-import { IPlante, Plante } from "../../../entities/plante/plante.model";
-import { PlanteService } from "../../../entities/plante/service/plante.service";
+import { IPlante, Plante } from "../../../entities/microservice/plante/plante.model";
+import { PlanteService } from "../../../entities/microservice/plante/service/plante.service";
 
 const PLANTES: Plante[] = [
   {
@@ -487,7 +487,7 @@ export const MOIS: any[] = [
 
 
 @Component({
-  selector: "jhi-plante",
+  selector: "perma-plante",
   templateUrl: "./semis.component.html"
 })
 export class SemisComponent implements OnInit {

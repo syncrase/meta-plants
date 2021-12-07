@@ -20,9 +20,9 @@
     </div>
   </h2>
 
-  <jhi-alert-error></jhi-alert-error>
+  <perma-alert-error></perma-alert-error>
 
-  <jhi-alert></jhi-alert>
+  <perma-alert></perma-alert>
 
   <div class="alert alert-warning" id="no-result" *ngIf="plantes?.length === 0">
     <span>No plantes found</span>
@@ -31,38 +31,38 @@
   <div class="table-responsive" id="entities" *ngIf="plantes && plantes.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-      <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
-        <th scope="col" jhiSortBy="id"><span>ID</span>
+      <tr permaSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+        <th scope="col" permaSortBy="id"><span>ID</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <!--        <th scope="col" jhiSortBy="entretien"><span>Entretien</span>-->
+        <!--        <th scope="col" permaSortBy="entretien"><span>Entretien</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <!--        <th scope="col" jhiSortBy="histoire"><span>Histoire</span>-->
+        <!--        <th scope="col" permaSortBy="histoire"><span>Histoire</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <!--        <th scope="col" jhiSortBy="vitesseCroissance"><span>Vitesse Croissance</span>-->
+        <!--        <th scope="col" permaSortBy="vitesseCroissance"><span>Vitesse Croissance</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <!--        <th scope="col" jhiSortBy="exposition"><span>Exposition</span>-->
+        <!--        <th scope="col" permaSortBy="exposition"><span>Exposition</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <th scope="col" jhiSortBy="cycleDeVie.id"><span>Cycle De Vie</span>
+        <th scope="col" permaSortBy="cycleDeVie.id"><span>Cycle De Vie</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <!--        <th scope="col" jhiSortBy="classification.id"><span>Classification</span>-->
+        <!--        <th scope="col" permaSortBy="classification.id"><span>Classification</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <!--        <th scope="col" jhiSortBy="temperature.id"><span>Temperature</span>-->
+        <!--        <th scope="col" permaSortBy="temperature.id"><span>Temperature</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <!--        <th scope="col" jhiSortBy="racine.id"><span>Racine</span>-->
+        <!--        <th scope="col" permaSortBy="racine.id"><span>Racine</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <!--        <th scope="col" jhiSortBy="strate.id"><span>Strate</span>-->
+        <!--        <th scope="col" permaSortBy="strate.id"><span>Strate</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
-        <!--        <th scope="col" jhiSortBy="feuillage.id"><span>Feuillage</span>-->
+        <!--        <th scope="col" permaSortBy="feuillage.id"><span>Feuillage</span>-->
         <!--          <fa-icon icon="sort"></fa-icon>-->
         <!--        </th>-->
         <!--        <th scope="col"></th>-->
@@ -134,7 +134,7 @@
 
   <div *ngIf="plantes && plantes.length > 0">
     <div class="row justify-content-center">
-      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+      <perma-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></perma-item-count>
     </div>
 
     <div class="row justify-content-center">
