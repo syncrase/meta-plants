@@ -20,10 +20,10 @@ public class InsertPlants {
 
     private final Logger log = LoggerFactory.getLogger(InsertPlants.class);
 
-    private ClassificationRepository classificationRepository;
-    private CronquistRepository cronquistRepository;
-    private NomVernaculaireRepository nomVernaculaireRepository;
-    private PlanteRepository planteRepository;
+    private final ClassificationRepository classificationRepository;
+    private final CronquistRepository cronquistRepository;
+    private final NomVernaculaireRepository nomVernaculaireRepository;
+    private final PlanteRepository planteRepository;
 
     public InsertPlants(ClassificationRepository classificationRepository, CronquistRepository cronquistRepository, NomVernaculaireRepository nomVernaculaireRepository, PlanteRepository planteRepository) {
         this.classificationRepository = classificationRepository;
@@ -38,12 +38,6 @@ public class InsertPlants {
     protected Map<String, Plante> insertAllPlants() {
         Map<String, Plante> insertedPlants = new HashMap<>();
         Map<String, String> plantAttributes = new HashMap<>();
-        plantAttributes.put("Ordre", "liliales");
-        plantAttributes.put("Famille", "liliaceae");
-        plantAttributes.put("Genre", "allium");
-        plantAttributes.put("Espece", "allium sativum");
-        plantAttributes.put("Plante", "ail");
-        insertedPlants.put("ail", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "apiales");
         plantAttributes.put("Famille", "apiaceae");
@@ -51,6 +45,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "daucus carota");
         plantAttributes.put("Plante", "carotte");
         insertedPlants.put("carotte", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "carotte jaune du doubs");
+        insertedPlants.put("carotte jaune du doubs", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "apiales");
         plantAttributes.put("Famille", "apiaceae");
@@ -59,40 +55,56 @@ public class InsertPlants {
         plantAttributes.put("Plante", "aneth");
         insertedPlants.put("aneth", insertPlant(plantAttributes));
 
-        plantAttributes.put("Ordre", "liliales");
-        plantAttributes.put("Famille", "liliaceae");
-        plantAttributes.put("Genre", "allium");
-        plantAttributes.put("Espece", "allium cepa");
-        plantAttributes.put("Plante", "échalotte");
-        insertedPlants.put("échalotte", insertPlant(plantAttributes));
-        plantAttributes.put("Plante", "oignon");
-        insertedPlants.put("oignon", insertPlant(plantAttributes));
-
-        plantAttributes.put("Ordre", "liliales");
-        plantAttributes.put("Famille", "alliaceae");
-        plantAttributes.put("Genre", "allium");
-        plantAttributes.put("Espece", "allium porrum");
-        plantAttributes.put("Plante", "poireau");
-        insertedPlants.put("poireau", insertPlant(plantAttributes));
-
-        plantAttributes.put("Ordre", "brassicales");
+        plantAttributes.put("Ordre", "capparales");
         plantAttributes.put("Famille", "brassicaceae");
+        plantAttributes.put("Genre", "lepidium");
+        plantAttributes.put("Espece", "lepidium sativum");
+        plantAttributes.put("Plante", "cresson");
+        insertedPlants.put("cresson", insertPlant(plantAttributes));
+
+        plantAttributes.put("Genre", "raphanus");
+        plantAttributes.put("Espece", "raphanus sativus");
+        plantAttributes.put("Plante", "radis");
+        insertedPlants.put("radis", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "radis 18 jours");
+        insertedPlants.put("radis 18 jours", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "radis kocto hf1");
+        insertedPlants.put("radis kocto hf1", insertPlant(plantAttributes));
+
+        plantAttributes.put("Genre", "armoracia");
+        plantAttributes.put("Espece", "armoracia rusticana");
+        plantAttributes.put("Plante", "raifort");
+        insertedPlants.put("raifort", insertPlant(plantAttributes));
+
         plantAttributes.put("Genre", "brassica");
         plantAttributes.put("Espece", "brassica oleracea");
         plantAttributes.put("Plante", "chou commun");
         insertedPlants.put("chou commun", insertPlant(plantAttributes));
-        plantAttributes.put("Plante", "chou-rave");
-        insertedPlants.put("chou-rave", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "chou rave");
+        insertedPlants.put("chou rave", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "brocoli");
         insertedPlants.put("brocoli", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "chou fleur");
         insertedPlants.put("chou fleur", insertPlant(plantAttributes));
-        plantAttributes.put("Plante", "chou fleur");
+        plantAttributes.put("Plante", "chou cabus");
         insertedPlants.put("chou cabus", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "chou cabus coeur de boeuf des vertus");
         insertedPlants.put("chou cabus coeur de boeuf des vertus", insertPlant(plantAttributes));
-        plantAttributes.put("Plante", "chou-fleur merveille de toutes saisons");
-        insertedPlants.put("chou-fleur merveille de toutes saisons", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "chou fleur merveille de toutes saisons");
+        insertedPlants.put("chou fleur merveille de toutes saisons", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "navet rouge plat hâtif à feuille entière");
+        insertedPlants.put("navet rouge plat hâtif à feuille entière", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "chou de chine");
+        insertedPlants.put("chou de chine", insertPlant(plantAttributes));
+
+        plantAttributes.put("Genre", "eruca");
+        plantAttributes.put("Espece", "eruca sativa");
+        plantAttributes.put("Plante", "roquette");
+        insertedPlants.put("roquette", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "roquette cultivée");
+        insertedPlants.put("roquette cultivée", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "roquette sauvage");
+        insertedPlants.put("roquette sauvage", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "lamiales");
         plantAttributes.put("Famille", "lamiaceae");
@@ -100,6 +112,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "satureja hortensis");
         plantAttributes.put("Plante", "sarriette");
         insertedPlants.put("sarriette", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "sarriette commune");
+        insertedPlants.put("sarriette commune", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "caryophyllales");
         plantAttributes.put("Famille", "chenopodiaceae");
@@ -109,6 +123,8 @@ public class InsertPlants {
         insertedPlants.put("betterave", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "bette");
         insertedPlants.put("bette", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "betterave de détroit améliorée 3");
+        insertedPlants.put("betterave de détroit améliorée 3", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "solanales");
         plantAttributes.put("Famille", "solanaceae");
@@ -116,6 +132,10 @@ public class InsertPlants {
         plantAttributes.put("Espece", "solanum lycopersicum");
         plantAttributes.put("Plante", "tomate");
         insertedPlants.put("tomate", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "tomate noire russe");
+        insertedPlants.put("tomate noire russe", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "tomate beefsteak");
+        insertedPlants.put("tomate beefsteak", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "asterales");
         plantAttributes.put("Famille", "asteraceae");
@@ -123,6 +143,22 @@ public class InsertPlants {
         plantAttributes.put("Espece", "lactuca sativa");
         plantAttributes.put("Plante", "laitue");
         insertedPlants.put("laitue", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue rouge grenobloise");
+        insertedPlants.put("laitue rouge grenobloise", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue reine de mai de pleine terre");
+        insertedPlants.put("laitue reine de mai de pleine terre", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue batavia lollo rossa");
+        insertedPlants.put("laitue batavia lollo rossa", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue pommée grosse blonde paresseuse");
+        insertedPlants.put("laitue pommée grosse blonde paresseuse", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue pommée reine de mai");
+        insertedPlants.put("laitue pommée reine de mai", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue batavia iceberg reine des glaces");
+        insertedPlants.put("laitue batavia iceberg reine des glaces", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue cressonnette marocaine");
+        insertedPlants.put("laitue cressonnette marocaine", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "laitue à couper");
+        insertedPlants.put("laitue à couper", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "violales");
         plantAttributes.put("Famille", "cucurbitaceae");
@@ -130,6 +166,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "cucumis sativus");
         plantAttributes.put("Plante", "concombre");
         insertedPlants.put("concombre", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "concombre vert long maraîcher");
+        insertedPlants.put("concombre vert long maraîcher", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "lamiales");
         plantAttributes.put("Famille", "lamiaceae");
@@ -149,11 +187,15 @@ public class InsertPlants {
         plantAttributes.put("Espece", "pisum sativum");
         plantAttributes.put("Plante", "pois");
         insertedPlants.put("pois", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "pois nain norli grain rond");
+        insertedPlants.put("pois nain norli grain rond", insertPlant(plantAttributes));
 
         plantAttributes.put("Genre", "vicia");
         plantAttributes.put("Espece", "vicia faba");
         plantAttributes.put("Plante", "fève");
         insertedPlants.put("fève", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "fève aguadulce à très longue cosse");
+        insertedPlants.put("fève aguadulce à très longue cosse", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "solanales");
         plantAttributes.put("Famille", "solanaceae");
@@ -168,6 +210,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "petroselinum crispum");
         plantAttributes.put("Plante", "persil");
         insertedPlants.put("persil", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "persil frisé vert foncé ou double");
+        insertedPlants.put("persil frisé vert foncé ou double", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "apiales");
         plantAttributes.put("Famille", "apiaceae");
@@ -182,6 +226,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "zea mays");
         plantAttributes.put("Plante", "maïs");
         insertedPlants.put("maïs", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "maïs doux bantam");
+        insertedPlants.put("maïs doux bantam", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "violales");
         plantAttributes.put("Famille", "cucurbitaceae");
@@ -189,8 +235,12 @@ public class InsertPlants {
         plantAttributes.put("Espece", "cucurbita maxima");
         plantAttributes.put("Plante", "courge");
         insertedPlants.put("courge", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "courge pâtisson blanc");
+        insertedPlants.put("courge pâtisson blanc", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "potiron");
         insertedPlants.put("potiron", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "potiron petit bonnet turc");
+        insertedPlants.put("potiron petit bonnet turc", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "courgette");
         insertedPlants.put("courgette", insertPlant(plantAttributes));
 
@@ -225,9 +275,33 @@ public class InsertPlants {
         plantAttributes.put("Ordre", "liliales");
         plantAttributes.put("Famille", "liliaceae");
         plantAttributes.put("Genre", "allium");
+        plantAttributes.put("Espece", "allium sativum");
+        plantAttributes.put("Plante", "ail");
+        insertedPlants.put("ail", insertPlant(plantAttributes));
+
+        plantAttributes.put("Espece", "allium cepa");
+        plantAttributes.put("Plante", "échalote");
+        insertedPlants.put("échalote", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "oignon");
+        insertedPlants.put("oignon", insertPlant(plantAttributes));
+
+        plantAttributes.put("Espece", "allium porrum");
+        plantAttributes.put("Plante", "poireau");
+        insertedPlants.put("poireau", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "poireau monstrueux de carentan");
+        insertedPlants.put("poireau monstrueux de carentan", insertPlant(plantAttributes));
+
         plantAttributes.put("Espece", "allium schoenoprasum");
         plantAttributes.put("Plante", "ciboulette");
         insertedPlants.put("ciboulette", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "ciboulette commune");
+        insertedPlants.put("ciboulette commune", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "civette");
+        insertedPlants.put("civette", insertPlant(plantAttributes));
+
+        plantAttributes.put("Espece", "allium tuberosum");
+        plantAttributes.put("Plante", "ciboule de chine");
+        insertedPlants.put("ciboule de chine", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "rosales");
         plantAttributes.put("Famille", "rosaceae");
@@ -249,6 +323,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "thymus vulgaris");
         plantAttributes.put("Plante", "thym commun");
         insertedPlants.put("thym commun", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "thym ordinaire");
+        insertedPlants.put("thym ordinaire", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "liliales");
         plantAttributes.put("Famille", "liliaceae");
@@ -263,15 +339,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "solanum melongena");
         plantAttributes.put("Plante", "aubergine");
         insertedPlants.put("aubergine", insertPlant(plantAttributes));
-
-        plantAttributes.put("Ordre", "capparales");
-        plantAttributes.put("Famille", "brassicaceae");
-        plantAttributes.put("Genre", "raphanus");
-        plantAttributes.put("Espece", "raphanus sativus");
-        plantAttributes.put("Plante", "radis");
-        insertedPlants.put("radis", insertPlant(plantAttributes));
-        plantAttributes.put("Plante", "radis 18 jours");
-        insertedPlants.put("radis", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "aubergine violetta di firenze");
+        insertedPlants.put("aubergine violetta di firenze", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "lamiales");
         plantAttributes.put("Famille", "lamiaceae");
@@ -279,6 +348,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "alvia officinalis");
         plantAttributes.put("Plante", "sauge");
         insertedPlants.put("sauge", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "sauge officinale");
+        insertedPlants.put("sauge officinale", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "lamiales");
         plantAttributes.put("Famille", "lamiaceae");
@@ -293,6 +364,10 @@ public class InsertPlants {
         plantAttributes.put("Espece", "origanum vulgare");
         plantAttributes.put("Plante", "origan");
         insertedPlants.put("origan", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "origan marjolaine");
+        insertedPlants.put("origan marjolaine", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "marjolaine vivace");
+        insertedPlants.put("marjolaine vivace", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "asterales");
         plantAttributes.put("Famille", "asteraceae");
@@ -314,6 +389,10 @@ public class InsertPlants {
         plantAttributes.put("Espece", "spinacia oleracea");
         plantAttributes.put("Plante", "épinard");
         insertedPlants.put("épinard", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "épinard d'été matador");
+        insertedPlants.put("épinard d'été matador", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "épinard géant d'hiver");
+        insertedPlants.put("épinard géant d'hiver", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "lamiales");
         plantAttributes.put("Famille", "boraginaceae");
@@ -335,6 +414,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "cucumis melo");
         plantAttributes.put("Plante", "melon");
         insertedPlants.put("melon", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "melon ancien vieille france");
+        insertedPlants.put("melon ancien vieille france", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "asterales");
         plantAttributes.put("Famille", "asteraceae");
@@ -407,6 +488,8 @@ public class InsertPlants {
         insertedPlants.put("poivron", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "piment");
         insertedPlants.put("piment", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "piment fort de cayenne");
+        insertedPlants.put("piment fort de cayenne", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "asterales");
         plantAttributes.put("Famille", "asteraceae");
@@ -414,6 +497,8 @@ public class InsertPlants {
         plantAttributes.put("Espece", "cynara cardunculus");
         plantAttributes.put("Plante", "artichaut");
         insertedPlants.put("artichaut", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "artichaut gros vert de laon");
+        insertedPlants.put("artichaut gros vert de laon", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "asterales");
         plantAttributes.put("Famille", "asteraceae");
@@ -471,13 +556,6 @@ public class InsertPlants {
         plantAttributes.put("Plante", "noyer");
         insertedPlants.put("noyer", insertPlant(plantAttributes));
 
-        plantAttributes.put("Ordre", "capparales");
-        plantAttributes.put("Famille", "brassicaceae");
-        plantAttributes.put("Genre", "lepidium");
-        plantAttributes.put("Espece", "lepidium sativum");
-        plantAttributes.put("Plante", "cresson");
-        insertedPlants.put("cresson", insertPlant(plantAttributes));
-
         plantAttributes.put("Ordre", "apiales");
         plantAttributes.put("Famille", "apiaceae");
         plantAttributes.put("Genre", "anthriscus");
@@ -492,19 +570,21 @@ public class InsertPlants {
         plantAttributes.put("Plante", "arroche des jardins");
         insertedPlants.put("arroche des jardins", insertPlant(plantAttributes));
 
-        plantAttributes.put("Ordre", "capparales");
-        plantAttributes.put("Famille", "brassicaceae");
-        plantAttributes.put("Genre", "armoracia");
-        plantAttributes.put("Espece", "armoracia rusticana");
-        plantAttributes.put("Plante", "raifort");
-        insertedPlants.put("raifort", insertPlant(plantAttributes));
-
         plantAttributes.put("Ordre", "caryophyllales");
         plantAttributes.put("Famille", "portulacaceae");
         plantAttributes.put("Genre", "portulaca");
         plantAttributes.put("Espece", "portulaca oleracea");
         plantAttributes.put("Plante", "pourpier");
         insertedPlants.put("pourpier", insertPlant(plantAttributes));
+
+        plantAttributes.put("Ordre", "dipsacales");
+        plantAttributes.put("Famille", "valerianaceae");
+        plantAttributes.put("Genre", "valerianella");
+        plantAttributes.put("Espece", "valerianella locusta");
+        plantAttributes.put("Plante", "mâche");
+        insertedPlants.put("mâche", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "mâche à grosse graine");
+        insertedPlants.put("mâche à grosse graine", insertPlant(plantAttributes));
         return insertedPlants;
     }
 

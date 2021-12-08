@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class InsertInteractions {
 
     private final Logger log = LoggerFactory.getLogger(InsertInteractions.class);
     private final Map<String, Plante> insertedPlants;
-    private AllelopathieRepository allelopathieRepository;
+    private final AllelopathieRepository allelopathieRepository;
 
     public InsertInteractions(Map<String, Plante> insertedPlants, AllelopathieRepository allelopathieRepository) {
         this.allelopathieRepository = allelopathieRepository;
@@ -24,13 +25,18 @@ public class InsertInteractions {
     }
 
     private Allelopathie getOrInsertAllelopathie(Allelopathie allelopathie) {
+
+        List<Allelopathie> all = allelopathieRepository.findAll(Example.of(allelopathie));
+        log.info("Is there multiple allelopathie " + all.size());
+
+
         if (!allelopathieRepository.exists(Example.of(allelopathie))) {
             allelopathieRepository.save(allelopathie);
         } else {
             Optional<Allelopathie> returned = allelopathieRepository.findOne(Example.of(allelopathie));
             if (returned.isPresent()) {
                 allelopathie = returned.get();
-                log.info("Existing allelopathie : " + allelopathie);
+                log.info("Existing allélopathie : " + allelopathie);
             } else {
                 log.error("Unable to get instance of : " + allelopathie);
             }
@@ -185,7 +191,7 @@ public class InsertInteractions {
         interactionContreTomate2.setType("Inconnu");
         getOrInsertAllelopathie(interactionContreTomate2);
         Allelopathie interactionContreTomate3 = new Allelopathie();
-        interactionContreTomate3.setOrigine(insertedPlants.get("chou-rave"));
+        interactionContreTomate3.setOrigine(insertedPlants.get("chou rave"));
         interactionContreTomate3.setCible(insertedPlants.get("tomate"));
         interactionContreTomate3.setImpact(-5);
         interactionContreTomate3.setDescription("");
@@ -291,7 +297,7 @@ public class InsertInteractions {
         interactionContrePois1.setType("Inconnu");
         getOrInsertAllelopathie(interactionContrePois1);
         Allelopathie interactionContrePois2 = new Allelopathie();
-        interactionContrePois2.setOrigine(insertedPlants.get("échalotte"));
+        interactionContrePois2.setOrigine(insertedPlants.get("échalote"));
         interactionContrePois2.setCible(insertedPlants.get("pois"));
         interactionContrePois2.setImpact(-5);
         interactionContrePois2.setDescription("");
@@ -430,7 +436,7 @@ public class InsertInteractions {
         interactionContreHaricot2.setType("Inconnu");
         getOrInsertAllelopathie(interactionContreHaricot2);
         Allelopathie interactionContreHaricot3 = new Allelopathie();
-        interactionContreHaricot3.setOrigine(insertedPlants.get("échalotte"));
+        interactionContreHaricot3.setOrigine(insertedPlants.get("échalote"));
         interactionContreHaricot3.setCible(insertedPlants.get("haricot"));
         interactionContreHaricot3.setImpact(-5);
         interactionContreHaricot3.setDescription("");
@@ -469,7 +475,7 @@ public class InsertInteractions {
         interactionContreFenouil1.setType("Inconnu");
         getOrInsertAllelopathie(interactionContreFenouil1);
         Allelopathie interactionContreFenouil2 = new Allelopathie();
-        interactionContreFenouil2.setOrigine(insertedPlants.get("chou-rave"));
+        interactionContreFenouil2.setOrigine(insertedPlants.get("chou rave"));
         interactionContreFenouil2.setCible(insertedPlants.get("fenouil"));
         interactionContreFenouil2.setImpact(-5);
         interactionContreFenouil2.setDescription("");
@@ -497,7 +503,7 @@ public class InsertInteractions {
         interactionContreFenouil6.setType("Inconnu");
         getOrInsertAllelopathie(interactionContreFenouil6);
         Allelopathie interactionContreFenouil7 = new Allelopathie();
-        interactionContreFenouil7.setOrigine(insertedPlants.get("échalotte"));
+        interactionContreFenouil7.setOrigine(insertedPlants.get("échalote"));
         interactionContreFenouil7.setCible(insertedPlants.get("fenouil"));
         interactionContreFenouil7.setImpact(-5);
         interactionContreFenouil7.setDescription("");
@@ -541,28 +547,28 @@ public class InsertInteractions {
         log.info("interactionContreEchalotte"); // Contre echalotte
         Allelopathie interactionContreEchalotte1 = new Allelopathie();
         interactionContreEchalotte1.setOrigine(insertedPlants.get("pois"));
-        interactionContreEchalotte1.setCible(insertedPlants.get("échalotte"));
+        interactionContreEchalotte1.setCible(insertedPlants.get("échalote"));
         interactionContreEchalotte1.setImpact(-5);
         interactionContreEchalotte1.setDescription("");
         interactionContreEchalotte1.setType("Inconnu");
         getOrInsertAllelopathie(interactionContreEchalotte1);
         Allelopathie interactionContreEchalotte2 = new Allelopathie();
         interactionContreEchalotte2.setOrigine(insertedPlants.get("haricot"));
-        interactionContreEchalotte2.setCible(insertedPlants.get("échalotte"));
+        interactionContreEchalotte2.setCible(insertedPlants.get("échalote"));
         interactionContreEchalotte2.setImpact(-5);
         interactionContreEchalotte2.setDescription("");
         interactionContreEchalotte2.setType("Inconnu");
         getOrInsertAllelopathie(interactionContreEchalotte2);
         Allelopathie interactionContreEchalotte3 = new Allelopathie();
         interactionContreEchalotte3.setOrigine(insertedPlants.get("fève"));
-        interactionContreEchalotte3.setCible(insertedPlants.get("échalotte"));
+        interactionContreEchalotte3.setCible(insertedPlants.get("échalote"));
         interactionContreEchalotte3.setImpact(-5);
         interactionContreEchalotte3.setDescription("");
         interactionContreEchalotte3.setType("Inconnu");
         getOrInsertAllelopathie(interactionContreEchalotte3);
         Allelopathie interactionContreEchalotte4 = new Allelopathie();
         interactionContreEchalotte4.setOrigine(insertedPlants.get("lentille"));
-        interactionContreEchalotte4.setCible(insertedPlants.get("échalotte"));
+        interactionContreEchalotte4.setCible(insertedPlants.get("échalote"));
         interactionContreEchalotte4.setImpact(-5);
         interactionContreEchalotte4.setDescription("");
         interactionContreEchalotte4.setType("Inconnu");
@@ -793,7 +799,7 @@ public class InsertInteractions {
         interactionPourCeleri3.setCible(insertedPlants.get("céleri"));
         interactionPourCeleri3.setImpact(5);
         interactionPourCeleri3.setDescription(
-            "Le céleri cultivé seul n'utilise qu'une partie des substances nutritives trouvées dans le sol. Quand on le plante avec du chou-fleur, " +
+            "Le céleri cultivé seul n'utilise qu'une partie des substances nutritives trouvées dans le sol. Quand on le plante avec du chou fleur, " +
                 "il les utilise mieux, de même que ce dernier. La récolte est alors meilleure pour les deux plantes."
         );
         interactionPourCeleri3.setType("Inconnu");
@@ -899,7 +905,7 @@ public class InsertInteractions {
         interactionPourRosier2.setOrigine(insertedPlants.get("ail"));
         interactionPourRosier2.setCible(insertedPlants.get("rosier de france"));
         interactionPourRosier2.setImpact(5);
-        interactionPourRosier2.setDescription("L'ail planté au pied des rosiersles rends plus beaux et résistants");
+        interactionPourRosier2.setDescription("L'ail planté au pied des rosiers les rends plus beaux et résistants");
         interactionPourRosier2.setType("Inconnu");
         getOrInsertAllelopathie(interactionPourRosier2);
         Allelopathie interactionPourRosier3 = new Allelopathie();
@@ -1035,7 +1041,7 @@ public class InsertInteractions {
     }
 
     private void interactionPourPecher(Map<String, Plante> insertedPlants) {
-        log.info("interactionPourPecher"); // Pour pecher
+        log.info("interactionPourPecher"); // Pour pêcher
         Allelopathie interactionPourPecher1 = new Allelopathie();
         interactionPourPecher1.setOrigine(insertedPlants.get("tanaisie"));
         interactionPourPecher1.setCible(insertedPlants.get("pêcher"));
@@ -1375,7 +1381,7 @@ public class InsertInteractions {
         interactionPourBetterave6.setType("Inconnu");
         getOrInsertAllelopathie(interactionPourBetterave6);
         Allelopathie interactionPourBetterave7 = new Allelopathie();
-        interactionPourBetterave7.setOrigine(insertedPlants.get("chou-rave"));
+        interactionPourBetterave7.setOrigine(insertedPlants.get("chou rave"));
         interactionPourBetterave7.setCible(insertedPlants.get("betterave"));
         interactionPourBetterave7.setImpact(5);
         interactionPourBetterave7.setDescription("");
@@ -1854,7 +1860,7 @@ public class InsertInteractions {
         interactionPourCarotte2.setType("Inconnu");
         getOrInsertAllelopathie(interactionPourCarotte2);
         Allelopathie interactionPourCarotte3 = new Allelopathie();
-        interactionPourCarotte3.setOrigine(insertedPlants.get("échalotte"));
+        interactionPourCarotte3.setOrigine(insertedPlants.get("échalote"));
         interactionPourCarotte3.setCible(insertedPlants.get("carotte"));
         interactionPourCarotte3.setImpact(5);
         interactionPourCarotte3.setDescription("");

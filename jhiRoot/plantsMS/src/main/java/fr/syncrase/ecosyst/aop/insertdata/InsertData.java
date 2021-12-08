@@ -96,7 +96,7 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
         this.classificationRepository = classificationRepository;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
@@ -121,7 +121,7 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
         InsertInteractions interactionSetter = new InsertInteractions(insertedPlants, allelopathieRepository);
         interactionSetter.insertAllInteractions();
 
-        InsertCycleDeVie cycleDeVieSetter = new InsertCycleDeVie(insertedPlants, cycleDeVieRepository, periodeAnneeRepository, semisRepository, planteRepository, moisRepository, moisSetter);
+        InsertCycleDeVie cycleDeVieSetter = new InsertCycleDeVie(insertedPlants, cycleDeVieRepository, periodeAnneeRepository, semisRepository, planteRepository, moisSetter);
         cycleDeVieSetter.insertAllCycleDeVie();
 
     }
