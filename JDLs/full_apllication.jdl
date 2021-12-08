@@ -209,13 +209,49 @@ entity Feuillage {
 	type String
 }
 
-relationship OneToOne {
+//relationship OneToOne {
+//	
+//    
+//}
+
+relationship OneToMany {
+	Plante{confusions} to Ressemblance{planteRessemblant},
+	Plante{ensoleillements} to Ensoleillement,
+	Plante{sols} to Sol,
+	Temperature{plantes} to Plante,// avec ou sans {plantes} ?
+    Racine to Plante,
+    Strate to Plante,
+    Feuillage to Plante,
+    Reproduction to CycleDeVie,
+    
+}
+
+relationship ManyToMany {
+	Plante{nomsVernaculaires(nom)} to NomVernaculaire{plantes},
+}
+
+relationship ManyToOne {
+	// Plusieurs allelopathie peuvent être liées à une plante
+	Allelopathie{cible} to Plante,
+	Allelopathie{origine} to Plante,
+
+	// Un même début peut apparaître plusieurs fois dans la table
+	// Un même mois peut être utilisé pour plusieurs périodes
 	PeriodeAnnee{debut(nom) required} to Mois,
-	PeriodeAnnee{fin(nom) required} to Mois
+	PeriodeAnnee{fin(nom) required} to Mois,
+
+	// Deux plantes peuvent partager la même classification
+	Plante{classification} to Classification,
+	Classification{raunkier} to Raunkier,
+	Classification{cronquist} to Cronquist,
+	Classification{apg1} to APGI,
+	Classification{apg2} to APGII,
+	Classification{apg3} to APGIII,
+	Classification{apg4} to APGIV,
 	
 	Semis{semisPleineTerre} to PeriodeAnnee,
 	Semis{semisSousAbris} to PeriodeAnnee,
-	Semis{typeSemis} to TypeSemis,
+	Semis{typeSemis(type)} to TypeSemis,
 	Semis{germination} to Germination,
 	
 	Plante{cycleDeVie} to CycleDeVie,
@@ -227,39 +263,6 @@ relationship OneToOne {
 	CycleDeVie{maturite} to PeriodeAnnee,
 	CycleDeVie{plantation} to PeriodeAnnee,
 	CycleDeVie{rempotage} to PeriodeAnnee,
-	
-    
-}
-
-relationship OneToMany {
-	Plante{confusions} to Ressemblance{planteRessemblant},
-	Plante{ensoleillements} to Ensoleillement,
-	Plante{sols} to Sol,
-	Temperature{plantes} to Plante,// avec ou sans {plantes} ?
-    Racine to Plante,
-    Strate to Plante,
-    Feuillage to Plante,
-    Reproduction to CycleDeVie
-    
-}
-
-relationship ManyToMany {
-	Plante{nomsVernaculaires} to NomVernaculaire{plantes}
-}
-
-relationship ManyToOne {
-	// Plusieurs allelopathie peuvent être liées à une plante
-	Allelopathie{cible} to Plante,
-	Allelopathie{origine} to Plante
-
-	// Deux plantes peuvent partager la même classification
-	Plante{classification} to Classification,
-	Classification{raunkier} to Raunkier,
-	Classification{cronquist} to Cronquist,
-	Classification{apg1} to APGI,
-	Classification{apg2} to APGII,
-	Classification{apg3} to APGIII,
-	Classification{apg4} to APGIV,
 }
 
 paginate * with pagination

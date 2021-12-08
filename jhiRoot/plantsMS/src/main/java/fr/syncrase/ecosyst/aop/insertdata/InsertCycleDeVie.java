@@ -34,20 +34,43 @@ public class InsertCycleDeVie {
     }
 
     public void insertAllCycleDeVie() {
-        insertCycleDeVieChouCabus();
+        insertCycleDeVie("chou cabus", MoisEnum.MARS, MoisEnum.JUIN, MoisEnum.JANVIER, MoisEnum.MARS);
+        insertCycleDeVie("poireau", MoisEnum.MARS, MoisEnum.AVRIL, null, null);
+        insertCycleDeVie("radis 18 jours", MoisEnum.SEPTEMBRE, MoisEnum.MARS, MoisEnum.JANVIER, MoisEnum.MARS);
+        insertCycleDeVie("pourpier", MoisEnum.MAI, MoisEnum.AOUT, MoisEnum.JANVIER, MoisEnum.AVRIL);
+        insertCycleDeVie("chou cabus coeur de boeuf des vertus", MoisEnum.OCTOBRE, MoisEnum.MARS, MoisEnum.JANVIER, MoisEnum.MARS);
+        insertCycleDeVie("chou-fleur merveille de toutes saisons", MoisEnum.AVRIL, MoisEnum.JUIN, MoisEnum.JANVIER, MoisEnum.FEVRIER);
     }
 
-    private void insertCycleDeVieChouCabus() {
+    private void insertCycleDeVie(String nomVernaculaire, MoisEnum pleineTerreDebut, MoisEnum pleineTerreFin, MoisEnum sousAbrisDebut, MoisEnum sousAbrisFin) {
+
+        PeriodeAnnee periodePleineTerre = null;
+        if (pleineTerreDebut != null && pleineTerreFin != null) {
+            periodePleineTerre = getOrInsertPeriodeAnnee(
+                new PeriodeAnnee()
+                    .debut(insertMois.getOrInsertMois(pleineTerreDebut.getMois()))
+                    .fin(insertMois.getOrInsertMois(pleineTerreFin.getMois()))
+            );
+        }
+
+        PeriodeAnnee periodeSousAbris = null;
+        if (sousAbrisDebut != null && sousAbrisFin != null) {
+            periodeSousAbris = getOrInsertPeriodeAnnee(
+                new PeriodeAnnee()
+                    .debut(insertMois.getOrInsertMois(sousAbrisDebut.getMois()))
+                    .fin(insertMois.getOrInsertMois(sousAbrisFin.getMois()))
+            );
+        }
+
+        Semis semis = new Semis()
+            .semisPleineTerre(periodePleineTerre)
+            .semisSousAbris(periodeSousAbris);
+
         CycleDeVie cycle = getOrInsertCycleDeVie(new CycleDeVie()
-            .semis(getOrInsertSemis(new Semis()
-                .semisPleineTerre(getOrInsertPeriodeAnnee(new PeriodeAnnee()
-                    .debut(insertMois.getOrInsertMois(MoisEnum.MARS.getMois()))
-                    .fin(insertMois.getOrInsertMois(MoisEnum.JUIN.getMois()))))
-                .semisSousAbris(getOrInsertPeriodeAnnee(new PeriodeAnnee()
-                    .debut(insertMois.getOrInsertMois(MoisEnum.JANVIER.getMois()))
-                    .fin(insertMois.getOrInsertMois(MoisEnum.MARS.getMois())))))
+            .semis(
+                getOrInsertSemis(semis)
             ));
-        planteRepository.save(insertedPlants.get("chou cabus").cycleDeVie(cycle));
+        planteRepository.save(insertedPlants.get(nomVernaculaire).cycleDeVie(cycle));
     }
 
     private PeriodeAnnee getOrInsertPeriodeAnnee(PeriodeAnnee periodeAnnee) {

@@ -89,6 +89,10 @@ public class InsertPlants {
         insertedPlants.put("chou fleur", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "chou fleur");
         insertedPlants.put("chou cabus", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "chou cabus coeur de boeuf des vertus");
+        insertedPlants.put("chou cabus coeur de boeuf des vertus", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "chou-fleur merveille de toutes saisons");
+        insertedPlants.put("chou-fleur merveille de toutes saisons", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "lamiales");
         plantAttributes.put("Famille", "lamiaceae");
@@ -265,6 +269,8 @@ public class InsertPlants {
         plantAttributes.put("Genre", "raphanus");
         plantAttributes.put("Espece", "raphanus sativus");
         plantAttributes.put("Plante", "radis");
+        insertedPlants.put("radis", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "radis 18 jours");
         insertedPlants.put("radis", insertPlant(plantAttributes));
 
         plantAttributes.put("Ordre", "lamiales");
@@ -492,6 +498,13 @@ public class InsertPlants {
         plantAttributes.put("Espece", "armoracia rusticana");
         plantAttributes.put("Plante", "raifort");
         insertedPlants.put("raifort", insertPlant(plantAttributes));
+
+        plantAttributes.put("Ordre", "caryophyllales");
+        plantAttributes.put("Famille", "portulacaceae");
+        plantAttributes.put("Genre", "portulaca");
+        plantAttributes.put("Espece", "portulaca oleracea");
+        plantAttributes.put("Plante", "pourpier");
+        insertedPlants.put("pourpier", insertPlant(plantAttributes));
         return insertedPlants;
     }
 

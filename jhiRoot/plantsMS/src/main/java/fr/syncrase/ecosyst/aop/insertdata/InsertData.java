@@ -102,16 +102,12 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
 
         InsertMois moisSetter = new InsertMois(moisRepository);
         moisSetter.insertAllMois();
-
         InsertRacines racineSetter = new InsertRacines(racineRepository);
         racineSetter.insertAllRacines();
-
         InsertStrates strateSetter = new InsertStrates(strateRepository);
         strateSetter.insertAllStrates();
-
         InsertFeuillages feuillageSetter = new InsertFeuillages(feuillageRepository);
         feuillageSetter.insertAllFeuillages();
-
         InsertSols solSetter = new InsertSols(solRepository);
         solSetter.insertAllSols();
 
