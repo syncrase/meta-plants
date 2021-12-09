@@ -1,6 +1,6 @@
 <div>
   <h2 id="page-heading" data-cy="PlanteHeading">
-    <span>Plantes</span>
+    <span>Tableau des semis</span>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
@@ -35,98 +35,33 @@
         <th scope="col" permaSortBy="id"><span>ID</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <!--        <th scope="col" permaSortBy="entretien"><span>Entretien</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col" permaSortBy="histoire"><span>Histoire</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col" permaSortBy="vitesseCroissance"><span>Vitesse Croissance</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col" permaSortBy="exposition"><span>Exposition</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
         <th scope="col" permaSortBy="cycleDeVie.id"><span>Cycle De Vie</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <!--        <th scope="col" permaSortBy="classification.id"><span>Classification</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col" permaSortBy="temperature.id"><span>Temperature</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col" permaSortBy="racine.id"><span>Racine</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col" permaSortBy="strate.id"><span>Strate</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col" permaSortBy="feuillage.id"><span>Feuillage</span>-->
-        <!--          <fa-icon icon="sort"></fa-icon>-->
-        <!--        </th>-->
-        <!--        <th scope="col"></th>-->
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let plante of plantes; trackBy: trackId" data-cy="entityTable">
         <td>
-          <a [routerLink]="['/plante', plante.id, 'view']">{{ plante.id }}</a>
+          <ng-template #loading>
+            <div class="spinner-border text-success" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </ng-template>
+          <a *ngIf="plante.nomsVernaculaires; else loading" [routerLink]="['/plante', plante.id, 'view']">{{ getNomVernaculaire(plante) }}</a>
         </td>
-        <!--        <td>{{ plante.entretien }}</td>-->
-        <!--        <td>{{ plante.histoire }}</td>-->
-        <!--        <td>{{ plante.vitesseCroissance }}</td>-->
-        <!--        <td>{{ plante.exposition }}</td>-->
         <td>
           <div *ngIf="plante.cycleDeVie">
-            <a [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.id }}</a>
+            <a
+              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisPleineTerre?.debut?.nom }}</a>
+            <a
+              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisPleineTerre?.fin?.nom }}</a>
+            <a
+              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisSousAbris?.debut?.nom }}</a>
+            <a
+              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisSousAbris?.fin?.nom }}</a>
           </div>
         </td>
-        <!--        <td>-->
-        <!--          <div *ngIf="plante.classification">-->
-        <!--            <a [routerLink]="['/classification', plante.classification?.id, 'view']">{{ plante.classification?.id }}</a>-->
-        <!--          </div>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <div *ngIf="plante.temperature">-->
-        <!--            <a [routerLink]="['/temperature', plante.temperature?.id, 'view']">{{ plante.temperature?.id }}</a>-->
-        <!--          </div>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <div *ngIf="plante.racine">-->
-        <!--            <a [routerLink]="['/racine', plante.racine?.id, 'view']">{{ plante.racine?.id }}</a>-->
-        <!--          </div>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <div *ngIf="plante.strate">-->
-        <!--            <a [routerLink]="['/strate', plante.strate?.id, 'view']">{{ plante.strate?.id }}</a>-->
-        <!--          </div>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <div *ngIf="plante.feuillage">-->
-        <!--            <a [routerLink]="['/feuillage', plante.feuillage?.id, 'view']">{{ plante.feuillage?.id }}</a>-->
-        <!--          </div>-->
-        <!--        </td>-->
-        <!--        <td class="text-right">-->
-        <!--          <div class="btn-group">-->
-        <!--            <button type="submit" [routerLink]="['/plante', plante.id, 'view']" class="btn btn-info btn-sm"-->
-        <!--                    data-cy="entityDetailsButton">-->
-        <!--              <fa-icon icon="eye"></fa-icon>-->
-        <!--              <span class="d-none d-md-inline">View</span>-->
-        <!--            </button>-->
-
-        <!--            <button type="submit" [routerLink]="['/plante', plante.id, 'edit']" class="btn btn-primary btn-sm"-->
-        <!--                    data-cy="entityEditButton">-->
-        <!--              <fa-icon icon="pencil-alt"></fa-icon>-->
-        <!--              <span class="d-none d-md-inline">Edit</span>-->
-        <!--            </button>-->
-
-        <!--                          <button type="submit" (click)="delete(plante)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">-->
-        <!--                            <fa-icon icon="times"></fa-icon>-->
-        <!--                            <span class="d-none d-md-inline">Delete</span>-->
-        <!--                          </button>-->
-        <!--          </div>-->
-        <!--        </td>-->
       </tr>
       </tbody>
     </table>
@@ -134,7 +69,8 @@
 
   <div *ngIf="plantes && plantes.length > 0">
     <div class="row justify-content-center">
-      <perma-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></perma-item-count>
+      <perma-item-count
+        [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></perma-item-count>
     </div>
 
     <div class="row justify-content-center">

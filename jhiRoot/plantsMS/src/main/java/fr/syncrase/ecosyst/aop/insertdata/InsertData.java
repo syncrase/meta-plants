@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Component
-public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
-
+public class InsertData  {
+//implements ApplicationListener<ContextRefreshedEvent>
     private final Logger log = LoggerFactory.getLogger(InsertData.class);
 
     private RacineRepository racineRepository;
@@ -97,7 +97,7 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Transactional
-    @Override
+//    @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         InsertMois moisSetter = new InsertMois(moisRepository);

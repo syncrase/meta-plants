@@ -141,10 +141,7 @@ public class InsertCycleDeVie {
         if (!semisRepository.exists(Example.of(semis))) {
             semisRepository.save(semis);
         } else {
-
-
             if (semis.getSemisSousAbris() == null || semis.getSemisPleineTerre() == null) {
-
                 List<Semis> returned = semisRepository.findAll(Example.of(semis));
                 if (returned.size() == 1) {
                     semis = returned.get(0);
@@ -166,7 +163,6 @@ public class InsertCycleDeVie {
                     }
                 }
             } else {
-
                 Optional<Semis> returned = semisRepository.findOne(Example.of(semis));
                 if (returned.isPresent()) {
                     semis = returned.get();
@@ -175,8 +171,6 @@ public class InsertCycleDeVie {
                     log.error("Unable to get instance of : " + semis);
                 }
             }
-
-
         }
         return semis;
     }
