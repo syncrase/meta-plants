@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SemisRoutingModule } from './semis-routing.module';
-import { SemisComponent } from "./list/semis.component";
+import { TableauSemisComponent } from "./list/tableau-semis.component";
 import { SharedModule } from "../../shared/shared.module";
 
 
 @NgModule({
   declarations: [
-    SemisComponent
+    TableauSemisComponent
   ],
   imports: [
     SharedModule,

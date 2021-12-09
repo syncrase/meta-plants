@@ -23,9 +23,9 @@ import { IPeriodeAnnee } from "../../../entities/microservice/periode-annee/peri
 
 @Component({
   selector: "perma-plante",
-  templateUrl: "./semis.component.html"
+  templateUrl: "./tableau-semis.component.html"
 })
-export class SemisComponent implements OnInit {
+export class TableauSemisComponent implements OnInit {
   plantes?: IPlante[];
   isLoading = false;
   totalItems = 0;
