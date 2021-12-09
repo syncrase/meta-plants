@@ -9,7 +9,7 @@ import { PlanteService } from "../../../entities/microservice/plante/service/pla
 import { INomVernaculaire } from "../../../entities/microservice/nom-vernaculaire/nom-vernaculaire.model";
 import { filter, map, mergeMap, tap } from "rxjs/operators";
 // import { flatMap } from "rxjs/internal/operators";
-import { combineLatest, EMPTY } from "rxjs";
+import { combineLatest, EMPTY, Observable } from "rxjs";
 import {
   NomVernaculaireService
 } from "../../../entities/microservice/nom-vernaculaire/service/nom-vernaculaire.service";
@@ -19,11 +19,13 @@ import { SemisService } from "../../../entities/microservice/semis/service/semis
 import { ISemis } from "../../../entities/microservice/semis/semis.model";
 import { PeriodeAnneeService } from "../../../entities/microservice/periode-annee/service/periode-annee.service";
 import { IPeriodeAnnee } from "../../../entities/microservice/periode-annee/periode-annee.model";
-
+import { IMois } from "../../../entities/microservice/mois/mois.model";
+import { MoisService } from "../../../entities/microservice/mois/service/mois.service";
 
 @Component({
   selector: "perma-plante",
-  templateUrl: "./tableau-semis.component.html"
+  templateUrl: "./tableau-semis.component.html",
+  styleUrls: ["./tableau-semis.component.css"]
 })
 export class TableauSemisComponent implements OnInit {
   plantes?: IPlante[];
@@ -34,6 +36,7 @@ export class TableauSemisComponent implements OnInit {
   predicate!: string;
   ascending!: boolean;
   ngbPaginationPage = 1;
+  mois$!: Observable<IMois[]>;
 
   constructor(
     protected planteService: PlanteService,
@@ -43,7 +46,8 @@ export class TableauSemisComponent implements OnInit {
     protected nomVernaculaireService: NomVernaculaireService,
     protected cycleDeVieService: CycleDeVieService,
     protected semisService: SemisService,
-    protected periodeAnneeService: PeriodeAnneeService
+    protected periodeAnneeService: PeriodeAnneeService,
+    protected moisService: MoisService
   ) {
   }
 
@@ -70,11 +74,24 @@ export class TableauSemisComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // TODO Problème, l'appel est fait pour tous les subscribers
+    this.mois$ = this.moisService.query({
+      page: 0,
+      size: 24
+    }).pipe(map((res: HttpResponse<IMois[]>) => res.body ?? []));
     this.handleNavigation();
   }
 
   trackId(index: number, item: IPlante): number {
     return item.id!;
+  }
+
+  getNomVernaculaire(plante: IPlante): string {
+    if (plante.nomsVernaculaires) {
+      return plante.nomsVernaculaires.map(nv => nv.nom).join(",");
+    } else {
+      return "no name";
+    }
   }
 
   protected sort(): string[] {
@@ -113,10 +130,7 @@ export class TableauSemisComponent implements OnInit {
       });
     }
     this.plantes = plantes ?? [];
-    // Load nested data
-
-
-    this.plantes.forEach(plant => {
+    this.plantes.forEach((plant) => {
       this.nomVernaculaireService
         .query({
           "plantesId.equals": plant.id
@@ -125,19 +139,10 @@ export class TableauSemisComponent implements OnInit {
         // Deleted pipe, cf plante-update.component.ts
         .subscribe((nomVernaculaires: INomVernaculaire[]) => (plant.nomsVernaculaires = nomVernaculaires));
 
-      this.semisService
-        .find(9982).subscribe(sem => {
-        // eslint-disable-next-line no-debugger
-        debugger;
-        // eslint-disable-next-line no-console
-        console.log(sem);
-      });
       if (plant.cycleDeVie?.id != null) {
         this.cycleDeVieService.find(plant.cycleDeVie.id)
           .pipe(
             map((res: HttpResponse<ICycleDeVie>) => {
-              // eslint-disable-next-line no-debugger
-              debugger;
               plant.cycleDeVie = res.body;
               return res.body ?? {};
             }),
@@ -160,22 +165,22 @@ export class TableauSemisComponent implements OnInit {
             )
           )
           .subscribe((semis: any) => {
-            this.periodeAnneeService
-              .find(semis.semisPleineTerre.id)
-              .subscribe((periodeAnnee: HttpResponse<IPeriodeAnnee>) => {
+            if (semis?.semisPleineTerre?.id) {
+              this.periodeAnneeService.find(semis.semisPleineTerre.id).subscribe((periodeAnnee: HttpResponse<IPeriodeAnnee>) => {
                 if (plant.cycleDeVie?.semis?.semisPleineTerre?.id != null) {
                   plant.cycleDeVie.semis.semisPleineTerre = periodeAnnee.body;
                 }
                 return periodeAnnee.body ?? {};
               });
-            this.periodeAnneeService
-              .find(semis.semisSousAbris.id)
-              .subscribe((periodeAnnee: HttpResponse<IPeriodeAnnee>) => {
+            }
+            if (semis?.semisSousAbris?.id) {
+              this.periodeAnneeService.find(semis.semisSousAbris.id).subscribe((periodeAnnee: HttpResponse<IPeriodeAnnee>) => {
                 if (plant.cycleDeVie?.semis?.semisSousAbris?.id != null) {
                   plant.cycleDeVie.semis.semisSousAbris = periodeAnnee.body;
                 }
                 return periodeAnnee.body ?? {};
               });
+            }
           });
       }
 
@@ -188,12 +193,4 @@ export class TableauSemisComponent implements OnInit {
     this.ngbPaginationPage = this.page ?? 1;
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering,@typescript-eslint/explicit-function-return-type
-  getNomVernaculaire(plante: IPlante) {
-    if (plante.nomsVernaculaires) {
-      return plante.nomsVernaculaires.map(nv => nv.nom).join(",");
-    } else {
-      return "no name";
-    }
-  }
 }

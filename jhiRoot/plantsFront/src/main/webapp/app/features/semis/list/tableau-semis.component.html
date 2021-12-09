@@ -35,34 +35,35 @@
         <th scope="col" permaSortBy="id"><span>ID</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <th scope="col" permaSortBy="cycleDeVie.id"><span>Cycle De Vie</span>
-          <fa-icon icon="sort"></fa-icon>
-        </th>
+        <th scope="col" *ngFor="let m of mois$|async">{{ m.nom }}</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let plante of plantes; trackBy: trackId" data-cy="entityTable">
-        <td>
-          <ng-template #loading>
-            <div class="spinner-border text-success" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-          </ng-template>
-          <a *ngIf="plante.nomsVernaculaires; else loading" [routerLink]="['/plante', plante.id, 'view']">{{ getNomVernaculaire(plante) }}</a>
-        </td>
-        <td>
-          <div *ngIf="plante.cycleDeVie">
-            <a
-              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisPleineTerre?.debut?.nom }}</a>
-            <a
-              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisPleineTerre?.fin?.nom }}</a>
-            <a
-              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisSousAbris?.debut?.nom }}</a>
-            <a
-              [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.semis?.semisSousAbris?.fin?.nom }}</a>
-          </div>
-        </td>
-      </tr>
+
+      <ng-container *ngFor="let plante of plantes; trackBy: trackId; let i = index" data-cy="entityTable">
+        <tr>
+          <!--        [attr.rowspan]="2"-->
+          <th scope="row" [attr.rowspan]="2">
+            <ng-template #loading>
+              <div class="spinner-border text-success" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </ng-template>
+            <a *ngIf="plante.nomsVernaculaires; else loading"
+               [routerLink]="['/plante', plante.id, 'view']">{{ getNomVernaculaire(plante) }}</a>
+          </th>
+          <td *ngFor="let m of mois$|async" [ngClass]="
+        (m?.numero??0) >= (plante?.cycleDeVie?.semis?.semisPleineTerre?.debut?.numero ?? 13) &&
+        (m?.numero??13) <= (plante?.cycleDeVie?.semis?.semisPleineTerre?.fin?.numero ?? 0) ?
+        'green': 'red'"></td>
+        </tr>
+        <tr>
+          <td *ngFor="let m of mois$|async" [ngClass]="
+        (m?.numero??0) >= (plante?.cycleDeVie?.semis?.semisSousAbris?.debut?.numero ?? 13) &&
+        (m?.numero??13) <= (plante?.cycleDeVie?.semis?.semisSousAbris?.fin?.numero ?? 0) ?
+        'green': 'red'"></td>
+        </tr>
+      </ng-container>
       </tbody>
     </table>
   </div>
