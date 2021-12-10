@@ -70,12 +70,21 @@ public class InsertPlants {
         plantAttributes.put("Plante", "tomate beefsteak");
         insertedPlants.put("tomate beefsteak", insertPlant(plantAttributes));
 
+        // TODO je crée l'objet Classification que je passe en paramètre à insert plant
+        // TODO ne plus utiliser plantAttributes
+        // TODO la plante c'est 'lactuca sativa' elle est unique
+        // TODO les plantes potagères sont 'laitue rouge grenobloise', 'laitue reine de mai de pleine terre', etc.
+
+        // Classification classification = getOrInsertClassification(cronquist);
+        // Plante justInsertedPlante = insertPlante(Classification)
+        // insertPlantePotagere(Plante)
         plantAttributes.put("Ordre", "asterales");
         plantAttributes.put("Famille", "asteraceae");
         plantAttributes.put("Genre", "lactuca");
         plantAttributes.put("Espece", "lactuca sativa");
-        plantAttributes.put("Plante", "laitue");
+        plantAttributes.put("Plante", "laitue");// La plante générique
         insertedPlants.put("laitue", insertPlant(plantAttributes));
+        // Les plantes potagères
         plantAttributes.put("Plante", "laitue rouge grenobloise");
         insertedPlants.put("laitue rouge grenobloise", insertPlant(plantAttributes));
         plantAttributes.put("Plante", "laitue reine de mai de pleine terre");
@@ -106,6 +115,17 @@ public class InsertPlants {
         plantAttributes.put("Espece", "fragaria vesca");
         plantAttributes.put("Plante", "fraisier des bois");
         insertedPlants.put("fraisier des bois", insertPlant(plantAttributes));
+
+        // TODO la plante c'est 'allium schoenoprasum' elle est unique
+        // TODO les noms vernaculaires sont 'ciboulette', 'ciboulette commune' ou 'civette' -> ces noms correspondent à la même plante
+        plantAttributes.put("Espece", "allium schoenoprasum");
+        plantAttributes.put("Plante", "ciboulette");
+        insertedPlants.put("ciboulette", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "ciboulette commune");
+        insertedPlants.put("ciboulette commune", insertPlant(plantAttributes));
+        plantAttributes.put("Plante", "civette");
+        insertedPlants.put("civette", insertPlant(plantAttributes));
+
         return insertedPlants;
     }
 

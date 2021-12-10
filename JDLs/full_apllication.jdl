@@ -89,6 +89,9 @@ entity Mois {
 entity PeriodeAnnee {
 }
 
+/**
+* Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique
+*/
 entity Plante {
 	entretien String,
 	histoire String,
@@ -114,7 +117,6 @@ entity NomVernaculaire {
 }
 
 entity Classification {
-	nomLatin String,
 }
 
 entity Cronquist {
@@ -209,14 +211,24 @@ entity Feuillage {
 	type String
 }
 
-//relationship OneToOne {
-//	
-//    
-//}
+relationship OneToOne {
+	Classification{raunkier} to Raunkier,
+	Classification{cronquist} to Cronquist,
+	Classification{apg1} to APGI,
+	Classification{apg2} to APGII,
+	Classification{apg3} to APGIII,
+	Classification{apg4} to APGIV,
+    
+}
 
 relationship OneToMany {
 	Plante{confusions} to Ressemblance{planteRessemblant},
 	Plante{ensoleillements} to Ensoleillement,
+	/** 
+	* Une plante peut avoir beaucoup de variantes potagère
+	* Une plante potagère ne correspond qu'à une seule plante botanique
+	*/
+	Plante{plantesPotageres} to Plante,
 	Plante{sols} to Sol,
 	Temperature{plantes} to Plante,// avec ou sans {plantes} ?
     Racine to Plante,
@@ -228,26 +240,24 @@ relationship OneToMany {
 
 relationship ManyToMany {
 	Plante{nomsVernaculaires(nom)} to NomVernaculaire{plantes},
+
+	// Un même mois peut être utilisé pour plusieurs dans la table PeriodeAnnee
+	// Une même période peut être utilisé pour plusieurs Mois
+	PeriodeAnnee{debut(nom) required} to Mois,
+	PeriodeAnnee{fin(nom) required} to Mois,
 }
 
 relationship ManyToOne {
+	/** 
+	* Une plante ne correspond qu'à une seule classification
+	* Mais, étant donnée les plantes potagère, une classification peut correspondre à plusieurs plantes
+	*/
+	Plante{classification} to Classification{plantes},
+
 	// Plusieurs allelopathie peuvent être liées à une plante
-	Allelopathie{cible} to Plante,
-	Allelopathie{origine} to Plante,
+	Allelopathie{cible required} to Plante,
+	Allelopathie{origine required} to Plante,
 
-	// Un même début peut apparaître plusieurs fois dans la table
-	// Un même mois peut être utilisé pour plusieurs périodes
-	PeriodeAnnee{debut(nom) required} to Mois,
-	PeriodeAnnee{fin(nom) required} to Mois,
-
-	// Deux plantes peuvent partager la même classification
-	Plante{classification} to Classification,
-	Classification{raunkier} to Raunkier,
-	Classification{cronquist} to Cronquist,
-	Classification{apg1} to APGI,
-	Classification{apg2} to APGII,
-	Classification{apg3} to APGIII,
-	Classification{apg4} to APGIV,
 	
 	Semis{semisPleineTerre} to PeriodeAnnee,
 	Semis{semisSousAbris} to PeriodeAnnee,
