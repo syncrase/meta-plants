@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Component
-public class InsertData  {
-//implements ApplicationListener<ContextRefreshedEvent>
+public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
+    //implements ApplicationListener<ContextRefreshedEvent>
     private final Logger log = LoggerFactory.getLogger(InsertData.class);
 
     private RacineRepository racineRepository;
@@ -97,7 +97,7 @@ public class InsertData  {
     }
 
     @Transactional
-//    @Override
+    @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         InsertMois moisSetter = new InsertMois(moisRepository);
@@ -111,10 +111,6 @@ public class InsertData  {
         InsertSols solSetter = new InsertSols(solRepository);
         solSetter.insertAllSols();
 
-        //      insertTypeTerre();
-        //      insertEnsoleillement();
-        //      insertVitesseCroissance();
-
         InsertPlants plantsSetter = new InsertPlants(classificationRepository, cronquistRepository, nomVernaculaireRepository, planteRepository);
         Map<String, Plante> insertedPlants = plantsSetter.insertAllPlants();
 
@@ -125,37 +121,6 @@ public class InsertData  {
         cycleDeVieSetter.insertAllCycleDeVie();
 
     }
-
-
-    //  private void insertVitesseCroissance() {
-    //      try {
-    //          VitesseCroissance tresLente = new VitesseCroissance("tresLente");
-    //          VitesseCroissance lente = new VitesseCroissance("lente");
-    //          VitesseCroissance vcNormale = new VitesseCroissance("normale");
-    //          VitesseCroissance rapide = new VitesseCroissance("rapide");
-    //          VitesseCroissance tresRapide = new VitesseCroissance("tresRapide");
-    //          vitesseCroissanceRepository.save(tresLente);
-    //          vitesseCroissanceRepository.save(lente);
-    //          vitesseCroissanceRepository.save(vcNormale);
-    //          vitesseCroissanceRepository.save(rapide);
-    //          vitesseCroissanceRepository.save(tresRapide);
-    //      } catch (Exception e) {
-    //          log.error("Error when trying to insert in table VitesseCroissance. {" + e.getMessage() + "}");
-    //      }
-    //  }
-
-    //  private void insertEnsoleillement() {
-    //      try {
-    //          Ensoleillement soleil = new Ensoleillement("soleil");
-    //          Ensoleillement miOmbre = new Ensoleillement("miOmbre");
-    //          Ensoleillement ombre = new Ensoleillement("ombre");
-    //          ensoleillementRepository.save(soleil);
-    //          ensoleillementRepository.save(miOmbre);
-    //          ensoleillementRepository.save(ombre);
-    //      } catch (Exception e) {
-    //          log.error("Error when trying to insert in table Ensoleillement. {" + e.getMessage() + "}");
-    //      }
-    //  }
 
 
 }

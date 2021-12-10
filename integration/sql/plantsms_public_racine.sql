@@ -1,0 +1,11 @@
+insert into public.racine (id, type) values (9001, 'pivotante');
+insert into public.racine (id, type) values (9002, 'fasciculaire');
+insert into public.racine (id, type) values (9003, 'adventice');
+insert into public.racine (id, type) values (9004, 'tracante');
+insert into public.racine (id, type) values (9005, 'contrefort');
+insert into public.racine (id, type) values (9006, 'crampon');
+insert into public.racine (id, type) values (9007, 'echasse');
+insert into public.racine (id, type) values (9008, 'aerienne');
+insert into public.racine (id, type) values (9009, 'liane');
+insert into public.racine (id, type) values (9010, 'ventouse');
+insert into public.racine (id, type) values (9011, 'pneumatophore');
