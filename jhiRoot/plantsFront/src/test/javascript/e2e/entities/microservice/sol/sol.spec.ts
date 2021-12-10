@@ -47,7 +47,6 @@ describe('Sol e2e test', () => {
       solUpdatePage.setPhMaxInput('5'),
       solUpdatePage.setTypeInput('type'),
       solUpdatePage.setRichesseInput('richesse'),
-      solUpdatePage.planteSelectLastOption(),
     ]);
 
     await solUpdatePage.save();

@@ -1,7 +1,11 @@
-import { browser, ExpectedConditions as ec, promise } from 'protractor';
+import { browser, ExpectedConditions as ec /* , promise */ } from 'protractor';
 import { NavBarPage, SignInPage } from '../../../page-objects/jhi-page-objects';
 
-import { AllelopathieComponentsPage, AllelopathieDeleteDialog, AllelopathieUpdatePage } from './allelopathie.page-object';
+import {
+  AllelopathieComponentsPage,
+  /* AllelopathieDeleteDialog, */
+  AllelopathieUpdatePage,
+} from './allelopathie.page-object';
 
 const expect = chai.expect;
 
@@ -10,7 +14,7 @@ describe('Allelopathie e2e test', () => {
   let signInPage: SignInPage;
   let allelopathieComponentsPage: AllelopathieComponentsPage;
   let allelopathieUpdatePage: AllelopathieUpdatePage;
-  let allelopathieDeleteDialog: AllelopathieDeleteDialog;
+  /* let allelopathieDeleteDialog: AllelopathieDeleteDialog; */
   const username = process.env.E2E_USERNAME ?? 'admin';
   const password = process.env.E2E_PASSWORD ?? 'admin';
 
@@ -40,36 +44,37 @@ describe('Allelopathie e2e test', () => {
     await allelopathieUpdatePage.cancel();
   });
 
-  it('should create and save Allelopathies', async () => {
-    const nbButtonsBeforeCreate = await allelopathieComponentsPage.countDeleteButtons();
+  /* it('should create and save Allelopathies', async () => {
+        const nbButtonsBeforeCreate = await allelopathieComponentsPage.countDeleteButtons();
 
-    await allelopathieComponentsPage.clickOnCreateButton();
+        await allelopathieComponentsPage.clickOnCreateButton();
 
-    await promise.all([
-      allelopathieUpdatePage.setTypeInput('type'),
-      allelopathieUpdatePage.setDescriptionInput('description'),
-      allelopathieUpdatePage.setImpactInput('5'),
-      allelopathieUpdatePage.cibleSelectLastOption(),
-      allelopathieUpdatePage.origineSelectLastOption(),
-    ]);
+        await promise.all([
+            allelopathieUpdatePage.setTypeInput('type'),
+            allelopathieUpdatePage.setDescriptionInput('description'),
+            allelopathieUpdatePage.setImpactInput('5'),
+            allelopathieUpdatePage.cibleSelectLastOption(),
+            allelopathieUpdatePage.origineSelectLastOption(),
+        ]);
 
-    await allelopathieUpdatePage.save();
-    expect(await allelopathieUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
+        await allelopathieUpdatePage.save();
+        expect(await allelopathieUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
-    expect(await allelopathieComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1, 'Expected one more entry in the table');
-  });
+        expect(await allelopathieComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1, 'Expected one more entry in the table');
+    }); */
 
-  it('should delete last Allelopathie', async () => {
-    const nbButtonsBeforeDelete = await allelopathieComponentsPage.countDeleteButtons();
-    await allelopathieComponentsPage.clickOnLastDeleteButton();
+  /* it('should delete last Allelopathie', async () => {
+        const nbButtonsBeforeDelete = await allelopathieComponentsPage.countDeleteButtons();
+        await allelopathieComponentsPage.clickOnLastDeleteButton();
 
-    allelopathieDeleteDialog = new AllelopathieDeleteDialog();
-    expect(await allelopathieDeleteDialog.getDialogTitle()).to.eq('Are you sure you want to delete this Allelopathie?');
-    await allelopathieDeleteDialog.clickOnConfirmButton();
-    await browser.wait(ec.visibilityOf(allelopathieComponentsPage.title), 5000);
+        allelopathieDeleteDialog = new AllelopathieDeleteDialog();
+        expect(await allelopathieDeleteDialog.getDialogTitle())
+            .to.eq('Are you sure you want to delete this Allelopathie?');
+        await allelopathieDeleteDialog.clickOnConfirmButton();
+        await browser.wait(ec.visibilityOf(allelopathieComponentsPage.title), 5000);
 
-    expect(await allelopathieComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
-  });
+        expect(await allelopathieComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
+    }); */
 
   after(async () => {
     await navBarPage.autoSignOut();

@@ -39,55 +39,40 @@ describe('PeriodeAnnee Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call debut query and add missing value', () => {
+    it('Should call Mois query and add missing value', () => {
       const periodeAnnee: IPeriodeAnnee = { id: 456 };
       const debut: IMois = { id: 8388 };
       periodeAnnee.debut = debut;
-
-      const debutCollection: IMois[] = [{ id: 33370 }];
-      jest.spyOn(moisService, 'query').mockReturnValue(of(new HttpResponse({ body: debutCollection })));
-      const expectedCollection: IMois[] = [debut, ...debutCollection];
-      jest.spyOn(moisService, 'addMoisToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ periodeAnnee });
-      comp.ngOnInit();
-
-      expect(moisService.query).toHaveBeenCalled();
-      expect(moisService.addMoisToCollectionIfMissing).toHaveBeenCalledWith(debutCollection, debut);
-      expect(comp.debutsCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call fin query and add missing value', () => {
-      const periodeAnnee: IPeriodeAnnee = { id: 456 };
-      const fin: IMois = { id: 3740 };
+      const fin: IMois = { id: 33370 };
       periodeAnnee.fin = fin;
 
-      const finCollection: IMois[] = [{ id: 1317 }];
-      jest.spyOn(moisService, 'query').mockReturnValue(of(new HttpResponse({ body: finCollection })));
-      const expectedCollection: IMois[] = [fin, ...finCollection];
+      const moisCollection: IMois[] = [{ id: 3740 }];
+      jest.spyOn(moisService, 'query').mockReturnValue(of(new HttpResponse({ body: moisCollection })));
+      const additionalMois = [debut, fin];
+      const expectedCollection: IMois[] = [...additionalMois, ...moisCollection];
       jest.spyOn(moisService, 'addMoisToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ periodeAnnee });
       comp.ngOnInit();
 
       expect(moisService.query).toHaveBeenCalled();
-      expect(moisService.addMoisToCollectionIfMissing).toHaveBeenCalledWith(finCollection, fin);
-      expect(comp.finsCollection).toEqual(expectedCollection);
+      expect(moisService.addMoisToCollectionIfMissing).toHaveBeenCalledWith(moisCollection, ...additionalMois);
+      expect(comp.moisSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should update editForm', () => {
       const periodeAnnee: IPeriodeAnnee = { id: 456 };
-      const debut: IMois = { id: 13355 };
+      const debut: IMois = { id: 1317 };
       periodeAnnee.debut = debut;
-      const fin: IMois = { id: 13362 };
+      const fin: IMois = { id: 13355 };
       periodeAnnee.fin = fin;
 
       activatedRoute.data = of({ periodeAnnee });
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(periodeAnnee));
-      expect(comp.debutsCollection).toContain(debut);
-      expect(comp.finsCollection).toContain(fin);
+      expect(comp.moisSharedCollection).toContain(debut);
+      expect(comp.moisSharedCollection).toContain(fin);
     });
   });
 

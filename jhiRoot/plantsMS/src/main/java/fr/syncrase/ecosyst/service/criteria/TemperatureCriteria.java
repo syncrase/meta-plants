@@ -34,8 +34,6 @@ public class TemperatureCriteria implements Serializable, Criteria {
 
     private StringFilter rusticite;
 
-    private LongFilter plantesId;
-
     private Boolean distinct;
 
     public TemperatureCriteria() {}
@@ -46,7 +44,6 @@ public class TemperatureCriteria implements Serializable, Criteria {
         this.max = other.max == null ? null : other.max.copy();
         this.description = other.description == null ? null : other.description.copy();
         this.rusticite = other.rusticite == null ? null : other.rusticite.copy();
-        this.plantesId = other.plantesId == null ? null : other.plantesId.copy();
         this.distinct = other.distinct;
     }
 
@@ -130,21 +127,6 @@ public class TemperatureCriteria implements Serializable, Criteria {
         this.rusticite = rusticite;
     }
 
-    public LongFilter getPlantesId() {
-        return plantesId;
-    }
-
-    public LongFilter plantesId() {
-        if (plantesId == null) {
-            plantesId = new LongFilter();
-        }
-        return plantesId;
-    }
-
-    public void setPlantesId(LongFilter plantesId) {
-        this.plantesId = plantesId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -168,14 +150,13 @@ public class TemperatureCriteria implements Serializable, Criteria {
             Objects.equals(max, that.max) &&
             Objects.equals(description, that.description) &&
             Objects.equals(rusticite, that.rusticite) &&
-            Objects.equals(plantesId, that.plantesId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, min, max, description, rusticite, plantesId, distinct);
+        return Objects.hash(id, min, max, description, rusticite, distinct);
     }
 
     // prettier-ignore
@@ -187,7 +168,6 @@ public class TemperatureCriteria implements Serializable, Criteria {
             (max != null ? "max=" + max + ", " : "") +
             (description != null ? "description=" + description + ", " : "") +
             (rusticite != null ? "rusticite=" + rusticite + ", " : "") +
-            (plantesId != null ? "plantesId=" + plantesId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

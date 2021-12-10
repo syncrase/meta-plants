@@ -13,6 +13,7 @@ import fr.syncrase.ecosyst.domain.Ensoleillement;
 import fr.syncrase.ecosyst.domain.Feuillage;
 import fr.syncrase.ecosyst.domain.NomVernaculaire;
 import fr.syncrase.ecosyst.domain.Plante;
+import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.domain.Racine;
 import fr.syncrase.ecosyst.domain.Ressemblance;
 import fr.syncrase.ecosyst.domain.Sol;
@@ -542,28 +543,28 @@ class PlanteResourceIT {
 
     @Test
     @Transactional
-    void getAllPlantesByCycleDeVieIsEqualToSomething() throws Exception {
+    void getAllPlantesByClassificationIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        CycleDeVie cycleDeVie;
-        if (TestUtil.findAll(em, CycleDeVie.class).isEmpty()) {
-            cycleDeVie = CycleDeVieResourceIT.createEntity(em);
-            em.persist(cycleDeVie);
+        Classification classification;
+        if (TestUtil.findAll(em, Classification.class).isEmpty()) {
+            classification = ClassificationResourceIT.createEntity(em);
+            em.persist(classification);
             em.flush();
         } else {
-            cycleDeVie = TestUtil.findAll(em, CycleDeVie.class).get(0);
+            classification = TestUtil.findAll(em, Classification.class).get(0);
         }
-        em.persist(cycleDeVie);
+        em.persist(classification);
         em.flush();
-        plante.setCycleDeVie(cycleDeVie);
+        plante.setClassification(classification);
         planteRepository.saveAndFlush(plante);
-        Long cycleDeVieId = cycleDeVie.getId();
+        Long classificationId = classification.getId();
 
-        // Get all the planteList where cycleDeVie equals to cycleDeVieId
-        defaultPlanteShouldBeFound("cycleDeVieId.equals=" + cycleDeVieId);
+        // Get all the planteList where classification equals to classificationId
+        defaultPlanteShouldBeFound("classificationId.equals=" + classificationId);
 
-        // Get all the planteList where cycleDeVie equals to (cycleDeVieId + 1)
-        defaultPlanteShouldNotBeFound("cycleDeVieId.equals=" + (cycleDeVieId + 1));
+        // Get all the planteList where classification equals to (classificationId + 1)
+        defaultPlanteShouldNotBeFound("classificationId.equals=" + (classificationId + 1));
     }
 
     @Test
@@ -620,80 +621,80 @@ class PlanteResourceIT {
 
     @Test
     @Transactional
-    void getAllPlantesBySolsIsEqualToSomething() throws Exception {
+    void getAllPlantesByPlantesPotageresIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Sol sols;
+        Plante plantesPotageres;
+        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
+            plantesPotageres = PlanteResourceIT.createEntity(em);
+            em.persist(plantesPotageres);
+            em.flush();
+        } else {
+            plantesPotageres = TestUtil.findAll(em, Plante.class).get(0);
+        }
+        em.persist(plantesPotageres);
+        em.flush();
+        plante.addPlantesPotageres(plantesPotageres);
+        planteRepository.saveAndFlush(plante);
+        Long plantesPotageresId = plantesPotageres.getId();
+
+        // Get all the planteList where plantesPotageres equals to plantesPotageresId
+        defaultPlanteShouldBeFound("plantesPotageresId.equals=" + plantesPotageresId);
+
+        // Get all the planteList where plantesPotageres equals to (plantesPotageresId + 1)
+        defaultPlanteShouldNotBeFound("plantesPotageresId.equals=" + (plantesPotageresId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByCycleDeVieIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        CycleDeVie cycleDeVie;
+        if (TestUtil.findAll(em, CycleDeVie.class).isEmpty()) {
+            cycleDeVie = CycleDeVieResourceIT.createEntity(em);
+            em.persist(cycleDeVie);
+            em.flush();
+        } else {
+            cycleDeVie = TestUtil.findAll(em, CycleDeVie.class).get(0);
+        }
+        em.persist(cycleDeVie);
+        em.flush();
+        plante.setCycleDeVie(cycleDeVie);
+        planteRepository.saveAndFlush(plante);
+        Long cycleDeVieId = cycleDeVie.getId();
+
+        // Get all the planteList where cycleDeVie equals to cycleDeVieId
+        defaultPlanteShouldBeFound("cycleDeVieId.equals=" + cycleDeVieId);
+
+        // Get all the planteList where cycleDeVie equals to (cycleDeVieId + 1)
+        defaultPlanteShouldNotBeFound("cycleDeVieId.equals=" + (cycleDeVieId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesBySolIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        Sol sol;
         if (TestUtil.findAll(em, Sol.class).isEmpty()) {
-            sols = SolResourceIT.createEntity(em);
-            em.persist(sols);
+            sol = SolResourceIT.createEntity(em);
+            em.persist(sol);
             em.flush();
         } else {
-            sols = TestUtil.findAll(em, Sol.class).get(0);
+            sol = TestUtil.findAll(em, Sol.class).get(0);
         }
-        em.persist(sols);
+        em.persist(sol);
         em.flush();
-        plante.addSols(sols);
+        plante.setSol(sol);
         planteRepository.saveAndFlush(plante);
-        Long solsId = sols.getId();
+        Long solId = sol.getId();
 
-        // Get all the planteList where sols equals to solsId
-        defaultPlanteShouldBeFound("solsId.equals=" + solsId);
+        // Get all the planteList where sol equals to solId
+        defaultPlanteShouldBeFound("solId.equals=" + solId);
 
-        // Get all the planteList where sols equals to (solsId + 1)
-        defaultPlanteShouldNotBeFound("solsId.equals=" + (solsId + 1));
-    }
-
-    @Test
-    @Transactional
-    void getAllPlantesByClassificationIsEqualToSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-        Classification classification;
-        if (TestUtil.findAll(em, Classification.class).isEmpty()) {
-            classification = ClassificationResourceIT.createEntity(em);
-            em.persist(classification);
-            em.flush();
-        } else {
-            classification = TestUtil.findAll(em, Classification.class).get(0);
-        }
-        em.persist(classification);
-        em.flush();
-        plante.setClassification(classification);
-        planteRepository.saveAndFlush(plante);
-        Long classificationId = classification.getId();
-
-        // Get all the planteList where classification equals to classificationId
-        defaultPlanteShouldBeFound("classificationId.equals=" + classificationId);
-
-        // Get all the planteList where classification equals to (classificationId + 1)
-        defaultPlanteShouldNotBeFound("classificationId.equals=" + (classificationId + 1));
-    }
-
-    @Test
-    @Transactional
-    void getAllPlantesByNomsVernaculairesIsEqualToSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-        NomVernaculaire nomsVernaculaires;
-        if (TestUtil.findAll(em, NomVernaculaire.class).isEmpty()) {
-            nomsVernaculaires = NomVernaculaireResourceIT.createEntity(em);
-            em.persist(nomsVernaculaires);
-            em.flush();
-        } else {
-            nomsVernaculaires = TestUtil.findAll(em, NomVernaculaire.class).get(0);
-        }
-        em.persist(nomsVernaculaires);
-        em.flush();
-        plante.addNomsVernaculaires(nomsVernaculaires);
-        planteRepository.saveAndFlush(plante);
-        Long nomsVernaculairesId = nomsVernaculaires.getId();
-
-        // Get all the planteList where nomsVernaculaires equals to nomsVernaculairesId
-        defaultPlanteShouldBeFound("nomsVernaculairesId.equals=" + nomsVernaculairesId);
-
-        // Get all the planteList where nomsVernaculaires equals to (nomsVernaculairesId + 1)
-        defaultPlanteShouldNotBeFound("nomsVernaculairesId.equals=" + (nomsVernaculairesId + 1));
+        // Get all the planteList where sol equals to (solId + 1)
+        defaultPlanteShouldNotBeFound("solId.equals=" + (solId + 1));
     }
 
     @Test
@@ -798,6 +799,58 @@ class PlanteResourceIT {
 
         // Get all the planteList where feuillage equals to (feuillageId + 1)
         defaultPlanteShouldNotBeFound("feuillageId.equals=" + (feuillageId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByNomsVernaculairesIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        NomVernaculaire nomsVernaculaires;
+        if (TestUtil.findAll(em, NomVernaculaire.class).isEmpty()) {
+            nomsVernaculaires = NomVernaculaireResourceIT.createEntity(em);
+            em.persist(nomsVernaculaires);
+            em.flush();
+        } else {
+            nomsVernaculaires = TestUtil.findAll(em, NomVernaculaire.class).get(0);
+        }
+        em.persist(nomsVernaculaires);
+        em.flush();
+        plante.addNomsVernaculaires(nomsVernaculaires);
+        planteRepository.saveAndFlush(plante);
+        Long nomsVernaculairesId = nomsVernaculaires.getId();
+
+        // Get all the planteList where nomsVernaculaires equals to nomsVernaculairesId
+        defaultPlanteShouldBeFound("nomsVernaculairesId.equals=" + nomsVernaculairesId);
+
+        // Get all the planteList where nomsVernaculaires equals to (nomsVernaculairesId + 1)
+        defaultPlanteShouldNotBeFound("nomsVernaculairesId.equals=" + (nomsVernaculairesId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByPlanteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        Plante plante;
+        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
+            plante = PlanteResourceIT.createEntity(em);
+            em.persist(plante);
+            em.flush();
+        } else {
+            plante = TestUtil.findAll(em, Plante.class).get(0);
+        }
+        em.persist(plante);
+        em.flush();
+        plante.setPlante(plante);
+        planteRepository.saveAndFlush(plante);
+        Long planteId = plante.getId();
+
+        // Get all the planteList where plante equals to planteId
+        defaultPlanteShouldBeFound("planteId.equals=" + planteId);
+
+        // Get all the planteList where plante equals to (planteId + 1)
+        defaultPlanteShouldNotBeFound("planteId.equals=" + (planteId + 1));
     }
 
     /**

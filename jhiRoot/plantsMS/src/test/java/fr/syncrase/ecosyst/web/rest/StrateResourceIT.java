@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
-import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.domain.Strate;
 import fr.syncrase.ecosyst.repository.StrateRepository;
 import fr.syncrase.ecosyst.service.criteria.StrateCriteria;
@@ -236,32 +235,6 @@ class StrateResourceIT {
 
         // Get all the strateList where type does not contain UPDATED_TYPE
         defaultStrateShouldBeFound("type.doesNotContain=" + UPDATED_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllStratesByPlanteIsEqualToSomething() throws Exception {
-        // Initialize the database
-        strateRepository.saveAndFlush(strate);
-        Plante plante;
-        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            plante = PlanteResourceIT.createEntity(em);
-            em.persist(plante);
-            em.flush();
-        } else {
-            plante = TestUtil.findAll(em, Plante.class).get(0);
-        }
-        em.persist(plante);
-        em.flush();
-        strate.addPlante(plante);
-        strateRepository.saveAndFlush(strate);
-        Long planteId = plante.getId();
-
-        // Get all the strateList where plante equals to planteId
-        defaultStrateShouldBeFound("planteId.equals=" + planteId);
-
-        // Get all the strateList where plante equals to (planteId + 1)
-        defaultStrateShouldNotBeFound("planteId.equals=" + (planteId + 1));
     }
 
     /**

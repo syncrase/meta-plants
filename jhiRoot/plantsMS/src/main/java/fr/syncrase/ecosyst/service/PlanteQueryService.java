@@ -97,12 +97,12 @@ public class PlanteQueryService extends QueryService<Plante> {
             if (criteria.getExposition() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getExposition(), Plante_.exposition));
             }
-            if (criteria.getCycleDeVieId() != null) {
+            if (criteria.getClassificationId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getCycleDeVieId(),
-                            root -> root.join(Plante_.cycleDeVie, JoinType.LEFT).get(CycleDeVie_.id)
+                            criteria.getClassificationId(),
+                            root -> root.join(Plante_.classification, JoinType.LEFT).get(Classification_.id)
                         )
                     );
             }
@@ -124,29 +124,27 @@ public class PlanteQueryService extends QueryService<Plante> {
                         )
                     );
             }
-            if (criteria.getSolsId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getSolsId(), root -> root.join(Plante_.sols, JoinType.LEFT).get(Sol_.id))
-                    );
-            }
-            if (criteria.getClassificationId() != null) {
+            if (criteria.getPlantesPotageresId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getClassificationId(),
-                            root -> root.join(Plante_.classification, JoinType.LEFT).get(Classification_.id)
+                            criteria.getPlantesPotageresId(),
+                            root -> root.join(Plante_.plantesPotageres, JoinType.LEFT).get(Plante_.id)
                         )
                     );
             }
-            if (criteria.getNomsVernaculairesId() != null) {
+            if (criteria.getCycleDeVieId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getNomsVernaculairesId(),
-                            root -> root.join(Plante_.nomsVernaculaires, JoinType.LEFT).get(NomVernaculaire_.id)
+                            criteria.getCycleDeVieId(),
+                            root -> root.join(Plante_.cycleDeVie, JoinType.LEFT).get(CycleDeVie_.id)
                         )
                     );
+            }
+            if (criteria.getSolId() != null) {
+                specification =
+                    specification.and(buildSpecification(criteria.getSolId(), root -> root.join(Plante_.sol, JoinType.LEFT).get(Sol_.id)));
             }
             if (criteria.getTemperatureId() != null) {
                 specification =
@@ -176,6 +174,21 @@ public class PlanteQueryService extends QueryService<Plante> {
                             criteria.getFeuillageId(),
                             root -> root.join(Plante_.feuillage, JoinType.LEFT).get(Feuillage_.id)
                         )
+                    );
+            }
+            if (criteria.getNomsVernaculairesId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getNomsVernaculairesId(),
+                            root -> root.join(Plante_.nomsVernaculaires, JoinType.LEFT).get(NomVernaculaire_.id)
+                        )
+                    );
+            }
+            if (criteria.getPlanteId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getPlanteId(), root -> root.join(Plante_.plante, JoinType.LEFT).get(Plante_.id))
                     );
             }
         }

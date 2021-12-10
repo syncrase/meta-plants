@@ -22,14 +22,12 @@ public class PeriodeAnnee implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @NotNull
-    @JoinColumn(unique = true)
     private Mois debut;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @NotNull
-    @JoinColumn(unique = true)
     private Mois fin;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

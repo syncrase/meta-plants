@@ -21,9 +21,10 @@
   "relationships": [
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "cycleDeVie",
+      "otherEntityName": "classification",
       "otherEntityRelationshipName": "plante",
-      "relationshipName": "cycleDeVie",
+      "javadoc": "Une plante ne correspond qu'à une seule classification\\nMais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes\\nMais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique",
+      "relationshipName": "classification",
       "ownerSide": true
     },
     {
@@ -40,27 +41,27 @@
     },
     {
       "relationshipType": "one-to-many",
-      "otherEntityName": "sol",
+      "otherEntityName": "plante",
       "otherEntityRelationshipName": "plante",
-      "relationshipName": "sols"
+      "javadoc": "Une plante peut avoir beaucoup de variantes potagère\\nUne plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)",
+      "relationshipName": "plantesPotageres"
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "classification",
+      "otherEntityName": "cycleDeVie",
       "otherEntityRelationshipName": "plante",
-      "relationshipName": "classification"
+      "relationshipName": "cycleDeVie"
     },
     {
-      "relationshipType": "many-to-many",
-      "otherEntityName": "nomVernaculaire",
-      "otherEntityRelationshipName": "plantes",
-      "relationshipName": "nomsVernaculaires",
-      "ownerSide": true
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sol",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "sol"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "temperature",
-      "otherEntityRelationshipName": "plantes",
+      "otherEntityRelationshipName": "plante",
       "relationshipName": "temperature"
     },
     {
@@ -80,6 +81,20 @@
       "otherEntityName": "feuillage",
       "otherEntityRelationshipName": "plante",
       "relationshipName": "feuillage"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "nomVernaculaire",
+      "otherEntityRelationshipName": "plantes",
+      "relationshipName": "nomsVernaculaires",
+      "otherEntityField": "nom",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "plantesPotageres",
+      "relationshipName": "plante"
     }
   ],
   "entityTableName": "plante",
@@ -90,9 +105,10 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
+  "applications": ["plantsFront", "plantsMS"],
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211206111337"
+  "changelogDate": "20211206111337",
+  "javadoc": "Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique"
 }

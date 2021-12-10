@@ -47,32 +47,46 @@ describe('CycleDeVie Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call semis query and add missing value', () => {
+    it('Should call Semis query and add missing value', () => {
       const cycleDeVie: ICycleDeVie = { id: 456 };
       const semis: ISemis = { id: 85629 };
       cycleDeVie.semis = semis;
 
       const semisCollection: ISemis[] = [{ id: 97375 }];
       jest.spyOn(semisService, 'query').mockReturnValue(of(new HttpResponse({ body: semisCollection })));
-      const expectedCollection: ISemis[] = [semis, ...semisCollection];
+      const additionalSemis = [semis];
+      const expectedCollection: ISemis[] = [...additionalSemis, ...semisCollection];
       jest.spyOn(semisService, 'addSemisToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ cycleDeVie });
       comp.ngOnInit();
 
       expect(semisService.query).toHaveBeenCalled();
-      expect(semisService.addSemisToCollectionIfMissing).toHaveBeenCalledWith(semisCollection, semis);
-      expect(comp.semisCollection).toEqual(expectedCollection);
+      expect(semisService.addSemisToCollectionIfMissing).toHaveBeenCalledWith(semisCollection, ...additionalSemis);
+      expect(comp.semisSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call apparitionFeuilles query and add missing value', () => {
+    it('Should call PeriodeAnnee query and add missing value', () => {
       const cycleDeVie: ICycleDeVie = { id: 456 };
       const apparitionFeuilles: IPeriodeAnnee = { id: 96705 };
       cycleDeVie.apparitionFeuilles = apparitionFeuilles;
+      const floraison: IPeriodeAnnee = { id: 61793 };
+      cycleDeVie.floraison = floraison;
+      const recolte: IPeriodeAnnee = { id: 80100 };
+      cycleDeVie.recolte = recolte;
+      const croissance: IPeriodeAnnee = { id: 95026 };
+      cycleDeVie.croissance = croissance;
+      const maturite: IPeriodeAnnee = { id: 9241 };
+      cycleDeVie.maturite = maturite;
+      const plantation: IPeriodeAnnee = { id: 11474 };
+      cycleDeVie.plantation = plantation;
+      const rempotage: IPeriodeAnnee = { id: 47849 };
+      cycleDeVie.rempotage = rempotage;
 
-      const apparitionFeuillesCollection: IPeriodeAnnee[] = [{ id: 61793 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: apparitionFeuillesCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [apparitionFeuilles, ...apparitionFeuillesCollection];
+      const periodeAnneeCollection: IPeriodeAnnee[] = [{ id: 44847 }];
+      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: periodeAnneeCollection })));
+      const additionalPeriodeAnnees = [apparitionFeuilles, floraison, recolte, croissance, maturite, plantation, rempotage];
+      const expectedCollection: IPeriodeAnnee[] = [...additionalPeriodeAnnees, ...periodeAnneeCollection];
       jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ cycleDeVie });
@@ -80,118 +94,10 @@ describe('CycleDeVie Management Update Component', () => {
 
       expect(periodeAnneeService.query).toHaveBeenCalled();
       expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(
-        apparitionFeuillesCollection,
-        apparitionFeuilles
+        periodeAnneeCollection,
+        ...additionalPeriodeAnnees
       );
-      expect(comp.apparitionFeuillesCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call floraison query and add missing value', () => {
-      const cycleDeVie: ICycleDeVie = { id: 456 };
-      const floraison: IPeriodeAnnee = { id: 80100 };
-      cycleDeVie.floraison = floraison;
-
-      const floraisonCollection: IPeriodeAnnee[] = [{ id: 95026 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: floraisonCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [floraison, ...floraisonCollection];
-      jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ cycleDeVie });
-      comp.ngOnInit();
-
-      expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(floraisonCollection, floraison);
-      expect(comp.floraisonsCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call recolte query and add missing value', () => {
-      const cycleDeVie: ICycleDeVie = { id: 456 };
-      const recolte: IPeriodeAnnee = { id: 9241 };
-      cycleDeVie.recolte = recolte;
-
-      const recolteCollection: IPeriodeAnnee[] = [{ id: 11474 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: recolteCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [recolte, ...recolteCollection];
-      jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ cycleDeVie });
-      comp.ngOnInit();
-
-      expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(recolteCollection, recolte);
-      expect(comp.recoltesCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call croissance query and add missing value', () => {
-      const cycleDeVie: ICycleDeVie = { id: 456 };
-      const croissance: IPeriodeAnnee = { id: 47849 };
-      cycleDeVie.croissance = croissance;
-
-      const croissanceCollection: IPeriodeAnnee[] = [{ id: 44847 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: croissanceCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [croissance, ...croissanceCollection];
-      jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ cycleDeVie });
-      comp.ngOnInit();
-
-      expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(croissanceCollection, croissance);
-      expect(comp.croissancesCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call maturite query and add missing value', () => {
-      const cycleDeVie: ICycleDeVie = { id: 456 };
-      const maturite: IPeriodeAnnee = { id: 27616 };
-      cycleDeVie.maturite = maturite;
-
-      const maturiteCollection: IPeriodeAnnee[] = [{ id: 49249 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: maturiteCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [maturite, ...maturiteCollection];
-      jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ cycleDeVie });
-      comp.ngOnInit();
-
-      expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(maturiteCollection, maturite);
-      expect(comp.maturitesCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call plantation query and add missing value', () => {
-      const cycleDeVie: ICycleDeVie = { id: 456 };
-      const plantation: IPeriodeAnnee = { id: 21279 };
-      cycleDeVie.plantation = plantation;
-
-      const plantationCollection: IPeriodeAnnee[] = [{ id: 33027 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: plantationCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [plantation, ...plantationCollection];
-      jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ cycleDeVie });
-      comp.ngOnInit();
-
-      expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(plantationCollection, plantation);
-      expect(comp.plantationsCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call rempotage query and add missing value', () => {
-      const cycleDeVie: ICycleDeVie = { id: 456 };
-      const rempotage: IPeriodeAnnee = { id: 13078 };
-      cycleDeVie.rempotage = rempotage;
-
-      const rempotageCollection: IPeriodeAnnee[] = [{ id: 78499 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: rempotageCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [rempotage, ...rempotageCollection];
-      jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ cycleDeVie });
-      comp.ngOnInit();
-
-      expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(rempotageCollection, rempotage);
-      expect(comp.rempotagesCollection).toEqual(expectedCollection);
+      expect(comp.periodeAnneesSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should call Reproduction query and add missing value', () => {
@@ -220,19 +126,19 @@ describe('CycleDeVie Management Update Component', () => {
       const cycleDeVie: ICycleDeVie = { id: 456 };
       const semis: ISemis = { id: 50141 };
       cycleDeVie.semis = semis;
-      const apparitionFeuilles: IPeriodeAnnee = { id: 32706 };
+      const apparitionFeuilles: IPeriodeAnnee = { id: 27616 };
       cycleDeVie.apparitionFeuilles = apparitionFeuilles;
-      const floraison: IPeriodeAnnee = { id: 87461 };
+      const floraison: IPeriodeAnnee = { id: 49249 };
       cycleDeVie.floraison = floraison;
-      const recolte: IPeriodeAnnee = { id: 3465 };
+      const recolte: IPeriodeAnnee = { id: 21279 };
       cycleDeVie.recolte = recolte;
-      const croissance: IPeriodeAnnee = { id: 6667 };
+      const croissance: IPeriodeAnnee = { id: 33027 };
       cycleDeVie.croissance = croissance;
-      const maturite: IPeriodeAnnee = { id: 84329 };
+      const maturite: IPeriodeAnnee = { id: 13078 };
       cycleDeVie.maturite = maturite;
-      const plantation: IPeriodeAnnee = { id: 11086 };
+      const plantation: IPeriodeAnnee = { id: 78499 };
       cycleDeVie.plantation = plantation;
-      const rempotage: IPeriodeAnnee = { id: 60787 };
+      const rempotage: IPeriodeAnnee = { id: 32706 };
       cycleDeVie.rempotage = rempotage;
       const reproduction: IReproduction = { id: 5780 };
       cycleDeVie.reproduction = reproduction;
@@ -241,14 +147,14 @@ describe('CycleDeVie Management Update Component', () => {
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(cycleDeVie));
-      expect(comp.semisCollection).toContain(semis);
-      expect(comp.apparitionFeuillesCollection).toContain(apparitionFeuilles);
-      expect(comp.floraisonsCollection).toContain(floraison);
-      expect(comp.recoltesCollection).toContain(recolte);
-      expect(comp.croissancesCollection).toContain(croissance);
-      expect(comp.maturitesCollection).toContain(maturite);
-      expect(comp.plantationsCollection).toContain(plantation);
-      expect(comp.rempotagesCollection).toContain(rempotage);
+      expect(comp.semisSharedCollection).toContain(semis);
+      expect(comp.periodeAnneesSharedCollection).toContain(apparitionFeuilles);
+      expect(comp.periodeAnneesSharedCollection).toContain(floraison);
+      expect(comp.periodeAnneesSharedCollection).toContain(recolte);
+      expect(comp.periodeAnneesSharedCollection).toContain(croissance);
+      expect(comp.periodeAnneesSharedCollection).toContain(maturite);
+      expect(comp.periodeAnneesSharedCollection).toContain(plantation);
+      expect(comp.periodeAnneesSharedCollection).toContain(rempotage);
       expect(comp.reproductionsSharedCollection).toContain(reproduction);
     });
   });

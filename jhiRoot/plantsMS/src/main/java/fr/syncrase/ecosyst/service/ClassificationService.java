@@ -2,7 +2,10 @@ package fr.syncrase.ecosyst.service;
 
 import fr.syncrase.ecosyst.domain.Classification;
 import fr.syncrase.ecosyst.repository.ClassificationRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -48,10 +51,6 @@ public class ClassificationService {
         return classificationRepository
             .findById(classification.getId())
             .map(existingClassification -> {
-                if (classification.getNomLatin() != null) {
-                    existingClassification.setNomLatin(classification.getNomLatin());
-                }
-
                 return existingClassification;
             })
             .map(classificationRepository::save);
@@ -67,6 +66,19 @@ public class ClassificationService {
     public Page<Classification> findAll(Pageable pageable) {
         log.debug("Request to get all Classifications");
         return classificationRepository.findAll(pageable);
+    }
+
+    /**
+     *  Get all the classifications where Plante is {@code null}.
+     *  @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<Classification> findAllWherePlanteIsNull() {
+        log.debug("Request to get all classifications where Plante is null");
+        return StreamSupport
+            .stream(classificationRepository.findAll().spliterator(), false)
+            .filter(classification -> classification.getPlante() == null)
+            .collect(Collectors.toList());
     }
 
     /**

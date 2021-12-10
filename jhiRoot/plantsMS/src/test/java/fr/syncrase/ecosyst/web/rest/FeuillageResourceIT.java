@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import fr.syncrase.ecosyst.IntegrationTest;
 import fr.syncrase.ecosyst.domain.Feuillage;
-import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.repository.FeuillageRepository;
 import fr.syncrase.ecosyst.service.criteria.FeuillageCriteria;
 import java.util.List;
@@ -236,32 +235,6 @@ class FeuillageResourceIT {
 
         // Get all the feuillageList where type does not contain UPDATED_TYPE
         defaultFeuillageShouldBeFound("type.doesNotContain=" + UPDATED_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllFeuillagesByPlanteIsEqualToSomething() throws Exception {
-        // Initialize the database
-        feuillageRepository.saveAndFlush(feuillage);
-        Plante plante;
-        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            plante = PlanteResourceIT.createEntity(em);
-            em.persist(plante);
-            em.flush();
-        } else {
-            plante = TestUtil.findAll(em, Plante.class).get(0);
-        }
-        em.persist(plante);
-        em.flush();
-        feuillage.addPlante(plante);
-        feuillageRepository.saveAndFlush(feuillage);
-        Long planteId = plante.getId();
-
-        // Get all the feuillageList where plante equals to planteId
-        defaultFeuillageShouldBeFound("planteId.equals=" + planteId);
-
-        // Get all the feuillageList where plante equals to (planteId + 1)
-        defaultFeuillageShouldNotBeFound("planteId.equals=" + (planteId + 1));
     }
 
     /**

@@ -85,9 +85,6 @@ public class ClassificationQueryService extends QueryService<Classification> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Classification_.id));
             }
-            if (criteria.getNomLatin() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNomLatin(), Classification_.nomLatin));
-            }
             if (criteria.getRaunkierId() != null) {
                 specification =
                     specification.and(
@@ -128,6 +125,12 @@ public class ClassificationQueryService extends QueryService<Classification> {
                 specification =
                     specification.and(
                         buildSpecification(criteria.getApg4Id(), root -> root.join(Classification_.apg4, JoinType.LEFT).get(APGIV_.id))
+                    );
+            }
+            if (criteria.getPlanteId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getPlanteId(), root -> root.join(Classification_.plante, JoinType.LEFT).get(Plante_.id))
                     );
             }
         }

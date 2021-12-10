@@ -5,8 +5,8 @@ export interface IAllelopathie {
   type?: string;
   description?: string | null;
   impact?: number | null;
-  cible?: IPlante | null;
-  origine?: IPlante | null;
+  cible?: IPlante;
+  origine?: IPlante;
 }
 
 export class Allelopathie implements IAllelopathie {
@@ -15,8 +15,8 @@ export class Allelopathie implements IAllelopathie {
     public type?: string,
     public description?: string | null,
     public impact?: number | null,
-    public cible?: IPlante | null,
-    public origine?: IPlante | null
+    public cible?: IPlante,
+    public origine?: IPlante
   ) {}
 }
 

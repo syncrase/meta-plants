@@ -7,12 +7,12 @@ import { finalize, map } from 'rxjs/operators';
 
 import { IPlante, Plante } from '../plante.model';
 import { PlanteService } from '../service/plante.service';
-import { ICycleDeVie } from 'app/entities/microservice/cycle-de-vie/cycle-de-vie.model';
-import { CycleDeVieService } from 'app/entities/microservice/cycle-de-vie/service/cycle-de-vie.service';
 import { IClassification } from 'app/entities/microservice/classification/classification.model';
 import { ClassificationService } from 'app/entities/microservice/classification/service/classification.service';
-import { INomVernaculaire } from 'app/entities/microservice/nom-vernaculaire/nom-vernaculaire.model';
-import { NomVernaculaireService } from 'app/entities/microservice/nom-vernaculaire/service/nom-vernaculaire.service';
+import { ICycleDeVie } from 'app/entities/microservice/cycle-de-vie/cycle-de-vie.model';
+import { CycleDeVieService } from 'app/entities/microservice/cycle-de-vie/service/cycle-de-vie.service';
+import { ISol } from 'app/entities/microservice/sol/sol.model';
+import { SolService } from 'app/entities/microservice/sol/service/sol.service';
 import { ITemperature } from 'app/entities/microservice/temperature/temperature.model';
 import { TemperatureService } from 'app/entities/microservice/temperature/service/temperature.service';
 import { IRacine } from 'app/entities/microservice/racine/racine.model';
@@ -21,6 +21,8 @@ import { IStrate } from 'app/entities/microservice/strate/strate.model';
 import { StrateService } from 'app/entities/microservice/strate/service/strate.service';
 import { IFeuillage } from 'app/entities/microservice/feuillage/feuillage.model';
 import { FeuillageService } from 'app/entities/microservice/feuillage/service/feuillage.service';
+import { INomVernaculaire } from 'app/entities/microservice/nom-vernaculaire/nom-vernaculaire.model';
+import { NomVernaculaireService } from 'app/entities/microservice/nom-vernaculaire/service/nom-vernaculaire.service';
 
 @Component({
   selector: 'perma-plante-update',
@@ -29,13 +31,15 @@ import { FeuillageService } from 'app/entities/microservice/feuillage/service/fe
 export class PlanteUpdateComponent implements OnInit {
   isSaving = false;
 
-  cycleDeViesCollection: ICycleDeVie[] = [];
-  classificationsSharedCollection: IClassification[] = [];
-  nomVernaculairesSharedCollection: INomVernaculaire[] = [];
+  classificationsCollection: IClassification[] = [];
+  plantesSharedCollection: IPlante[] = [];
+  cycleDeViesSharedCollection: ICycleDeVie[] = [];
+  solsSharedCollection: ISol[] = [];
   temperaturesSharedCollection: ITemperature[] = [];
   racinesSharedCollection: IRacine[] = [];
   stratesSharedCollection: IStrate[] = [];
   feuillagesSharedCollection: IFeuillage[] = [];
+  nomVernaculairesSharedCollection: INomVernaculaire[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -43,24 +47,27 @@ export class PlanteUpdateComponent implements OnInit {
     histoire: [],
     vitesseCroissance: [],
     exposition: [],
-    cycleDeVie: [],
     classification: [],
-    nomsVernaculaires: [],
+    cycleDeVie: [],
+    sol: [],
     temperature: [],
     racine: [],
     strate: [],
     feuillage: [],
+    nomsVernaculaires: [],
+    plante: [],
   });
 
   constructor(
     protected planteService: PlanteService,
-    protected cycleDeVieService: CycleDeVieService,
     protected classificationService: ClassificationService,
-    protected nomVernaculaireService: NomVernaculaireService,
+    protected cycleDeVieService: CycleDeVieService,
+    protected solService: SolService,
     protected temperatureService: TemperatureService,
     protected racineService: RacineService,
     protected strateService: StrateService,
     protected feuillageService: FeuillageService,
+    protected nomVernaculaireService: NomVernaculaireService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
   ) {}
@@ -87,15 +94,19 @@ export class PlanteUpdateComponent implements OnInit {
     }
   }
 
-  trackCycleDeVieById(index: number, item: ICycleDeVie): number {
-    return item.id!;
-  }
-
   trackClassificationById(index: number, item: IClassification): number {
     return item.id!;
   }
 
-  trackNomVernaculaireById(index: number, item: INomVernaculaire): number {
+  trackPlanteById(index: number, item: IPlante): number {
+    return item.id!;
+  }
+
+  trackCycleDeVieById(index: number, item: ICycleDeVie): number {
+    return item.id!;
+  }
+
+  trackSolById(index: number, item: ISol): number {
     return item.id!;
   }
 
@@ -112,6 +123,10 @@ export class PlanteUpdateComponent implements OnInit {
   }
 
   trackFeuillageById(index: number, item: IFeuillage): number {
+    return item.id!;
+  }
+
+  trackNomVernaculaireById(index: number, item: INomVernaculaire): number {
     return item.id!;
   }
 
@@ -152,24 +167,27 @@ export class PlanteUpdateComponent implements OnInit {
       histoire: plante.histoire,
       vitesseCroissance: plante.vitesseCroissance,
       exposition: plante.exposition,
-      cycleDeVie: plante.cycleDeVie,
       classification: plante.classification,
-      nomsVernaculaires: plante.nomsVernaculaires,
+      cycleDeVie: plante.cycleDeVie,
+      sol: plante.sol,
       temperature: plante.temperature,
       racine: plante.racine,
       strate: plante.strate,
       feuillage: plante.feuillage,
+      nomsVernaculaires: plante.nomsVernaculaires,
+      plante: plante.plante,
     });
 
-    this.cycleDeViesCollection = this.cycleDeVieService.addCycleDeVieToCollectionIfMissing(this.cycleDeViesCollection, plante.cycleDeVie);
-    this.classificationsSharedCollection = this.classificationService.addClassificationToCollectionIfMissing(
-      this.classificationsSharedCollection,
+    this.classificationsCollection = this.classificationService.addClassificationToCollectionIfMissing(
+      this.classificationsCollection,
       plante.classification
     );
-    this.nomVernaculairesSharedCollection = this.nomVernaculaireService.addNomVernaculaireToCollectionIfMissing(
-      this.nomVernaculairesSharedCollection,
-      ...(plante.nomsVernaculaires ?? [])
+    this.plantesSharedCollection = this.planteService.addPlanteToCollectionIfMissing(this.plantesSharedCollection, plante.plante);
+    this.cycleDeViesSharedCollection = this.cycleDeVieService.addCycleDeVieToCollectionIfMissing(
+      this.cycleDeViesSharedCollection,
+      plante.cycleDeVie
     );
+    this.solsSharedCollection = this.solService.addSolToCollectionIfMissing(this.solsSharedCollection, plante.sol);
     this.temperaturesSharedCollection = this.temperatureService.addTemperatureToCollectionIfMissing(
       this.temperaturesSharedCollection,
       plante.temperature
@@ -180,41 +198,44 @@ export class PlanteUpdateComponent implements OnInit {
       this.feuillagesSharedCollection,
       plante.feuillage
     );
+    this.nomVernaculairesSharedCollection = this.nomVernaculaireService.addNomVernaculaireToCollectionIfMissing(
+      this.nomVernaculairesSharedCollection,
+      ...(plante.nomsVernaculaires ?? [])
+    );
   }
 
   protected loadRelationshipsOptions(): void {
-    this.cycleDeVieService
-      .query({ filter: 'plante-is-null' })
-      .pipe(map((res: HttpResponse<ICycleDeVie[]>) => res.body ?? []))
-      .pipe(
-        map((cycleDeVies: ICycleDeVie[]) =>
-          this.cycleDeVieService.addCycleDeVieToCollectionIfMissing(cycleDeVies, this.editForm.get('cycleDeVie')!.value)
-        )
-      )
-      .subscribe((cycleDeVies: ICycleDeVie[]) => (this.cycleDeViesCollection = cycleDeVies));
-
     this.classificationService
-      .query()
+      .query({ filter: 'plante-is-null' })
       .pipe(map((res: HttpResponse<IClassification[]>) => res.body ?? []))
       .pipe(
         map((classifications: IClassification[]) =>
           this.classificationService.addClassificationToCollectionIfMissing(classifications, this.editForm.get('classification')!.value)
         )
       )
-      .subscribe((classifications: IClassification[]) => (this.classificationsSharedCollection = classifications));
+      .subscribe((classifications: IClassification[]) => (this.classificationsCollection = classifications));
 
-    this.nomVernaculaireService
+    this.planteService
       .query()
-      .pipe(map((res: HttpResponse<INomVernaculaire[]>) => res.body ?? []))
+      .pipe(map((res: HttpResponse<IPlante[]>) => res.body ?? []))
+      .pipe(map((plantes: IPlante[]) => this.planteService.addPlanteToCollectionIfMissing(plantes, this.editForm.get('plante')!.value)))
+      .subscribe((plantes: IPlante[]) => (this.plantesSharedCollection = plantes));
+
+    this.cycleDeVieService
+      .query()
+      .pipe(map((res: HttpResponse<ICycleDeVie[]>) => res.body ?? []))
       .pipe(
-        map((nomVernaculaires: INomVernaculaire[]) =>
-          this.nomVernaculaireService.addNomVernaculaireToCollectionIfMissing(
-            nomVernaculaires,
-            ...(this.editForm.get('nomsVernaculaires')!.value ?? [])
-          )
+        map((cycleDeVies: ICycleDeVie[]) =>
+          this.cycleDeVieService.addCycleDeVieToCollectionIfMissing(cycleDeVies, this.editForm.get('cycleDeVie')!.value)
         )
       )
-      .subscribe((nomVernaculaires: INomVernaculaire[]) => (this.nomVernaculairesSharedCollection = nomVernaculaires));
+      .subscribe((cycleDeVies: ICycleDeVie[]) => (this.cycleDeViesSharedCollection = cycleDeVies));
+
+    this.solService
+      .query()
+      .pipe(map((res: HttpResponse<ISol[]>) => res.body ?? []))
+      .pipe(map((sols: ISol[]) => this.solService.addSolToCollectionIfMissing(sols, this.editForm.get('sol')!.value)))
+      .subscribe((sols: ISol[]) => (this.solsSharedCollection = sols));
 
     this.temperatureService
       .query()
@@ -247,6 +268,19 @@ export class PlanteUpdateComponent implements OnInit {
         )
       )
       .subscribe((feuillages: IFeuillage[]) => (this.feuillagesSharedCollection = feuillages));
+
+    this.nomVernaculaireService
+      .query()
+      .pipe(map((res: HttpResponse<INomVernaculaire[]>) => res.body ?? []))
+      .pipe(
+        map((nomVernaculaires: INomVernaculaire[]) =>
+          this.nomVernaculaireService.addNomVernaculaireToCollectionIfMissing(
+            nomVernaculaires,
+            ...(this.editForm.get('nomsVernaculaires')!.value ?? [])
+          )
+        )
+      )
+      .subscribe((nomVernaculaires: INomVernaculaire[]) => (this.nomVernaculairesSharedCollection = nomVernaculaires));
   }
 
   protected createFromForm(): IPlante {
@@ -257,13 +291,15 @@ export class PlanteUpdateComponent implements OnInit {
       histoire: this.editForm.get(['histoire'])!.value,
       vitesseCroissance: this.editForm.get(['vitesseCroissance'])!.value,
       exposition: this.editForm.get(['exposition'])!.value,
-      cycleDeVie: this.editForm.get(['cycleDeVie'])!.value,
       classification: this.editForm.get(['classification'])!.value,
-      nomsVernaculaires: this.editForm.get(['nomsVernaculaires'])!.value,
+      cycleDeVie: this.editForm.get(['cycleDeVie'])!.value,
+      sol: this.editForm.get(['sol'])!.value,
       temperature: this.editForm.get(['temperature'])!.value,
       racine: this.editForm.get(['racine'])!.value,
       strate: this.editForm.get(['strate'])!.value,
       feuillage: this.editForm.get(['feuillage'])!.value,
+      nomsVernaculaires: this.editForm.get(['nomsVernaculaires'])!.value,
+      plante: this.editForm.get(['plante'])!.value,
     };
   }
 }

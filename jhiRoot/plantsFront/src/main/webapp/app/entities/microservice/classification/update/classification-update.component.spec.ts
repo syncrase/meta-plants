@@ -59,118 +59,112 @@ describe('Classification Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call Raunkier query and add missing value', () => {
+    it('Should call raunkier query and add missing value', () => {
       const classification: IClassification = { id: 456 };
       const raunkier: IRaunkier = { id: 61579 };
       classification.raunkier = raunkier;
 
       const raunkierCollection: IRaunkier[] = [{ id: 36464 }];
       jest.spyOn(raunkierService, 'query').mockReturnValue(of(new HttpResponse({ body: raunkierCollection })));
-      const additionalRaunkiers = [raunkier];
-      const expectedCollection: IRaunkier[] = [...additionalRaunkiers, ...raunkierCollection];
+      const expectedCollection: IRaunkier[] = [raunkier, ...raunkierCollection];
       jest.spyOn(raunkierService, 'addRaunkierToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ classification });
       comp.ngOnInit();
 
       expect(raunkierService.query).toHaveBeenCalled();
-      expect(raunkierService.addRaunkierToCollectionIfMissing).toHaveBeenCalledWith(raunkierCollection, ...additionalRaunkiers);
-      expect(comp.raunkiersSharedCollection).toEqual(expectedCollection);
+      expect(raunkierService.addRaunkierToCollectionIfMissing).toHaveBeenCalledWith(raunkierCollection, raunkier);
+      expect(comp.raunkiersCollection).toEqual(expectedCollection);
     });
 
-    it('Should call Cronquist query and add missing value', () => {
+    it('Should call cronquist query and add missing value', () => {
       const classification: IClassification = { id: 456 };
       const cronquist: ICronquist = { id: 74922 };
       classification.cronquist = cronquist;
 
       const cronquistCollection: ICronquist[] = [{ id: 24554 }];
       jest.spyOn(cronquistService, 'query').mockReturnValue(of(new HttpResponse({ body: cronquistCollection })));
-      const additionalCronquists = [cronquist];
-      const expectedCollection: ICronquist[] = [...additionalCronquists, ...cronquistCollection];
+      const expectedCollection: ICronquist[] = [cronquist, ...cronquistCollection];
       jest.spyOn(cronquistService, 'addCronquistToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ classification });
       comp.ngOnInit();
 
       expect(cronquistService.query).toHaveBeenCalled();
-      expect(cronquistService.addCronquistToCollectionIfMissing).toHaveBeenCalledWith(cronquistCollection, ...additionalCronquists);
-      expect(comp.cronquistsSharedCollection).toEqual(expectedCollection);
+      expect(cronquistService.addCronquistToCollectionIfMissing).toHaveBeenCalledWith(cronquistCollection, cronquist);
+      expect(comp.cronquistsCollection).toEqual(expectedCollection);
     });
 
-    it('Should call APGI query and add missing value', () => {
+    it('Should call apg1 query and add missing value', () => {
       const classification: IClassification = { id: 456 };
       const apg1: IAPGI = { id: 75939 };
       classification.apg1 = apg1;
 
-      const aPGICollection: IAPGI[] = [{ id: 26520 }];
-      jest.spyOn(aPGIService, 'query').mockReturnValue(of(new HttpResponse({ body: aPGICollection })));
-      const additionalAPGIS = [apg1];
-      const expectedCollection: IAPGI[] = [...additionalAPGIS, ...aPGICollection];
+      const apg1Collection: IAPGI[] = [{ id: 26520 }];
+      jest.spyOn(aPGIService, 'query').mockReturnValue(of(new HttpResponse({ body: apg1Collection })));
+      const expectedCollection: IAPGI[] = [apg1, ...apg1Collection];
       jest.spyOn(aPGIService, 'addAPGIToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ classification });
       comp.ngOnInit();
 
       expect(aPGIService.query).toHaveBeenCalled();
-      expect(aPGIService.addAPGIToCollectionIfMissing).toHaveBeenCalledWith(aPGICollection, ...additionalAPGIS);
-      expect(comp.aPGISSharedCollection).toEqual(expectedCollection);
+      expect(aPGIService.addAPGIToCollectionIfMissing).toHaveBeenCalledWith(apg1Collection, apg1);
+      expect(comp.apg1sCollection).toEqual(expectedCollection);
     });
 
-    it('Should call APGII query and add missing value', () => {
+    it('Should call apg2 query and add missing value', () => {
       const classification: IClassification = { id: 456 };
       const apg2: IAPGII = { id: 75387 };
       classification.apg2 = apg2;
 
-      const aPGIICollection: IAPGII[] = [{ id: 86005 }];
-      jest.spyOn(aPGIIService, 'query').mockReturnValue(of(new HttpResponse({ body: aPGIICollection })));
-      const additionalAPGIIS = [apg2];
-      const expectedCollection: IAPGII[] = [...additionalAPGIIS, ...aPGIICollection];
+      const apg2Collection: IAPGII[] = [{ id: 86005 }];
+      jest.spyOn(aPGIIService, 'query').mockReturnValue(of(new HttpResponse({ body: apg2Collection })));
+      const expectedCollection: IAPGII[] = [apg2, ...apg2Collection];
       jest.spyOn(aPGIIService, 'addAPGIIToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ classification });
       comp.ngOnInit();
 
       expect(aPGIIService.query).toHaveBeenCalled();
-      expect(aPGIIService.addAPGIIToCollectionIfMissing).toHaveBeenCalledWith(aPGIICollection, ...additionalAPGIIS);
-      expect(comp.aPGIISSharedCollection).toEqual(expectedCollection);
+      expect(aPGIIService.addAPGIIToCollectionIfMissing).toHaveBeenCalledWith(apg2Collection, apg2);
+      expect(comp.apg2sCollection).toEqual(expectedCollection);
     });
 
-    it('Should call APGIII query and add missing value', () => {
+    it('Should call apg3 query and add missing value', () => {
       const classification: IClassification = { id: 456 };
       const apg3: IAPGIII = { id: 88678 };
       classification.apg3 = apg3;
 
-      const aPGIIICollection: IAPGIII[] = [{ id: 64364 }];
-      jest.spyOn(aPGIIIService, 'query').mockReturnValue(of(new HttpResponse({ body: aPGIIICollection })));
-      const additionalAPGIIIS = [apg3];
-      const expectedCollection: IAPGIII[] = [...additionalAPGIIIS, ...aPGIIICollection];
+      const apg3Collection: IAPGIII[] = [{ id: 64364 }];
+      jest.spyOn(aPGIIIService, 'query').mockReturnValue(of(new HttpResponse({ body: apg3Collection })));
+      const expectedCollection: IAPGIII[] = [apg3, ...apg3Collection];
       jest.spyOn(aPGIIIService, 'addAPGIIIToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ classification });
       comp.ngOnInit();
 
       expect(aPGIIIService.query).toHaveBeenCalled();
-      expect(aPGIIIService.addAPGIIIToCollectionIfMissing).toHaveBeenCalledWith(aPGIIICollection, ...additionalAPGIIIS);
-      expect(comp.aPGIIISSharedCollection).toEqual(expectedCollection);
+      expect(aPGIIIService.addAPGIIIToCollectionIfMissing).toHaveBeenCalledWith(apg3Collection, apg3);
+      expect(comp.apg3sCollection).toEqual(expectedCollection);
     });
 
-    it('Should call APGIV query and add missing value', () => {
+    it('Should call apg4 query and add missing value', () => {
       const classification: IClassification = { id: 456 };
       const apg4: IAPGIV = { id: 34949 };
       classification.apg4 = apg4;
 
-      const aPGIVCollection: IAPGIV[] = [{ id: 31132 }];
-      jest.spyOn(aPGIVService, 'query').mockReturnValue(of(new HttpResponse({ body: aPGIVCollection })));
-      const additionalAPGIVS = [apg4];
-      const expectedCollection: IAPGIV[] = [...additionalAPGIVS, ...aPGIVCollection];
+      const apg4Collection: IAPGIV[] = [{ id: 31132 }];
+      jest.spyOn(aPGIVService, 'query').mockReturnValue(of(new HttpResponse({ body: apg4Collection })));
+      const expectedCollection: IAPGIV[] = [apg4, ...apg4Collection];
       jest.spyOn(aPGIVService, 'addAPGIVToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ classification });
       comp.ngOnInit();
 
       expect(aPGIVService.query).toHaveBeenCalled();
-      expect(aPGIVService.addAPGIVToCollectionIfMissing).toHaveBeenCalledWith(aPGIVCollection, ...additionalAPGIVS);
-      expect(comp.aPGIVSSharedCollection).toEqual(expectedCollection);
+      expect(aPGIVService.addAPGIVToCollectionIfMissing).toHaveBeenCalledWith(apg4Collection, apg4);
+      expect(comp.apg4sCollection).toEqual(expectedCollection);
     });
 
     it('Should update editForm', () => {
@@ -192,12 +186,12 @@ describe('Classification Management Update Component', () => {
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(classification));
-      expect(comp.raunkiersSharedCollection).toContain(raunkier);
-      expect(comp.cronquistsSharedCollection).toContain(cronquist);
-      expect(comp.aPGISSharedCollection).toContain(apg1);
-      expect(comp.aPGIISSharedCollection).toContain(apg2);
-      expect(comp.aPGIIISSharedCollection).toContain(apg3);
-      expect(comp.aPGIVSSharedCollection).toContain(apg4);
+      expect(comp.raunkiersCollection).toContain(raunkier);
+      expect(comp.cronquistsCollection).toContain(cronquist);
+      expect(comp.apg1sCollection).toContain(apg1);
+      expect(comp.apg2sCollection).toContain(apg2);
+      expect(comp.apg3sCollection).toContain(apg3);
+      expect(comp.apg4sCollection).toContain(apg4);
     });
   });
 

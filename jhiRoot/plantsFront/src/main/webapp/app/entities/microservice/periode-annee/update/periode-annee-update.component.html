@@ -14,10 +14,10 @@
         <div class="form-group">
           <label class="form-control-label" for="field_debut">Debut</label>
           <select class="form-control" id="field_debut" data-cy="debut" name="debut" formControlName="debut">
-            <option *ngIf="editForm.get(['debut'])!.value == null" [ngValue]="null" selected></option>
+            <option *ngIf="!editForm.get('debut')!.value" [ngValue]="null" selected></option>
             <option
               [ngValue]="moisOption.id === editForm.get('debut')!.value?.id ? editForm.get('debut')!.value : moisOption"
-              *ngFor="let moisOption of debutsCollection; trackBy: trackMoisById"
+              *ngFor="let moisOption of moisSharedCollection; trackBy: trackMoisById"
             >
               {{ moisOption.nom }}
             </option>
@@ -30,10 +30,10 @@
         <div class="form-group">
           <label class="form-control-label" for="field_fin">Fin</label>
           <select class="form-control" id="field_fin" data-cy="fin" name="fin" formControlName="fin">
-            <option *ngIf="editForm.get(['fin'])!.value == null" [ngValue]="null" selected></option>
+            <option *ngIf="!editForm.get('fin')!.value" [ngValue]="null" selected></option>
             <option
               [ngValue]="moisOption.id === editForm.get('fin')!.value?.id ? editForm.get('fin')!.value : moisOption"
-              *ngFor="let moisOption of finsCollection; trackBy: trackMoisById"
+              *ngFor="let moisOption of moisSharedCollection; trackBy: trackMoisById"
             >
               {{ moisOption.nom }}
             </option>

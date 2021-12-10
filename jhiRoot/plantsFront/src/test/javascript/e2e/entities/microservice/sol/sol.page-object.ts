@@ -35,8 +35,6 @@ export class SolUpdatePage {
   typeInput = element(by.id('field_type'));
   richesseInput = element(by.id('field_richesse'));
 
-  planteSelect = element(by.id('field_plante'));
-
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getText();
   }
@@ -79,22 +77,6 @@ export class SolUpdatePage {
 
   async getRichesseInput(): Promise<string> {
     return await this.richesseInput.getAttribute('value');
-  }
-
-  async planteSelectLastOption(): Promise<void> {
-    await this.planteSelect.all(by.tagName('option')).last().click();
-  }
-
-  async planteSelectOption(option: string): Promise<void> {
-    await this.planteSelect.sendKeys(option);
-  }
-
-  getPlanteSelect(): ElementFinder {
-    return this.planteSelect;
-  }
-
-  async getPlanteSelectedOption(): Promise<string> {
-    return await this.planteSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

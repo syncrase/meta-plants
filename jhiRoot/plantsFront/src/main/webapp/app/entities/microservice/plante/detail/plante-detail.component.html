@@ -30,24 +30,23 @@
         <dd>
           <span>{{ plante.exposition }}</span>
         </dd>
-        <dt><span>Cycle De Vie</span></dt>
-        <dd>
-          <div *ngIf="plante.cycleDeVie">
-            <a [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.id }}</a>
-          </div>
-        </dd>
         <dt><span>Classification</span></dt>
         <dd>
           <div *ngIf="plante.classification">
             <a [routerLink]="['/classification', plante.classification?.id, 'view']">{{ plante.classification?.id }}</a>
           </div>
         </dd>
-        <dt><span>Noms Vernaculaires</span></dt>
+        <dt><span>Cycle De Vie</span></dt>
         <dd>
-          <span *ngFor="let nomsVernaculaires of plante.nomsVernaculaires; let last = last">
-            <a [routerLink]="['/nom-vernaculaire', nomsVernaculaires?.id, 'view']">{{ nomsVernaculaires.id }}</a
-            >{{ last ? '' : ', ' }}
-          </span>
+          <div *ngIf="plante.cycleDeVie">
+            <a [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Sol</span></dt>
+        <dd>
+          <div *ngIf="plante.sol">
+            <a [routerLink]="['/sol', plante.sol?.id, 'view']">{{ plante.sol?.id }}</a>
+          </div>
         </dd>
         <dt><span>Temperature</span></dt>
         <dd>
@@ -71,6 +70,19 @@
         <dd>
           <div *ngIf="plante.feuillage">
             <a [routerLink]="['/feuillage', plante.feuillage?.id, 'view']">{{ plante.feuillage?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Noms Vernaculaires</span></dt>
+        <dd>
+          <span *ngFor="let nomsVernaculaires of plante.nomsVernaculaires; let last = last">
+            <a [routerLink]="['/nom-vernaculaire', nomsVernaculaires?.id, 'view']">{{ nomsVernaculaires.nom }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span>Plante</span></dt>
+        <dd>
+          <div *ngIf="plante.plante">
+            <a [routerLink]="['/plante', plante.plante?.id, 'view']">{{ plante.plante?.id }}</a>
           </div>
         </dd>
       </dl>

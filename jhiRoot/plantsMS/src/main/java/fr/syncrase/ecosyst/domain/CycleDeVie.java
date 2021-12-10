@@ -22,44 +22,36 @@ public class CycleDeVie implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "semisPleineTerre", "semisSousAbris", "typeSemis", "germination" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private Semis semis;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee apparitionFeuilles;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee floraison;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee recolte;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee croissance;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee maturite;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee plantation;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee rempotage;
 
     @ManyToOne

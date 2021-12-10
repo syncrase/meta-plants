@@ -88,12 +88,6 @@ public class RacineQueryService extends QueryService<Racine> {
             if (criteria.getType() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getType(), Racine_.type));
             }
-            if (criteria.getPlanteId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getPlanteId(), root -> root.join(Racine_.plantes, JoinType.LEFT).get(Plante_.id))
-                    );
-            }
         }
         return specification;
     }

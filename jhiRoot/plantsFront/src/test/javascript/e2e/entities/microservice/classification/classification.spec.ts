@@ -46,7 +46,6 @@ describe('Classification e2e test', () => {
     await classificationComponentsPage.clickOnCreateButton();
 
     await promise.all([
-      classificationUpdatePage.setNomLatinInput('nomLatin'),
       classificationUpdatePage.raunkierSelectLastOption(),
       classificationUpdatePage.cronquistSelectLastOption(),
       classificationUpdatePage.apg1SelectLastOption(),

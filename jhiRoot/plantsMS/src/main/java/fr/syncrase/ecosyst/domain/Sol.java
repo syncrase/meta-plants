@@ -1,6 +1,5 @@
 package fr.syncrase.ecosyst.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
@@ -33,24 +32,6 @@ public class Sol implements Serializable {
 
     @Column(name = "richesse")
     private String richesse;
-
-    @ManyToOne
-    @JsonIgnoreProperties(
-        value = {
-            "cycleDeVie",
-            "confusions",
-            "ensoleillements",
-            "sols",
-            "classification",
-            "nomsVernaculaires",
-            "temperature",
-            "racine",
-            "strate",
-            "feuillage",
-        },
-        allowSetters = true
-    )
-    private Plante plante;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -117,19 +98,6 @@ public class Sol implements Serializable {
 
     public void setRichesse(String richesse) {
         this.richesse = richesse;
-    }
-
-    public Plante getPlante() {
-        return this.plante;
-    }
-
-    public void setPlante(Plante plante) {
-        this.plante = plante;
-    }
-
-    public Sol plante(Plante plante) {
-        this.setPlante(plante);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

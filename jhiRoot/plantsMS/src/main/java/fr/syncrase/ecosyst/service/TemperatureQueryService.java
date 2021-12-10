@@ -97,12 +97,6 @@ public class TemperatureQueryService extends QueryService<Temperature> {
             if (criteria.getRusticite() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getRusticite(), Temperature_.rusticite));
             }
-            if (criteria.getPlantesId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getPlantesId(), root -> root.join(Temperature_.plantes, JoinType.LEFT).get(Plante_.id))
-                    );
-            }
         }
         return specification;
     }

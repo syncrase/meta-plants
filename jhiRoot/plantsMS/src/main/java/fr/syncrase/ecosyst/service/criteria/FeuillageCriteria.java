@@ -28,8 +28,6 @@ public class FeuillageCriteria implements Serializable, Criteria {
 
     private StringFilter type;
 
-    private LongFilter planteId;
-
     private Boolean distinct;
 
     public FeuillageCriteria() {}
@@ -37,7 +35,6 @@ public class FeuillageCriteria implements Serializable, Criteria {
     public FeuillageCriteria(FeuillageCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.type = other.type == null ? null : other.type.copy();
-        this.planteId = other.planteId == null ? null : other.planteId.copy();
         this.distinct = other.distinct;
     }
 
@@ -76,21 +73,6 @@ public class FeuillageCriteria implements Serializable, Criteria {
         this.type = type;
     }
 
-    public LongFilter getPlanteId() {
-        return planteId;
-    }
-
-    public LongFilter planteId() {
-        if (planteId == null) {
-            planteId = new LongFilter();
-        }
-        return planteId;
-    }
-
-    public void setPlanteId(LongFilter planteId) {
-        this.planteId = planteId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -108,17 +90,12 @@ public class FeuillageCriteria implements Serializable, Criteria {
             return false;
         }
         final FeuillageCriteria that = (FeuillageCriteria) o;
-        return (
-            Objects.equals(id, that.id) &&
-            Objects.equals(type, that.type) &&
-            Objects.equals(planteId, that.planteId) &&
-            Objects.equals(distinct, that.distinct)
-        );
+        return Objects.equals(id, that.id) && Objects.equals(type, that.type) && Objects.equals(distinct, that.distinct);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, planteId, distinct);
+        return Objects.hash(id, type, distinct);
     }
 
     // prettier-ignore
@@ -127,7 +104,6 @@ public class FeuillageCriteria implements Serializable, Criteria {
         return "FeuillageCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
             (type != null ? "type=" + type + ", " : "") +
-            (planteId != null ? "planteId=" + planteId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

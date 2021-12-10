@@ -22,22 +22,18 @@ public class Semis implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee semisPleineTerre;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "debut", "fin" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
     private PeriodeAnnee semisSousAbris;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @ManyToOne
     private TypeSemis typeSemis;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @ManyToOne
     private Germination germination;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

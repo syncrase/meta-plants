@@ -21,14 +21,8 @@ import { ReproductionService } from 'app/entities/microservice/reproduction/serv
 export class CycleDeVieUpdateComponent implements OnInit {
   isSaving = false;
 
-  semisCollection: ISemis[] = [];
-  apparitionFeuillesCollection: IPeriodeAnnee[] = [];
-  floraisonsCollection: IPeriodeAnnee[] = [];
-  recoltesCollection: IPeriodeAnnee[] = [];
-  croissancesCollection: IPeriodeAnnee[] = [];
-  maturitesCollection: IPeriodeAnnee[] = [];
-  plantationsCollection: IPeriodeAnnee[] = [];
-  rempotagesCollection: IPeriodeAnnee[] = [];
+  semisSharedCollection: ISemis[] = [];
+  periodeAnneesSharedCollection: IPeriodeAnnee[] = [];
   reproductionsSharedCollection: IReproduction[] = [];
 
   editForm = this.fb.group({
@@ -120,27 +114,15 @@ export class CycleDeVieUpdateComponent implements OnInit {
       reproduction: cycleDeVie.reproduction,
     });
 
-    this.semisCollection = this.semisService.addSemisToCollectionIfMissing(this.semisCollection, cycleDeVie.semis);
-    this.apparitionFeuillesCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
-      this.apparitionFeuillesCollection,
-      cycleDeVie.apparitionFeuilles
-    );
-    this.floraisonsCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
-      this.floraisonsCollection,
-      cycleDeVie.floraison
-    );
-    this.recoltesCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(this.recoltesCollection, cycleDeVie.recolte);
-    this.croissancesCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
-      this.croissancesCollection,
-      cycleDeVie.croissance
-    );
-    this.maturitesCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(this.maturitesCollection, cycleDeVie.maturite);
-    this.plantationsCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
-      this.plantationsCollection,
-      cycleDeVie.plantation
-    );
-    this.rempotagesCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
-      this.rempotagesCollection,
+    this.semisSharedCollection = this.semisService.addSemisToCollectionIfMissing(this.semisSharedCollection, cycleDeVie.semis);
+    this.periodeAnneesSharedCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
+      this.periodeAnneesSharedCollection,
+      cycleDeVie.apparitionFeuilles,
+      cycleDeVie.floraison,
+      cycleDeVie.recolte,
+      cycleDeVie.croissance,
+      cycleDeVie.maturite,
+      cycleDeVie.plantation,
       cycleDeVie.rempotage
     );
     this.reproductionsSharedCollection = this.reproductionService.addReproductionToCollectionIfMissing(
@@ -151,80 +133,29 @@ export class CycleDeVieUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.semisService
-      .query({ filter: 'cycledevie-is-null' })
+      .query()
       .pipe(map((res: HttpResponse<ISemis[]>) => res.body ?? []))
       .pipe(map((semis: ISemis[]) => this.semisService.addSemisToCollectionIfMissing(semis, this.editForm.get('semis')!.value)))
-      .subscribe((semis: ISemis[]) => (this.semisCollection = semis));
+      .subscribe((semis: ISemis[]) => (this.semisSharedCollection = semis));
 
     this.periodeAnneeService
-      .query({ filter: 'cycledevie-is-null' })
+      .query()
       .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
       .pipe(
         map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('apparitionFeuilles')!.value)
+          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
+            periodeAnnees,
+            this.editForm.get('apparitionFeuilles')!.value,
+            this.editForm.get('floraison')!.value,
+            this.editForm.get('recolte')!.value,
+            this.editForm.get('croissance')!.value,
+            this.editForm.get('maturite')!.value,
+            this.editForm.get('plantation')!.value,
+            this.editForm.get('rempotage')!.value
+          )
         )
       )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.apparitionFeuillesCollection = periodeAnnees));
-
-    this.periodeAnneeService
-      .query({ filter: 'cycledevie-is-null' })
-      .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
-      .pipe(
-        map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('floraison')!.value)
-        )
-      )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.floraisonsCollection = periodeAnnees));
-
-    this.periodeAnneeService
-      .query({ filter: 'cycledevie-is-null' })
-      .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
-      .pipe(
-        map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('recolte')!.value)
-        )
-      )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.recoltesCollection = periodeAnnees));
-
-    this.periodeAnneeService
-      .query({ filter: 'cycledevie-is-null' })
-      .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
-      .pipe(
-        map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('croissance')!.value)
-        )
-      )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.croissancesCollection = periodeAnnees));
-
-    this.periodeAnneeService
-      .query({ filter: 'cycledevie-is-null' })
-      .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
-      .pipe(
-        map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('maturite')!.value)
-        )
-      )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.maturitesCollection = periodeAnnees));
-
-    this.periodeAnneeService
-      .query({ filter: 'cycledevie-is-null' })
-      .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
-      .pipe(
-        map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('plantation')!.value)
-        )
-      )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.plantationsCollection = periodeAnnees));
-
-    this.periodeAnneeService
-      .query({ filter: 'cycledevie-is-null' })
-      .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
-      .pipe(
-        map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('rempotage')!.value)
-        )
-      )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.rempotagesCollection = periodeAnnees));
+      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.periodeAnneesSharedCollection = periodeAnnees));
 
     this.reproductionService
       .query()

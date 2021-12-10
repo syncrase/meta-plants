@@ -27,7 +27,7 @@
                   ? editForm.get('semisPleineTerre')!.value
                   : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of semisPleineTerresCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -50,7 +50,7 @@
                   ? editForm.get('semisSousAbris')!.value
                   : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of semisSousAbrisesCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -63,9 +63,9 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="typeSemisOption.id === editForm.get('typeSemis')!.value?.id ? editForm.get('typeSemis')!.value : typeSemisOption"
-              *ngFor="let typeSemisOption of typeSemisCollection; trackBy: trackTypeSemisById"
+              *ngFor="let typeSemisOption of typeSemisSharedCollection; trackBy: trackTypeSemisById"
             >
-              {{ typeSemisOption.id }}
+              {{ typeSemisOption.type }}
             </option>
           </select>
         </div>
@@ -78,7 +78,7 @@
               [ngValue]="
                 germinationOption.id === editForm.get('germination')!.value?.id ? editForm.get('germination')!.value : germinationOption
               "
-              *ngFor="let germinationOption of germinationsCollection; trackBy: trackGerminationById"
+              *ngFor="let germinationOption of germinationsSharedCollection; trackBy: trackGerminationById"
             >
               {{ germinationOption.id }}
             </option>

@@ -35,7 +35,7 @@
           <th scope="col" permaSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="semisPleineTerre.id"><span>Semis Pleine Terre</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="semisSousAbris.id"><span>Semis Sous Abris</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" permaSortBy="typeSemis.id"><span>Type Semis</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="typeSemis.type"><span>Type Semis</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="germination.id"><span>Germination</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
@@ -57,7 +57,7 @@
           </td>
           <td>
             <div *ngIf="semis.typeSemis">
-              <a [routerLink]="['/type-semis', semis.typeSemis?.id, 'view']">{{ semis.typeSemis?.id }}</a>
+              <a [routerLink]="['/type-semis', semis.typeSemis?.id, 'view']">{{ semis.typeSemis?.type }}</a>
             </div>
           </td>
           <td>

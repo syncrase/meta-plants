@@ -47,13 +47,15 @@ describe('Plante e2e test', () => {
       planteUpdatePage.setHistoireInput('histoire'),
       planteUpdatePage.setVitesseCroissanceInput('vitesseCroissance'),
       planteUpdatePage.setExpositionInput('exposition'),
-      planteUpdatePage.cycleDeVieSelectLastOption(),
       planteUpdatePage.classificationSelectLastOption(),
-      // planteUpdatePage.nomsVernaculairesSelectLastOption(),
+      planteUpdatePage.cycleDeVieSelectLastOption(),
+      planteUpdatePage.solSelectLastOption(),
       planteUpdatePage.temperatureSelectLastOption(),
       planteUpdatePage.racineSelectLastOption(),
       planteUpdatePage.strateSelectLastOption(),
       planteUpdatePage.feuillageSelectLastOption(),
+      // planteUpdatePage.nomsVernaculairesSelectLastOption(),
+      planteUpdatePage.planteSelectLastOption(),
     ]);
 
     await planteUpdatePage.save();

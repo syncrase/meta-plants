@@ -17,7 +17,7 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="semisOption.id === editForm.get('semis')!.value?.id ? editForm.get('semis')!.value : semisOption"
-              *ngFor="let semisOption of semisCollection; trackBy: trackSemisById"
+              *ngFor="let semisOption of semisSharedCollection; trackBy: trackSemisById"
             >
               {{ semisOption.id }}
             </option>
@@ -40,7 +40,7 @@
                   ? editForm.get('apparitionFeuilles')!.value
                   : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of apparitionFeuillesCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -55,7 +55,7 @@
               [ngValue]="
                 periodeAnneeOption.id === editForm.get('floraison')!.value?.id ? editForm.get('floraison')!.value : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of floraisonsCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -68,7 +68,7 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="periodeAnneeOption.id === editForm.get('recolte')!.value?.id ? editForm.get('recolte')!.value : periodeAnneeOption"
-              *ngFor="let periodeAnneeOption of recoltesCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -83,7 +83,7 @@
               [ngValue]="
                 periodeAnneeOption.id === editForm.get('croissance')!.value?.id ? editForm.get('croissance')!.value : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of croissancesCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -98,7 +98,7 @@
               [ngValue]="
                 periodeAnneeOption.id === editForm.get('maturite')!.value?.id ? editForm.get('maturite')!.value : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of maturitesCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -113,7 +113,7 @@
               [ngValue]="
                 periodeAnneeOption.id === editForm.get('plantation')!.value?.id ? editForm.get('plantation')!.value : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of plantationsCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>
@@ -128,7 +128,7 @@
               [ngValue]="
                 periodeAnneeOption.id === editForm.get('rempotage')!.value?.id ? editForm.get('rempotage')!.value : periodeAnneeOption
               "
-              *ngFor="let periodeAnneeOption of rempotagesCollection; trackBy: trackPeriodeAnneeById"
+              *ngFor="let periodeAnneeOption of periodeAnneesSharedCollection; trackBy: trackPeriodeAnneeById"
             >
               {{ periodeAnneeOption.id }}
             </option>

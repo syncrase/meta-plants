@@ -32,16 +32,18 @@ public class Ressemblance implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(
         value = {
-            "cycleDeVie",
+            "classification",
             "confusions",
             "ensoleillements",
-            "sols",
-            "classification",
-            "nomsVernaculaires",
+            "plantesPotageres",
+            "cycleDeVie",
+            "sol",
             "temperature",
             "racine",
             "strate",
             "feuillage",
+            "nomsVernaculaires",
+            "plante",
         },
         allowSetters = true
     )

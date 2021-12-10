@@ -181,8 +181,19 @@ class PeriodeAnneeResourceIT {
     @Test
     @Transactional
     void getAllPeriodeAnneesByDebutIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        Mois debut = periodeAnnee.getDebut();
+        // Initialize the database
+        periodeAnneeRepository.saveAndFlush(periodeAnnee);
+        Mois debut;
+        if (TestUtil.findAll(em, Mois.class).isEmpty()) {
+            debut = MoisResourceIT.createEntity(em);
+            em.persist(debut);
+            em.flush();
+        } else {
+            debut = TestUtil.findAll(em, Mois.class).get(0);
+        }
+        em.persist(debut);
+        em.flush();
+        periodeAnnee.setDebut(debut);
         periodeAnneeRepository.saveAndFlush(periodeAnnee);
         Long debutId = debut.getId();
 
@@ -196,8 +207,19 @@ class PeriodeAnneeResourceIT {
     @Test
     @Transactional
     void getAllPeriodeAnneesByFinIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        Mois fin = periodeAnnee.getFin();
+        // Initialize the database
+        periodeAnneeRepository.saveAndFlush(periodeAnnee);
+        Mois fin;
+        if (TestUtil.findAll(em, Mois.class).isEmpty()) {
+            fin = MoisResourceIT.createEntity(em);
+            em.persist(fin);
+            em.flush();
+        } else {
+            fin = TestUtil.findAll(em, Mois.class).get(0);
+        }
+        em.persist(fin);
+        em.flush();
+        periodeAnnee.setFin(fin);
         periodeAnneeRepository.saveAndFlush(periodeAnnee);
         Long finId = fin.getId();
 

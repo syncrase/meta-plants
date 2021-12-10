@@ -3,12 +3,10 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import { ISol, Sol } from '../sol.model';
 import { SolService } from '../service/sol.service';
-import { IPlante } from 'app/entities/microservice/plante/plante.model';
-import { PlanteService } from 'app/entities/microservice/plante/service/plante.service';
 
 @Component({
   selector: 'perma-sol-update',
@@ -17,29 +15,19 @@ import { PlanteService } from 'app/entities/microservice/plante/service/plante.s
 export class SolUpdateComponent implements OnInit {
   isSaving = false;
 
-  plantesSharedCollection: IPlante[] = [];
-
   editForm = this.fb.group({
     id: [],
     phMin: [],
     phMax: [],
     type: [],
     richesse: [],
-    plante: [],
   });
 
-  constructor(
-    protected solService: SolService,
-    protected planteService: PlanteService,
-    protected activatedRoute: ActivatedRoute,
-    protected fb: FormBuilder
-  ) {}
+  constructor(protected solService: SolService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ sol }) => {
       this.updateForm(sol);
-
-      this.loadRelationshipsOptions();
     });
   }
 
@@ -55,10 +43,6 @@ export class SolUpdateComponent implements OnInit {
     } else {
       this.subscribeToSaveResponse(this.solService.create(sol));
     }
-  }
-
-  trackPlanteById(index: number, item: IPlante): number {
-    return item.id!;
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<ISol>>): void {
@@ -87,18 +71,7 @@ export class SolUpdateComponent implements OnInit {
       phMax: sol.phMax,
       type: sol.type,
       richesse: sol.richesse,
-      plante: sol.plante,
     });
-
-    this.plantesSharedCollection = this.planteService.addPlanteToCollectionIfMissing(this.plantesSharedCollection, sol.plante);
-  }
-
-  protected loadRelationshipsOptions(): void {
-    this.planteService
-      .query()
-      .pipe(map((res: HttpResponse<IPlante[]>) => res.body ?? []))
-      .pipe(map((plantes: IPlante[]) => this.planteService.addPlanteToCollectionIfMissing(plantes, this.editForm.get('plante')!.value)))
-      .subscribe((plantes: IPlante[]) => (this.plantesSharedCollection = plantes));
   }
 
   protected createFromForm(): ISol {
@@ -109,7 +82,6 @@ export class SolUpdateComponent implements OnInit {
       phMax: this.editForm.get(['phMax'])!.value,
       type: this.editForm.get(['type'])!.value,
       richesse: this.editForm.get(['richesse'])!.value,
-      plante: this.editForm.get(['plante'])!.value,
     };
   }
 }

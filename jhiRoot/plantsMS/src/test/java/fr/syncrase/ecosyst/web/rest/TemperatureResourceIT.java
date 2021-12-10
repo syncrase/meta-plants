@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
-import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.domain.Temperature;
 import fr.syncrase.ecosyst.repository.TemperatureRepository;
 import fr.syncrase.ecosyst.service.criteria.TemperatureCriteria;
@@ -550,32 +549,6 @@ class TemperatureResourceIT {
 
         // Get all the temperatureList where rusticite does not contain UPDATED_RUSTICITE
         defaultTemperatureShouldBeFound("rusticite.doesNotContain=" + UPDATED_RUSTICITE);
-    }
-
-    @Test
-    @Transactional
-    void getAllTemperaturesByPlantesIsEqualToSomething() throws Exception {
-        // Initialize the database
-        temperatureRepository.saveAndFlush(temperature);
-        Plante plantes;
-        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            plantes = PlanteResourceIT.createEntity(em);
-            em.persist(plantes);
-            em.flush();
-        } else {
-            plantes = TestUtil.findAll(em, Plante.class).get(0);
-        }
-        em.persist(plantes);
-        em.flush();
-        temperature.addPlantes(plantes);
-        temperatureRepository.saveAndFlush(temperature);
-        Long plantesId = plantes.getId();
-
-        // Get all the temperatureList where plantes equals to plantesId
-        defaultTemperatureShouldBeFound("plantesId.equals=" + plantesId);
-
-        // Get all the temperatureList where plantes equals to (plantesId + 1)
-        defaultTemperatureShouldNotBeFound("plantesId.equals=" + (plantesId + 1));
     }
 
     /**

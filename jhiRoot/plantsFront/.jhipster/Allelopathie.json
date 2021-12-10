@@ -23,12 +23,14 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "allelopathie",
+      "relationshipValidateRules": "required",
       "relationshipName": "cible"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "allelopathie",
+      "relationshipValidateRules": "required",
       "relationshipName": "origine"
     }
   ],

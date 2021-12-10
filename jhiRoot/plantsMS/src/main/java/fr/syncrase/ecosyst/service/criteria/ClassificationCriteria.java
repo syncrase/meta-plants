@@ -26,8 +26,6 @@ public class ClassificationCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private StringFilter nomLatin;
-
     private LongFilter raunkierId;
 
     private LongFilter cronquistId;
@@ -40,19 +38,21 @@ public class ClassificationCriteria implements Serializable, Criteria {
 
     private LongFilter apg4Id;
 
+    private LongFilter planteId;
+
     private Boolean distinct;
 
     public ClassificationCriteria() {}
 
     public ClassificationCriteria(ClassificationCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.nomLatin = other.nomLatin == null ? null : other.nomLatin.copy();
         this.raunkierId = other.raunkierId == null ? null : other.raunkierId.copy();
         this.cronquistId = other.cronquistId == null ? null : other.cronquistId.copy();
         this.apg1Id = other.apg1Id == null ? null : other.apg1Id.copy();
         this.apg2Id = other.apg2Id == null ? null : other.apg2Id.copy();
         this.apg3Id = other.apg3Id == null ? null : other.apg3Id.copy();
         this.apg4Id = other.apg4Id == null ? null : other.apg4Id.copy();
+        this.planteId = other.planteId == null ? null : other.planteId.copy();
         this.distinct = other.distinct;
     }
 
@@ -74,21 +74,6 @@ public class ClassificationCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
-    }
-
-    public StringFilter getNomLatin() {
-        return nomLatin;
-    }
-
-    public StringFilter nomLatin() {
-        if (nomLatin == null) {
-            nomLatin = new StringFilter();
-        }
-        return nomLatin;
-    }
-
-    public void setNomLatin(StringFilter nomLatin) {
-        this.nomLatin = nomLatin;
     }
 
     public LongFilter getRaunkierId() {
@@ -181,6 +166,21 @@ public class ClassificationCriteria implements Serializable, Criteria {
         this.apg4Id = apg4Id;
     }
 
+    public LongFilter getPlanteId() {
+        return planteId;
+    }
+
+    public LongFilter planteId() {
+        if (planteId == null) {
+            planteId = new LongFilter();
+        }
+        return planteId;
+    }
+
+    public void setPlanteId(LongFilter planteId) {
+        this.planteId = planteId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -200,20 +200,20 @@ public class ClassificationCriteria implements Serializable, Criteria {
         final ClassificationCriteria that = (ClassificationCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(nomLatin, that.nomLatin) &&
             Objects.equals(raunkierId, that.raunkierId) &&
             Objects.equals(cronquistId, that.cronquistId) &&
             Objects.equals(apg1Id, that.apg1Id) &&
             Objects.equals(apg2Id, that.apg2Id) &&
             Objects.equals(apg3Id, that.apg3Id) &&
             Objects.equals(apg4Id, that.apg4Id) &&
+            Objects.equals(planteId, that.planteId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nomLatin, raunkierId, cronquistId, apg1Id, apg2Id, apg3Id, apg4Id, distinct);
+        return Objects.hash(id, raunkierId, cronquistId, apg1Id, apg2Id, apg3Id, apg4Id, planteId, distinct);
     }
 
     // prettier-ignore
@@ -221,13 +221,13 @@ public class ClassificationCriteria implements Serializable, Criteria {
     public String toString() {
         return "ClassificationCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
-            (nomLatin != null ? "nomLatin=" + nomLatin + ", " : "") +
             (raunkierId != null ? "raunkierId=" + raunkierId + ", " : "") +
             (cronquistId != null ? "cronquistId=" + cronquistId + ", " : "") +
             (apg1Id != null ? "apg1Id=" + apg1Id + ", " : "") +
             (apg2Id != null ? "apg2Id=" + apg2Id + ", " : "") +
             (apg3Id != null ? "apg3Id=" + apg3Id + ", " : "") +
             (apg4Id != null ? "apg4Id=" + apg4Id + ", " : "") +
+            (planteId != null ? "planteId=" + planteId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

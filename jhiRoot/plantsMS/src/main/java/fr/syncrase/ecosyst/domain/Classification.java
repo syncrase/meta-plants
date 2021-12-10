@@ -1,5 +1,6 @@
 package fr.syncrase.ecosyst.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
@@ -21,26 +22,49 @@ public class Classification implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nom_latin")
-    private String nomLatin;
-
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(unique = true)
     private Raunkier raunkier;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(unique = true)
     private Cronquist cronquist;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(unique = true)
     private APGI apg1;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(unique = true)
     private APGII apg2;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(unique = true)
     private APGIII apg3;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(unique = true)
     private APGIV apg4;
+
+    @JsonIgnoreProperties(
+        value = {
+            "classification",
+            "confusions",
+            "ensoleillements",
+            "plantesPotageres",
+            "cycleDeVie",
+            "sol",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+            "nomsVernaculaires",
+            "plante",
+        },
+        allowSetters = true
+    )
+    @OneToOne(mappedBy = "classification")
+    private Plante plante;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -55,19 +79,6 @@ public class Classification implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNomLatin() {
-        return this.nomLatin;
-    }
-
-    public Classification nomLatin(String nomLatin) {
-        this.setNomLatin(nomLatin);
-        return this;
-    }
-
-    public void setNomLatin(String nomLatin) {
-        this.nomLatin = nomLatin;
     }
 
     public Raunkier getRaunkier() {
@@ -148,6 +159,25 @@ public class Classification implements Serializable {
         return this;
     }
 
+    public Plante getPlante() {
+        return this.plante;
+    }
+
+    public void setPlante(Plante plante) {
+        if (this.plante != null) {
+            this.plante.setClassification(null);
+        }
+        if (plante != null) {
+            plante.setClassification(this);
+        }
+        this.plante = plante;
+    }
+
+    public Classification plante(Plante plante) {
+        this.setPlante(plante);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -172,7 +202,6 @@ public class Classification implements Serializable {
     public String toString() {
         return "Classification{" +
             "id=" + getId() +
-            ", nomLatin='" + getNomLatin() + "'" +
             "}";
     }
 }

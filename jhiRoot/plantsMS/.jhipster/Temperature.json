@@ -18,14 +18,7 @@
       "fieldType": "String"
     }
   ],
-  "relationships": [
-    {
-      "relationshipType": "one-to-many",
-      "otherEntityName": "plante",
-      "otherEntityRelationshipName": "temperature",
-      "relationshipName": "plantes"
-    }
-  ],
+  "relationships": [],
   "entityTableName": "temperature",
   "dto": "no",
   "pagination": "pagination",
@@ -34,7 +27,7 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
+  "applications": ["plantsFront", "plantsMS"],
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",

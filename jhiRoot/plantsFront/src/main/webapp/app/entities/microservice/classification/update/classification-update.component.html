@@ -12,17 +12,12 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" for="field_nomLatin">Nom Latin</label>
-          <input type="text" class="form-control" name="nomLatin" id="field_nomLatin" data-cy="nomLatin" formControlName="nomLatin" />
-        </div>
-
-        <div class="form-group">
           <label class="form-control-label" for="field_raunkier">Raunkier</label>
           <select class="form-control" id="field_raunkier" data-cy="raunkier" name="raunkier" formControlName="raunkier">
             <option [ngValue]="null"></option>
             <option
               [ngValue]="raunkierOption.id === editForm.get('raunkier')!.value?.id ? editForm.get('raunkier')!.value : raunkierOption"
-              *ngFor="let raunkierOption of raunkiersSharedCollection; trackBy: trackRaunkierById"
+              *ngFor="let raunkierOption of raunkiersCollection; trackBy: trackRaunkierById"
             >
               {{ raunkierOption.id }}
             </option>
@@ -35,7 +30,7 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="cronquistOption.id === editForm.get('cronquist')!.value?.id ? editForm.get('cronquist')!.value : cronquistOption"
-              *ngFor="let cronquistOption of cronquistsSharedCollection; trackBy: trackCronquistById"
+              *ngFor="let cronquistOption of cronquistsCollection; trackBy: trackCronquistById"
             >
               {{ cronquistOption.id }}
             </option>
@@ -48,7 +43,7 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="aPGIOption.id === editForm.get('apg1')!.value?.id ? editForm.get('apg1')!.value : aPGIOption"
-              *ngFor="let aPGIOption of aPGISSharedCollection; trackBy: trackAPGIById"
+              *ngFor="let aPGIOption of apg1sCollection; trackBy: trackAPGIById"
             >
               {{ aPGIOption.id }}
             </option>
@@ -61,7 +56,7 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="aPGIIOption.id === editForm.get('apg2')!.value?.id ? editForm.get('apg2')!.value : aPGIIOption"
-              *ngFor="let aPGIIOption of aPGIISSharedCollection; trackBy: trackAPGIIById"
+              *ngFor="let aPGIIOption of apg2sCollection; trackBy: trackAPGIIById"
             >
               {{ aPGIIOption.id }}
             </option>
@@ -74,7 +69,7 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="aPGIIIOption.id === editForm.get('apg3')!.value?.id ? editForm.get('apg3')!.value : aPGIIIOption"
-              *ngFor="let aPGIIIOption of aPGIIISSharedCollection; trackBy: trackAPGIIIById"
+              *ngFor="let aPGIIIOption of apg3sCollection; trackBy: trackAPGIIIById"
             >
               {{ aPGIIIOption.id }}
             </option>
@@ -87,7 +82,7 @@
             <option [ngValue]="null"></option>
             <option
               [ngValue]="aPGIVOption.id === editForm.get('apg4')!.value?.id ? editForm.get('apg4')!.value : aPGIVOption"
-              *ngFor="let aPGIVOption of aPGIVSSharedCollection; trackBy: trackAPGIVById"
+              *ngFor="let aPGIVOption of apg4sCollection; trackBy: trackAPGIVById"
             >
               {{ aPGIVOption.id }}
             </option>

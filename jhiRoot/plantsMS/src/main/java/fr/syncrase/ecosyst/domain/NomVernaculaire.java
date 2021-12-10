@@ -36,16 +36,18 @@ public class NomVernaculaire implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(
         value = {
-            "cycleDeVie",
+            "classification",
             "confusions",
             "ensoleillements",
-            "sols",
-            "classification",
-            "nomsVernaculaires",
+            "plantesPotageres",
+            "cycleDeVie",
+            "sol",
             "temperature",
             "racine",
             "strate",
             "feuillage",
+            "nomsVernaculaires",
+            "plante",
         },
         allowSetters = true
     )

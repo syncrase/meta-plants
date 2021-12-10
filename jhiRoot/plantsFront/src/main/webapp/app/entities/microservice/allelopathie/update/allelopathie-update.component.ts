@@ -24,8 +24,8 @@ export class AllelopathieUpdateComponent implements OnInit {
     type: [null, [Validators.required]],
     description: [],
     impact: [null, [Validators.min(-10), Validators.max(10)]],
-    cible: [],
-    origine: [],
+    cible: [null, Validators.required],
+    origine: [null, Validators.required],
   });
 
   constructor(

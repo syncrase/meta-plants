@@ -1,9 +1,6 @@
 package fr.syncrase.ecosyst.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -26,25 +23,6 @@ public class Strate implements Serializable {
 
     @Column(name = "type")
     private String type;
-
-    @OneToMany(mappedBy = "strate")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(
-        value = {
-            "cycleDeVie",
-            "confusions",
-            "ensoleillements",
-            "sols",
-            "classification",
-            "nomsVernaculaires",
-            "temperature",
-            "racine",
-            "strate",
-            "feuillage",
-        },
-        allowSetters = true
-    )
-    private Set<Plante> plantes = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -72,37 +50,6 @@ public class Strate implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Set<Plante> getPlantes() {
-        return this.plantes;
-    }
-
-    public void setPlantes(Set<Plante> plantes) {
-        if (this.plantes != null) {
-            this.plantes.forEach(i -> i.setStrate(null));
-        }
-        if (plantes != null) {
-            plantes.forEach(i -> i.setStrate(this));
-        }
-        this.plantes = plantes;
-    }
-
-    public Strate plantes(Set<Plante> plantes) {
-        this.setPlantes(plantes);
-        return this;
-    }
-
-    public Strate addPlante(Plante plante) {
-        this.plantes.add(plante);
-        plante.setStrate(this);
-        return this;
-    }
-
-    public Strate removePlante(Plante plante) {
-        this.plantes.remove(plante);
-        plante.setStrate(null);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

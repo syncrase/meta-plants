@@ -34,17 +34,17 @@ public class PlanteCriteria implements Serializable, Criteria {
 
     private StringFilter exposition;
 
-    private LongFilter cycleDeVieId;
+    private LongFilter classificationId;
 
     private LongFilter confusionsId;
 
     private LongFilter ensoleillementsId;
 
-    private LongFilter solsId;
+    private LongFilter plantesPotageresId;
 
-    private LongFilter classificationId;
+    private LongFilter cycleDeVieId;
 
-    private LongFilter nomsVernaculairesId;
+    private LongFilter solId;
 
     private LongFilter temperatureId;
 
@@ -53,6 +53,10 @@ public class PlanteCriteria implements Serializable, Criteria {
     private LongFilter strateId;
 
     private LongFilter feuillageId;
+
+    private LongFilter nomsVernaculairesId;
+
+    private LongFilter planteId;
 
     private Boolean distinct;
 
@@ -64,16 +68,18 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.histoire = other.histoire == null ? null : other.histoire.copy();
         this.vitesseCroissance = other.vitesseCroissance == null ? null : other.vitesseCroissance.copy();
         this.exposition = other.exposition == null ? null : other.exposition.copy();
-        this.cycleDeVieId = other.cycleDeVieId == null ? null : other.cycleDeVieId.copy();
+        this.classificationId = other.classificationId == null ? null : other.classificationId.copy();
         this.confusionsId = other.confusionsId == null ? null : other.confusionsId.copy();
         this.ensoleillementsId = other.ensoleillementsId == null ? null : other.ensoleillementsId.copy();
-        this.solsId = other.solsId == null ? null : other.solsId.copy();
-        this.classificationId = other.classificationId == null ? null : other.classificationId.copy();
-        this.nomsVernaculairesId = other.nomsVernaculairesId == null ? null : other.nomsVernaculairesId.copy();
+        this.plantesPotageresId = other.plantesPotageresId == null ? null : other.plantesPotageresId.copy();
+        this.cycleDeVieId = other.cycleDeVieId == null ? null : other.cycleDeVieId.copy();
+        this.solId = other.solId == null ? null : other.solId.copy();
         this.temperatureId = other.temperatureId == null ? null : other.temperatureId.copy();
         this.racineId = other.racineId == null ? null : other.racineId.copy();
         this.strateId = other.strateId == null ? null : other.strateId.copy();
         this.feuillageId = other.feuillageId == null ? null : other.feuillageId.copy();
+        this.nomsVernaculairesId = other.nomsVernaculairesId == null ? null : other.nomsVernaculairesId.copy();
+        this.planteId = other.planteId == null ? null : other.planteId.copy();
         this.distinct = other.distinct;
     }
 
@@ -157,19 +163,19 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.exposition = exposition;
     }
 
-    public LongFilter getCycleDeVieId() {
-        return cycleDeVieId;
+    public LongFilter getClassificationId() {
+        return classificationId;
     }
 
-    public LongFilter cycleDeVieId() {
-        if (cycleDeVieId == null) {
-            cycleDeVieId = new LongFilter();
+    public LongFilter classificationId() {
+        if (classificationId == null) {
+            classificationId = new LongFilter();
         }
-        return cycleDeVieId;
+        return classificationId;
     }
 
-    public void setCycleDeVieId(LongFilter cycleDeVieId) {
-        this.cycleDeVieId = cycleDeVieId;
+    public void setClassificationId(LongFilter classificationId) {
+        this.classificationId = classificationId;
     }
 
     public LongFilter getConfusionsId() {
@@ -202,49 +208,49 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.ensoleillementsId = ensoleillementsId;
     }
 
-    public LongFilter getSolsId() {
-        return solsId;
+    public LongFilter getPlantesPotageresId() {
+        return plantesPotageresId;
     }
 
-    public LongFilter solsId() {
-        if (solsId == null) {
-            solsId = new LongFilter();
+    public LongFilter plantesPotageresId() {
+        if (plantesPotageresId == null) {
+            plantesPotageresId = new LongFilter();
         }
-        return solsId;
+        return plantesPotageresId;
     }
 
-    public void setSolsId(LongFilter solsId) {
-        this.solsId = solsId;
+    public void setPlantesPotageresId(LongFilter plantesPotageresId) {
+        this.plantesPotageresId = plantesPotageresId;
     }
 
-    public LongFilter getClassificationId() {
-        return classificationId;
+    public LongFilter getCycleDeVieId() {
+        return cycleDeVieId;
     }
 
-    public LongFilter classificationId() {
-        if (classificationId == null) {
-            classificationId = new LongFilter();
+    public LongFilter cycleDeVieId() {
+        if (cycleDeVieId == null) {
+            cycleDeVieId = new LongFilter();
         }
-        return classificationId;
+        return cycleDeVieId;
     }
 
-    public void setClassificationId(LongFilter classificationId) {
-        this.classificationId = classificationId;
+    public void setCycleDeVieId(LongFilter cycleDeVieId) {
+        this.cycleDeVieId = cycleDeVieId;
     }
 
-    public LongFilter getNomsVernaculairesId() {
-        return nomsVernaculairesId;
+    public LongFilter getSolId() {
+        return solId;
     }
 
-    public LongFilter nomsVernaculairesId() {
-        if (nomsVernaculairesId == null) {
-            nomsVernaculairesId = new LongFilter();
+    public LongFilter solId() {
+        if (solId == null) {
+            solId = new LongFilter();
         }
-        return nomsVernaculairesId;
+        return solId;
     }
 
-    public void setNomsVernaculairesId(LongFilter nomsVernaculairesId) {
-        this.nomsVernaculairesId = nomsVernaculairesId;
+    public void setSolId(LongFilter solId) {
+        this.solId = solId;
     }
 
     public LongFilter getTemperatureId() {
@@ -307,6 +313,36 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.feuillageId = feuillageId;
     }
 
+    public LongFilter getNomsVernaculairesId() {
+        return nomsVernaculairesId;
+    }
+
+    public LongFilter nomsVernaculairesId() {
+        if (nomsVernaculairesId == null) {
+            nomsVernaculairesId = new LongFilter();
+        }
+        return nomsVernaculairesId;
+    }
+
+    public void setNomsVernaculairesId(LongFilter nomsVernaculairesId) {
+        this.nomsVernaculairesId = nomsVernaculairesId;
+    }
+
+    public LongFilter getPlanteId() {
+        return planteId;
+    }
+
+    public LongFilter planteId() {
+        if (planteId == null) {
+            planteId = new LongFilter();
+        }
+        return planteId;
+    }
+
+    public void setPlanteId(LongFilter planteId) {
+        this.planteId = planteId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -330,16 +366,18 @@ public class PlanteCriteria implements Serializable, Criteria {
             Objects.equals(histoire, that.histoire) &&
             Objects.equals(vitesseCroissance, that.vitesseCroissance) &&
             Objects.equals(exposition, that.exposition) &&
-            Objects.equals(cycleDeVieId, that.cycleDeVieId) &&
+            Objects.equals(classificationId, that.classificationId) &&
             Objects.equals(confusionsId, that.confusionsId) &&
             Objects.equals(ensoleillementsId, that.ensoleillementsId) &&
-            Objects.equals(solsId, that.solsId) &&
-            Objects.equals(classificationId, that.classificationId) &&
-            Objects.equals(nomsVernaculairesId, that.nomsVernaculairesId) &&
+            Objects.equals(plantesPotageresId, that.plantesPotageresId) &&
+            Objects.equals(cycleDeVieId, that.cycleDeVieId) &&
+            Objects.equals(solId, that.solId) &&
             Objects.equals(temperatureId, that.temperatureId) &&
             Objects.equals(racineId, that.racineId) &&
             Objects.equals(strateId, that.strateId) &&
             Objects.equals(feuillageId, that.feuillageId) &&
+            Objects.equals(nomsVernaculairesId, that.nomsVernaculairesId) &&
+            Objects.equals(planteId, that.planteId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -352,16 +390,18 @@ public class PlanteCriteria implements Serializable, Criteria {
             histoire,
             vitesseCroissance,
             exposition,
-            cycleDeVieId,
+            classificationId,
             confusionsId,
             ensoleillementsId,
-            solsId,
-            classificationId,
-            nomsVernaculairesId,
+            plantesPotageresId,
+            cycleDeVieId,
+            solId,
             temperatureId,
             racineId,
             strateId,
             feuillageId,
+            nomsVernaculairesId,
+            planteId,
             distinct
         );
     }
@@ -375,16 +415,18 @@ public class PlanteCriteria implements Serializable, Criteria {
             (histoire != null ? "histoire=" + histoire + ", " : "") +
             (vitesseCroissance != null ? "vitesseCroissance=" + vitesseCroissance + ", " : "") +
             (exposition != null ? "exposition=" + exposition + ", " : "") +
-            (cycleDeVieId != null ? "cycleDeVieId=" + cycleDeVieId + ", " : "") +
+            (classificationId != null ? "classificationId=" + classificationId + ", " : "") +
             (confusionsId != null ? "confusionsId=" + confusionsId + ", " : "") +
             (ensoleillementsId != null ? "ensoleillementsId=" + ensoleillementsId + ", " : "") +
-            (solsId != null ? "solsId=" + solsId + ", " : "") +
-            (classificationId != null ? "classificationId=" + classificationId + ", " : "") +
-            (nomsVernaculairesId != null ? "nomsVernaculairesId=" + nomsVernaculairesId + ", " : "") +
+            (plantesPotageresId != null ? "plantesPotageresId=" + plantesPotageresId + ", " : "") +
+            (cycleDeVieId != null ? "cycleDeVieId=" + cycleDeVieId + ", " : "") +
+            (solId != null ? "solId=" + solId + ", " : "") +
             (temperatureId != null ? "temperatureId=" + temperatureId + ", " : "") +
             (racineId != null ? "racineId=" + racineId + ", " : "") +
             (strateId != null ? "strateId=" + strateId + ", " : "") +
             (feuillageId != null ? "feuillageId=" + feuillageId + ", " : "") +
+            (nomsVernaculairesId != null ? "nomsVernaculairesId=" + nomsVernaculairesId + ", " : "") +
+            (planteId != null ? "planteId=" + planteId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

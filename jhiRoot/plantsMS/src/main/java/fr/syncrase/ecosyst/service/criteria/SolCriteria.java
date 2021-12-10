@@ -34,8 +34,6 @@ public class SolCriteria implements Serializable, Criteria {
 
     private StringFilter richesse;
 
-    private LongFilter planteId;
-
     private Boolean distinct;
 
     public SolCriteria() {}
@@ -46,7 +44,6 @@ public class SolCriteria implements Serializable, Criteria {
         this.phMax = other.phMax == null ? null : other.phMax.copy();
         this.type = other.type == null ? null : other.type.copy();
         this.richesse = other.richesse == null ? null : other.richesse.copy();
-        this.planteId = other.planteId == null ? null : other.planteId.copy();
         this.distinct = other.distinct;
     }
 
@@ -130,21 +127,6 @@ public class SolCriteria implements Serializable, Criteria {
         this.richesse = richesse;
     }
 
-    public LongFilter getPlanteId() {
-        return planteId;
-    }
-
-    public LongFilter planteId() {
-        if (planteId == null) {
-            planteId = new LongFilter();
-        }
-        return planteId;
-    }
-
-    public void setPlanteId(LongFilter planteId) {
-        this.planteId = planteId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -168,14 +150,13 @@ public class SolCriteria implements Serializable, Criteria {
             Objects.equals(phMax, that.phMax) &&
             Objects.equals(type, that.type) &&
             Objects.equals(richesse, that.richesse) &&
-            Objects.equals(planteId, that.planteId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phMin, phMax, type, richesse, planteId, distinct);
+        return Objects.hash(id, phMin, phMax, type, richesse, distinct);
     }
 
     // prettier-ignore
@@ -187,7 +168,6 @@ public class SolCriteria implements Serializable, Criteria {
             (phMax != null ? "phMax=" + phMax + ", " : "") +
             (type != null ? "type=" + type + ", " : "") +
             (richesse != null ? "richesse=" + richesse + ", " : "") +
-            (planteId != null ? "planteId=" + planteId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

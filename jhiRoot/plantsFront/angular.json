@@ -108,7 +108,6 @@
   },
   "defaultProject": "plants-front",
   "cli": {
-    "analytics": false,
     "packageManager": "npm"
   }
 }

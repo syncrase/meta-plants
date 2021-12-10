@@ -1,6 +1,8 @@
 package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,8 +11,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * A Plante.
+ * Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique
  */
+@ApiModel(
+    description = "Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique"
+)
 @Entity
 @Table(name = "plante")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -36,15 +41,16 @@ public class Plante implements Serializable {
     @Column(name = "exposition")
     private String exposition;
 
-    @JsonIgnoreProperties(
-        value = {
-            "semis", "apparitionFeuilles", "floraison", "recolte", "croissance", "maturite", "plantation", "rempotage", "reproduction",
-        },
-        allowSetters = true
+    /**
+     * Une plante ne correspond qu'à une seule classification\nMais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes\nMais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique
+     */
+    @ApiModelProperty(
+        value = "Une plante ne correspond qu'à une seule classification\nMais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes\nMais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique"
     )
+    @JsonIgnoreProperties(value = { "raunkier", "cronquist", "apg1", "apg2", "apg3", "apg4", "plante" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
-    private CycleDeVie cycleDeVie;
+    private Classification classification;
 
     @OneToMany(mappedBy = "planteRessemblant")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -56,14 +62,56 @@ public class Plante implements Serializable {
     @JsonIgnoreProperties(value = { "plante" }, allowSetters = true)
     private Set<Ensoleillement> ensoleillements = new HashSet<>();
 
+    /**
+     * Une plante peut avoir beaucoup de variantes potagère\nUne plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)
+     */
+    @ApiModelProperty(
+        value = "Une plante peut avoir beaucoup de variantes potagère\nUne plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)"
+    )
     @OneToMany(mappedBy = "plante")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "plante" }, allowSetters = true)
-    private Set<Sol> sols = new HashSet<>();
+    @JsonIgnoreProperties(
+        value = {
+            "classification",
+            "confusions",
+            "ensoleillements",
+            "plantesPotageres",
+            "cycleDeVie",
+            "sol",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+            "nomsVernaculaires",
+            "plante",
+        },
+        allowSetters = true
+    )
+    private Set<Plante> plantesPotageres = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "raunkier", "cronquist", "apg1", "apg2", "apg3", "apg4" }, allowSetters = true)
-    private Classification classification;
+    @JsonIgnoreProperties(
+        value = {
+            "semis", "apparitionFeuilles", "floraison", "recolte", "croissance", "maturite", "plantation", "rempotage", "reproduction",
+        },
+        allowSetters = true
+    )
+    private CycleDeVie cycleDeVie;
+
+    @ManyToOne
+    private Sol sol;
+
+    @ManyToOne
+    private Temperature temperature;
+
+    @ManyToOne
+    private Racine racine;
+
+    @ManyToOne
+    private Strate strate;
+
+    @ManyToOne
+    private Feuillage feuillage;
 
     @ManyToMany
     @JoinTable(
@@ -76,20 +124,24 @@ public class Plante implements Serializable {
     private Set<NomVernaculaire> nomsVernaculaires = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "plantes" }, allowSetters = true)
-    private Temperature temperature;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "plantes" }, allowSetters = true)
-    private Racine racine;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "plantes" }, allowSetters = true)
-    private Strate strate;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "plantes" }, allowSetters = true)
-    private Feuillage feuillage;
+    @JsonIgnoreProperties(
+        value = {
+            "classification",
+            "confusions",
+            "ensoleillements",
+            "plantesPotageres",
+            "cycleDeVie",
+            "sol",
+            "temperature",
+            "racine",
+            "strate",
+            "feuillage",
+            "nomsVernaculaires",
+            "plante",
+        },
+        allowSetters = true
+    )
+    private Plante plante;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -158,16 +210,16 @@ public class Plante implements Serializable {
         this.exposition = exposition;
     }
 
-    public CycleDeVie getCycleDeVie() {
-        return this.cycleDeVie;
+    public Classification getClassification() {
+        return this.classification;
     }
 
-    public void setCycleDeVie(CycleDeVie cycleDeVie) {
-        this.cycleDeVie = cycleDeVie;
+    public void setClassification(Classification classification) {
+        this.classification = classification;
     }
 
-    public Plante cycleDeVie(CycleDeVie cycleDeVie) {
-        this.setCycleDeVie(cycleDeVie);
+    public Plante classification(Classification classification) {
+        this.setClassification(classification);
         return this;
     }
 
@@ -233,72 +285,60 @@ public class Plante implements Serializable {
         return this;
     }
 
-    public Set<Sol> getSols() {
-        return this.sols;
+    public Set<Plante> getPlantesPotageres() {
+        return this.plantesPotageres;
     }
 
-    public void setSols(Set<Sol> sols) {
-        if (this.sols != null) {
-            this.sols.forEach(i -> i.setPlante(null));
+    public void setPlantesPotageres(Set<Plante> plantes) {
+        if (this.plantesPotageres != null) {
+            this.plantesPotageres.forEach(i -> i.setPlante(null));
         }
-        if (sols != null) {
-            sols.forEach(i -> i.setPlante(this));
+        if (plantes != null) {
+            plantes.forEach(i -> i.setPlante(this));
         }
-        this.sols = sols;
+        this.plantesPotageres = plantes;
     }
 
-    public Plante sols(Set<Sol> sols) {
-        this.setSols(sols);
+    public Plante plantesPotageres(Set<Plante> plantes) {
+        this.setPlantesPotageres(plantes);
         return this;
     }
 
-    public Plante addSols(Sol sol) {
-        this.sols.add(sol);
-        sol.setPlante(this);
+    public Plante addPlantesPotageres(Plante plante) {
+        this.plantesPotageres.add(plante);
+        plante.setPlante(this);
         return this;
     }
 
-    public Plante removeSols(Sol sol) {
-        this.sols.remove(sol);
-        sol.setPlante(null);
+    public Plante removePlantesPotageres(Plante plante) {
+        this.plantesPotageres.remove(plante);
+        plante.setPlante(null);
         return this;
     }
 
-    public Classification getClassification() {
-        return this.classification;
+    public CycleDeVie getCycleDeVie() {
+        return this.cycleDeVie;
     }
 
-    public void setClassification(Classification classification) {
-        this.classification = classification;
+    public void setCycleDeVie(CycleDeVie cycleDeVie) {
+        this.cycleDeVie = cycleDeVie;
     }
 
-    public Plante classification(Classification classification) {
-        this.setClassification(classification);
+    public Plante cycleDeVie(CycleDeVie cycleDeVie) {
+        this.setCycleDeVie(cycleDeVie);
         return this;
     }
 
-    public Set<NomVernaculaire> getNomsVernaculaires() {
-        return this.nomsVernaculaires;
+    public Sol getSol() {
+        return this.sol;
     }
 
-    public void setNomsVernaculaires(Set<NomVernaculaire> nomVernaculaires) {
-        this.nomsVernaculaires = nomVernaculaires;
+    public void setSol(Sol sol) {
+        this.sol = sol;
     }
 
-    public Plante nomsVernaculaires(Set<NomVernaculaire> nomVernaculaires) {
-        this.setNomsVernaculaires(nomVernaculaires);
-        return this;
-    }
-
-    public Plante addNomsVernaculaires(NomVernaculaire nomVernaculaire) {
-        this.nomsVernaculaires.add(nomVernaculaire);
-        nomVernaculaire.getPlantes().add(this);
-        return this;
-    }
-
-    public Plante removeNomsVernaculaires(NomVernaculaire nomVernaculaire) {
-        this.nomsVernaculaires.remove(nomVernaculaire);
-        nomVernaculaire.getPlantes().remove(this);
+    public Plante sol(Sol sol) {
+        this.setSol(sol);
         return this;
     }
 
@@ -351,6 +391,44 @@ public class Plante implements Serializable {
 
     public Plante feuillage(Feuillage feuillage) {
         this.setFeuillage(feuillage);
+        return this;
+    }
+
+    public Set<NomVernaculaire> getNomsVernaculaires() {
+        return this.nomsVernaculaires;
+    }
+
+    public void setNomsVernaculaires(Set<NomVernaculaire> nomVernaculaires) {
+        this.nomsVernaculaires = nomVernaculaires;
+    }
+
+    public Plante nomsVernaculaires(Set<NomVernaculaire> nomVernaculaires) {
+        this.setNomsVernaculaires(nomVernaculaires);
+        return this;
+    }
+
+    public Plante addNomsVernaculaires(NomVernaculaire nomVernaculaire) {
+        this.nomsVernaculaires.add(nomVernaculaire);
+        nomVernaculaire.getPlantes().add(this);
+        return this;
+    }
+
+    public Plante removeNomsVernaculaires(NomVernaculaire nomVernaculaire) {
+        this.nomsVernaculaires.remove(nomVernaculaire);
+        nomVernaculaire.getPlantes().remove(this);
+        return this;
+    }
+
+    public Plante getPlante() {
+        return this.plante;
+    }
+
+    public void setPlante(Plante plante) {
+        this.plante = plante;
+    }
+
+    public Plante plante(Plante plante) {
+        this.setPlante(plante);
         return this;
     }
 

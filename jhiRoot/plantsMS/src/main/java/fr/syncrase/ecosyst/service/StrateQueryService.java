@@ -88,12 +88,6 @@ public class StrateQueryService extends QueryService<Strate> {
             if (criteria.getType() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getType(), Strate_.type));
             }
-            if (criteria.getPlanteId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getPlanteId(), root -> root.join(Strate_.plantes, JoinType.LEFT).get(Plante_.id))
-                    );
-            }
         }
         return specification;
     }

@@ -35,37 +35,43 @@ public class Allelopathie implements Serializable {
     @Column(name = "impact")
     private Integer impact;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(
         value = {
-            "cycleDeVie",
+            "classification",
             "confusions",
             "ensoleillements",
-            "sols",
-            "classification",
-            "nomsVernaculaires",
+            "plantesPotageres",
+            "cycleDeVie",
+            "sol",
             "temperature",
             "racine",
             "strate",
             "feuillage",
+            "nomsVernaculaires",
+            "plante",
         },
         allowSetters = true
     )
     private Plante cible;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(
         value = {
-            "cycleDeVie",
+            "classification",
             "confusions",
             "ensoleillements",
-            "sols",
-            "classification",
-            "nomsVernaculaires",
+            "plantesPotageres",
+            "cycleDeVie",
+            "sol",
             "temperature",
             "racine",
             "strate",
             "feuillage",
+            "nomsVernaculaires",
+            "plante",
         },
         allowSetters = true
     )

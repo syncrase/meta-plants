@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
-import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.domain.Sol;
 import fr.syncrase.ecosyst.repository.SolRepository;
 import fr.syncrase.ecosyst.service.criteria.SolCriteria;
@@ -542,32 +541,6 @@ class SolResourceIT {
 
         // Get all the solList where richesse does not contain UPDATED_RICHESSE
         defaultSolShouldBeFound("richesse.doesNotContain=" + UPDATED_RICHESSE);
-    }
-
-    @Test
-    @Transactional
-    void getAllSolsByPlanteIsEqualToSomething() throws Exception {
-        // Initialize the database
-        solRepository.saveAndFlush(sol);
-        Plante plante;
-        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            plante = PlanteResourceIT.createEntity(em);
-            em.persist(plante);
-            em.flush();
-        } else {
-            plante = TestUtil.findAll(em, Plante.class).get(0);
-        }
-        em.persist(plante);
-        em.flush();
-        sol.setPlante(plante);
-        solRepository.saveAndFlush(sol);
-        Long planteId = plante.getId();
-
-        // Get all the solList where plante equals to planteId
-        defaultSolShouldBeFound("planteId.equals=" + planteId);
-
-        // Get all the solList where plante equals to (planteId + 1)
-        defaultSolShouldNotBeFound("planteId.equals=" + (planteId + 1));
     }
 
     /**

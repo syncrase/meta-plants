@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
-import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.domain.Racine;
 import fr.syncrase.ecosyst.repository.RacineRepository;
 import fr.syncrase.ecosyst.service.criteria.RacineCriteria;
@@ -236,32 +235,6 @@ class RacineResourceIT {
 
         // Get all the racineList where type does not contain UPDATED_TYPE
         defaultRacineShouldBeFound("type.doesNotContain=" + UPDATED_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllRacinesByPlanteIsEqualToSomething() throws Exception {
-        // Initialize the database
-        racineRepository.saveAndFlush(racine);
-        Plante plante;
-        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            plante = PlanteResourceIT.createEntity(em);
-            em.persist(plante);
-            em.flush();
-        } else {
-            plante = TestUtil.findAll(em, Plante.class).get(0);
-        }
-        em.persist(plante);
-        em.flush();
-        racine.addPlante(plante);
-        racineRepository.saveAndFlush(racine);
-        Long planteId = plante.getId();
-
-        // Get all the racineList where plante equals to planteId
-        defaultRacineShouldBeFound("planteId.equals=" + planteId);
-
-        // Get all the racineList where plante equals to (planteId + 1)
-        defaultRacineShouldNotBeFound("planteId.equals=" + (planteId + 1));
     }
 
     /**

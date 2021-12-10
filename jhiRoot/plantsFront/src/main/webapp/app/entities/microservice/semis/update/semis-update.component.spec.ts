@@ -47,83 +47,73 @@ describe('Semis Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call semisPleineTerre query and add missing value', () => {
+    it('Should call PeriodeAnnee query and add missing value', () => {
       const semis: ISemis = { id: 456 };
       const semisPleineTerre: IPeriodeAnnee = { id: 87356 };
       semis.semisPleineTerre = semisPleineTerre;
-
-      const semisPleineTerreCollection: IPeriodeAnnee[] = [{ id: 55917 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: semisPleineTerreCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [semisPleineTerre, ...semisPleineTerreCollection];
-      jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ semis });
-      comp.ngOnInit();
-
-      expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(semisPleineTerreCollection, semisPleineTerre);
-      expect(comp.semisPleineTerresCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call semisSousAbris query and add missing value', () => {
-      const semis: ISemis = { id: 456 };
-      const semisSousAbris: IPeriodeAnnee = { id: 17874 };
+      const semisSousAbris: IPeriodeAnnee = { id: 55917 };
       semis.semisSousAbris = semisSousAbris;
 
-      const semisSousAbrisCollection: IPeriodeAnnee[] = [{ id: 24283 }];
-      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: semisSousAbrisCollection })));
-      const expectedCollection: IPeriodeAnnee[] = [semisSousAbris, ...semisSousAbrisCollection];
+      const periodeAnneeCollection: IPeriodeAnnee[] = [{ id: 17874 }];
+      jest.spyOn(periodeAnneeService, 'query').mockReturnValue(of(new HttpResponse({ body: periodeAnneeCollection })));
+      const additionalPeriodeAnnees = [semisPleineTerre, semisSousAbris];
+      const expectedCollection: IPeriodeAnnee[] = [...additionalPeriodeAnnees, ...periodeAnneeCollection];
       jest.spyOn(periodeAnneeService, 'addPeriodeAnneeToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ semis });
       comp.ngOnInit();
 
       expect(periodeAnneeService.query).toHaveBeenCalled();
-      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(semisSousAbrisCollection, semisSousAbris);
-      expect(comp.semisSousAbrisesCollection).toEqual(expectedCollection);
+      expect(periodeAnneeService.addPeriodeAnneeToCollectionIfMissing).toHaveBeenCalledWith(
+        periodeAnneeCollection,
+        ...additionalPeriodeAnnees
+      );
+      expect(comp.periodeAnneesSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call typeSemis query and add missing value', () => {
+    it('Should call TypeSemis query and add missing value', () => {
       const semis: ISemis = { id: 456 };
       const typeSemis: ITypeSemis = { id: 20363 };
       semis.typeSemis = typeSemis;
 
       const typeSemisCollection: ITypeSemis[] = [{ id: 49807 }];
       jest.spyOn(typeSemisService, 'query').mockReturnValue(of(new HttpResponse({ body: typeSemisCollection })));
-      const expectedCollection: ITypeSemis[] = [typeSemis, ...typeSemisCollection];
+      const additionalTypeSemis = [typeSemis];
+      const expectedCollection: ITypeSemis[] = [...additionalTypeSemis, ...typeSemisCollection];
       jest.spyOn(typeSemisService, 'addTypeSemisToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ semis });
       comp.ngOnInit();
 
       expect(typeSemisService.query).toHaveBeenCalled();
-      expect(typeSemisService.addTypeSemisToCollectionIfMissing).toHaveBeenCalledWith(typeSemisCollection, typeSemis);
-      expect(comp.typeSemisCollection).toEqual(expectedCollection);
+      expect(typeSemisService.addTypeSemisToCollectionIfMissing).toHaveBeenCalledWith(typeSemisCollection, ...additionalTypeSemis);
+      expect(comp.typeSemisSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call germination query and add missing value', () => {
+    it('Should call Germination query and add missing value', () => {
       const semis: ISemis = { id: 456 };
       const germination: IGermination = { id: 2343 };
       semis.germination = germination;
 
       const germinationCollection: IGermination[] = [{ id: 62208 }];
       jest.spyOn(germinationService, 'query').mockReturnValue(of(new HttpResponse({ body: germinationCollection })));
-      const expectedCollection: IGermination[] = [germination, ...germinationCollection];
+      const additionalGerminations = [germination];
+      const expectedCollection: IGermination[] = [...additionalGerminations, ...germinationCollection];
       jest.spyOn(germinationService, 'addGerminationToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ semis });
       comp.ngOnInit();
 
       expect(germinationService.query).toHaveBeenCalled();
-      expect(germinationService.addGerminationToCollectionIfMissing).toHaveBeenCalledWith(germinationCollection, germination);
-      expect(comp.germinationsCollection).toEqual(expectedCollection);
+      expect(germinationService.addGerminationToCollectionIfMissing).toHaveBeenCalledWith(germinationCollection, ...additionalGerminations);
+      expect(comp.germinationsSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should update editForm', () => {
       const semis: ISemis = { id: 456 };
-      const semisPleineTerre: IPeriodeAnnee = { id: 44741 };
+      const semisPleineTerre: IPeriodeAnnee = { id: 24283 };
       semis.semisPleineTerre = semisPleineTerre;
-      const semisSousAbris: IPeriodeAnnee = { id: 85672 };
+      const semisSousAbris: IPeriodeAnnee = { id: 44741 };
       semis.semisSousAbris = semisSousAbris;
       const typeSemis: ITypeSemis = { id: 70645 };
       semis.typeSemis = typeSemis;
@@ -134,10 +124,10 @@ describe('Semis Management Update Component', () => {
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(semis));
-      expect(comp.semisPleineTerresCollection).toContain(semisPleineTerre);
-      expect(comp.semisSousAbrisesCollection).toContain(semisSousAbris);
-      expect(comp.typeSemisCollection).toContain(typeSemis);
-      expect(comp.germinationsCollection).toContain(germination);
+      expect(comp.periodeAnneesSharedCollection).toContain(semisPleineTerre);
+      expect(comp.periodeAnneesSharedCollection).toContain(semisSousAbris);
+      expect(comp.typeSemisSharedCollection).toContain(typeSemis);
+      expect(comp.germinationsSharedCollection).toContain(germination);
     });
   });
 

@@ -17,8 +17,7 @@ import { MoisService } from 'app/entities/microservice/mois/service/mois.service
 export class PeriodeAnneeUpdateComponent implements OnInit {
   isSaving = false;
 
-  debutsCollection: IMois[] = [];
-  finsCollection: IMois[] = [];
+  moisSharedCollection: IMois[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -85,22 +84,23 @@ export class PeriodeAnneeUpdateComponent implements OnInit {
       fin: periodeAnnee.fin,
     });
 
-    this.debutsCollection = this.moisService.addMoisToCollectionIfMissing(this.debutsCollection, periodeAnnee.debut);
-    this.finsCollection = this.moisService.addMoisToCollectionIfMissing(this.finsCollection, periodeAnnee.fin);
+    this.moisSharedCollection = this.moisService.addMoisToCollectionIfMissing(
+      this.moisSharedCollection,
+      periodeAnnee.debut,
+      periodeAnnee.fin
+    );
   }
 
   protected loadRelationshipsOptions(): void {
     this.moisService
-      .query({ filter: 'periodeannee-is-null' })
+      .query()
       .pipe(map((res: HttpResponse<IMois[]>) => res.body ?? []))
-      .pipe(map((mois: IMois[]) => this.moisService.addMoisToCollectionIfMissing(mois, this.editForm.get('debut')!.value)))
-      .subscribe((mois: IMois[]) => (this.debutsCollection = mois));
-
-    this.moisService
-      .query({ filter: 'periodeannee-is-null' })
-      .pipe(map((res: HttpResponse<IMois[]>) => res.body ?? []))
-      .pipe(map((mois: IMois[]) => this.moisService.addMoisToCollectionIfMissing(mois, this.editForm.get('fin')!.value)))
-      .subscribe((mois: IMois[]) => (this.finsCollection = mois));
+      .pipe(
+        map((mois: IMois[]) =>
+          this.moisService.addMoisToCollectionIfMissing(mois, this.editForm.get('debut')!.value, this.editForm.get('fin')!.value)
+        )
+      )
+      .subscribe((mois: IMois[]) => (this.moisSharedCollection = mois));
   }
 
   protected createFromForm(): IPeriodeAnnee {

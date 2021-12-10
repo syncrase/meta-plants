@@ -33,7 +33,6 @@
       <thead>
         <tr permaSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
           <th scope="col" permaSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" permaSortBy="nomLatin"><span>Nom Latin</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="raunkier.id"><span>Raunkier</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="cronquist.id"><span>Cronquist</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="apg1.id"><span>Apg 1</span> <fa-icon icon="sort"></fa-icon></th>
@@ -48,7 +47,6 @@
           <td>
             <a [routerLink]="['/classification', classification.id, 'view']">{{ classification.id }}</a>
           </td>
-          <td>{{ classification.nomLatin }}</td>
           <td>
             <div *ngIf="classification.raunkier">
               <a [routerLink]="['/raunkier', classification.raunkier?.id, 'view']">{{ classification.raunkier?.id }}</a>

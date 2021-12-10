@@ -35,13 +35,15 @@ export class PlanteUpdatePage {
   vitesseCroissanceInput = element(by.id('field_vitesseCroissance'));
   expositionInput = element(by.id('field_exposition'));
 
-  cycleDeVieSelect = element(by.id('field_cycleDeVie'));
   classificationSelect = element(by.id('field_classification'));
-  nomsVernaculairesSelect = element(by.id('field_nomsVernaculaires'));
+  cycleDeVieSelect = element(by.id('field_cycleDeVie'));
+  solSelect = element(by.id('field_sol'));
   temperatureSelect = element(by.id('field_temperature'));
   racineSelect = element(by.id('field_racine'));
   strateSelect = element(by.id('field_strate'));
   feuillageSelect = element(by.id('field_feuillage'));
+  nomsVernaculairesSelect = element(by.id('field_nomsVernaculaires'));
+  planteSelect = element(by.id('field_plante'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getText();
@@ -87,22 +89,6 @@ export class PlanteUpdatePage {
     return await this.expositionInput.getAttribute('value');
   }
 
-  async cycleDeVieSelectLastOption(): Promise<void> {
-    await this.cycleDeVieSelect.all(by.tagName('option')).last().click();
-  }
-
-  async cycleDeVieSelectOption(option: string): Promise<void> {
-    await this.cycleDeVieSelect.sendKeys(option);
-  }
-
-  getCycleDeVieSelect(): ElementFinder {
-    return this.cycleDeVieSelect;
-  }
-
-  async getCycleDeVieSelectedOption(): Promise<string> {
-    return await this.cycleDeVieSelect.element(by.css('option:checked')).getText();
-  }
-
   async classificationSelectLastOption(): Promise<void> {
     await this.classificationSelect.all(by.tagName('option')).last().click();
   }
@@ -119,20 +105,36 @@ export class PlanteUpdatePage {
     return await this.classificationSelect.element(by.css('option:checked')).getText();
   }
 
-  async nomsVernaculairesSelectLastOption(): Promise<void> {
-    await this.nomsVernaculairesSelect.all(by.tagName('option')).last().click();
+  async cycleDeVieSelectLastOption(): Promise<void> {
+    await this.cycleDeVieSelect.all(by.tagName('option')).last().click();
   }
 
-  async nomsVernaculairesSelectOption(option: string): Promise<void> {
-    await this.nomsVernaculairesSelect.sendKeys(option);
+  async cycleDeVieSelectOption(option: string): Promise<void> {
+    await this.cycleDeVieSelect.sendKeys(option);
   }
 
-  getNomsVernaculairesSelect(): ElementFinder {
-    return this.nomsVernaculairesSelect;
+  getCycleDeVieSelect(): ElementFinder {
+    return this.cycleDeVieSelect;
   }
 
-  async getNomsVernaculairesSelectedOption(): Promise<string> {
-    return await this.nomsVernaculairesSelect.element(by.css('option:checked')).getText();
+  async getCycleDeVieSelectedOption(): Promise<string> {
+    return await this.cycleDeVieSelect.element(by.css('option:checked')).getText();
+  }
+
+  async solSelectLastOption(): Promise<void> {
+    await this.solSelect.all(by.tagName('option')).last().click();
+  }
+
+  async solSelectOption(option: string): Promise<void> {
+    await this.solSelect.sendKeys(option);
+  }
+
+  getSolSelect(): ElementFinder {
+    return this.solSelect;
+  }
+
+  async getSolSelectedOption(): Promise<string> {
+    return await this.solSelect.element(by.css('option:checked')).getText();
   }
 
   async temperatureSelectLastOption(): Promise<void> {
@@ -197,6 +199,38 @@ export class PlanteUpdatePage {
 
   async getFeuillageSelectedOption(): Promise<string> {
     return await this.feuillageSelect.element(by.css('option:checked')).getText();
+  }
+
+  async nomsVernaculairesSelectLastOption(): Promise<void> {
+    await this.nomsVernaculairesSelect.all(by.tagName('option')).last().click();
+  }
+
+  async nomsVernaculairesSelectOption(option: string): Promise<void> {
+    await this.nomsVernaculairesSelect.sendKeys(option);
+  }
+
+  getNomsVernaculairesSelect(): ElementFinder {
+    return this.nomsVernaculairesSelect;
+  }
+
+  async getNomsVernaculairesSelectedOption(): Promise<string> {
+    return await this.nomsVernaculairesSelect.element(by.css('option:checked')).getText();
+  }
+
+  async planteSelectLastOption(): Promise<void> {
+    await this.planteSelect.all(by.tagName('option')).last().click();
+  }
+
+  async planteSelectOption(option: string): Promise<void> {
+    await this.planteSelect.sendKeys(option);
+  }
+
+  getPlanteSelect(): ElementFinder {
+    return this.planteSelect;
+  }
+
+  async getPlanteSelectedOption(): Promise<string> {
+    return await this.planteSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

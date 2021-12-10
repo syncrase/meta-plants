@@ -21,10 +21,9 @@ import { GerminationService } from 'app/entities/microservice/germination/servic
 export class SemisUpdateComponent implements OnInit {
   isSaving = false;
 
-  semisPleineTerresCollection: IPeriodeAnnee[] = [];
-  semisSousAbrisesCollection: IPeriodeAnnee[] = [];
-  typeSemisCollection: ITypeSemis[] = [];
-  germinationsCollection: IGermination[] = [];
+  periodeAnneesSharedCollection: IPeriodeAnnee[] = [];
+  typeSemisSharedCollection: ITypeSemis[] = [];
+  germinationsSharedCollection: IGermination[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -105,61 +104,55 @@ export class SemisUpdateComponent implements OnInit {
       germination: semis.germination,
     });
 
-    this.semisPleineTerresCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
-      this.semisPleineTerresCollection,
-      semis.semisPleineTerre
-    );
-    this.semisSousAbrisesCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
-      this.semisSousAbrisesCollection,
+    this.periodeAnneesSharedCollection = this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
+      this.periodeAnneesSharedCollection,
+      semis.semisPleineTerre,
       semis.semisSousAbris
     );
-    this.typeSemisCollection = this.typeSemisService.addTypeSemisToCollectionIfMissing(this.typeSemisCollection, semis.typeSemis);
-    this.germinationsCollection = this.germinationService.addGerminationToCollectionIfMissing(
-      this.germinationsCollection,
+    this.typeSemisSharedCollection = this.typeSemisService.addTypeSemisToCollectionIfMissing(
+      this.typeSemisSharedCollection,
+      semis.typeSemis
+    );
+    this.germinationsSharedCollection = this.germinationService.addGerminationToCollectionIfMissing(
+      this.germinationsSharedCollection,
       semis.germination
     );
   }
 
   protected loadRelationshipsOptions(): void {
     this.periodeAnneeService
-      .query({ filter: 'semis-is-null' })
+      .query()
       .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
       .pipe(
         map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('semisPleineTerre')!.value)
+          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(
+            periodeAnnees,
+            this.editForm.get('semisPleineTerre')!.value,
+            this.editForm.get('semisSousAbris')!.value
+          )
         )
       )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.semisPleineTerresCollection = periodeAnnees));
-
-    this.periodeAnneeService
-      .query({ filter: 'semis-is-null' })
-      .pipe(map((res: HttpResponse<IPeriodeAnnee[]>) => res.body ?? []))
-      .pipe(
-        map((periodeAnnees: IPeriodeAnnee[]) =>
-          this.periodeAnneeService.addPeriodeAnneeToCollectionIfMissing(periodeAnnees, this.editForm.get('semisSousAbris')!.value)
-        )
-      )
-      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.semisSousAbrisesCollection = periodeAnnees));
+      .subscribe((periodeAnnees: IPeriodeAnnee[]) => (this.periodeAnneesSharedCollection = periodeAnnees));
 
     this.typeSemisService
-      .query({ filter: 'semis-is-null' })
+      .query()
       .pipe(map((res: HttpResponse<ITypeSemis[]>) => res.body ?? []))
       .pipe(
         map((typeSemis: ITypeSemis[]) =>
           this.typeSemisService.addTypeSemisToCollectionIfMissing(typeSemis, this.editForm.get('typeSemis')!.value)
         )
       )
-      .subscribe((typeSemis: ITypeSemis[]) => (this.typeSemisCollection = typeSemis));
+      .subscribe((typeSemis: ITypeSemis[]) => (this.typeSemisSharedCollection = typeSemis));
 
     this.germinationService
-      .query({ filter: 'semis-is-null' })
+      .query()
       .pipe(map((res: HttpResponse<IGermination[]>) => res.body ?? []))
       .pipe(
         map((germinations: IGermination[]) =>
           this.germinationService.addGerminationToCollectionIfMissing(germinations, this.editForm.get('germination')!.value)
         )
       )
-      .subscribe((germinations: IGermination[]) => (this.germinationsCollection = germinations));
+      .subscribe((germinations: IGermination[]) => (this.germinationsSharedCollection = germinations));
   }
 
   protected createFromForm(): ISemis {

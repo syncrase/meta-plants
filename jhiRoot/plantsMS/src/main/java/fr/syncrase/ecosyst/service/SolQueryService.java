@@ -97,12 +97,6 @@ public class SolQueryService extends QueryService<Sol> {
             if (criteria.getRichesse() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getRichesse(), Sol_.richesse));
             }
-            if (criteria.getPlanteId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getPlanteId(), root -> root.join(Sol_.plante, JoinType.LEFT).get(Plante_.id))
-                    );
-            }
         }
         return specification;
     }

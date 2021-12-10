@@ -30,7 +30,6 @@ export class ClassificationUpdatePage {
   cancelButton = element(by.id('cancel-save'));
 
   idInput = element(by.id('field_id'));
-  nomLatinInput = element(by.id('field_nomLatin'));
 
   raunkierSelect = element(by.id('field_raunkier'));
   cronquistSelect = element(by.id('field_cronquist'));
@@ -49,14 +48,6 @@ export class ClassificationUpdatePage {
 
   async getIdInput(): Promise<string> {
     return await this.idInput.getAttribute('value');
-  }
-
-  async setNomLatinInput(nomLatin: string): Promise<void> {
-    await this.nomLatinInput.sendKeys(nomLatin);
-  }
-
-  async getNomLatinInput(): Promise<string> {
-    return await this.nomLatinInput.getAttribute('value');
   }
 
   async raunkierSelectLastOption(): Promise<void> {

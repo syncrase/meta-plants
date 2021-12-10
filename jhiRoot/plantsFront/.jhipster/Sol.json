@@ -18,14 +18,7 @@
       "fieldType": "String"
     }
   ],
-  "relationships": [
-    {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "plante",
-      "otherEntityRelationshipName": "sols",
-      "relationshipName": "plante"
-    }
-  ],
+  "relationships": [],
   "entityTableName": "sol",
   "dto": "no",
   "pagination": "pagination",

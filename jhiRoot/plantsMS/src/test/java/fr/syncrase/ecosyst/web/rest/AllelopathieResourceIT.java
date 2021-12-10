@@ -66,6 +66,18 @@ class AllelopathieResourceIT {
      */
     public static Allelopathie createEntity(EntityManager em) {
         Allelopathie allelopathie = new Allelopathie().type(DEFAULT_TYPE).description(DEFAULT_DESCRIPTION).impact(DEFAULT_IMPACT);
+        // Add required entity
+        Plante plante;
+        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
+            plante = PlanteResourceIT.createEntity(em);
+            em.persist(plante);
+            em.flush();
+        } else {
+            plante = TestUtil.findAll(em, Plante.class).get(0);
+        }
+        allelopathie.setCible(plante);
+        // Add required entity
+        allelopathie.setOrigine(plante);
         return allelopathie;
     }
 
@@ -77,6 +89,18 @@ class AllelopathieResourceIT {
      */
     public static Allelopathie createUpdatedEntity(EntityManager em) {
         Allelopathie allelopathie = new Allelopathie().type(UPDATED_TYPE).description(UPDATED_DESCRIPTION).impact(UPDATED_IMPACT);
+        // Add required entity
+        Plante plante;
+        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
+            plante = PlanteResourceIT.createUpdatedEntity(em);
+            em.persist(plante);
+            em.flush();
+        } else {
+            plante = TestUtil.findAll(em, Plante.class).get(0);
+        }
+        allelopathie.setCible(plante);
+        // Add required entity
+        allelopathie.setOrigine(plante);
         return allelopathie;
     }
 

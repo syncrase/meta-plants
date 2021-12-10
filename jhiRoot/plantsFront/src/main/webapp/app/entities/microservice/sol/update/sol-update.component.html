@@ -30,19 +30,6 @@
           <label class="form-control-label" for="field_richesse">Richesse</label>
           <input type="text" class="form-control" name="richesse" id="field_richesse" data-cy="richesse" formControlName="richesse" />
         </div>
-
-        <div class="form-group">
-          <label class="form-control-label" for="field_plante">Plante</label>
-          <select class="form-control" id="field_plante" data-cy="plante" name="plante" formControlName="plante">
-            <option [ngValue]="null"></option>
-            <option
-              [ngValue]="planteOption.id === editForm.get('plante')!.value?.id ? editForm.get('plante')!.value : planteOption"
-              *ngFor="let planteOption of plantesSharedCollection; trackBy: trackPlanteById"
-            >
-              {{ planteOption.id }}
-            </option>
-          </select>
-        </div>
       </div>
 
       <div>

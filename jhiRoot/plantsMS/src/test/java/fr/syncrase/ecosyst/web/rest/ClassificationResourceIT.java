@@ -12,6 +12,7 @@ import fr.syncrase.ecosyst.domain.APGIII;
 import fr.syncrase.ecosyst.domain.APGIV;
 import fr.syncrase.ecosyst.domain.Classification;
 import fr.syncrase.ecosyst.domain.Cronquist;
+import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.domain.Raunkier;
 import fr.syncrase.ecosyst.repository.ClassificationRepository;
 import fr.syncrase.ecosyst.service.criteria.ClassificationCriteria;
@@ -35,9 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @WithMockUser
 class ClassificationResourceIT {
-
-    private static final String DEFAULT_NOM_LATIN = "AAAAAAAAAA";
-    private static final String UPDATED_NOM_LATIN = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/classifications";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -63,7 +61,7 @@ class ClassificationResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Classification createEntity(EntityManager em) {
-        Classification classification = new Classification().nomLatin(DEFAULT_NOM_LATIN);
+        Classification classification = new Classification();
         return classification;
     }
 
@@ -74,7 +72,7 @@ class ClassificationResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Classification createUpdatedEntity(EntityManager em) {
-        Classification classification = new Classification().nomLatin(UPDATED_NOM_LATIN);
+        Classification classification = new Classification();
         return classification;
     }
 
@@ -98,7 +96,6 @@ class ClassificationResourceIT {
         List<Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeCreate + 1);
         Classification testClassification = classificationList.get(classificationList.size() - 1);
-        assertThat(testClassification.getNomLatin()).isEqualTo(DEFAULT_NOM_LATIN);
     }
 
     @Test
@@ -132,8 +129,7 @@ class ClassificationResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(classification.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomLatin").value(hasItem(DEFAULT_NOM_LATIN)));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(classification.getId().intValue())));
     }
 
     @Test
@@ -147,8 +143,7 @@ class ClassificationResourceIT {
             .perform(get(ENTITY_API_URL_ID, classification.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(classification.getId().intValue()))
-            .andExpect(jsonPath("$.nomLatin").value(DEFAULT_NOM_LATIN));
+            .andExpect(jsonPath("$.id").value(classification.getId().intValue()));
     }
 
     @Test
@@ -167,84 +162,6 @@ class ClassificationResourceIT {
 
         defaultClassificationShouldBeFound("id.lessThanOrEqual=" + id);
         defaultClassificationShouldNotBeFound("id.lessThan=" + id);
-    }
-
-    @Test
-    @Transactional
-    void getAllClassificationsByNomLatinIsEqualToSomething() throws Exception {
-        // Initialize the database
-        classificationRepository.saveAndFlush(classification);
-
-        // Get all the classificationList where nomLatin equals to DEFAULT_NOM_LATIN
-        defaultClassificationShouldBeFound("nomLatin.equals=" + DEFAULT_NOM_LATIN);
-
-        // Get all the classificationList where nomLatin equals to UPDATED_NOM_LATIN
-        defaultClassificationShouldNotBeFound("nomLatin.equals=" + UPDATED_NOM_LATIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllClassificationsByNomLatinIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        classificationRepository.saveAndFlush(classification);
-
-        // Get all the classificationList where nomLatin not equals to DEFAULT_NOM_LATIN
-        defaultClassificationShouldNotBeFound("nomLatin.notEquals=" + DEFAULT_NOM_LATIN);
-
-        // Get all the classificationList where nomLatin not equals to UPDATED_NOM_LATIN
-        defaultClassificationShouldBeFound("nomLatin.notEquals=" + UPDATED_NOM_LATIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllClassificationsByNomLatinIsInShouldWork() throws Exception {
-        // Initialize the database
-        classificationRepository.saveAndFlush(classification);
-
-        // Get all the classificationList where nomLatin in DEFAULT_NOM_LATIN or UPDATED_NOM_LATIN
-        defaultClassificationShouldBeFound("nomLatin.in=" + DEFAULT_NOM_LATIN + "," + UPDATED_NOM_LATIN);
-
-        // Get all the classificationList where nomLatin equals to UPDATED_NOM_LATIN
-        defaultClassificationShouldNotBeFound("nomLatin.in=" + UPDATED_NOM_LATIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllClassificationsByNomLatinIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        classificationRepository.saveAndFlush(classification);
-
-        // Get all the classificationList where nomLatin is not null
-        defaultClassificationShouldBeFound("nomLatin.specified=true");
-
-        // Get all the classificationList where nomLatin is null
-        defaultClassificationShouldNotBeFound("nomLatin.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllClassificationsByNomLatinContainsSomething() throws Exception {
-        // Initialize the database
-        classificationRepository.saveAndFlush(classification);
-
-        // Get all the classificationList where nomLatin contains DEFAULT_NOM_LATIN
-        defaultClassificationShouldBeFound("nomLatin.contains=" + DEFAULT_NOM_LATIN);
-
-        // Get all the classificationList where nomLatin contains UPDATED_NOM_LATIN
-        defaultClassificationShouldNotBeFound("nomLatin.contains=" + UPDATED_NOM_LATIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllClassificationsByNomLatinNotContainsSomething() throws Exception {
-        // Initialize the database
-        classificationRepository.saveAndFlush(classification);
-
-        // Get all the classificationList where nomLatin does not contain DEFAULT_NOM_LATIN
-        defaultClassificationShouldNotBeFound("nomLatin.doesNotContain=" + DEFAULT_NOM_LATIN);
-
-        // Get all the classificationList where nomLatin does not contain UPDATED_NOM_LATIN
-        defaultClassificationShouldBeFound("nomLatin.doesNotContain=" + UPDATED_NOM_LATIN);
     }
 
     @Test
@@ -403,6 +320,33 @@ class ClassificationResourceIT {
         defaultClassificationShouldNotBeFound("apg4Id.equals=" + (apg4Id + 1));
     }
 
+    @Test
+    @Transactional
+    void getAllClassificationsByPlanteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        classificationRepository.saveAndFlush(classification);
+        Plante plante;
+        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
+            plante = PlanteResourceIT.createEntity(em);
+            em.persist(plante);
+            em.flush();
+        } else {
+            plante = TestUtil.findAll(em, Plante.class).get(0);
+        }
+        em.persist(plante);
+        em.flush();
+        classification.setPlante(plante);
+        plante.setClassification(classification);
+        classificationRepository.saveAndFlush(classification);
+        Long planteId = plante.getId();
+
+        // Get all the classificationList where plante equals to planteId
+        defaultClassificationShouldBeFound("planteId.equals=" + planteId);
+
+        // Get all the classificationList where plante equals to (planteId + 1)
+        defaultClassificationShouldNotBeFound("planteId.equals=" + (planteId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -411,8 +355,7 @@ class ClassificationResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(classification.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomLatin").value(hasItem(DEFAULT_NOM_LATIN)));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(classification.getId().intValue())));
 
         // Check, that the count call also returns 1
         restClassificationMockMvc
@@ -460,7 +403,6 @@ class ClassificationResourceIT {
         Classification updatedClassification = classificationRepository.findById(classification.getId()).get();
         // Disconnect from session so that the updates on updatedClassification are not directly saved in db
         em.detach(updatedClassification);
-        updatedClassification.nomLatin(UPDATED_NOM_LATIN);
 
         restClassificationMockMvc
             .perform(
@@ -474,7 +416,6 @@ class ClassificationResourceIT {
         List<Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeUpdate);
         Classification testClassification = classificationList.get(classificationList.size() - 1);
-        assertThat(testClassification.getNomLatin()).isEqualTo(UPDATED_NOM_LATIN);
     }
 
     @Test
@@ -557,7 +498,6 @@ class ClassificationResourceIT {
         List<Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeUpdate);
         Classification testClassification = classificationList.get(classificationList.size() - 1);
-        assertThat(testClassification.getNomLatin()).isEqualTo(DEFAULT_NOM_LATIN);
     }
 
     @Test
@@ -572,8 +512,6 @@ class ClassificationResourceIT {
         Classification partialUpdatedClassification = new Classification();
         partialUpdatedClassification.setId(classification.getId());
 
-        partialUpdatedClassification.nomLatin(UPDATED_NOM_LATIN);
-
         restClassificationMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedClassification.getId())
@@ -586,7 +524,6 @@ class ClassificationResourceIT {
         List<Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeUpdate);
         Classification testClassification = classificationList.get(classificationList.size() - 1);
-        assertThat(testClassification.getNomLatin()).isEqualTo(UPDATED_NOM_LATIN);
     }
 
     @Test

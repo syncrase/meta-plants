@@ -9,8 +9,6 @@ import { of, Subject } from 'rxjs';
 
 import { SolService } from '../service/sol.service';
 import { ISol, Sol } from '../sol.model';
-import { IPlante } from 'app/entities/microservice/plante/plante.model';
-import { PlanteService } from 'app/entities/microservice/plante/service/plante.service';
 
 import { SolUpdateComponent } from './sol-update.component';
 
@@ -19,7 +17,6 @@ describe('Sol Management Update Component', () => {
   let fixture: ComponentFixture<SolUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let solService: SolService;
-  let planteService: PlanteService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -33,41 +30,18 @@ describe('Sol Management Update Component', () => {
     fixture = TestBed.createComponent(SolUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
     solService = TestBed.inject(SolService);
-    planteService = TestBed.inject(PlanteService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Plante query and add missing value', () => {
-      const sol: ISol = { id: 456 };
-      const plante: IPlante = { id: 5155 };
-      sol.plante = plante;
-
-      const planteCollection: IPlante[] = [{ id: 74635 }];
-      jest.spyOn(planteService, 'query').mockReturnValue(of(new HttpResponse({ body: planteCollection })));
-      const additionalPlantes = [plante];
-      const expectedCollection: IPlante[] = [...additionalPlantes, ...planteCollection];
-      jest.spyOn(planteService, 'addPlanteToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ sol });
-      comp.ngOnInit();
-
-      expect(planteService.query).toHaveBeenCalled();
-      expect(planteService.addPlanteToCollectionIfMissing).toHaveBeenCalledWith(planteCollection, ...additionalPlantes);
-      expect(comp.plantesSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should update editForm', () => {
       const sol: ISol = { id: 456 };
-      const plante: IPlante = { id: 38392 };
-      sol.plante = plante;
 
       activatedRoute.data = of({ sol });
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(sol));
-      expect(comp.plantesSharedCollection).toContain(plante);
     });
   });
 
@@ -132,16 +106,6 @@ describe('Sol Management Update Component', () => {
       expect(solService.update).toHaveBeenCalledWith(sol);
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Tracking relationships identifiers', () => {
-    describe('trackPlanteById', () => {
-      it('Should return tracked Plante primary key', () => {
-        const entity = { id: 123 };
-        const trackResult = comp.trackPlanteById(0, entity);
-        expect(trackResult).toEqual(entity.id);
-      });
     });
   });
 });

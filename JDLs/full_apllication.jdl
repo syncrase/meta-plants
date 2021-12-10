@@ -128,6 +128,7 @@ entity Cronquist {
 	ordre String,
 	famille String,
 	genre String,
+	// TODO add unique constraint
 	espece String,
 }
 
@@ -218,43 +219,45 @@ relationship OneToOne {
 	Classification{apg2} to APGII,
 	Classification{apg3} to APGIII,
 	Classification{apg4} to APGIV,
+	/** 
+	* Une plante ne correspond qu'à une seule classification
+	* Mais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes
+	* Mais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique
+	*/
+	Plante{classification} to Classification{plante},
     
 }
 
 relationship OneToMany {
 	Plante{confusions} to Ressemblance{planteRessemblant},
 	Plante{ensoleillements} to Ensoleillement,
+
 	/** 
 	* Une plante peut avoir beaucoup de variantes potagère
-	* Une plante potagère ne correspond qu'à une seule plante botanique
+	* Une plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)
 	*/
 	Plante{plantesPotageres} to Plante,
-	Plante{sols} to Sol,
-	Temperature{plantes} to Plante,// avec ou sans {plantes} ?
-    Racine to Plante,
-    Strate to Plante,
-    Feuillage to Plante,
+
     Reproduction to CycleDeVie,
     
 }
 
 relationship ManyToMany {
 	Plante{nomsVernaculaires(nom)} to NomVernaculaire{plantes},
-
-	// Un même mois peut être utilisé pour plusieurs dans la table PeriodeAnnee
-	// Une même période peut être utilisé pour plusieurs Mois
-	PeriodeAnnee{debut(nom) required} to Mois,
-	PeriodeAnnee{fin(nom) required} to Mois,
 }
 
 relationship ManyToOne {
-	/** 
-	* Une plante ne correspond qu'à une seule classification
-	* Mais, étant donnée les plantes potagère, une classification peut correspondre à plusieurs plantes
-	*/
-	Plante{classification} to Classification{plantes},
+	Plante{cycleDeVie} to CycleDeVie,
+
+	Plante{sol} to Sol,
+	Plante{temperature} to Temperature,
+    Plante{racine} to Racine,
+    Plante{strate} to Strate,
+    Plante{feuillage} to Feuillage,
+
 
 	// Plusieurs allelopathie peuvent être liées à une plante
+	// L'allélopathie n'est pas enregistré dans Plante
 	Allelopathie{cible required} to Plante,
 	Allelopathie{origine required} to Plante,
 
@@ -264,7 +267,6 @@ relationship ManyToOne {
 	Semis{typeSemis(type)} to TypeSemis,
 	Semis{germination} to Germination,
 	
-	Plante{cycleDeVie} to CycleDeVie,
 	CycleDeVie{semis} to Semis,
 	CycleDeVie{apparitionFeuilles} to PeriodeAnnee,
 	CycleDeVie{floraison} to PeriodeAnnee,
@@ -273,6 +275,10 @@ relationship ManyToOne {
 	CycleDeVie{maturite} to PeriodeAnnee,
 	CycleDeVie{plantation} to PeriodeAnnee,
 	CycleDeVie{rempotage} to PeriodeAnnee,
+
+	// Il peut y avoir plusieurs mois identique pour le début et pour la fin
+	PeriodeAnnee{debut(nom) required} to Mois,
+	PeriodeAnnee{fin(nom) required} to Mois,
 }
 
 paginate * with pagination

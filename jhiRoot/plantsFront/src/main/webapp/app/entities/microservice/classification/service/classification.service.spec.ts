@@ -21,7 +21,6 @@ describe('Classification Service', () => {
 
     elemDefault = {
       id: 0,
-      nomLatin: 'AAAAAAA',
     };
   });
 
@@ -57,7 +56,6 @@ describe('Classification Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
-          nomLatin: 'BBBBBB',
         },
         elemDefault
       );
@@ -89,7 +87,6 @@ describe('Classification Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
-          nomLatin: 'BBBBBB',
         },
         elemDefault
       );
@@ -141,7 +138,7 @@ describe('Classification Service', () => {
       });
 
       it('should add only unique Classification to an array', () => {
-        const classificationArray: IClassification[] = [{ id: 123 }, { id: 456 }, { id: 40905 }];
+        const classificationArray: IClassification[] = [{ id: 123 }, { id: 456 }, { id: 14764 }];
         const classificationCollection: IClassification[] = [{ id: 123 }];
         expectedResult = service.addClassificationToCollectionIfMissing(classificationCollection, ...classificationArray);
         expect(expectedResult).toHaveLength(3);

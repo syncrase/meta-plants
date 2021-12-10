@@ -3,32 +3,29 @@
   "fields": [],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "semis",
-      "relationshipName": "semisPleineTerre",
-      "ownerSide": true
+      "relationshipName": "semisPleineTerre"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "semis",
-      "relationshipName": "semisSousAbris",
-      "ownerSide": true
+      "relationshipName": "semisSousAbris"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "typeSemis",
       "otherEntityRelationshipName": "semis",
       "relationshipName": "typeSemis",
-      "ownerSide": true
+      "otherEntityField": "type"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "germination",
       "otherEntityRelationshipName": "semis",
-      "relationshipName": "germination",
-      "ownerSide": true
+      "relationshipName": "germination"
     }
   ],
   "entityTableName": "semis",
@@ -39,7 +36,7 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
+  "applications": ["plantsFront", "plantsMS"],
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",

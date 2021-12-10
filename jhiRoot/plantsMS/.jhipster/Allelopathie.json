@@ -23,12 +23,14 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "allelopathie",
+      "relationshipValidateRules": "required",
       "relationshipName": "cible"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "allelopathie",
+      "relationshipValidateRules": "required",
       "relationshipName": "origine"
     }
   ],
@@ -40,7 +42,7 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
+  "applications": ["plantsFront", "plantsMS"],
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",

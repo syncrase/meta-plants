@@ -88,12 +88,6 @@ public class FeuillageQueryService extends QueryService<Feuillage> {
             if (criteria.getType() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getType(), Feuillage_.type));
             }
-            if (criteria.getPlanteId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getPlanteId(), root -> root.join(Feuillage_.plantes, JoinType.LEFT).get(Plante_.id))
-                    );
-            }
         }
         return specification;
     }

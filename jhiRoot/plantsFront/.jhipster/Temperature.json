@@ -18,14 +18,7 @@
       "fieldType": "String"
     }
   ],
-  "relationships": [
-    {
-      "relationshipType": "one-to-many",
-      "otherEntityName": "plante",
-      "otherEntityRelationshipName": "temperature",
-      "relationshipName": "plantes"
-    }
-  ],
+  "relationships": [],
   "entityTableName": "temperature",
   "dto": "no",
   "pagination": "pagination",

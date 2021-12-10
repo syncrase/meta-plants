@@ -3,60 +3,52 @@
   "fields": [],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "semis",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "semis",
-      "ownerSide": true
+      "relationshipName": "semis"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "apparitionFeuilles",
-      "ownerSide": true
+      "relationshipName": "apparitionFeuilles"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "floraison",
-      "ownerSide": true
+      "relationshipName": "floraison"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "recolte",
-      "ownerSide": true
+      "relationshipName": "recolte"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "croissance",
-      "ownerSide": true
+      "relationshipName": "croissance"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "maturite",
-      "ownerSide": true
+      "relationshipName": "maturite"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "plantation",
-      "ownerSide": true
+      "relationshipName": "plantation"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "periodeAnnee",
       "otherEntityRelationshipName": "cycleDeVie",
-      "relationshipName": "rempotage",
-      "ownerSide": true
+      "relationshipName": "rempotage"
     },
     {
       "relationshipType": "many-to-one",
@@ -73,7 +65,7 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
+  "applications": ["plantsFront", "plantsMS"],
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",

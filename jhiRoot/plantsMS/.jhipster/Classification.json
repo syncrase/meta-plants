@@ -1,47 +1,55 @@
 {
   "name": "Classification",
-  "fields": [
-    {
-      "fieldName": "nomLatin",
-      "fieldType": "String"
-    }
-  ],
+  "fields": [],
   "relationships": [
     {
-      "relationshipType": "many-to-one",
+      "relationshipType": "one-to-one",
       "otherEntityName": "raunkier",
       "otherEntityRelationshipName": "classification",
-      "relationshipName": "raunkier"
+      "relationshipName": "raunkier",
+      "ownerSide": true
     },
     {
-      "relationshipType": "many-to-one",
+      "relationshipType": "one-to-one",
       "otherEntityName": "cronquist",
       "otherEntityRelationshipName": "classification",
-      "relationshipName": "cronquist"
+      "relationshipName": "cronquist",
+      "ownerSide": true
     },
     {
-      "relationshipType": "many-to-one",
+      "relationshipType": "one-to-one",
       "otherEntityName": "aPGI",
       "otherEntityRelationshipName": "classification",
-      "relationshipName": "apg1"
+      "relationshipName": "apg1",
+      "ownerSide": true
     },
     {
-      "relationshipType": "many-to-one",
+      "relationshipType": "one-to-one",
       "otherEntityName": "aPGII",
       "otherEntityRelationshipName": "classification",
-      "relationshipName": "apg2"
+      "relationshipName": "apg2",
+      "ownerSide": true
     },
     {
-      "relationshipType": "many-to-one",
+      "relationshipType": "one-to-one",
       "otherEntityName": "aPGIII",
       "otherEntityRelationshipName": "classification",
-      "relationshipName": "apg3"
+      "relationshipName": "apg3",
+      "ownerSide": true
     },
     {
-      "relationshipType": "many-to-one",
+      "relationshipType": "one-to-one",
       "otherEntityName": "aPGIV",
       "otherEntityRelationshipName": "classification",
-      "relationshipName": "apg4"
+      "relationshipName": "apg4",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "classification",
+      "relationshipName": "plante",
+      "ownerSide": false
     }
   ],
   "entityTableName": "classification",
@@ -52,7 +60,7 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
+  "applications": ["plantsFront", "plantsMS"],
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",
