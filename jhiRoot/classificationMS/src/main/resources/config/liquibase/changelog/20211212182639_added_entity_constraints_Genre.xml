@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity Genre.
+    -->
+    <changeSet id="20211212182639-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="sous_tribu_id"
+                                 baseTableName="genre"
+                                 constraintName="fk_genre__sous_tribu_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_tribu"/>
+
+        <addForeignKeyConstraint baseColumnNames="genre_id"
+                                 baseTableName="genre"
+                                 constraintName="fk_genre__genre_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="genre"/>
+    </changeSet>
+</databaseChangeLog>

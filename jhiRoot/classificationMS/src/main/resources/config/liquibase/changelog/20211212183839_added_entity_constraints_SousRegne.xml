@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity SousRegne.
+    -->
+    <changeSet id="20211212183839-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="regne_id"
+                                 baseTableName="sous_regne"
+                                 constraintName="fk_sous_regne__regne_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="regne"/>
+
+        <addForeignKeyConstraint baseColumnNames="sous_regne_id"
+                                 baseTableName="sous_regne"
+                                 constraintName="fk_sous_regne__sous_regne_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_regne"/>
+    </changeSet>
+</databaseChangeLog>

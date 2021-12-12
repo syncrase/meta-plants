@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity InfraEmbranchement.
+    -->
+    <changeSet id="20211212183239-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="sous_division_id"
+                                 baseTableName="infra_embranchement"
+                                 constraintName="fk_infra_embranchement__sous_division_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_division"/>
+
+        <addForeignKeyConstraint baseColumnNames="infra_embranchement_id"
+                                 baseTableName="infra_embranchement"
+                                 constraintName="fk_infra_embranchement__infra_embranchement_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="infra_embranchement"/>
+    </changeSet>
+</databaseChangeLog>

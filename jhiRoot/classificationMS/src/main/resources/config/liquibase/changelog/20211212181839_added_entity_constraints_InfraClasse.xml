@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity InfraClasse.
+    -->
+    <changeSet id="20211212181839-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="sous_classe_id"
+                                 baseTableName="infra_classe"
+                                 constraintName="fk_infra_classe__sous_classe_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_classe"/>
+
+        <addForeignKeyConstraint baseColumnNames="infra_classe_id"
+                                 baseTableName="infra_classe"
+                                 constraintName="fk_infra_classe__infra_classe_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="infra_classe"/>
+    </changeSet>
+</databaseChangeLog>

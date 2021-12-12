@@ -1,0 +1,57 @@
+{
+  "name": "InfraEmbranchement",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "microEmbranchement",
+      "otherEntityRelationshipName": "infraEmbranchement",
+      "relationshipName": "microEmbranchements",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "infraEmbranchement",
+      "otherEntityRelationshipName": "infraEmbranchement",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousDivision",
+      "otherEntityRelationshipName": "infraEmbranchements",
+      "relationshipName": "sousDivision",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "infraEmbranchement",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "infraEmbranchement"
+    }
+  ],
+  "javadoc": "Infraphylum",
+  "entityTableName": "infra_embranchement",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212183239"
+}

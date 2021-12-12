@@ -1,0 +1,57 @@
+{
+  "name": "SousRegne",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "rameau",
+      "otherEntityRelationshipName": "sousRegne",
+      "relationshipName": "rameaus",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sousRegne",
+      "otherEntityRelationshipName": "sousRegne",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "regne",
+      "otherEntityRelationshipName": "sousRegnes",
+      "relationshipName": "regne",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousRegne",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "sousRegne"
+    }
+  ],
+  "javadoc": "Subregnum",
+  "entityTableName": "sous_regne",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212183839"
+}

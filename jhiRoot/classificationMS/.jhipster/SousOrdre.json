@@ -1,0 +1,57 @@
+{
+  "name": "SousOrdre",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "infraOrdre",
+      "otherEntityRelationshipName": "sousOrdre",
+      "relationshipName": "infraOrdres",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sousOrdre",
+      "otherEntityRelationshipName": "sousOrdre",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "ordre",
+      "otherEntityRelationshipName": "sousOrdres",
+      "relationshipName": "ordre",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousOrdre",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "sousOrdre"
+    }
+  ],
+  "javadoc": "Subordo",
+  "entityTableName": "sous_ordre",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212181939"
+}

@@ -1,0 +1,57 @@
+{
+  "name": "InfraRegne",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "superDivision",
+      "otherEntityRelationshipName": "infraRegne",
+      "relationshipName": "superDivisions",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "infraRegne",
+      "otherEntityRelationshipName": "infraRegne",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "rameau",
+      "otherEntityRelationshipName": "infraRegnes",
+      "relationshipName": "rameau",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "infraRegne",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "infraRegne"
+    }
+  ],
+  "javadoc": "Infraregnum",
+  "entityTableName": "infra_regne",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212182539"
+}
