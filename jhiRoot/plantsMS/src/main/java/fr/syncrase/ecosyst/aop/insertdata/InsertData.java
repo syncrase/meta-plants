@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
-@Component
+//@Component
 public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     //implements ApplicationListener<ContextRefreshedEvent>
     private final Logger log = LoggerFactory.getLogger(InsertData.class);
