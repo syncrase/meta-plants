@@ -2,43 +2,40 @@
 
 application {
 	config {
-	  	baseName plantsFront,
-		applicationType gateway,
-		packageName fr.syncrase.ecosyst,
-		serverPort 8080,
-    	authenticationType jwt,
-		cacheProvider hazelcast,
-		enableHibernateCache true,
-		websocket false,
-		databaseType sql,
-		devDatabaseType postgresql,
-		prodDatabaseType postgresql,
-		searchEngine false,
-		messageBroker false,
-		serviceDiscoveryType eureka,
-		buildTool maven,
-		enableSwaggerCodegen false,
-		embeddableLaunchScript false
-		clientPackageManager npm,
-    	enableGradleEnterprise false,
-		clientFramework angularX,
-    	withAdminUi true,
-		clientTheme sketchy,
-    	clientThemeVariant dark,
-		testFrameworks [gatling, cucumber, protractor],
-		jhiPrefix perma,
-		dtoSuffix DTO,
-		enableTranslation false,
-		nativeLanguage fr,
-    	languages [en, fr],
-		skipClient false,
-		skipUserManagement false
+        baseName plantsFront,
+        applicationType gateway,
+        packageName fr.syncrase.ecosyst,
+        serverPort 8080,
+        authenticationType jwt,
+        cacheProvider hazelcast,
+        enableHibernateCache true,
+        websocket false,
+        databaseType sql,
+        devDatabaseType postgresql,
+        prodDatabaseType postgresql,
+        searchEngine false,
+        messageBroker false,
+        serviceDiscoveryType eureka,
+        buildTool maven,
+        enableSwaggerCodegen true,
+        embeddableLaunchScript false,
+        clientPackageManager npm,
+        enableGradleEnterprise false,
+        withAdminUi true,
+        clientTheme sketchy,
+        clientThemeVariant dark,
+        testFrameworks [gatling, cucumber, protractor],
+        jhiPrefix perma,
+        enableTranslation false,
+        nativeLanguage fr,
+        languages [en, fr],
+        skipClient false,
+        skipUserManagement false,
+        clientFramework angularX,
+        dtoSuffix DTO,
 	}
 	
 	entities *
-	
-	// Toutes les entités viennent du microservice 'microservice'
-	microservice * with plantsms
 }
 
 application {
@@ -67,10 +64,10 @@ application {
 		skipClient true,
 		skipUserManagement true,
 		clientPackageManager npm,
-		embeddableLaunchScript false
+		embeddableLaunchScript false,
 	}
-	
-  	entities APGIPlante APGIIPlante APGIIIPlante, APGIVPlante, Allelopathie, Classification, CronquistPlante, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, RaunkierPlante, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis
+    
+    entities APGIPlante, APGIIPlante, APGIIIPlante, APGIVPlante, Allelopathie, Classification, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, RaunkierPlante, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, Clade, CronquistPlante
 }
 
 // https://www.jhipster.tech/jdl/deployments
@@ -80,44 +77,11 @@ deployment {
 	appsFolders [plantsFront, plantsMS]
 }
 
-
-entity Mois {
-	numero Double required,
-	nom String required
-}
-
-entity PeriodeAnnee {
-}
-
-/**
-* Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique
-*/
-entity Plante {
-	entretien String,
-	histoire String,
-    vitesseCroissance String,
-    exposition String //ombre, mi-ombre, etc
-}
-
-entity Reproduction {
-	vitesse String,
-    type String
-}
-
-entity Sol {
-	phMin Double, // ENUM,
-	phMax Double, // ENUM,
-	type String, // argileux calcaire etc ENUM
-    richesse String
-}
-
-entity NomVernaculaire {
-	nom String required,
-	description String
-}
-
-entity Classification {
-}
+//***********************************************************
+//***********************************************************
+// CRONQUIST, PlantsMS : Shared entities
+//***********************************************************
+//***********************************************************
 
 /**
 * Entité partagé pour communiquer sur l'arborescence
@@ -156,6 +120,50 @@ entity CronquistPlante {
 	variete String,
 	sousVariete String,
 	forme String,
+}
+
+//***********************************************************
+//***********************************************************
+// PlantsMS entities
+//***********************************************************
+//***********************************************************
+
+entity Mois {
+	numero Double required,
+	nom String required
+}
+
+entity PeriodeAnnee {
+}
+
+/**
+* Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique
+*/
+entity Plante {
+	entretien String,
+	histoire String,
+    vitesseCroissance String,
+    exposition String //ombre, mi-ombre, etc
+}
+
+entity Reproduction {
+	vitesse String,
+    type String
+}
+
+entity Sol {
+	phMin Double, // ENUM,
+	phMax Double, // ENUM,
+	type String, // argileux calcaire etc ENUM
+    richesse String
+}
+
+entity NomVernaculaire {
+	nom String required,
+	description String
+}
+
+entity Classification {
 }
 
 entity RaunkierPlante {
@@ -252,6 +260,14 @@ entity Feuillage {
 	type String
 }
 
+
+//***********************************************************
+//***********************************************************
+// PlantsMS associations
+//***********************************************************
+//***********************************************************
+
+
 relationship OneToOne {
 	Classification{raunkier} to RaunkierPlante,
 	Classification{cronquist} to CronquistPlante,
@@ -269,6 +285,7 @@ relationship OneToOne {
 }
 
 relationship OneToMany {
+	// TODO gestion de la ressemblance
 	Plante{confusions} to Ressemblance{planteRessemblant},
 	Plante{ensoleillements} to Ensoleillement,
 
@@ -325,6 +342,9 @@ relationship ManyToOne {
 	PeriodeAnnee{debut(nom) required} to Mois,
 	PeriodeAnnee{fin(nom) required} to Mois,
 }
+
+
+microservice * with plantsms
 
 paginate * with pagination
 // dto * with mapstruct

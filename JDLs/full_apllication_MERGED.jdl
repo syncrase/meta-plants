@@ -1,0 +1,765 @@
+
+
+application {
+    config {
+        baseName plantsFront,
+        applicationType gateway,
+        packageName fr.syncrase.ecosyst,
+        serverPort 8080,
+        authenticationType jwt,
+        cacheProvider hazelcast,
+        enableHibernateCache true,
+        websocket false,
+        databaseType sql,
+        devDatabaseType postgresql,
+        prodDatabaseType postgresql,
+        searchEngine false,
+        messageBroker false,
+        serviceDiscoveryType eureka,
+        buildTool maven,
+        enableSwaggerCodegen true,
+        embeddableLaunchScript false,
+        clientPackageManager npm,
+        enableGradleEnterprise false,
+        withAdminUi true,
+        clientTheme sketchy,
+        clientThemeVariant dark,
+        testFrameworks [gatling, cucumber, protractor],
+        jhiPrefix perma,
+        enableTranslation false,
+        nativeLanguage fr,
+        languages [en, fr],
+        skipClient false,
+        skipUserManagement false,
+        clientFramework angularX,
+        dtoSuffix DTO,
+    }
+    
+    entities *
+
+}
+
+application {
+    config {
+        baseName plantsMS,
+        applicationType microservice,
+        packageName fr.syncrase.ecosyst,
+        serverPort 8081,
+        authenticationType jwt,
+        cacheProvider hazelcast,
+        enableHibernateCache true,
+        websocket false,
+        databaseType sql,
+        devDatabaseType postgresql,
+        prodDatabaseType postgresql,
+        searchEngine false,
+        messageBroker false,
+        serviceDiscoveryType eureka,
+        buildTool maven,
+        enableSwaggerCodegen true,
+        testFrameworks [gatling, cucumber],
+        jhiPrefix perma,
+        dtoSuffix DTO,
+        enableTranslation false,
+        nativeLanguage fr,
+        skipClient true,
+        skipUserManagement true,
+        clientPackageManager npm,
+        embeddableLaunchScript false,
+    }
+    
+    entities APGIPlante, APGIIPlante, APGIIIPlante, APGIVPlante, Allelopathie, Classification, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, RaunkierPlante, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, Clade, CronquistPlante
+}
+
+application {
+    config {
+        baseName classificationMS,
+        applicationType microservice,
+        packageName fr.syncrase.ecosyst,
+        serverPort 8082,
+        authenticationType jwt,
+        cacheProvider hazelcast,
+        enableHibernateCache true,
+        websocket false,
+        databaseType sql,
+        devDatabaseType postgresql,
+        prodDatabaseType postgresql,
+        searchEngine false,
+        messageBroker false,
+        serviceDiscoveryType eureka,
+        buildTool maven,
+        enableSwaggerCodegen true,
+        testFrameworks [gatling, cucumber],
+        jhiPrefix perma,
+        dtoSuffix DTO,
+        enableTranslation false,
+        nativeLanguage fr,
+        skipClient true,
+        skipUserManagement true,
+        clientPackageManager npm,
+        embeddableLaunchScript false,
+    }
+    
+    entities SuperRegne, Regne , SousRegne , Rameau , InfraRegne ,SuperDivision, Division, SousDivision, InfraEmbranchement, MicroEmbranchement, SuperClasse, Classe, SousClasse, InfraClasse, SuperOrdre, Ordre, SousOrdre, InfraOrdre, MicroOrdre, SuperFamille, Famille, SousFamille, Tribu, SousTribu, Genre, SousGenre, Section, SousSection, Espece, SousEspece, Variete, SousVariete, Forme, SousForme, CronquistPlante
+}
+
+// https://www.jhipster.tech/jdl/deployments
+deployment {
+    deploymentType docker-compose
+    dockerRepositoryName "dockerRepo"
+    appsFolders [plantsFront, plantsMS, classificationMS]
+}
+
+
+    
+//***********************************************************
+//***********************************************************
+// CRONQUIST, PlantsMS : Shared entities
+//***********************************************************
+//***********************************************************
+
+/**
+* Entité partagé pour communiquer sur l'arborescence
+*/
+entity CronquistPlante {
+    superRegne String,
+    regne String,
+    sousRegne String,
+    rameau String,
+    infraRegne String,
+    superDivision String,
+    division String,
+    sousDivision String,
+    infraEmbranchement String,
+    microEmbranchement String,
+    superClasse String,
+    classe String,
+    sousClasse String,
+    infraClasse String,
+    superOrdre String,
+    ordre String,
+    sousOrdre String,
+    infraOrdre String,
+    microOrdre String,
+    superFamille String,
+    famille String,
+    sousFamille String,
+    tribu String,
+    sousTribu String,
+    genre String,
+    sousGenre String,
+    section String,
+    sousSection String,
+    espece String,
+    sousEspece String,
+    variete String,
+    sousVariete String,
+    forme String,
+}
+
+
+//***********************************************************
+//***********************************************************
+// PlantsMS entities
+//***********************************************************
+//***********************************************************
+
+entity Mois {
+    numero Double required,
+    nom String required
+}
+
+entity PeriodeAnnee {
+}
+
+/**
+* Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique
+*/
+entity Plante {
+    entretien String,
+    histoire String,
+    vitesseCroissance String,
+    exposition String //ombre, mi-ombre, etc
+}
+
+entity Reproduction {
+    vitesse String,
+    type String
+}
+
+entity Sol {
+    phMin Double, // ENUM,
+    phMax Double, // ENUM,
+    type String, // argileux calcaire etc ENUM
+    richesse String
+}
+
+entity NomVernaculaire {
+    nom String required,
+    description String
+}
+
+entity Classification {
+}
+
+entity RaunkierPlante {
+    type String required
+}
+
+/**
+* Un clade peut être référencé dans chacune des classifications phylogénétiques
+*/
+entity Clade {
+    nom String required
+}
+
+entity APGIPlante {
+    ordre String required,
+    famille String required
+}
+
+entity APGIIPlante {
+    ordre String required,
+    famille String required
+}
+
+/**
+* Peut contenir plusieurs clades
+*/
+entity APGIIIPlante {
+    ordre String required,
+    famille String required,
+    sousFamille String required,
+    tribu String,
+    sousTribu String,
+    genre String required
+}
+
+entity APGIVPlante {
+    ordre String required // ENUM
+    famille String required // ENUM
+}
+
+entity Semis {
+
+}
+
+// à la volée, en ligne
+entity TypeSemis {
+    type String required,
+    description String // ENUM
+}
+
+entity CycleDeVie {
+
+}
+
+entity Germination {
+    tempsDeGermination String,
+    conditionDeGermination String // ENUM
+}
+
+entity Allelopathie {
+    type String required ,// symbiose ou parasitisme ou autre ENUM
+    description String,
+    impact Integer min(-10) max(10)
+}
+
+/**
+* Pour que la ressemblance soit réflexive il faut l'enregistrer 2 fois. Car si la ressemblance A ressemble à B est enregistrée, alors B ne ressemble pas à A
+*/
+entity Ressemblance {
+    description String
+}
+
+entity Ensoleillement {
+    orientation String, // nord sud etc
+    ensoleilement Double, // heures par jour
+}
+
+entity Temperature {
+    min Double,
+    max Double,
+    description String, // Gel pour fructifiction, durée de gel minimum pour fructification, ...,
+    rusticite String // ENUM
+}
+
+entity Racine {
+    type String
+}
+
+entity Strate {
+    type String
+}
+
+entity Feuillage {
+    type String
+}
+
+
+//***********************************************************
+//***********************************************************
+// CRONQUIST entities
+//***********************************************************
+//***********************************************************
+
+/**
+* Super-règne, Empire, Domaine (Superregnum, Imperium, Dominium)
+*/
+entity SuperRegne {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+*  (Regnum)
+*/
+entity Regne {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Subregnum 
+*/
+entity SousRegne {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Ramus, « branch » en anglais 
+*/
+entity Rameau {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Infraregnum 
+*/
+entity InfraRegne {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Super-embranchement, Super-division ou Superphylum, Superdivisio 
+*/
+entity SuperDivision {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Embranchement, Division ou Phylum, Divisio 2
+*/
+entity Division {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Sous-embranchement, Sous-division ou Subphylum, Subdivisio 
+*/
+entity SousDivision {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Infraphylum 
+*/
+entity InfraEmbranchement {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Microphylum 
+*/
+entity MicroEmbranchement {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Superclassis 
+*/
+entity SuperClasse {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Classis 
+*/
+entity Classe {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Subclassis 
+*/
+entity SousClasse {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Infraclassis 
+*/
+entity InfraClasse {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Superordo 
+*/
+entity SuperOrdre {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Ordo 
+*/
+entity Ordre {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Subordo 
+*/
+entity SousOrdre {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Infraordo 
+*/
+entity InfraOrdre {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Microordo 
+*/
+entity MicroOrdre {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Superfamilia 
+*/
+entity SuperFamille {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Familia 
+*/
+entity Famille {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Subfamilia 
+*/
+entity SousFamille {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Tribus 
+*/
+entity Tribu {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Subtribus 
+*/
+entity SousTribu {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Genus 
+*/
+entity Genre {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Subgenus 
+*/
+entity SousGenre {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Sectio 
+*/
+entity Section {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Subsectio 
+*/
+entity SousSection {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* Species 
+*/
+entity Espece {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* subspecies  - dernier rang zoologique officiel3
+*/
+entity SousEspece {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* varietas  - race étant un rang zoologique informel3
+*/
+entity Variete {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* subvarietas  - sous-race étant un rang zoologique informel3
+*/
+entity SousVariete {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* forma  dernier rang en mycologie
+*/
+entity Forme {
+    nomFr String required,
+    nomLatin String
+}
+
+/**
+* subforma 
+*/
+entity SousForme {
+    nomFr String required,
+    nomLatin String
+}
+
+//***********************************************************
+//***********************************************************
+// PlantsMS associations
+//***********************************************************
+//***********************************************************
+
+
+relationship OneToOne {
+    Classification{raunkier} to RaunkierPlante,
+    Classification{cronquist} to CronquistPlante,
+    Classification{apg1} to APGIPlante,
+    Classification{apg2} to APGIIPlante,
+    Classification{apg3} to APGIIIPlante,
+    Classification{apg4} to APGIVPlante,
+    /** 
+    * Une plante ne correspond qu'à une seule classification
+    * Mais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes
+    * Mais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique
+    */
+    Plante{classification} to Classification{plante},
+    
+}
+
+relationship OneToMany {
+    // TODO gestion de la ressemblance
+    Plante{confusions} to Ressemblance{planteRessemblant},
+    Plante{ensoleillements} to Ensoleillement,
+
+    /** 
+    * Une plante peut avoir beaucoup de variantes potagère
+    * Une plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)
+    */
+    Plante{plantesPotageres} to Plante,
+
+    Reproduction to CycleDeVie,
+    
+}
+
+relationship ManyToMany {
+    /**
+    * Un même nom vernaculaire peut qualifier plusieurs plantes distinctes et très différentes
+    */
+    Plante{nomsVernaculaires(nom)} to NomVernaculaire{plantes},
+    // Valider le ManyToMany
+    APGIIIPlante{clades(nom)} to Clade{apgiiis}
+}
+
+relationship ManyToOne {
+    Plante{cycleDeVie} to CycleDeVie,
+
+    Plante{sol} to Sol,
+    Plante{temperature} to Temperature,
+    Plante{racine} to Racine,
+    Plante{strate} to Strate,
+    Plante{feuillage} to Feuillage,
+
+
+    // Plusieurs allelopathie peuvent être liées à une plante
+    // L'allélopathie n'est pas enregistré dans Plante
+    Allelopathie{cible required} to Plante,
+    Allelopathie{origine required} to Plante,
+
+    
+    Semis{semisPleineTerre} to PeriodeAnnee,
+    Semis{semisSousAbris} to PeriodeAnnee,
+    Semis{typeSemis(type)} to TypeSemis,
+    Semis{germination} to Germination,
+    
+    CycleDeVie{semis} to Semis,
+    CycleDeVie{apparitionFeuilles} to PeriodeAnnee,
+    CycleDeVie{floraison} to PeriodeAnnee,
+    CycleDeVie{recolte} to PeriodeAnnee,
+    CycleDeVie{croissance} to PeriodeAnnee,
+    CycleDeVie{maturite} to PeriodeAnnee,
+    CycleDeVie{plantation} to PeriodeAnnee,
+    CycleDeVie{rempotage} to PeriodeAnnee,
+
+    // Il peut y avoir plusieurs mois identique pour le début et pour la fin
+    PeriodeAnnee{debut(nom) required} to Mois,
+    PeriodeAnnee{fin(nom) required} to Mois,
+}
+
+
+//***********************************************************
+//***********************************************************
+// CRONQUIST associations
+//***********************************************************
+//***********************************************************
+
+
+relationship OneToMany {
+    //***********************************************************
+    // CRONQUIST : Arborescence de Cronquist
+    //***********************************************************
+
+    SuperRegne{regnes(nomFr)} to Regne{superRegne(nomFr)},
+    Regne{sousRegnes(nomFr)} to SousRegne{regne(nomFr)},
+    SousRegne{rameaus(nomFr)} to Rameau{sousRegne(nomFr)},
+    Rameau{infraRegnes(nomFr)} to InfraRegne{rameau(nomFr)},
+    InfraRegne{superDivisions(nomFr)} to SuperDivision{infraRegne(nomFr)},
+    SuperDivision{divisions(nomFr)} to Division{superDivision(nomFr)},
+    Division{sousDivisions(nomFr)} to SousDivision{division(nomFr)},
+    SousDivision{infraEmbranchements(nomFr)} to InfraEmbranchement{sousDivision(nomFr)},
+    InfraEmbranchement{microEmbranchements(nomFr)} to MicroEmbranchement{infraEmbranchement(nomFr)},
+    MicroEmbranchement{superClasses(nomFr)} to SuperClasse{microEmbranchement(nomFr)},
+    SuperClasse{classes(nomFr)} to Classe{superClasse(nomFr)},
+    Classe{sousClasses(nomFr)} to SousClasse{classe(nomFr)},
+    SousClasse{infraClasses(nomFr)} to InfraClasse{sousClasse(nomFr)},
+    InfraClasse{superOrdres(nomFr)} to SuperOrdre{infraClasse(nomFr)},
+    SuperOrdre{ordres(nomFr)} to Ordre{superOrdre(nomFr)},
+    Ordre{sousOrdres(nomFr)} to SousOrdre{ordre(nomFr)},
+    SousOrdre{infraOrdres(nomFr)} to InfraOrdre{sousOrdre(nomFr)},
+    InfraOrdre{microOrdres(nomFr)} to MicroOrdre{infraOrdre(nomFr)},
+    MicroOrdre{superFamilles(nomFr)} to SuperFamille{microOrdre(nomFr)},
+    SuperFamille{familles(nomFr)} to Famille{superFamille(nomFr)},
+    Famille{sousFamilles(nomFr)} to SousFamille{famille(nomFr)},
+    SousFamille{tribus(nomFr)} to Tribu{sousFamille(nomFr)},
+    Tribu{sousTribus(nomFr)} to SousTribu{tribu(nomFr)},
+    SousTribu{genres(nomFr)} to Genre{sousTribu(nomFr)},
+    Genre{sousGenres(nomFr)} to SousGenre{genre(nomFr)},
+    SousGenre{sections(nomFr)} to Section{sousGenre(nomFr)},
+    Section{sousSections(nomFr)} to SousSection{section(nomFr)},
+    SousSection{especes(nomFr)} to Espece{sousSection(nomFr)},
+    Espece{sousEspeces(nomFr)} to SousEspece{espece(nomFr)},
+    SousEspece{varietes(nomFr)} to Variete{sousEspece(nomFr)},
+    Variete{sousVarietes(nomFr)} to SousVariete{variete(nomFr)},
+    SousVariete{formes(nomFr)} to Forme{sousVariete(nomFr)},
+    Forme{sousFormes(nomFr)} to SousForme{forme(nomFr)},
+
+
+
+    //***********************************************************
+    // CRONQUIST : Synonymes
+    //***********************************************************
+    SuperRegne{synonymes(nomFr)} to     SuperRegne,
+    Regne{synonymes(nomFr)} to     Regne,
+    SousRegne{synonymes(nomFr)} to     SousRegne,
+    Rameau{synonymes(nomFr)} to     Rameau,
+    InfraRegne{synonymes(nomFr)} to     InfraRegne,
+    SuperDivision{synonymes(nomFr)} to     SuperDivision,
+    Division{synonymes(nomFr)} to     Division,
+    SousDivision{synonymes(nomFr)} to     SousDivision,
+    InfraEmbranchement{synonymes(nomFr)} to     InfraEmbranchement,
+    MicroEmbranchement{synonymes(nomFr)} to     MicroEmbranchement,
+    SuperClasse{synonymes(nomFr)} to     SuperClasse,
+    Classe{synonymes(nomFr)} to     Classe,
+    SousClasse{synonymes(nomFr)} to     SousClasse,
+    InfraClasse{synonymes(nomFr)} to     InfraClasse,
+    SuperOrdre{synonymes(nomFr)} to     SuperOrdre,
+    Ordre{synonymes(nomFr)} to     Ordre,
+    SousOrdre{synonymes(nomFr)} to     SousOrdre,
+    InfraOrdre{synonymes(nomFr)} to     InfraOrdre,
+    MicroOrdre{synonymes(nomFr)} to     MicroOrdre,
+    SuperFamille{synonymes(nomFr)} to     SuperFamille,
+    Famille{synonymes(nomFr)} to     Famille,
+    SousFamille{synonymes(nomFr)} to     SousFamille,
+    Tribu{synonymes(nomFr)} to     Tribu,
+    SousTribu{synonymes(nomFr)} to     SousTribu,
+    Genre{synonymes(nomFr)} to     Genre,
+    SousGenre{synonymes(nomFr)} to     SousGenre,
+    Section{synonymes(nomFr)} to     Section,
+    SousSection{synonymes(nomFr)} to     SousSection,
+    Espece{synonymes(nomFr)} to     Espece,
+    SousEspece{synonymes(nomFr)} to     SousEspece,
+    Variete{synonymes(nomFr)} to     Variete,
+    SousVariete{synonymes(nomFr)} to     SousVariete,
+    Forme{synonymes(nomFr)} to     Forme,
+    SousForme{synonymes(nomFr)} to     SousForme,
+
+    
+}
+
+
+
+microservice CronquistPlante, SuperRegne, Regne , SousRegne , Rameau , InfraRegne ,SuperDivision, Division, SousDivision, InfraEmbranchement, MicroEmbranchement, SuperClasse, Classe, SousClasse, InfraClasse, SuperOrdre, Ordre, SousOrdre, InfraOrdre, MicroOrdre, SuperFamille, Famille, SousFamille, Tribu, SousTribu, Genre, SousGenre, Section, SousSection, Espece, SousEspece, Variete, SousVariete, Forme, SousForme with classificationMS
+
+microservice CronquistPlante, APGIPlante, APGIIPlante, APGIIIPlante, APGIVPlante, Allelopathie, Classification, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, RaunkierPlante, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, Clade with plantsMS
+
+
+paginate * with pagination
+// dto * with mapstruct
+filter *
+// service * with serviceImpl
+// use mapstruct, serviceImpl, pagination for all
+// use mapstruct, serviceImpl, pagination for all
+
+
+
