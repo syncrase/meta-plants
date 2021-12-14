@@ -4,23 +4,22 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from "app/config/pagination.constants";
-import { IPlante } from "../../../entities/microservice/plante/plante.model";
-import { PlanteService } from "../../../entities/microservice/plante/service/plante.service";
-import { INomVernaculaire } from "../../../entities/microservice/nom-vernaculaire/nom-vernaculaire.model";
 import { filter, map, mergeMap, tap } from "rxjs/operators";
 // import { flatMap } from "rxjs/internal/operators";
 import { combineLatest, EMPTY, Observable } from "rxjs";
-import {
-  NomVernaculaireService
-} from "../../../entities/microservice/nom-vernaculaire/service/nom-vernaculaire.service";
-import { CycleDeVieService } from "../../../entities/microservice/cycle-de-vie/service/cycle-de-vie.service";
-import { ICycleDeVie } from "../../../entities/microservice/cycle-de-vie/cycle-de-vie.model";
-import { SemisService } from "../../../entities/microservice/semis/service/semis.service";
-import { ISemis } from "../../../entities/microservice/semis/semis.model";
-import { PeriodeAnneeService } from "../../../entities/microservice/periode-annee/service/periode-annee.service";
-import { IPeriodeAnnee } from "../../../entities/microservice/periode-annee/periode-annee.model";
-import { IMois } from "../../../entities/microservice/mois/mois.model";
-import { MoisService } from "../../../entities/microservice/mois/service/mois.service";
+import { IPlante } from "../../../entities/plantsMS/plante/plante.model";
+import { IMois } from "../../../entities/plantsMS/mois/mois.model";
+import { PlanteService } from "../../../entities/plantsMS/plante/service/plante.service";
+import { NomVernaculaireService } from "../../../entities/plantsMS/nom-vernaculaire/service/nom-vernaculaire.service";
+import { CycleDeVieService } from "../../../entities/plantsMS/cycle-de-vie/service/cycle-de-vie.service";
+import { SemisService } from "../../../entities/plantsMS/semis/service/semis.service";
+import { PeriodeAnneeService } from "../../../entities/plantsMS/periode-annee/service/periode-annee.service";
+import { MoisService } from "../../../entities/plantsMS/mois/service/mois.service";
+import { INomVernaculaire } from "../../../entities/plantsMS/nom-vernaculaire/nom-vernaculaire.model";
+import { ICycleDeVie } from "../../../entities/plantsMS/cycle-de-vie/cycle-de-vie.model";
+import { ISemis } from "../../../entities/plantsMS/semis/semis.model";
+import { IPeriodeAnnee } from "../../../entities/plantsMS/periode-annee/periode-annee.model";
+
 
 @Component({
   selector: "perma-plante",

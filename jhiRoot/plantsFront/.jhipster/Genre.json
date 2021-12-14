@@ -1,0 +1,57 @@
+{
+  "name": "Genre",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sousGenre",
+      "otherEntityRelationshipName": "genre",
+      "relationshipName": "sousGenres",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "genre",
+      "otherEntityRelationshipName": "genre",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousTribu",
+      "otherEntityRelationshipName": "genres",
+      "relationshipName": "sousTribu",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "genre",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "genre"
+    }
+  ],
+  "javadoc": "Genus",
+  "entityTableName": "genre",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212185100"
+}

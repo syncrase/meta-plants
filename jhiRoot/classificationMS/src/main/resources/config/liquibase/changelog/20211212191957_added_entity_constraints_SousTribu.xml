@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity SousTribu.
+    -->
+    <changeSet id="20211212191957-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="tribu_id"
+                                 baseTableName="sous_tribu"
+                                 constraintName="fk_sous_tribu__tribu_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tribu"/>
+
+        <addForeignKeyConstraint baseColumnNames="sous_tribu_id"
+                                 baseTableName="sous_tribu"
+                                 constraintName="fk_sous_tribu__sous_tribu_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_tribu"/>
+    </changeSet>
+</databaseChangeLog>

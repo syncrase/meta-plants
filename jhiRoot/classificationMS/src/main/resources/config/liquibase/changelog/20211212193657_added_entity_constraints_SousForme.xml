@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity SousForme.
+    -->
+    <changeSet id="20211212193657-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="forme_id"
+                                 baseTableName="sous_forme"
+                                 constraintName="fk_sous_forme__forme_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="forme"/>
+
+        <addForeignKeyConstraint baseColumnNames="sous_forme_id"
+                                 baseTableName="sous_forme"
+                                 constraintName="fk_sous_forme__sous_forme_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_forme"/>
+    </changeSet>
+</databaseChangeLog>

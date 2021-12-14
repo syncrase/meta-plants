@@ -1,0 +1,160 @@
+<div>
+  <h2 id="page-heading" data-cy="CronquistPlanteHeading">
+    <span>Cronquist Plantes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-cronquist-plante"
+        [routerLink]="['/cronquist-plante/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Cronquist Plante </span>
+      </button>
+    </div>
+  </h2>
+
+  <perma-alert-error></perma-alert-error>
+
+  <perma-alert></perma-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="cronquistPlantes?.length === 0">
+    <span>No cronquistPlantes found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="cronquistPlantes && cronquistPlantes.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr permaSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" permaSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superRegne"><span>Super Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="regne"><span>Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousRegne"><span>Sous Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="rameau"><span>Rameau</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraRegne"><span>Infra Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superDivision"><span>Super Division</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="division"><span>Division</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousDivision"><span>Sous Division</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraEmbranchement"><span>Infra Embranchement</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="microEmbranchement"><span>Micro Embranchement</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superClasse"><span>Super Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="classe"><span>Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousClasse"><span>Sous Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraClasse"><span>Infra Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superOrdre"><span>Super Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="ordre"><span>Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousOrdre"><span>Sous Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraOrdre"><span>Infra Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="microOrdre"><span>Micro Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superFamille"><span>Super Famille</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="famille"><span>Famille</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousFamille"><span>Sous Famille</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="tribu"><span>Tribu</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousTribu"><span>Sous Tribu</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="genre"><span>Genre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousGenre"><span>Sous Genre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="section"><span>Section</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousSection"><span>Sous Section</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="espece"><span>Espece</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousEspece"><span>Sous Espece</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="variete"><span>Variete</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousVariete"><span>Sous Variete</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="forme"><span>Forme</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cronquistPlante of cronquistPlantes; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/cronquist-plante', cronquistPlante.id, 'view']">{{ cronquistPlante.id }}</a>
+          </td>
+          <td>{{ cronquistPlante.superRegne }}</td>
+          <td>{{ cronquistPlante.regne }}</td>
+          <td>{{ cronquistPlante.sousRegne }}</td>
+          <td>{{ cronquistPlante.rameau }}</td>
+          <td>{{ cronquistPlante.infraRegne }}</td>
+          <td>{{ cronquistPlante.superDivision }}</td>
+          <td>{{ cronquistPlante.division }}</td>
+          <td>{{ cronquistPlante.sousDivision }}</td>
+          <td>{{ cronquistPlante.infraEmbranchement }}</td>
+          <td>{{ cronquistPlante.microEmbranchement }}</td>
+          <td>{{ cronquistPlante.superClasse }}</td>
+          <td>{{ cronquistPlante.classe }}</td>
+          <td>{{ cronquistPlante.sousClasse }}</td>
+          <td>{{ cronquistPlante.infraClasse }}</td>
+          <td>{{ cronquistPlante.superOrdre }}</td>
+          <td>{{ cronquistPlante.ordre }}</td>
+          <td>{{ cronquistPlante.sousOrdre }}</td>
+          <td>{{ cronquistPlante.infraOrdre }}</td>
+          <td>{{ cronquistPlante.microOrdre }}</td>
+          <td>{{ cronquistPlante.superFamille }}</td>
+          <td>{{ cronquistPlante.famille }}</td>
+          <td>{{ cronquistPlante.sousFamille }}</td>
+          <td>{{ cronquistPlante.tribu }}</td>
+          <td>{{ cronquistPlante.sousTribu }}</td>
+          <td>{{ cronquistPlante.genre }}</td>
+          <td>{{ cronquistPlante.sousGenre }}</td>
+          <td>{{ cronquistPlante.section }}</td>
+          <td>{{ cronquistPlante.sousSection }}</td>
+          <td>{{ cronquistPlante.espece }}</td>
+          <td>{{ cronquistPlante.sousEspece }}</td>
+          <td>{{ cronquistPlante.variete }}</td>
+          <td>{{ cronquistPlante.sousVariete }}</td>
+          <td>{{ cronquistPlante.forme }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/cronquist-plante', cronquistPlante.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/cronquist-plante', cronquistPlante.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(cronquistPlante)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="cronquistPlantes && cronquistPlantes.length > 0">
+    <div class="row justify-content-center">
+      <perma-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></perma-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+{
+  "name": "Clade",
+  "fields": [
+    {
+      "fieldName": "nom",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "aPGIIIPlante",
+      "otherEntityRelationshipName": "clades",
+      "relationshipName": "apgiiis",
+      "ownerSide": false
+    }
+  ],
+  "javadoc": "Un clade peut être référencé dans chacune des classifications phylogénétiques",
+  "entityTableName": "clade",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "plantsMS"],
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212183400"
+}

@@ -16,5 +16,7 @@ Launch all your infrastructure by running: `docker-compose up -d`.
 - plantsFront's postgresql database
 - plantsMS (microservice application)
 - plantsMS's postgresql database
+- classificationMS (microservice application)
+- classificationMS's postgresql database
 
 ### Additional Services:

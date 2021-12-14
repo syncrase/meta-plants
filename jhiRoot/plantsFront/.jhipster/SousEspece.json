@@ -1,0 +1,57 @@
+{
+  "name": "SousEspece",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "variete",
+      "otherEntityRelationshipName": "sousEspece",
+      "relationshipName": "varietes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sousEspece",
+      "otherEntityRelationshipName": "sousEspece",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "espece",
+      "otherEntityRelationshipName": "sousEspeces",
+      "relationshipName": "espece",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousEspece",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "sousEspece"
+    }
+  ],
+  "javadoc": "subspecies  - dernier rang zoologique officiel3",
+  "entityTableName": "sous_espece",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212184500"
+}

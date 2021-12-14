@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sousRegne">
+      <h2 data-cy="sousRegneDetailsHeading"><span>Sous Regne</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ sousRegne.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ sousRegne.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ sousRegne.nomLatin }}</span>
+        </dd>
+        <dt><span>Regne</span></dt>
+        <dd>
+          <div *ngIf="sousRegne.regne">
+            <a [routerLink]="['/regne', sousRegne.regne?.id, 'view']">{{ sousRegne.regne?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Sous Regne</span></dt>
+        <dd>
+          <div *ngIf="sousRegne.sousRegne">
+            <a [routerLink]="['/sous-regne', sousRegne.sousRegne?.id, 'view']">{{ sousRegne.sousRegne?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sous-regne', sousRegne.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity SousSection.
+    -->
+    <changeSet id="20211212194757-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="section_id"
+                                 baseTableName="sous_section"
+                                 constraintName="fk_sous_section__section_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="section"/>
+
+        <addForeignKeyConstraint baseColumnNames="sous_section_id"
+                                 baseTableName="sous_section"
+                                 constraintName="fk_sous_section__sous_section_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_section"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="microEmbranchement">
+      <h2 data-cy="microEmbranchementDetailsHeading"><span>Micro Embranchement</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ microEmbranchement.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ microEmbranchement.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ microEmbranchement.nomLatin }}</span>
+        </dd>
+        <dt><span>Infra Embranchement</span></dt>
+        <dd>
+          <div *ngIf="microEmbranchement.infraEmbranchement">
+            <a [routerLink]="['/infra-embranchement', microEmbranchement.infraEmbranchement?.id, 'view']">{{
+              microEmbranchement.infraEmbranchement?.nomFr
+            }}</a>
+          </div>
+        </dd>
+        <dt><span>Micro Embranchement</span></dt>
+        <dd>
+          <div *ngIf="microEmbranchement.microEmbranchement">
+            <a [routerLink]="['/micro-embranchement', microEmbranchement.microEmbranchement?.id, 'view']">{{
+              microEmbranchement.microEmbranchement?.id
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/micro-embranchement', microEmbranchement.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

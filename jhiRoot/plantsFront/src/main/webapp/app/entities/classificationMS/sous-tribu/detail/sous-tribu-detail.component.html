@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sousTribu">
+      <h2 data-cy="sousTribuDetailsHeading"><span>Sous Tribu</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ sousTribu.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ sousTribu.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ sousTribu.nomLatin }}</span>
+        </dd>
+        <dt><span>Tribu</span></dt>
+        <dd>
+          <div *ngIf="sousTribu.tribu">
+            <a [routerLink]="['/tribu', sousTribu.tribu?.id, 'view']">{{ sousTribu.tribu?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Sous Tribu</span></dt>
+        <dd>
+          <div *ngIf="sousTribu.sousTribu">
+            <a [routerLink]="['/sous-tribu', sousTribu.sousTribu?.id, 'view']">{{ sousTribu.sousTribu?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sous-tribu', sousTribu.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

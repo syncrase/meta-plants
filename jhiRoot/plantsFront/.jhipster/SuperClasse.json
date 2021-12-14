@@ -1,0 +1,57 @@
+{
+  "name": "SuperClasse",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "classe",
+      "otherEntityRelationshipName": "superClasse",
+      "relationshipName": "classes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "superClasse",
+      "otherEntityRelationshipName": "superClasse",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "microEmbranchement",
+      "otherEntityRelationshipName": "superClasses",
+      "relationshipName": "microEmbranchement",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "superClasse",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "superClasse"
+    }
+  ],
+  "javadoc": "Superclassis",
+  "entityTableName": "super_classe",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212184300"
+}

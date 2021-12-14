@@ -4,42 +4,42 @@
   "relationships": [
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "raunkier",
+      "otherEntityName": "raunkierPlante",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "raunkier",
       "ownerSide": true
     },
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "cronquist",
+      "otherEntityName": "cronquistPlante",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "cronquist",
       "ownerSide": true
     },
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "aPGI",
+      "otherEntityName": "aPGIPlante",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg1",
       "ownerSide": true
     },
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "aPGII",
+      "otherEntityName": "aPGIIPlante",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg2",
       "ownerSide": true
     },
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "aPGIII",
+      "otherEntityName": "aPGIIIPlante",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg3",
       "ownerSide": true
     },
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "aPGIV",
+      "otherEntityName": "aPGIVPlante",
       "otherEntityRelationshipName": "classification",
       "relationshipName": "apg4",
       "ownerSide": true
@@ -61,8 +61,8 @@
   "readOnly": false,
   "embedded": false,
   "applications": ["plantsFront", "plantsMS"],
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211206113822",
-  "microserviceName": "plantsms",
-  "clientRootFolder": "microservice"
+  "changelogDate": "20211212191200"
 }

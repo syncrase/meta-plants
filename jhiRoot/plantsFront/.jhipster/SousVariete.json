@@ -1,0 +1,57 @@
+{
+  "name": "SousVariete",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "forme",
+      "otherEntityRelationshipName": "sousVariete",
+      "relationshipName": "formes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sousVariete",
+      "otherEntityRelationshipName": "sousVariete",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "variete",
+      "otherEntityRelationshipName": "sousVarietes",
+      "relationshipName": "variete",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousVariete",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "sousVariete"
+    }
+  ],
+  "javadoc": "subvarietas  - sous-race étant un rang zoologique informel3",
+  "entityTableName": "sous_variete",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212185300"
+}

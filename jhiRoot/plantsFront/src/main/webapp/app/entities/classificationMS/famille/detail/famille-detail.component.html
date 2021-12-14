@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="famille">
+      <h2 data-cy="familleDetailsHeading"><span>Famille</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ famille.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ famille.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ famille.nomLatin }}</span>
+        </dd>
+        <dt><span>Super Famille</span></dt>
+        <dd>
+          <div *ngIf="famille.superFamille">
+            <a [routerLink]="['/super-famille', famille.superFamille?.id, 'view']">{{ famille.superFamille?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Famille</span></dt>
+        <dd>
+          <div *ngIf="famille.famille">
+            <a [routerLink]="['/famille', famille.famille?.id, 'view']">{{ famille.famille?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/famille', famille.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

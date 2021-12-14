@@ -86,6 +86,7 @@
       "relationshipType": "many-to-many",
       "otherEntityName": "nomVernaculaire",
       "otherEntityRelationshipName": "plantes",
+      "javadoc": "Un même nom vernaculaire peut qualifier plusieurs plantes distinctes et très différentes",
       "relationshipName": "nomsVernaculaires",
       "otherEntityField": "nom",
       "ownerSide": true
@@ -97,6 +98,7 @@
       "relationshipName": "plante"
     }
   ],
+  "javadoc": "Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique",
   "entityTableName": "plante",
   "dto": "no",
   "pagination": "pagination",
@@ -106,9 +108,8 @@
   "readOnly": false,
   "embedded": false,
   "applications": ["plantsFront", "plantsMS"],
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211206113818",
-  "microserviceName": "plantsms",
-  "clientRootFolder": "microservice",
-  "javadoc": "Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique"
+  "changelogDate": "20211212183900"
 }

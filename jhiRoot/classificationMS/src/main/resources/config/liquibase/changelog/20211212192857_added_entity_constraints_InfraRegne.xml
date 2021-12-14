@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity InfraRegne.
+    -->
+    <changeSet id="20211212192857-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="rameau_id"
+                                 baseTableName="infra_regne"
+                                 constraintName="fk_infra_regne__rameau_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="rameau"/>
+
+        <addForeignKeyConstraint baseColumnNames="infra_regne_id"
+                                 baseTableName="infra_regne"
+                                 constraintName="fk_infra_regne__infra_regne_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="infra_regne"/>
+    </changeSet>
+</databaseChangeLog>

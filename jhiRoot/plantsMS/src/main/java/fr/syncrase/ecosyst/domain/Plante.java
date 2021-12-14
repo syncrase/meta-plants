@@ -113,6 +113,10 @@ public class Plante implements Serializable {
     @ManyToOne
     private Feuillage feuillage;
 
+    /**
+     * Un même nom vernaculaire peut qualifier plusieurs plantes distinctes et très différentes
+     */
+    @ApiModelProperty(value = "Un même nom vernaculaire peut qualifier plusieurs plantes distinctes et très différentes")
     @ManyToMany
     @JoinTable(
         name = "rel_plante__noms_vernaculaires",

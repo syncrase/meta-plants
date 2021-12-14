@@ -5,4 +5,4 @@
  * @author syncrase
  *
  */
-package fr.syncrase.ecosyst.service.crawler.aujardin;
+package fr.syncrase.ecosyst.aop.crawlers.service.aujardin;

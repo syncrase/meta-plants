@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="superOrdre">
+      <h2 data-cy="superOrdreDetailsHeading"><span>Super Ordre</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ superOrdre.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ superOrdre.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ superOrdre.nomLatin }}</span>
+        </dd>
+        <dt><span>Infra Classe</span></dt>
+        <dd>
+          <div *ngIf="superOrdre.infraClasse">
+            <a [routerLink]="['/infra-classe', superOrdre.infraClasse?.id, 'view']">{{ superOrdre.infraClasse?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Super Ordre</span></dt>
+        <dd>
+          <div *ngIf="superOrdre.superOrdre">
+            <a [routerLink]="['/super-ordre', superOrdre.superOrdre?.id, 'view']">{{ superOrdre.superOrdre?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/super-ordre', superOrdre.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

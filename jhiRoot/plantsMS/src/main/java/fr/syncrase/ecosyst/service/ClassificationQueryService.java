@@ -90,7 +90,7 @@ public class ClassificationQueryService extends QueryService<Classification> {
                     specification.and(
                         buildSpecification(
                             criteria.getRaunkierId(),
-                            root -> root.join(Classification_.raunkier, JoinType.LEFT).get(Raunkier_.id)
+                            root -> root.join(Classification_.raunkier, JoinType.LEFT).get(RaunkierPlante_.id)
                         )
                     );
             }
@@ -99,32 +99,41 @@ public class ClassificationQueryService extends QueryService<Classification> {
                     specification.and(
                         buildSpecification(
                             criteria.getCronquistId(),
-                            root -> root.join(Classification_.cronquist, JoinType.LEFT).get(Cronquist_.id)
+                            root -> root.join(Classification_.cronquist, JoinType.LEFT).get(CronquistPlante_.id)
                         )
                     );
             }
             if (criteria.getApg1Id() != null) {
                 specification =
                     specification.and(
-                        buildSpecification(criteria.getApg1Id(), root -> root.join(Classification_.apg1, JoinType.LEFT).get(APGI_.id))
+                        buildSpecification(criteria.getApg1Id(), root -> root.join(Classification_.apg1, JoinType.LEFT).get(APGIPlante_.id))
                     );
             }
             if (criteria.getApg2Id() != null) {
                 specification =
                     specification.and(
-                        buildSpecification(criteria.getApg2Id(), root -> root.join(Classification_.apg2, JoinType.LEFT).get(APGII_.id))
+                        buildSpecification(
+                            criteria.getApg2Id(),
+                            root -> root.join(Classification_.apg2, JoinType.LEFT).get(APGIIPlante_.id)
+                        )
                     );
             }
             if (criteria.getApg3Id() != null) {
                 specification =
                     specification.and(
-                        buildSpecification(criteria.getApg3Id(), root -> root.join(Classification_.apg3, JoinType.LEFT).get(APGIII_.id))
+                        buildSpecification(
+                            criteria.getApg3Id(),
+                            root -> root.join(Classification_.apg3, JoinType.LEFT).get(APGIIIPlante_.id)
+                        )
                     );
             }
             if (criteria.getApg4Id() != null) {
                 specification =
                     specification.and(
-                        buildSpecification(criteria.getApg4Id(), root -> root.join(Classification_.apg4, JoinType.LEFT).get(APGIV_.id))
+                        buildSpecification(
+                            criteria.getApg4Id(),
+                            root -> root.join(Classification_.apg4, JoinType.LEFT).get(APGIVPlante_.id)
+                        )
                     );
             }
             if (criteria.getPlanteId() != null) {

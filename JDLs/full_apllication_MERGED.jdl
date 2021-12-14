@@ -100,7 +100,7 @@ application {
         embeddableLaunchScript false,
     }
     
-    entities SuperRegne, Regne , SousRegne , Rameau , InfraRegne ,SuperDivision, Division, SousDivision, InfraEmbranchement, MicroEmbranchement, SuperClasse, Classe, SousClasse, InfraClasse, SuperOrdre, Ordre, SousOrdre, InfraOrdre, MicroOrdre, SuperFamille, Famille, SousFamille, Tribu, SousTribu, Genre, SousGenre, Section, SousSection, Espece, SousEspece, Variete, SousVariete, Forme, SousForme, CronquistPlante
+    entities SuperRegne, Regne, SousRegne, Rameau, InfraRegne, SuperEmbranchement, Embranchement, SousEmbranchement, InfraEmbranchement, MicroEmbranchement, SuperClasse, Classe, SousClasse, InfraClasse, SuperOrdre, Ordre, SousOrdre, InfraOrdre, MicroOrdre, SuperFamille, Famille, SousFamille, Tribu, SousTribu, Genre, SousGenre, Section, SousSection, Espece, SousEspece, Variete, SousVariete, Forme, SousForme, CronquistPlante
 }
 
 // https://www.jhipster.tech/jdl/deployments
@@ -127,9 +127,9 @@ entity CronquistPlante {
     sousRegne String,
     rameau String,
     infraRegne String,
-    superDivision String,
+    superEmbranchement String,
     division String,
-    sousDivision String,
+    sousEmbranchement String,
     infraEmbranchement String,
     microEmbranchement String,
     superClasse String,
@@ -260,7 +260,7 @@ entity Germination {
 }
 
 entity Allelopathie {
-    type String required ,// symbiose ou parasitisme ou autre ENUM
+    type String required,// symbiose ou parasitisme ou autre ENUM
     description String,
     impact Integer min(-10) max(10)
 }
@@ -307,272 +307,272 @@ entity Feuillage {
 * Super-règne, Empire, Domaine (Superregnum, Imperium, Dominium)
 */
 entity SuperRegne {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 *  (Regnum)
 */
 entity Regne {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Subregnum 
 */
 entity SousRegne {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique unique
 }
 
 /**
 * Ramus, « branch » en anglais 
 */
 entity Rameau {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Infraregnum 
 */
 entity InfraRegne {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Super-embranchement, Super-division ou Superphylum, Superdivisio 
 */
-entity SuperDivision {
-    nomFr String required,
-    nomLatin String
+entity SuperEmbranchement {
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
-* Embranchement, Division ou Phylum, Divisio 2
+* Embranchement, Embranchement ou Phylum, Divisio 2
 */
-entity Division {
-    nomFr String required,
-    nomLatin String
+entity Embranchement {
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Sous-embranchement, Sous-division ou Subphylum, Subdivisio 
 */
-entity SousDivision {
-    nomFr String required,
-    nomLatin String
+entity SousEmbranchement {
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Infraphylum 
 */
 entity InfraEmbranchement {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Microphylum 
 */
 entity MicroEmbranchement {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Superclassis 
 */
 entity SuperClasse {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Classis 
 */
 entity Classe {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Subclassis 
 */
 entity SousClasse {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Infraclassis 
 */
 entity InfraClasse {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Superordo 
 */
 entity SuperOrdre {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Ordo 
 */
 entity Ordre {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Subordo 
 */
 entity SousOrdre {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Infraordo 
 */
 entity InfraOrdre {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Microordo 
 */
 entity MicroOrdre {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Superfamilia 
 */
 entity SuperFamille {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Familia 
 */
 entity Famille {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Subfamilia 
 */
 entity SousFamille {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Tribus 
 */
 entity Tribu {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Subtribus 
 */
 entity SousTribu {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Genus 
 */
 entity Genre {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Subgenus 
 */
 entity SousGenre {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Sectio 
 */
 entity Section {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Subsectio 
 */
 entity SousSection {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * Species 
 */
 entity Espece {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * subspecies  - dernier rang zoologique officiel3
 */
 entity SousEspece {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * varietas  - race étant un rang zoologique informel3
 */
 entity Variete {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * subvarietas  - sous-race étant un rang zoologique informel3
 */
 entity SousVariete {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * forma  dernier rang en mycologie
 */
 entity Forme {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 /**
 * subforma 
 */
 entity SousForme {
-    nomFr String required,
-    nomLatin String
+    nomFr String required unique,
+    nomLatin String unique
 }
 
 //***********************************************************
@@ -674,10 +674,10 @@ relationship OneToMany {
     Regne{sousRegnes(nomFr)} to SousRegne{regne(nomFr)},
     SousRegne{rameaus(nomFr)} to Rameau{sousRegne(nomFr)},
     Rameau{infraRegnes(nomFr)} to InfraRegne{rameau(nomFr)},
-    InfraRegne{superDivisions(nomFr)} to SuperDivision{infraRegne(nomFr)},
-    SuperDivision{divisions(nomFr)} to Division{superDivision(nomFr)},
-    Division{sousDivisions(nomFr)} to SousDivision{division(nomFr)},
-    SousDivision{infraEmbranchements(nomFr)} to InfraEmbranchement{sousDivision(nomFr)},
+    InfraRegne{superEmbranchements(nomFr)} to SuperEmbranchement{infraRegne(nomFr)},
+    SuperEmbranchement{divisions(nomFr)} to Embranchement{superEmbranchement(nomFr)},
+    Embranchement{sousEmbranchements(nomFr)} to SousEmbranchement{division(nomFr)},
+    SousEmbranchement{infraEmbranchements(nomFr)} to InfraEmbranchement{sousEmbranchement(nomFr)},
     InfraEmbranchement{microEmbranchements(nomFr)} to MicroEmbranchement{infraEmbranchement(nomFr)},
     MicroEmbranchement{superClasses(nomFr)} to SuperClasse{microEmbranchement(nomFr)},
     SuperClasse{classes(nomFr)} to Classe{superClasse(nomFr)},
@@ -703,53 +703,52 @@ relationship OneToMany {
     Variete{sousVarietes(nomFr)} to SousVariete{variete(nomFr)},
     SousVariete{formes(nomFr)} to Forme{sousVariete(nomFr)},
     Forme{sousFormes(nomFr)} to SousForme{forme(nomFr)},
+}
 
-
-
+relationship ManyToMany {
     //***********************************************************
     // CRONQUIST : Synonymes
     //***********************************************************
-    SuperRegne{synonymes(nomFr)} to     SuperRegne,
-    Regne{synonymes(nomFr)} to     Regne,
-    SousRegne{synonymes(nomFr)} to     SousRegne,
-    Rameau{synonymes(nomFr)} to     Rameau,
-    InfraRegne{synonymes(nomFr)} to     InfraRegne,
-    SuperDivision{synonymes(nomFr)} to     SuperDivision,
-    Division{synonymes(nomFr)} to     Division,
-    SousDivision{synonymes(nomFr)} to     SousDivision,
-    InfraEmbranchement{synonymes(nomFr)} to     InfraEmbranchement,
-    MicroEmbranchement{synonymes(nomFr)} to     MicroEmbranchement,
-    SuperClasse{synonymes(nomFr)} to     SuperClasse,
-    Classe{synonymes(nomFr)} to     Classe,
-    SousClasse{synonymes(nomFr)} to     SousClasse,
-    InfraClasse{synonymes(nomFr)} to     InfraClasse,
-    SuperOrdre{synonymes(nomFr)} to     SuperOrdre,
-    Ordre{synonymes(nomFr)} to     Ordre,
-    SousOrdre{synonymes(nomFr)} to     SousOrdre,
-    InfraOrdre{synonymes(nomFr)} to     InfraOrdre,
-    MicroOrdre{synonymes(nomFr)} to     MicroOrdre,
-    SuperFamille{synonymes(nomFr)} to     SuperFamille,
-    Famille{synonymes(nomFr)} to     Famille,
-    SousFamille{synonymes(nomFr)} to     SousFamille,
-    Tribu{synonymes(nomFr)} to     Tribu,
-    SousTribu{synonymes(nomFr)} to     SousTribu,
-    Genre{synonymes(nomFr)} to     Genre,
-    SousGenre{synonymes(nomFr)} to     SousGenre,
-    Section{synonymes(nomFr)} to     Section,
-    SousSection{synonymes(nomFr)} to     SousSection,
-    Espece{synonymes(nomFr)} to     Espece,
-    SousEspece{synonymes(nomFr)} to     SousEspece,
-    Variete{synonymes(nomFr)} to     Variete,
-    SousVariete{synonymes(nomFr)} to     SousVariete,
-    Forme{synonymes(nomFr)} to     Forme,
-    SousForme{synonymes(nomFr)} to     SousForme,
+    SuperRegne{synonymes(nomFr)} to     SuperRegne{synonymes(nomFr)},
+    Regne{synonymes(nomFr)} to     Regne{synonymes(nomFr)},
+    SousRegne{synonymes(nomFr)} to     SousRegne{synonymes(nomFr)},
+    Rameau{synonymes(nomFr)} to     Rameau{synonymes(nomFr)},
+    InfraRegne{synonymes(nomFr)} to     InfraRegne{synonymes(nomFr)},
+    SuperEmbranchement{synonymes(nomFr)} to     SuperEmbranchement{synonymes(nomFr)},
+    Embranchement{synonymes(nomFr)} to     Embranchement{synonymes(nomFr)},
+    SousEmbranchement{synonymes(nomFr)} to     SousEmbranchement{synonymes(nomFr)},
+    InfraEmbranchement{synonymes(nomFr)} to     InfraEmbranchement{synonymes(nomFr)},
+    MicroEmbranchement{synonymes(nomFr)} to     MicroEmbranchement{synonymes(nomFr)},
+    SuperClasse{synonymes(nomFr)} to     SuperClasse{synonymes(nomFr)},
+    Classe{synonymes(nomFr)} to     Classe{synonymes(nomFr)},
+    SousClasse{synonymes(nomFr)} to     SousClasse{synonymes(nomFr)},
+    InfraClasse{synonymes(nomFr)} to     InfraClasse{synonymes(nomFr)},
+    SuperOrdre{synonymes(nomFr)} to     SuperOrdre{synonymes(nomFr)},
+    Ordre{synonymes(nomFr)} to     Ordre{synonymes(nomFr)},
+    SousOrdre{synonymes(nomFr)} to     SousOrdre{synonymes(nomFr)},
+    InfraOrdre{synonymes(nomFr)} to     InfraOrdre{synonymes(nomFr)},
+    MicroOrdre{synonymes(nomFr)} to     MicroOrdre{synonymes(nomFr)},
+    SuperFamille{synonymes(nomFr)} to     SuperFamille{synonymes(nomFr)},
+    Famille{synonymes(nomFr)} to     Famille{synonymes(nomFr)},
+    SousFamille{synonymes(nomFr)} to     SousFamille{synonymes(nomFr)},
+    Tribu{synonymes(nomFr)} to     Tribu{synonymes(nomFr)},
+    SousTribu{synonymes(nomFr)} to     SousTribu{synonymes(nomFr)},
+    Genre{synonymes(nomFr)} to     Genre{synonymes(nomFr)},
+    SousGenre{synonymes(nomFr)} to     SousGenre{synonymes(nomFr)},
+    Section{synonymes(nomFr)} to     Section{synonymes(nomFr)},
+    SousSection{synonymes(nomFr)} to     SousSection{synonymes(nomFr)},
+    Espece{synonymes(nomFr)} to     Espece{synonymes(nomFr)},
+    SousEspece{synonymes(nomFr)} to     SousEspece{synonymes(nomFr)},
+    Variete{synonymes(nomFr)} to     Variete{synonymes(nomFr)},
+    SousVariete{synonymes(nomFr)} to     SousVariete{synonymes(nomFr)},
+    Forme{synonymes(nomFr)} to     Forme{synonymes(nomFr)},
+    SousForme{synonymes(nomFr)} to     SousForme{synonymes(nomFr)},
 
-    
 }
 
 
 
-microservice CronquistPlante, SuperRegne, Regne , SousRegne , Rameau , InfraRegne ,SuperDivision, Division, SousDivision, InfraEmbranchement, MicroEmbranchement, SuperClasse, Classe, SousClasse, InfraClasse, SuperOrdre, Ordre, SousOrdre, InfraOrdre, MicroOrdre, SuperFamille, Famille, SousFamille, Tribu, SousTribu, Genre, SousGenre, Section, SousSection, Espece, SousEspece, Variete, SousVariete, Forme, SousForme with classificationMS
+microservice CronquistPlante, SuperRegne, Regne, SousRegne, Rameau, InfraRegne, SuperEmbranchement, Embranchement, SousEmbranchement, InfraEmbranchement, MicroEmbranchement, SuperClasse, Classe, SousClasse, InfraClasse, SuperOrdre, Ordre, SousOrdre, InfraOrdre, MicroOrdre, SuperFamille, Famille, SousFamille, Tribu, SousTribu, Genre, SousGenre, Section, SousSection, Espece, SousEspece, Variete, SousVariete, Forme, SousForme with classificationMS
 
 microservice CronquistPlante, APGIPlante, APGIIPlante, APGIIIPlante, APGIVPlante, Allelopathie, Classification, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, RaunkierPlante, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, Clade with plantsMS
 

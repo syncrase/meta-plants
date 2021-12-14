@@ -1,0 +1,73 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="perma-sous-classe-heading" data-cy="SousClasseCreateUpdateHeading">Create or edit a Sous Classe</h2>
+
+      <div>
+        <perma-alert-error></perma-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_nomFr">Nom Fr</label>
+          <input type="text" class="form-control" name="nomFr" id="field_nomFr" data-cy="nomFr" formControlName="nomFr" />
+          <div *ngIf="editForm.get('nomFr')!.invalid && (editForm.get('nomFr')!.dirty || editForm.get('nomFr')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('nomFr')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_nomLatin">Nom Latin</label>
+          <input type="text" class="form-control" name="nomLatin" id="field_nomLatin" data-cy="nomLatin" formControlName="nomLatin" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_classe">Classe</label>
+          <select class="form-control" id="field_classe" data-cy="classe" name="classe" formControlName="classe">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="classeOption.id === editForm.get('classe')!.value?.id ? editForm.get('classe')!.value : classeOption"
+              *ngFor="let classeOption of classesSharedCollection; trackBy: trackClasseById"
+            >
+              {{ classeOption.nomFr }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousClasse">Sous Classe</label>
+          <select class="form-control" id="field_sousClasse" data-cy="sousClasse" name="sousClasse" formControlName="sousClasse">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                sousClasseOption.id === editForm.get('sousClasse')!.value?.id ? editForm.get('sousClasse')!.value : sousClasseOption
+              "
+              *ngFor="let sousClasseOption of sousClassesSharedCollection; trackBy: trackSousClasseById"
+            >
+              {{ sousClasseOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

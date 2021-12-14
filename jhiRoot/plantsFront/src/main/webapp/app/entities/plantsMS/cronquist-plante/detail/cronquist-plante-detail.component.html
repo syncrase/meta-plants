@@ -1,0 +1,160 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cronquistPlante">
+      <h2 data-cy="cronquistPlanteDetailsHeading"><span>Cronquist Plante</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.id }}</span>
+        </dd>
+        <dt><span>Super Regne</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.superRegne }}</span>
+        </dd>
+        <dt><span>Regne</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.regne }}</span>
+        </dd>
+        <dt><span>Sous Regne</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousRegne }}</span>
+        </dd>
+        <dt><span>Rameau</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.rameau }}</span>
+        </dd>
+        <dt><span>Infra Regne</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.infraRegne }}</span>
+        </dd>
+        <dt><span>Super Division</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.superDivision }}</span>
+        </dd>
+        <dt><span>Division</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.division }}</span>
+        </dd>
+        <dt><span>Sous Division</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousDivision }}</span>
+        </dd>
+        <dt><span>Infra Embranchement</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.infraEmbranchement }}</span>
+        </dd>
+        <dt><span>Micro Embranchement</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.microEmbranchement }}</span>
+        </dd>
+        <dt><span>Super Classe</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.superClasse }}</span>
+        </dd>
+        <dt><span>Classe</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.classe }}</span>
+        </dd>
+        <dt><span>Sous Classe</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousClasse }}</span>
+        </dd>
+        <dt><span>Infra Classe</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.infraClasse }}</span>
+        </dd>
+        <dt><span>Super Ordre</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.superOrdre }}</span>
+        </dd>
+        <dt><span>Ordre</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.ordre }}</span>
+        </dd>
+        <dt><span>Sous Ordre</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousOrdre }}</span>
+        </dd>
+        <dt><span>Infra Ordre</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.infraOrdre }}</span>
+        </dd>
+        <dt><span>Micro Ordre</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.microOrdre }}</span>
+        </dd>
+        <dt><span>Super Famille</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.superFamille }}</span>
+        </dd>
+        <dt><span>Famille</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.famille }}</span>
+        </dd>
+        <dt><span>Sous Famille</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousFamille }}</span>
+        </dd>
+        <dt><span>Tribu</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.tribu }}</span>
+        </dd>
+        <dt><span>Sous Tribu</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousTribu }}</span>
+        </dd>
+        <dt><span>Genre</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.genre }}</span>
+        </dd>
+        <dt><span>Sous Genre</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousGenre }}</span>
+        </dd>
+        <dt><span>Section</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.section }}</span>
+        </dd>
+        <dt><span>Sous Section</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousSection }}</span>
+        </dd>
+        <dt><span>Espece</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.espece }}</span>
+        </dd>
+        <dt><span>Sous Espece</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousEspece }}</span>
+        </dd>
+        <dt><span>Variete</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.variete }}</span>
+        </dd>
+        <dt><span>Sous Variete</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.sousVariete }}</span>
+        </dd>
+        <dt><span>Forme</span></dt>
+        <dd>
+          <span>{{ cronquistPlante.forme }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/cronquist-plante', cronquistPlante.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

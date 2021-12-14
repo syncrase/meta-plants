@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="classe">
+      <h2 data-cy="classeDetailsHeading"><span>Classe</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ classe.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ classe.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ classe.nomLatin }}</span>
+        </dd>
+        <dt><span>Super Classe</span></dt>
+        <dd>
+          <div *ngIf="classe.superClasse">
+            <a [routerLink]="['/super-classe', classe.superClasse?.id, 'view']">{{ classe.superClasse?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Classe</span></dt>
+        <dd>
+          <div *ngIf="classe.classe">
+            <a [routerLink]="['/classe', classe.classe?.id, 'view']">{{ classe.classe?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/classe', classe.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

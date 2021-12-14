@@ -24,27 +24,28 @@ public class Classification implements Serializable {
 
     @OneToOne
     @JoinColumn(unique = true)
-    private Raunkier raunkier;
+    private RaunkierPlante raunkier;
 
     @OneToOne
     @JoinColumn(unique = true)
-    private Cronquist cronquist;
+    private CronquistPlante cronquist;
 
     @OneToOne
     @JoinColumn(unique = true)
-    private APGI apg1;
+    private APGIPlante apg1;
 
     @OneToOne
     @JoinColumn(unique = true)
-    private APGII apg2;
+    private APGIIPlante apg2;
+
+    @JsonIgnoreProperties(value = { "clades" }, allowSetters = true)
+    @OneToOne
+    @JoinColumn(unique = true)
+    private APGIIIPlante apg3;
 
     @OneToOne
     @JoinColumn(unique = true)
-    private APGIII apg3;
-
-    @OneToOne
-    @JoinColumn(unique = true)
-    private APGIV apg4;
+    private APGIVPlante apg4;
 
     @JsonIgnoreProperties(
         value = {
@@ -81,81 +82,81 @@ public class Classification implements Serializable {
         this.id = id;
     }
 
-    public Raunkier getRaunkier() {
+    public RaunkierPlante getRaunkier() {
         return this.raunkier;
     }
 
-    public void setRaunkier(Raunkier raunkier) {
-        this.raunkier = raunkier;
+    public void setRaunkier(RaunkierPlante raunkierPlante) {
+        this.raunkier = raunkierPlante;
     }
 
-    public Classification raunkier(Raunkier raunkier) {
-        this.setRaunkier(raunkier);
+    public Classification raunkier(RaunkierPlante raunkierPlante) {
+        this.setRaunkier(raunkierPlante);
         return this;
     }
 
-    public Cronquist getCronquist() {
+    public CronquistPlante getCronquist() {
         return this.cronquist;
     }
 
-    public void setCronquist(Cronquist cronquist) {
-        this.cronquist = cronquist;
+    public void setCronquist(CronquistPlante cronquistPlante) {
+        this.cronquist = cronquistPlante;
     }
 
-    public Classification cronquist(Cronquist cronquist) {
-        this.setCronquist(cronquist);
+    public Classification cronquist(CronquistPlante cronquistPlante) {
+        this.setCronquist(cronquistPlante);
         return this;
     }
 
-    public APGI getApg1() {
+    public APGIPlante getApg1() {
         return this.apg1;
     }
 
-    public void setApg1(APGI aPGI) {
-        this.apg1 = aPGI;
+    public void setApg1(APGIPlante aPGIPlante) {
+        this.apg1 = aPGIPlante;
     }
 
-    public Classification apg1(APGI aPGI) {
-        this.setApg1(aPGI);
+    public Classification apg1(APGIPlante aPGIPlante) {
+        this.setApg1(aPGIPlante);
         return this;
     }
 
-    public APGII getApg2() {
+    public APGIIPlante getApg2() {
         return this.apg2;
     }
 
-    public void setApg2(APGII aPGII) {
-        this.apg2 = aPGII;
+    public void setApg2(APGIIPlante aPGIIPlante) {
+        this.apg2 = aPGIIPlante;
     }
 
-    public Classification apg2(APGII aPGII) {
-        this.setApg2(aPGII);
+    public Classification apg2(APGIIPlante aPGIIPlante) {
+        this.setApg2(aPGIIPlante);
         return this;
     }
 
-    public APGIII getApg3() {
+    public APGIIIPlante getApg3() {
         return this.apg3;
     }
 
-    public void setApg3(APGIII aPGIII) {
-        this.apg3 = aPGIII;
+    public void setApg3(APGIIIPlante aPGIIIPlante) {
+        this.apg3 = aPGIIIPlante;
     }
 
-    public Classification apg3(APGIII aPGIII) {
-        this.setApg3(aPGIII);
+    public Classification apg3(APGIIIPlante aPGIIIPlante) {
+        this.setApg3(aPGIIIPlante);
         return this;
     }
 
-    public APGIV getApg4() {
+    public APGIVPlante getApg4() {
         return this.apg4;
     }
 
-    public void setApg4(APGIV aPGIV) {
-        this.apg4 = aPGIV;
+    public void setApg4(APGIVPlante aPGIVPlante) {
+        this.apg4 = aPGIVPlante;
     }
 
-    public Classification apg4(APGIV aPGIV) {
-        this.setApg4(aPGIV);
+    public Classification apg4(APGIVPlante aPGIVPlante) {
+        this.setApg4(aPGIVPlante);
         return this;
     }
 

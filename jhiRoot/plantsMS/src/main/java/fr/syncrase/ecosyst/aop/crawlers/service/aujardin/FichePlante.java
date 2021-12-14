@@ -67,7 +67,7 @@ public class FichePlante {
     private Classification getClassification(Element article) {
         // TODO Auto-generated method stub
         Classification classification = new Classification();
-        Cronquist cronquist = new Cronquist();
+//        Cronquist cronquist = new Cronquist();
         // TODO
 //		cronquist.set
         return null;

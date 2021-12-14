@@ -53,5 +53,5 @@
   "microserviceName": "classificationMS",
   "clientRootFolder": "classificationMS",
   "databaseType": "sql",
-  "changelogDate": "20211212184739"
+  "changelogDate": "20211212190000"
 }

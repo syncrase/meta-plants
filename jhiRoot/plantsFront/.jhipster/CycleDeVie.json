@@ -66,8 +66,8 @@
   "readOnly": false,
   "embedded": false,
   "applications": ["plantsFront", "plantsMS"],
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211206113831",
-  "microserviceName": "plantsms",
-  "clientRootFolder": "microservice"
+  "changelogDate": "20211212192400"
 }

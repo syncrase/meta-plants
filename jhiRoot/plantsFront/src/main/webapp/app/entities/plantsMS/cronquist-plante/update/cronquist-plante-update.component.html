@@ -1,0 +1,316 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="perma-cronquist-plante-heading" data-cy="CronquistPlanteCreateUpdateHeading">Create or edit a Cronquist Plante</h2>
+
+      <div>
+        <perma-alert-error></perma-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_superRegne">Super Regne</label>
+          <input
+            type="text"
+            class="form-control"
+            name="superRegne"
+            id="field_superRegne"
+            data-cy="superRegne"
+            formControlName="superRegne"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_regne">Regne</label>
+          <input type="text" class="form-control" name="regne" id="field_regne" data-cy="regne" formControlName="regne" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousRegne">Sous Regne</label>
+          <input type="text" class="form-control" name="sousRegne" id="field_sousRegne" data-cy="sousRegne" formControlName="sousRegne" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_rameau">Rameau</label>
+          <input type="text" class="form-control" name="rameau" id="field_rameau" data-cy="rameau" formControlName="rameau" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_infraRegne">Infra Regne</label>
+          <input
+            type="text"
+            class="form-control"
+            name="infraRegne"
+            id="field_infraRegne"
+            data-cy="infraRegne"
+            formControlName="infraRegne"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_superDivision">Super Division</label>
+          <input
+            type="text"
+            class="form-control"
+            name="superDivision"
+            id="field_superDivision"
+            data-cy="superDivision"
+            formControlName="superDivision"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_division">Division</label>
+          <input type="text" class="form-control" name="division" id="field_division" data-cy="division" formControlName="division" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousDivision">Sous Division</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousDivision"
+            id="field_sousDivision"
+            data-cy="sousDivision"
+            formControlName="sousDivision"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_infraEmbranchement">Infra Embranchement</label>
+          <input
+            type="text"
+            class="form-control"
+            name="infraEmbranchement"
+            id="field_infraEmbranchement"
+            data-cy="infraEmbranchement"
+            formControlName="infraEmbranchement"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_microEmbranchement">Micro Embranchement</label>
+          <input
+            type="text"
+            class="form-control"
+            name="microEmbranchement"
+            id="field_microEmbranchement"
+            data-cy="microEmbranchement"
+            formControlName="microEmbranchement"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_superClasse">Super Classe</label>
+          <input
+            type="text"
+            class="form-control"
+            name="superClasse"
+            id="field_superClasse"
+            data-cy="superClasse"
+            formControlName="superClasse"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_classe">Classe</label>
+          <input type="text" class="form-control" name="classe" id="field_classe" data-cy="classe" formControlName="classe" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousClasse">Sous Classe</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousClasse"
+            id="field_sousClasse"
+            data-cy="sousClasse"
+            formControlName="sousClasse"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_infraClasse">Infra Classe</label>
+          <input
+            type="text"
+            class="form-control"
+            name="infraClasse"
+            id="field_infraClasse"
+            data-cy="infraClasse"
+            formControlName="infraClasse"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_superOrdre">Super Ordre</label>
+          <input
+            type="text"
+            class="form-control"
+            name="superOrdre"
+            id="field_superOrdre"
+            data-cy="superOrdre"
+            formControlName="superOrdre"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_ordre">Ordre</label>
+          <input type="text" class="form-control" name="ordre" id="field_ordre" data-cy="ordre" formControlName="ordre" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousOrdre">Sous Ordre</label>
+          <input type="text" class="form-control" name="sousOrdre" id="field_sousOrdre" data-cy="sousOrdre" formControlName="sousOrdre" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_infraOrdre">Infra Ordre</label>
+          <input
+            type="text"
+            class="form-control"
+            name="infraOrdre"
+            id="field_infraOrdre"
+            data-cy="infraOrdre"
+            formControlName="infraOrdre"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_microOrdre">Micro Ordre</label>
+          <input
+            type="text"
+            class="form-control"
+            name="microOrdre"
+            id="field_microOrdre"
+            data-cy="microOrdre"
+            formControlName="microOrdre"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_superFamille">Super Famille</label>
+          <input
+            type="text"
+            class="form-control"
+            name="superFamille"
+            id="field_superFamille"
+            data-cy="superFamille"
+            formControlName="superFamille"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_famille">Famille</label>
+          <input type="text" class="form-control" name="famille" id="field_famille" data-cy="famille" formControlName="famille" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousFamille">Sous Famille</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousFamille"
+            id="field_sousFamille"
+            data-cy="sousFamille"
+            formControlName="sousFamille"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_tribu">Tribu</label>
+          <input type="text" class="form-control" name="tribu" id="field_tribu" data-cy="tribu" formControlName="tribu" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousTribu">Sous Tribu</label>
+          <input type="text" class="form-control" name="sousTribu" id="field_sousTribu" data-cy="sousTribu" formControlName="sousTribu" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_genre">Genre</label>
+          <input type="text" class="form-control" name="genre" id="field_genre" data-cy="genre" formControlName="genre" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousGenre">Sous Genre</label>
+          <input type="text" class="form-control" name="sousGenre" id="field_sousGenre" data-cy="sousGenre" formControlName="sousGenre" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_section">Section</label>
+          <input type="text" class="form-control" name="section" id="field_section" data-cy="section" formControlName="section" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousSection">Sous Section</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousSection"
+            id="field_sousSection"
+            data-cy="sousSection"
+            formControlName="sousSection"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_espece">Espece</label>
+          <input type="text" class="form-control" name="espece" id="field_espece" data-cy="espece" formControlName="espece" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousEspece">Sous Espece</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousEspece"
+            id="field_sousEspece"
+            data-cy="sousEspece"
+            formControlName="sousEspece"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_variete">Variete</label>
+          <input type="text" class="form-control" name="variete" id="field_variete" data-cy="variete" formControlName="variete" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousVariete">Sous Variete</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousVariete"
+            id="field_sousVariete"
+            data-cy="sousVariete"
+            formControlName="sousVariete"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_forme">Forme</label>
+          <input type="text" class="form-control" name="forme" id="field_forme" data-cy="forme" formControlName="forme" />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

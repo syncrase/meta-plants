@@ -1,0 +1,100 @@
+<div>
+  <h2 id="page-heading" data-cy="EspeceHeading">
+    <span>Especes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-espece"
+        [routerLink]="['/espece/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Espece </span>
+      </button>
+    </div>
+  </h2>
+
+  <perma-alert-error></perma-alert-error>
+
+  <perma-alert></perma-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="especes?.length === 0">
+    <span>No especes found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="especes && especes.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr permaSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" permaSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="nomFr"><span>Nom Fr</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="nomLatin"><span>Nom Latin</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousSection.nomFr"><span>Sous Section</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="espece.id"><span>Espece</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let espece of especes; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/espece', espece.id, 'view']">{{ espece.id }}</a>
+          </td>
+          <td>{{ espece.nomFr }}</td>
+          <td>{{ espece.nomLatin }}</td>
+          <td>
+            <div *ngIf="espece.sousSection">
+              <a [routerLink]="['/sous-section', espece.sousSection?.id, 'view']">{{ espece.sousSection?.nomFr }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="espece.espece">
+              <a [routerLink]="['/espece', espece.espece?.id, 'view']">{{ espece.espece?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/espece', espece.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/espece', espece.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(espece)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="especes && especes.length > 0">
+    <div class="row justify-content-center">
+      <perma-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></perma-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

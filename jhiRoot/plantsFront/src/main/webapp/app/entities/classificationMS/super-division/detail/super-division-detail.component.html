@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="superDivision">
+      <h2 data-cy="superDivisionDetailsHeading"><span>Super Division</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ superDivision.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ superDivision.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ superDivision.nomLatin }}</span>
+        </dd>
+        <dt><span>Infra Regne</span></dt>
+        <dd>
+          <div *ngIf="superDivision.infraRegne">
+            <a [routerLink]="['/infra-regne', superDivision.infraRegne?.id, 'view']">{{ superDivision.infraRegne?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Super Division</span></dt>
+        <dd>
+          <div *ngIf="superDivision.superDivision">
+            <a [routerLink]="['/super-division', superDivision.superDivision?.id, 'view']">{{ superDivision.superDivision?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/super-division', superDivision.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

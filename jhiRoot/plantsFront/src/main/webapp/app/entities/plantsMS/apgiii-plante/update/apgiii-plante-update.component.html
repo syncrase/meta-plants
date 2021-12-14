@@ -1,0 +1,93 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="perma-apgiii-plante-heading" data-cy="APGIIIPlanteCreateUpdateHeading">Create or edit a APGIII Plante</h2>
+
+      <div>
+        <perma-alert-error></perma-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_ordre">Ordre</label>
+          <input type="text" class="form-control" name="ordre" id="field_ordre" data-cy="ordre" formControlName="ordre" />
+          <div *ngIf="editForm.get('ordre')!.invalid && (editForm.get('ordre')!.dirty || editForm.get('ordre')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('ordre')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_famille">Famille</label>
+          <input type="text" class="form-control" name="famille" id="field_famille" data-cy="famille" formControlName="famille" />
+          <div *ngIf="editForm.get('famille')!.invalid && (editForm.get('famille')!.dirty || editForm.get('famille')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('famille')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousFamille">Sous Famille</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sousFamille"
+            id="field_sousFamille"
+            data-cy="sousFamille"
+            formControlName="sousFamille"
+          />
+          <div *ngIf="editForm.get('sousFamille')!.invalid && (editForm.get('sousFamille')!.dirty || editForm.get('sousFamille')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('sousFamille')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_tribu">Tribu</label>
+          <input type="text" class="form-control" name="tribu" id="field_tribu" data-cy="tribu" formControlName="tribu" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sousTribu">Sous Tribu</label>
+          <input type="text" class="form-control" name="sousTribu" id="field_sousTribu" data-cy="sousTribu" formControlName="sousTribu" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_genre">Genre</label>
+          <input type="text" class="form-control" name="genre" id="field_genre" data-cy="genre" formControlName="genre" />
+          <div *ngIf="editForm.get('genre')!.invalid && (editForm.get('genre')!.dirty || editForm.get('genre')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('genre')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="field_clades">Clades</label>
+          <select class="form-control" id="field_clades" data-cy="clades" multiple name="clades" formControlName="clades">
+            <option
+              [ngValue]="getSelectedClade(cladeOption, editForm.get('clades')!.value)"
+              *ngFor="let cladeOption of cladesSharedCollection; trackBy: trackCladeById"
+            >
+              {{ cladeOption.nom }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

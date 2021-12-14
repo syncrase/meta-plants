@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="microOrdre">
+      <h2 data-cy="microOrdreDetailsHeading"><span>Micro Ordre</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ microOrdre.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ microOrdre.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ microOrdre.nomLatin }}</span>
+        </dd>
+        <dt><span>Infra Ordre</span></dt>
+        <dd>
+          <div *ngIf="microOrdre.infraOrdre">
+            <a [routerLink]="['/infra-ordre', microOrdre.infraOrdre?.id, 'view']">{{ microOrdre.infraOrdre?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Micro Ordre</span></dt>
+        <dd>
+          <div *ngIf="microOrdre.microOrdre">
+            <a [routerLink]="['/micro-ordre', microOrdre.microOrdre?.id, 'view']">{{ microOrdre.microOrdre?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/micro-ordre', microOrdre.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

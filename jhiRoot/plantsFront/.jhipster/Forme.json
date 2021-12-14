@@ -1,0 +1,57 @@
+{
+  "name": "Forme",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sousForme",
+      "otherEntityRelationshipName": "forme",
+      "relationshipName": "sousFormes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "forme",
+      "otherEntityRelationshipName": "forme",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousVariete",
+      "otherEntityRelationshipName": "formes",
+      "relationshipName": "sousVariete",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "forme",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "forme"
+    }
+  ],
+  "javadoc": "forma  dernier rang en mycologie",
+  "entityTableName": "forme",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212183700"
+}

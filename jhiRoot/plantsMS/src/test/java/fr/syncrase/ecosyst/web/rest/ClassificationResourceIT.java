@@ -6,14 +6,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
-import fr.syncrase.ecosyst.domain.APGI;
-import fr.syncrase.ecosyst.domain.APGII;
-import fr.syncrase.ecosyst.domain.APGIII;
-import fr.syncrase.ecosyst.domain.APGIV;
+import fr.syncrase.ecosyst.domain.APGIIIPlante;
+import fr.syncrase.ecosyst.domain.APGIIPlante;
+import fr.syncrase.ecosyst.domain.APGIPlante;
+import fr.syncrase.ecosyst.domain.APGIVPlante;
 import fr.syncrase.ecosyst.domain.Classification;
-import fr.syncrase.ecosyst.domain.Cronquist;
+import fr.syncrase.ecosyst.domain.CronquistPlante;
 import fr.syncrase.ecosyst.domain.Plante;
-import fr.syncrase.ecosyst.domain.Raunkier;
+import fr.syncrase.ecosyst.domain.RaunkierPlante;
 import fr.syncrase.ecosyst.repository.ClassificationRepository;
 import fr.syncrase.ecosyst.service.criteria.ClassificationCriteria;
 import java.util.List;
@@ -169,13 +169,13 @@ class ClassificationResourceIT {
     void getAllClassificationsByRaunkierIsEqualToSomething() throws Exception {
         // Initialize the database
         classificationRepository.saveAndFlush(classification);
-        Raunkier raunkier;
-        if (TestUtil.findAll(em, Raunkier.class).isEmpty()) {
-            raunkier = RaunkierResourceIT.createEntity(em);
+        RaunkierPlante raunkier;
+        if (TestUtil.findAll(em, RaunkierPlante.class).isEmpty()) {
+            raunkier = RaunkierPlanteResourceIT.createEntity(em);
             em.persist(raunkier);
             em.flush();
         } else {
-            raunkier = TestUtil.findAll(em, Raunkier.class).get(0);
+            raunkier = TestUtil.findAll(em, RaunkierPlante.class).get(0);
         }
         em.persist(raunkier);
         em.flush();
@@ -195,13 +195,13 @@ class ClassificationResourceIT {
     void getAllClassificationsByCronquistIsEqualToSomething() throws Exception {
         // Initialize the database
         classificationRepository.saveAndFlush(classification);
-        Cronquist cronquist;
-        if (TestUtil.findAll(em, Cronquist.class).isEmpty()) {
-            cronquist = CronquistResourceIT.createEntity(em);
+        CronquistPlante cronquist;
+        if (TestUtil.findAll(em, CronquistPlante.class).isEmpty()) {
+            cronquist = CronquistPlanteResourceIT.createEntity(em);
             em.persist(cronquist);
             em.flush();
         } else {
-            cronquist = TestUtil.findAll(em, Cronquist.class).get(0);
+            cronquist = TestUtil.findAll(em, CronquistPlante.class).get(0);
         }
         em.persist(cronquist);
         em.flush();
@@ -221,13 +221,13 @@ class ClassificationResourceIT {
     void getAllClassificationsByApg1IsEqualToSomething() throws Exception {
         // Initialize the database
         classificationRepository.saveAndFlush(classification);
-        APGI apg1;
-        if (TestUtil.findAll(em, APGI.class).isEmpty()) {
-            apg1 = APGIResourceIT.createEntity(em);
+        APGIPlante apg1;
+        if (TestUtil.findAll(em, APGIPlante.class).isEmpty()) {
+            apg1 = APGIPlanteResourceIT.createEntity(em);
             em.persist(apg1);
             em.flush();
         } else {
-            apg1 = TestUtil.findAll(em, APGI.class).get(0);
+            apg1 = TestUtil.findAll(em, APGIPlante.class).get(0);
         }
         em.persist(apg1);
         em.flush();
@@ -247,13 +247,13 @@ class ClassificationResourceIT {
     void getAllClassificationsByApg2IsEqualToSomething() throws Exception {
         // Initialize the database
         classificationRepository.saveAndFlush(classification);
-        APGII apg2;
-        if (TestUtil.findAll(em, APGII.class).isEmpty()) {
-            apg2 = APGIIResourceIT.createEntity(em);
+        APGIIPlante apg2;
+        if (TestUtil.findAll(em, APGIIPlante.class).isEmpty()) {
+            apg2 = APGIIPlanteResourceIT.createEntity(em);
             em.persist(apg2);
             em.flush();
         } else {
-            apg2 = TestUtil.findAll(em, APGII.class).get(0);
+            apg2 = TestUtil.findAll(em, APGIIPlante.class).get(0);
         }
         em.persist(apg2);
         em.flush();
@@ -273,13 +273,13 @@ class ClassificationResourceIT {
     void getAllClassificationsByApg3IsEqualToSomething() throws Exception {
         // Initialize the database
         classificationRepository.saveAndFlush(classification);
-        APGIII apg3;
-        if (TestUtil.findAll(em, APGIII.class).isEmpty()) {
-            apg3 = APGIIIResourceIT.createEntity(em);
+        APGIIIPlante apg3;
+        if (TestUtil.findAll(em, APGIIIPlante.class).isEmpty()) {
+            apg3 = APGIIIPlanteResourceIT.createEntity(em);
             em.persist(apg3);
             em.flush();
         } else {
-            apg3 = TestUtil.findAll(em, APGIII.class).get(0);
+            apg3 = TestUtil.findAll(em, APGIIIPlante.class).get(0);
         }
         em.persist(apg3);
         em.flush();
@@ -299,13 +299,13 @@ class ClassificationResourceIT {
     void getAllClassificationsByApg4IsEqualToSomething() throws Exception {
         // Initialize the database
         classificationRepository.saveAndFlush(classification);
-        APGIV apg4;
-        if (TestUtil.findAll(em, APGIV.class).isEmpty()) {
-            apg4 = APGIVResourceIT.createEntity(em);
+        APGIVPlante apg4;
+        if (TestUtil.findAll(em, APGIVPlante.class).isEmpty()) {
+            apg4 = APGIVPlanteResourceIT.createEntity(em);
             em.persist(apg4);
             em.flush();
         } else {
-            apg4 = TestUtil.findAll(em, APGIV.class).get(0);
+            apg4 = TestUtil.findAll(em, APGIVPlante.class).get(0);
         }
         em.persist(apg4);
         em.flush();

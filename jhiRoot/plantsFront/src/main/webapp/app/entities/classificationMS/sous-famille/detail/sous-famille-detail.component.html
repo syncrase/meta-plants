@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sousFamille">
+      <h2 data-cy="sousFamilleDetailsHeading"><span>Sous Famille</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ sousFamille.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ sousFamille.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ sousFamille.nomLatin }}</span>
+        </dd>
+        <dt><span>Famille</span></dt>
+        <dd>
+          <div *ngIf="sousFamille.famille">
+            <a [routerLink]="['/famille', sousFamille.famille?.id, 'view']">{{ sousFamille.famille?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Sous Famille</span></dt>
+        <dd>
+          <div *ngIf="sousFamille.sousFamille">
+            <a [routerLink]="['/sous-famille', sousFamille.sousFamille?.id, 'view']">{{ sousFamille.sousFamille?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sous-famille', sousFamille.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

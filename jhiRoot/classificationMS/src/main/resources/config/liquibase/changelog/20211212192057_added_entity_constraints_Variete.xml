@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity Variete.
+    -->
+    <changeSet id="20211212192057-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="sous_espece_id"
+                                 baseTableName="variete"
+                                 constraintName="fk_variete__sous_espece_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_espece"/>
+
+        <addForeignKeyConstraint baseColumnNames="variete_id"
+                                 baseTableName="variete"
+                                 constraintName="fk_variete__variete_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="variete"/>
+    </changeSet>
+</databaseChangeLog>

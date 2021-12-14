@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sousGenre">
+      <h2 data-cy="sousGenreDetailsHeading"><span>Sous Genre</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ sousGenre.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ sousGenre.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ sousGenre.nomLatin }}</span>
+        </dd>
+        <dt><span>Genre</span></dt>
+        <dd>
+          <div *ngIf="sousGenre.genre">
+            <a [routerLink]="['/genre', sousGenre.genre?.id, 'view']">{{ sousGenre.genre?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Sous Genre</span></dt>
+        <dd>
+          <div *ngIf="sousGenre.sousGenre">
+            <a [routerLink]="['/sous-genre', sousGenre.sousGenre?.id, 'view']">{{ sousGenre.sousGenre?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sous-genre', sousGenre.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

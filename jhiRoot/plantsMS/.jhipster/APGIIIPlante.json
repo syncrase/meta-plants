@@ -1,0 +1,57 @@
+{
+  "name": "APGIIIPlante",
+  "fields": [
+    {
+      "fieldName": "ordre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "famille",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "sousFamille",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "tribu",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousTribu",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "genre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "clade",
+      "otherEntityRelationshipName": "apgiiis",
+      "relationshipName": "clades",
+      "otherEntityField": "nom",
+      "ownerSide": true
+    }
+  ],
+  "javadoc": "Peut contenir plusieurs clades",
+  "entityTableName": "apgiii_plante",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "plantsMS"],
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212183800"
+}

@@ -1,0 +1,114 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="perma-classification-heading" data-cy="ClassificationCreateUpdateHeading">Create or edit a Classification</h2>
+
+      <div>
+        <perma-alert-error></perma-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_raunkier">Raunkier</label>
+          <select class="form-control" id="field_raunkier" data-cy="raunkier" name="raunkier" formControlName="raunkier">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                raunkierPlanteOption.id === editForm.get('raunkier')!.value?.id ? editForm.get('raunkier')!.value : raunkierPlanteOption
+              "
+              *ngFor="let raunkierPlanteOption of raunkiersCollection; trackBy: trackRaunkierPlanteById"
+            >
+              {{ raunkierPlanteOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_cronquist">Cronquist</label>
+          <select class="form-control" id="field_cronquist" data-cy="cronquist" name="cronquist" formControlName="cronquist">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                cronquistPlanteOption.id === editForm.get('cronquist')!.value?.id ? editForm.get('cronquist')!.value : cronquistPlanteOption
+              "
+              *ngFor="let cronquistPlanteOption of cronquistsCollection; trackBy: trackCronquistPlanteById"
+            >
+              {{ cronquistPlanteOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_apg1">Apg 1</label>
+          <select class="form-control" id="field_apg1" data-cy="apg1" name="apg1" formControlName="apg1">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="aPGIPlanteOption.id === editForm.get('apg1')!.value?.id ? editForm.get('apg1')!.value : aPGIPlanteOption"
+              *ngFor="let aPGIPlanteOption of apg1sCollection; trackBy: trackAPGIPlanteById"
+            >
+              {{ aPGIPlanteOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_apg2">Apg 2</label>
+          <select class="form-control" id="field_apg2" data-cy="apg2" name="apg2" formControlName="apg2">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="aPGIIPlanteOption.id === editForm.get('apg2')!.value?.id ? editForm.get('apg2')!.value : aPGIIPlanteOption"
+              *ngFor="let aPGIIPlanteOption of apg2sCollection; trackBy: trackAPGIIPlanteById"
+            >
+              {{ aPGIIPlanteOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_apg3">Apg 3</label>
+          <select class="form-control" id="field_apg3" data-cy="apg3" name="apg3" formControlName="apg3">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="aPGIIIPlanteOption.id === editForm.get('apg3')!.value?.id ? editForm.get('apg3')!.value : aPGIIIPlanteOption"
+              *ngFor="let aPGIIIPlanteOption of apg3sCollection; trackBy: trackAPGIIIPlanteById"
+            >
+              {{ aPGIIIPlanteOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_apg4">Apg 4</label>
+          <select class="form-control" id="field_apg4" data-cy="apg4" name="apg4" formControlName="apg4">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="aPGIVPlanteOption.id === editForm.get('apg4')!.value?.id ? editForm.get('apg4')!.value : aPGIVPlanteOption"
+              *ngFor="let aPGIVPlanteOption of apg4sCollection; trackBy: trackAPGIVPlanteById"
+            >
+              {{ aPGIVPlanteOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

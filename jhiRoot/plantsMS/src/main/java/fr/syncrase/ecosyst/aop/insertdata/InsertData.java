@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
@@ -25,7 +24,7 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     private PlanteRepository planteRepository;
     private AllelopathieRepository allelopathieRepository;
     private ClassificationRepository classificationRepository;
-    private CronquistRepository cronquistRepository;
+    private CronquistPlanteRepository cronquistRepository;
     private NomVernaculaireRepository nomVernaculaireRepository;
     private CycleDeVieRepository cycleDeVieRepository;
     private PeriodeAnneeRepository periodeAnneeRepository;
@@ -52,7 +51,7 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Autowired
-    public void setCronquistRepository(CronquistRepository cronquistRepository) {
+    public void setCronquistRepository(CronquistPlanteRepository cronquistRepository) {
         this.cronquistRepository = cronquistRepository;
     }
 

@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sousVariete">
+      <h2 data-cy="sousVarieteDetailsHeading"><span>Sous Variete</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ sousVariete.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ sousVariete.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ sousVariete.nomLatin }}</span>
+        </dd>
+        <dt><span>Variete</span></dt>
+        <dd>
+          <div *ngIf="sousVariete.variete">
+            <a [routerLink]="['/variete', sousVariete.variete?.id, 'view']">{{ sousVariete.variete?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Sous Variete</span></dt>
+        <dd>
+          <div *ngIf="sousVariete.sousVariete">
+            <a [routerLink]="['/sous-variete', sousVariete.sousVariete?.id, 'view']">{{ sousVariete.sousVariete?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sous-variete', sousVariete.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

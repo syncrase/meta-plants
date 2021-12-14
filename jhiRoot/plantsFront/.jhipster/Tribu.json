@@ -1,0 +1,57 @@
+{
+  "name": "Tribu",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sousTribu",
+      "otherEntityRelationshipName": "tribu",
+      "relationshipName": "sousTribus",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "tribu",
+      "otherEntityRelationshipName": "tribu",
+      "relationshipName": "synonymes",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sousFamille",
+      "otherEntityRelationshipName": "tribus",
+      "relationshipName": "sousFamille",
+      "otherEntityField": "nomFr"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tribu",
+      "otherEntityRelationshipName": "synonymes",
+      "relationshipName": "tribu"
+    }
+  ],
+  "javadoc": "Tribus",
+  "entityTableName": "tribu",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20211212183600"
+}

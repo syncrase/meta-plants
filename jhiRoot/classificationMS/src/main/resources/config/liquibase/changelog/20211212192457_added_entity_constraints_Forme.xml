@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity Forme.
+    -->
+    <changeSet id="20211212192457-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="sous_variete_id"
+                                 baseTableName="forme"
+                                 constraintName="fk_forme__sous_variete_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sous_variete"/>
+
+        <addForeignKeyConstraint baseColumnNames="forme_id"
+                                 baseTableName="forme"
+                                 constraintName="fk_forme__forme_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="forme"/>
+    </changeSet>
+</databaseChangeLog>
