@@ -211,7 +211,7 @@ entity SuperEmbranchement {
 }
 
 /**
-* Embranchement, Embranchement ou Phylum, Divisio 2
+* Embranchement, Embranchement ou Phylum, Divisio
 */
 entity Embranchement {
     nomFr String required unique,
@@ -395,7 +395,7 @@ entity Espece {
 }
 
 /**
-* subspecies  - dernier rang zoologique officiel3
+* subspecies  - dernier rang zoologique officiel
 */
 entity SousEspece {
     nomFr String required unique,
@@ -403,7 +403,7 @@ entity SousEspece {
 }
 
 /**
-* varietas  - race étant un rang zoologique informel3
+* varietas  - race étant un rang zoologique informel
 */
 entity Variete {
     nomFr String required unique,
@@ -411,7 +411,7 @@ entity Variete {
 }
 
 /**
-* subvarietas  - sous-race étant un rang zoologique informel3
+* subvarietas  - sous-race étant un rang zoologique informel
 */
 entity SousVariete {
     nomFr String required unique,
@@ -433,7 +433,6 @@ entity SousForme {
     nomFr String required unique,
     nomLatin String unique
 }
-
 
 //***********************************************************
 //***********************************************************
@@ -481,55 +480,54 @@ relationship OneToMany {
     SousVariete{formes(nomFr)} to Forme{sousVariete(nomFr)},
     Forme{sousFormes(nomFr)} to SousForme{forme(nomFr)},
 
-
-
-	//***********************************************************
-	// CRONQUIST : Synonymes
-    // Chacun des synonymes est une copie conforme de ses synonymes en terme d'ascendant et de descendant
-	//***********************************************************
-    SuperRegne{synonymes(nomFr)} to     SuperRegne,
-    Regne{synonymes(nomFr)} to     Regne,
-    SousRegne{synonymes(nomFr)} to     SousRegne,
-    Rameau{synonymes(nomFr)} to     Rameau,
-    InfraRegne{synonymes(nomFr)} to     InfraRegne,
-    SuperEmbranchement{synonymes(nomFr)} to     SuperEmbranchement,
-    Embranchement{synonymes(nomFr)} to     Embranchement,
-    SousEmbranchement{synonymes(nomFr)} to     SousEmbranchement,
-    InfraEmbranchement{synonymes(nomFr)} to     InfraEmbranchement,
-    MicroEmbranchement{synonymes(nomFr)} to     MicroEmbranchement,
-    SuperClasse{synonymes(nomFr)} to     SuperClasse,
-    Classe{synonymes(nomFr)} to     Classe,
-    SousClasse{synonymes(nomFr)} to     SousClasse,
-    InfraClasse{synonymes(nomFr)} to     InfraClasse,
-    SuperOrdre{synonymes(nomFr)} to     SuperOrdre,
-    Ordre{synonymes(nomFr)} to     Ordre,
-    SousOrdre{synonymes(nomFr)} to     SousOrdre,
-    InfraOrdre{synonymes(nomFr)} to     InfraOrdre,
-    MicroOrdre{synonymes(nomFr)} to     MicroOrdre,
-    SuperFamille{synonymes(nomFr)} to     SuperFamille,
-    Famille{synonymes(nomFr)} to     Famille,
-    SousFamille{synonymes(nomFr)} to     SousFamille,
-    Tribu{synonymes(nomFr)} to     Tribu,
-    SousTribu{synonymes(nomFr)} to     SousTribu,
-    Genre{synonymes(nomFr)} to     Genre,
-    SousGenre{synonymes(nomFr)} to     SousGenre,
-    Section{synonymes(nomFr)} to     Section,
-    SousSection{synonymes(nomFr)} to     SousSection,
-    Espece{synonymes(nomFr)} to     Espece,
-    SousEspece{synonymes(nomFr)} to     SousEspece,
-    Variete{synonymes(nomFr)} to     Variete,
-    SousVariete{synonymes(nomFr)} to     SousVariete,
-    Forme{synonymes(nomFr)} to     Forme,
-    SousForme{synonymes(nomFr)} to     SousForme,
-
     
+}
+
+relationship ManyToMany {
+    //***********************************************************
+    // CRONQUIST : Synonymes
+    //***********************************************************
+    SuperRegne{synonymes(nomFr)} to     SuperRegne{synonymes(nomFr)},
+    Regne{synonymes(nomFr)} to     Regne{synonymes(nomFr)},
+    SousRegne{synonymes(nomFr)} to     SousRegne{synonymes(nomFr)},
+    Rameau{synonymes(nomFr)} to     Rameau{synonymes(nomFr)},
+    InfraRegne{synonymes(nomFr)} to     InfraRegne{synonymes(nomFr)},
+    SuperEmbranchement{synonymes(nomFr)} to     SuperEmbranchement{synonymes(nomFr)},
+    Embranchement{synonymes(nomFr)} to     Embranchement{synonymes(nomFr)},
+    SousEmbranchement{synonymes(nomFr)} to     SousEmbranchement{synonymes(nomFr)},
+    InfraEmbranchement{synonymes(nomFr)} to     InfraEmbranchement{synonymes(nomFr)},
+    MicroEmbranchement{synonymes(nomFr)} to     MicroEmbranchement{synonymes(nomFr)},
+    SuperClasse{synonymes(nomFr)} to     SuperClasse{synonymes(nomFr)},
+    Classe{synonymes(nomFr)} to     Classe{synonymes(nomFr)},
+    SousClasse{synonymes(nomFr)} to     SousClasse{synonymes(nomFr)},
+    InfraClasse{synonymes(nomFr)} to     InfraClasse{synonymes(nomFr)},
+    SuperOrdre{synonymes(nomFr)} to     SuperOrdre{synonymes(nomFr)},
+    Ordre{synonymes(nomFr)} to     Ordre{synonymes(nomFr)},
+    SousOrdre{synonymes(nomFr)} to     SousOrdre{synonymes(nomFr)},
+    InfraOrdre{synonymes(nomFr)} to     InfraOrdre{synonymes(nomFr)},
+    MicroOrdre{synonymes(nomFr)} to     MicroOrdre{synonymes(nomFr)},
+    SuperFamille{synonymes(nomFr)} to     SuperFamille{synonymes(nomFr)},
+    Famille{synonymes(nomFr)} to     Famille{synonymes(nomFr)},
+    SousFamille{synonymes(nomFr)} to     SousFamille{synonymes(nomFr)},
+    Tribu{synonymes(nomFr)} to     Tribu{synonymes(nomFr)},
+    SousTribu{synonymes(nomFr)} to     SousTribu{synonymes(nomFr)},
+    Genre{synonymes(nomFr)} to     Genre{synonymes(nomFr)},
+    SousGenre{synonymes(nomFr)} to     SousGenre{synonymes(nomFr)},
+    Section{synonymes(nomFr)} to     Section{synonymes(nomFr)},
+    SousSection{synonymes(nomFr)} to     SousSection{synonymes(nomFr)},
+    Espece{synonymes(nomFr)} to     Espece{synonymes(nomFr)},
+    SousEspece{synonymes(nomFr)} to     SousEspece{synonymes(nomFr)},
+    Variete{synonymes(nomFr)} to     Variete{synonymes(nomFr)},
+    SousVariete{synonymes(nomFr)} to     SousVariete{synonymes(nomFr)},
+    Forme{synonymes(nomFr)} to     Forme{synonymes(nomFr)},
+    SousForme{synonymes(nomFr)} to     SousForme{synonymes(nomFr)},
+
 }
 
 paginate * with pagination
 // dto * with mapstruct
 filter *
 // service * with serviceImpl
-// use mapstruct, serviceImpl, pagination for all
 // use mapstruct, serviceImpl, pagination for all
 
 
