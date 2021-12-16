@@ -1,12 +1,16 @@
 package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistRank;
 import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -17,7 +21,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "classe")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Classe implements Serializable {
+public class Classe implements Serializable, CronquistRank {
 
     private static final long serialVersionUID = 1L;
 
@@ -208,5 +212,20 @@ public class Classe implements Serializable {
             ", nomFr='" + getNomFr() + "'" +
             ", nomLatin='" + getNomLatin() + "'" +
             "}";
+    }
+
+    @Override
+    public CronquistRank getParent() {
+        return superClasse;
+    }
+
+    @Override
+    public Set<? extends CronquistRank> getChildren() {
+        return sousClasses;
+    }
+
+    @Override
+    public List<? extends CronquistRank> findExistingRank() {
+        throw new NotImplementedException("Cette méthode ne doit pas être utilisée!");
     }
 }

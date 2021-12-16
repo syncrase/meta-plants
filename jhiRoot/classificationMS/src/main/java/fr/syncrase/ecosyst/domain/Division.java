@@ -1,9 +1,11 @@
 package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistRank;
 import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -17,7 +19,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "division")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Division implements Serializable {
+public class Division implements Serializable, CronquistRank {
 
     private static final long serialVersionUID = 1L;
 
@@ -208,5 +210,20 @@ public class Division implements Serializable {
             ", nomFr='" + getNomFr() + "'" +
             ", nomLatin='" + getNomLatin() + "'" +
             "}";
+    }
+
+    @Override
+    public CronquistRank getParent() {
+        return superDivision;
+    }
+
+    @Override
+    public Set<? extends CronquistRank> getChildren() {
+        return sousDivisions;
+    }
+
+    @Override
+    public List<? extends CronquistRank> findExistingRank() {
+        return null;
     }
 }

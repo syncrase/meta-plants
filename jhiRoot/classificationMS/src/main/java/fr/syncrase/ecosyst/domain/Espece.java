@@ -1,9 +1,11 @@
 package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistRank;
 import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -17,7 +19,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "espece")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Espece implements Serializable {
+public class Espece implements Serializable, CronquistRank {
+
 
     private static final long serialVersionUID = 1L;
 
@@ -36,20 +39,20 @@ public class Espece implements Serializable {
 
     @OneToMany(mappedBy = "espece")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "varietes", "synonymes", "espece", "sousEspece" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"varietes", "synonymes", "espece", "sousEspece"}, allowSetters = true)
     private Set<SousEspece> sousEspeces = new HashSet<>();
 
     @OneToMany(mappedBy = "espece")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "sousEspeces", "synonymes", "sousSection", "espece" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"sousEspeces", "synonymes", "sousSection", "espece"}, allowSetters = true)
     private Set<Espece> synonymes = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "especes", "synonymes", "section", "sousSection" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"especes", "synonymes", "section", "sousSection"}, allowSetters = true)
     private SousSection sousSection;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "sousEspeces", "synonymes", "sousSection", "espece" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"sousEspeces", "synonymes", "sousSection", "espece"}, allowSetters = true)
     private Espece espece;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -208,5 +211,20 @@ public class Espece implements Serializable {
             ", nomFr='" + getNomFr() + "'" +
             ", nomLatin='" + getNomLatin() + "'" +
             "}";
+    }
+
+    @Override
+    public CronquistRank getParent() {
+        return sousSection;
+    }
+
+    @Override
+    public Set<? extends CronquistRank> getChildren() {
+        return sousEspeces;
+    }
+
+    @Override
+    public List<? extends CronquistRank> findExistingRank() {
+        return null;
     }
 }

@@ -28,6 +28,7 @@ public class WikipediaCrawler {
             /*
              Enregistrement d'une sous-tribu
              */
+            // TODO j'ai deux familles 'Arecacae' alors que je ne devrait en avoir qu'une seule
             scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
             /*
             Enregistrement d'une espèce partageant la même famille avec la plante précédente
@@ -36,13 +37,13 @@ public class WikipediaCrawler {
 
             /*
             AssertThat
-            - TODO un enregistrement  n'enregistre qu'un seul élément de chaque rang
+            - un enregistrement  n'enregistre qu'un seul élément de chaque rang
+            - enregistrer une deuxième fois une espece ne duplique pas les sous rangs
             - le rang est bien enregistré en base
             - TODO les classes sont synonymes
             - les sous classes sont égales
             - les super-ordres sont égaux
             - ainsi que les ordres et les familles
-            -  TODO enregistrer une deuxième fois une espece ne duplique pas les sous rangs
              */
 //            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
             // https://fr.wikipedia.org/wiki/Ptychospermatinae rang inférieur
@@ -175,7 +176,7 @@ public class WikipediaCrawler {
         Elements tables = encadreTaxonomique.select("table.taxobox_classification");
         Element mainTable = tables.get(0);
         Elements elementsDeClassification = mainTable.select("tbody tr");
-        SuperRegneWrapper superRegneWrapper = new SuperRegneWrapper();
+        CronquistClassification superRegneWrapper = new CronquistClassification();
         // TODO je crée un nouveau super regne et je l'ajoute à la fin. (pour pouvoir rajouter un rang inférieur quand les rangs supérieur n'existe pas, je ne fais que renseigner les valeurs vides présentes)
         for (Element classificationItem : elementsDeClassification) {
             setCronquistTaxonomyItemFromElement(superRegneWrapper, classificationItem);
@@ -294,7 +295,7 @@ public class WikipediaCrawler {
      * @param superRegneWrapper  side effect
      * @param classificationItem row of the taxonomy table which contains taxonomy rank and name
      */
-    private void setCronquistTaxonomyItemFromElement(SuperRegneWrapper superRegneWrapper, Element classificationItem) {
+    private void setCronquistTaxonomyItemFromElement(CronquistClassification superRegneWrapper, Element classificationItem) {
         String classificationItemKey = selectText(classificationItem, "th a");
         switch (classificationItemKey) {
             case "Super-Règne":
@@ -413,7 +414,7 @@ public class WikipediaCrawler {
      * @param classificationItemKey   rang taxonomique
      * @param classificationItemValue taxon
      */
-    private void setCronquistTaxonomyItem(SuperRegneWrapper superRegneWrapper, @NotNull String classificationItemKey, String classificationItemValue) {
+    private void setCronquistTaxonomyItem(CronquistClassification superRegneWrapper, @NotNull String classificationItemKey, String classificationItemValue) {
         switch (classificationItemKey) {
             case "Super-Règne":
                 superRegneWrapper.getSuperRegne().setNomFr(classificationItemValue);
