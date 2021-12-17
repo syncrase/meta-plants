@@ -575,6 +575,10 @@ entity SousForme {
     nomLatin String unique
 }
 
+entity Url {
+    url String required unique
+}
+
 
 //***********************************************************
 //***********************************************************
@@ -744,6 +748,43 @@ relationship ManyToMany {
     SousVariete{synonymes(nomFr)} to     SousVariete{synonymes(nomFr)},
     Forme{synonymes(nomFr)} to     Forme{synonymes(nomFr)},
     SousForme{synonymes(nomFr)} to     SousForme{synonymes(nomFr)},
+    //***********************************************************
+    // CRONQUIST : Url
+    //***********************************************************
+    SuperRegne to Url,
+    Regne to Url,
+    SousRegne to Url,
+    Rameau to Url,
+    InfraRegne to Url,
+    SuperEmbranchement to Url,
+    Embranchement to Url,
+    SousEmbranchement to Url,
+    InfraEmbranchement to Url,
+    MicroEmbranchement to Url,
+    SuperClasse to Url,
+    Classe to Url,
+    SousClasse to Url,
+    InfraClasse to Url,
+    SuperOrdre to Url,
+    Ordre to Url,
+    SousOrdre to Url,
+    InfraOrdre to Url,
+    MicroOrdre to Url,
+    SuperFamille to Url,
+    Famille to Url,
+    SousFamille to Url,
+    Tribu to Url,
+    SousTribu to Url,
+    Genre to Url,
+    SousGenre to Url,
+    Section to Url,
+    SousSection to Url,
+    Espece to Url,
+    SousEspece to Url,
+    Variete to Url,
+    SousVariete to Url,
+    Forme to Url,
+    SousForme to Url,
 
 }
 

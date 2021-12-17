@@ -1,74 +1,5 @@
 
 
-application {
-	config {
-        baseName plantsFront,
-        applicationType gateway,
-        packageName fr.syncrase.ecosyst,
-        serverPort 8080,
-        authenticationType jwt,
-        cacheProvider hazelcast,
-        enableHibernateCache true,
-        websocket false,
-        databaseType sql,
-        devDatabaseType postgresql,
-        prodDatabaseType postgresql,
-        searchEngine false,
-        messageBroker false,
-        serviceDiscoveryType eureka,
-        buildTool maven,
-        enableSwaggerCodegen true,
-        embeddableLaunchScript false,
-        clientPackageManager npm,
-        enableGradleEnterprise false,
-        withAdminUi true,
-        clientTheme sketchy,
-        clientThemeVariant dark,
-        testFrameworks [gatling, cucumber, protractor],
-        jhiPrefix perma,
-        enableTranslation false,
-        nativeLanguage fr,
-        languages [en, fr],
-        skipClient false,
-        skipUserManagement false,
-        clientFramework angularX,
-        dtoSuffix DTO,
-	}
-	
-	entities *
-}
-
-application {
-	config {
-	  	baseName plantsMS,
-		applicationType microservice,
-		packageName fr.syncrase.ecosyst,
-		serverPort 8081,
-    	authenticationType jwt,
-		cacheProvider hazelcast,
-		enableHibernateCache true,
-		websocket false,
-		databaseType sql,
-		devDatabaseType postgresql,
-		prodDatabaseType postgresql,
-		searchEngine false,
-		messageBroker false,
-		serviceDiscoveryType eureka,
-		buildTool maven,
-		enableSwaggerCodegen true,
-		testFrameworks [gatling, cucumber],
-		jhiPrefix perma,
-		dtoSuffix DTO,
-		enableTranslation false,
-		nativeLanguage fr,
-		skipClient true,
-		skipUserManagement true,
-		clientPackageManager npm,
-		embeddableLaunchScript false,
-	}
-
-  	entities APGIPlante APGIIPlante APGIIIPlante, APGIVPlante, Allelopathie, Classification, CronquistPlante, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, RaunkierPlante, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis
-}
 
 application {
 	config {
@@ -99,15 +30,15 @@ application {
 		embeddableLaunchScript false,
 	}
     
-    entities SuperRegne, Regne, SousRegne, Rameau, InfraRegne, SuperEmbranchement, Embranchement, SousEmbranchement, InfraEmbranchement, MicroEmbranchement, SuperClasse, Classe, SousClasse, InfraClasse, SuperOrdre, Ordre, SousOrdre, InfraOrdre, MicroOrdre, SuperFamille, Famille, SousFamille, Tribu, SousTribu, Genre, SousGenre, Section, SousSection, Espece, SousEspece, Variete, SousVariete, Forme, SousForme, CronquistPlante
+    entities Url, CronquistRank, CronquistPlante
 }
 
 // https://www.jhipster.tech/jdl/deployments
-deployment {
-	deploymentType docker-compose
-	dockerRepositoryName "dockerRepo"
-	appsFolders [plantsFront, plantsMS, classificationMS]
-}
+//deployment {
+//	deploymentType docker-compose
+//	dockerRepositoryName "dockerRepo"
+//	appsFolders [plantsFront, plantsMS, classificationMS]
+//}
 
 
 //***********************************************************
@@ -162,277 +93,53 @@ entity CronquistPlante {
 //***********************************************************
 //***********************************************************
 
-/**
-* Super-règne, Empire, Domaine (Superregnum, Imperium, Dominium)
-*/
-entity SuperRegne {
-	nomFr String required unique,
-	nomLatin String unique
+entity CronquistRank {
+    rank CronquistTaxonomikRanks required
+    nomFr String unique,
+    nomLantin String unique
 }
 
-/**
-*  (Regnum)
-*/
-entity Regne {
-	nomFr String required unique,
-	nomLatin String unique
+enum CronquistTaxonomikRanks {
+    SUPERREGNE (SuperRegne),
+    REGNE (Regne),
+    SOUSREGNE (SousRegne),
+    RAMEAU (Rameau),
+    INFRAREGNE (InfraRegne),
+    SUPEREMBRANCHEMENT (SuperEmbranchement),
+    EMBRANCHEMENT (Embranchement),
+    SOUSEMBRANCHEMENT (SousEmbranchement),
+    INFRAEMBRANCHEMENT (InfraEmbranchement),
+    MICROEMBRANCHEMENT (MicroEmbranchement),
+    SUPERCLASSE (SuperClasse),
+    CLASSE (Classe),
+    SOUSCLASSE (SousClasse),
+    INFRACLASSE (InfraClasse),
+    SUPERORDRE (SuperOrdre),
+    ORDRE (Ordre),
+    SOUSORDRE (SousOrdre),
+    INFRAORDRE (InfraOrdre),
+    MICROORDRE (MicroOrdre),
+    SUPERFAMILLE (SuperFamille),
+    FAMILLE (Famille),
+    SOUSFAMILLE (SousFamille),
+    TRIBU (Tribu),
+    SOUSTRIBU (SousTribu),
+    GENRE (Genre),
+    SOUSGENRE (SousGenre),
+    SECTION (Section),
+    SOUSSECTION (SousSection),
+    ESPECE (Espece),
+    SOUSESPECE (SousEspece),
+    VARIETE (Variete),
+    SOUSVARIETE (SousVariete),
+    FORME (Forme),
+    SOUSFORME (SousForme)
 }
 
-/**
-* Subregnum 
-*/
-entity SousRegne {
-    nomFr String required unique,
-    nomLatin String unique unique
+entity Url {
+    url String required
 }
 
-/**
-* Ramus, « branch » en anglais 
-*/
-entity Rameau {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Infraregnum 
-*/
-entity InfraRegne {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Super-embranchement, Super-division ou Superphylum, Superdivisio 
-*/
-entity SuperEmbranchement {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Embranchement, Embranchement ou Phylum, Divisio
-*/
-entity Embranchement {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Sous-embranchement, Sous-division ou Subphylum, Subdivisio 
-*/
-entity SousEmbranchement {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Infraphylum 
-*/
-entity InfraEmbranchement {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Microphylum 
-*/
-entity MicroEmbranchement {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Superclassis 
-*/
-entity SuperClasse {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Classis 
-*/
-entity Classe {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Subclassis 
-*/
-entity SousClasse {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Infraclassis 
-*/
-entity InfraClasse {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Superordo 
-*/
-entity SuperOrdre {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Ordo 
-*/
-entity Ordre {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Subordo 
-*/
-entity SousOrdre {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Infraordo 
-*/
-entity InfraOrdre {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Microordo 
-*/
-entity MicroOrdre {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Superfamilia 
-*/
-entity SuperFamille {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Familia 
-*/
-entity Famille {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Subfamilia 
-*/
-entity SousFamille {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Tribus 
-*/
-entity Tribu {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Subtribus 
-*/
-entity SousTribu {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Genus 
-*/
-entity Genre {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Subgenus 
-*/
-entity SousGenre {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Sectio 
-*/
-entity Section {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Subsectio 
-*/
-entity SousSection {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* Species 
-*/
-entity Espece {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* subspecies  - dernier rang zoologique officiel
-*/
-entity SousEspece {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* varietas  - race étant un rang zoologique informel
-*/
-entity Variete {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* subvarietas  - sous-race étant un rang zoologique informel
-*/
-entity SousVariete {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* forma  dernier rang en mycologie
-*/
-entity Forme {
-    nomFr String required unique,
-    nomLatin String unique
-}
-
-/**
-* subforma 
-*/
-entity SousForme {
-    nomFr String required unique,
-    nomLatin String unique
-}
 
 //***********************************************************
 //***********************************************************
@@ -442,92 +149,16 @@ entity SousForme {
 
 
 relationship OneToMany {
-	//***********************************************************
-	// CRONQUIST : Arborescence de Cronquist
-	//***********************************************************
-
-    SuperRegne{regnes(nomFr)} to Regne{superRegne(nomFr)},
-    Regne{sousRegnes(nomFr)} to SousRegne{regne(nomFr)},
-    SousRegne{rameaus(nomFr)} to Rameau{sousRegne(nomFr)},
-    Rameau{infraRegnes(nomFr)} to InfraRegne{rameau(nomFr)},
-    InfraRegne{superEmbranchements(nomFr)} to SuperEmbranchement{infraRegne(nomFr)},
-    SuperEmbranchement{divisions(nomFr)} to Embranchement{superEmbranchement(nomFr)},
-    Embranchement{sousEmbranchements(nomFr)} to SousEmbranchement{division(nomFr)},
-    SousEmbranchement{infraEmbranchements(nomFr)} to InfraEmbranchement{sousEmbranchement(nomFr)},
-    InfraEmbranchement{microEmbranchements(nomFr)} to MicroEmbranchement{infraEmbranchement(nomFr)},
-    MicroEmbranchement{superClasses(nomFr)} to SuperClasse{microEmbranchement(nomFr)},
-    SuperClasse{classes(nomFr)} to Classe{superClasse(nomFr)},
-    Classe{sousClasses(nomFr)} to SousClasse{classe(nomFr)},
-    SousClasse{infraClasses(nomFr)} to InfraClasse{sousClasse(nomFr)},
-    InfraClasse{superOrdres(nomFr)} to SuperOrdre{infraClasse(nomFr)},
-    SuperOrdre{ordres(nomFr)} to Ordre{superOrdre(nomFr)},
-    Ordre{sousOrdres(nomFr)} to SousOrdre{ordre(nomFr)},
-    SousOrdre{infraOrdres(nomFr)} to InfraOrdre{sousOrdre(nomFr)},
-    InfraOrdre{microOrdres(nomFr)} to MicroOrdre{infraOrdre(nomFr)},
-    MicroOrdre{superFamilles(nomFr)} to SuperFamille{microOrdre(nomFr)},
-    SuperFamille{familles(nomFr)} to Famille{superFamille(nomFr)},
-    Famille{sousFamilles(nomFr)} to SousFamille{famille(nomFr)},
-    SousFamille{tribus(nomFr)} to Tribu{sousFamille(nomFr)},
-    Tribu{sousTribus(nomFr)} to SousTribu{tribu(nomFr)},
-    SousTribu{genres(nomFr)} to Genre{sousTribu(nomFr)},
-    Genre{sousGenres(nomFr)} to SousGenre{genre(nomFr)},
-    SousGenre{sections(nomFr)} to Section{sousGenre(nomFr)},
-    Section{sousSections(nomFr)} to SousSection{section(nomFr)},
-    SousSection{especes(nomFr)} to Espece{sousSection(nomFr)},
-    Espece{sousEspeces(nomFr)} to SousEspece{espece(nomFr)},
-    SousEspece{varietes(nomFr)} to Variete{sousEspece(nomFr)},
-    Variete{sousVarietes(nomFr)} to SousVariete{variete(nomFr)},
-    SousVariete{formes(nomFr)} to Forme{sousVariete(nomFr)},
-    Forme{sousFormes(nomFr)} to SousForme{forme(nomFr)},
-
-    
-}
-
-relationship ManyToMany {
-    //***********************************************************
-    // CRONQUIST : Synonymes
-    //***********************************************************
-    SuperRegne{synonymes(nomFr)} to     SuperRegne{synonymes(nomFr)},
-    Regne{synonymes(nomFr)} to     Regne{synonymes(nomFr)},
-    SousRegne{synonymes(nomFr)} to     SousRegne{synonymes(nomFr)},
-    Rameau{synonymes(nomFr)} to     Rameau{synonymes(nomFr)},
-    InfraRegne{synonymes(nomFr)} to     InfraRegne{synonymes(nomFr)},
-    SuperEmbranchement{synonymes(nomFr)} to     SuperEmbranchement{synonymes(nomFr)},
-    Embranchement{synonymes(nomFr)} to     Embranchement{synonymes(nomFr)},
-    SousEmbranchement{synonymes(nomFr)} to     SousEmbranchement{synonymes(nomFr)},
-    InfraEmbranchement{synonymes(nomFr)} to     InfraEmbranchement{synonymes(nomFr)},
-    MicroEmbranchement{synonymes(nomFr)} to     MicroEmbranchement{synonymes(nomFr)},
-    SuperClasse{synonymes(nomFr)} to     SuperClasse{synonymes(nomFr)},
-    Classe{synonymes(nomFr)} to     Classe{synonymes(nomFr)},
-    SousClasse{synonymes(nomFr)} to     SousClasse{synonymes(nomFr)},
-    InfraClasse{synonymes(nomFr)} to     InfraClasse{synonymes(nomFr)},
-    SuperOrdre{synonymes(nomFr)} to     SuperOrdre{synonymes(nomFr)},
-    Ordre{synonymes(nomFr)} to     Ordre{synonymes(nomFr)},
-    SousOrdre{synonymes(nomFr)} to     SousOrdre{synonymes(nomFr)},
-    InfraOrdre{synonymes(nomFr)} to     InfraOrdre{synonymes(nomFr)},
-    MicroOrdre{synonymes(nomFr)} to     MicroOrdre{synonymes(nomFr)},
-    SuperFamille{synonymes(nomFr)} to     SuperFamille{synonymes(nomFr)},
-    Famille{synonymes(nomFr)} to     Famille{synonymes(nomFr)},
-    SousFamille{synonymes(nomFr)} to     SousFamille{synonymes(nomFr)},
-    Tribu{synonymes(nomFr)} to     Tribu{synonymes(nomFr)},
-    SousTribu{synonymes(nomFr)} to     SousTribu{synonymes(nomFr)},
-    Genre{synonymes(nomFr)} to     Genre{synonymes(nomFr)},
-    SousGenre{synonymes(nomFr)} to     SousGenre{synonymes(nomFr)},
-    Section{synonymes(nomFr)} to     Section{synonymes(nomFr)},
-    SousSection{synonymes(nomFr)} to     SousSection{synonymes(nomFr)},
-    Espece{synonymes(nomFr)} to     Espece{synonymes(nomFr)},
-    SousEspece{synonymes(nomFr)} to     SousEspece{synonymes(nomFr)},
-    Variete{synonymes(nomFr)} to     Variete{synonymes(nomFr)},
-    SousVariete{synonymes(nomFr)} to     SousVariete{synonymes(nomFr)},
-    Forme{synonymes(nomFr)} to     Forme{synonymes(nomFr)},
-    SousForme{synonymes(nomFr)} to     SousForme{synonymes(nomFr)},
+    CronquistRank{children(nomFr)} to CronquistRank{parent(nomFr)},
+    CronquistRank{urls} to Url,
+    CronquistRank{synonymes(nomFr)} to CronquistRank,
 
 }
 
 paginate * with pagination
 // dto * with mapstruct
 filter *
-// service * with serviceImpl
+service * with serviceImpl
 // use mapstruct, serviceImpl, pagination for all
 
 
