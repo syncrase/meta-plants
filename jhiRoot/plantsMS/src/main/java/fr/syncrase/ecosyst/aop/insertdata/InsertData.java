@@ -7,11 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
-//@Component
+@Component
 public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     //implements ApplicationListener<ContextRefreshedEvent>
     private final Logger log = LoggerFactory.getLogger(InsertData.class);
@@ -23,12 +24,18 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     private FeuillageRepository feuillageRepository;
     private PlanteRepository planteRepository;
     private AllelopathieRepository allelopathieRepository;
-    private ClassificationRepository classificationRepository;
-    private CronquistPlanteRepository cronquistRepository;
+//    private ClassificationRepository classificationRepository;
+//    private CronquistPlanteRepository cronquistRepository;
     private NomVernaculaireRepository nomVernaculaireRepository;
     private CycleDeVieRepository cycleDeVieRepository;
     private PeriodeAnneeRepository periodeAnneeRepository;
     private SemisRepository semisRepository;
+    private ClassificationCronquistRepository classificationCronquistRepository;
+
+    @Autowired
+    public void setClassificationCronquistRepository(ClassificationCronquistRepository classificationCronquistRepository) {
+        this.classificationCronquistRepository = classificationCronquistRepository;
+    }
 
     @Autowired
     public void setSemisRepository(SemisRepository semisRepository) {
@@ -50,10 +57,10 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
         this.nomVernaculaireRepository = nomVernaculaireRepository;
     }
 
-    @Autowired
-    public void setCronquistRepository(CronquistPlanteRepository cronquistRepository) {
-        this.cronquistRepository = cronquistRepository;
-    }
+//    @Autowired
+//    public void setCronquistRepository(CronquistPlanteRepository cronquistRepository) {
+//        this.cronquistRepository = cronquistRepository;
+//    }
 
     @Autowired
     public void setRacineRepository(RacineRepository racineRepository) {
@@ -90,10 +97,10 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
         this.allelopathieRepository = allelopathieRepository;
     }
 
-    @Autowired
-    public void setClassificationRepository(ClassificationRepository classificationRepository) {
-        this.classificationRepository = classificationRepository;
-    }
+//    @Autowired
+//    public void setClassificationRepository(ClassificationRepository classificationRepository) {
+//        this.classificationRepository = classificationRepository;
+//    }
 
     @Transactional
     @Override
@@ -110,7 +117,7 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
         InsertSols solSetter = new InsertSols(solRepository);
         solSetter.insertAllSols();
 
-        InsertPlants plantsSetter = new InsertPlants(classificationRepository, cronquistRepository, nomVernaculaireRepository, planteRepository);
+        InsertPlants plantsSetter = new InsertPlants(classificationCronquistRepository, nomVernaculaireRepository, planteRepository);
         Map<String, Plante> insertedPlants = plantsSetter.insertAllPlants();
 
         InsertInteractions interactionSetter = new InsertInteractions(insertedPlants, allelopathieRepository);

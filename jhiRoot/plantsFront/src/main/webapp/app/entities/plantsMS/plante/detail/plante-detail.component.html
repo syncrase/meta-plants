@@ -73,10 +73,10 @@
             >{{ last ? '' : ', ' }}
           </span>
         </dd>
-        <dt><span>Plante</span></dt>
+        <dt><span>Plante Botanique</span></dt>
         <dd>
-          <div *ngIf="plante.plante">
-            <a [routerLink]="['/plante', plante.plante?.id, 'view']">{{ plante.plante?.id }}</a>
+          <div *ngIf="plante.planteBotanique">
+            <a [routerLink]="['/plante', plante.planteBotanique?.id, 'view']">{{ plante.planteBotanique?.id }}</a>
           </div>
         </dd>
       </dl>

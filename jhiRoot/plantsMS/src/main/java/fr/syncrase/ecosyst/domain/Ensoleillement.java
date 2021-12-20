@@ -41,7 +41,8 @@ public class Ensoleillement implements Serializable {
             "strate",
             "feuillage",
             "nomsVernaculaires",
-            "plante",
+            "classificationCronquist",
+            "planteBotanique",
         },
         allowSetters = true
     )

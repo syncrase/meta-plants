@@ -46,7 +46,6 @@ spring:
       label: main # toggle to switch to a different version of the configuration as stored in git
       # it can be set to any label, branch or commit of the configuration source Git repository
   liquibase:
-    # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev
     url: jdbc:postgresql://localhost:5432/plantsfront
   mail:

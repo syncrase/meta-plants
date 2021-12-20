@@ -3,7 +3,10 @@ package fr.syncrase.ecosyst.service.impl;
 import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.repository.PlanteRepository;
 import fr.syncrase.ecosyst.service.PlanteService;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -66,6 +69,19 @@ public class PlanteServiceImpl implements PlanteService {
 
     public Page<Plante> findAllWithEagerRelationships(Pageable pageable) {
         return planteRepository.findAllWithEagerRelationships(pageable);
+    }
+
+    /**
+     *  Get all the plantes where ClassificationCronquist is {@code null}.
+     *  @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<Plante> findAllWhereClassificationCronquistIsNull() {
+        log.debug("Request to get all plantes where ClassificationCronquist is null");
+        return StreamSupport
+            .stream(planteRepository.findAll().spliterator(), false)
+            .filter(plante -> plante.getClassificationCronquist() == null)
+            .collect(Collectors.toList());
     }
 
     @Override

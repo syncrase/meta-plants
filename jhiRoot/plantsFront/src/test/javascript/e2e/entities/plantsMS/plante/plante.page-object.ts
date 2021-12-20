@@ -42,7 +42,7 @@ export class PlanteUpdatePage {
   strateSelect = element(by.id('field_strate'));
   feuillageSelect = element(by.id('field_feuillage'));
   nomsVernaculairesSelect = element(by.id('field_nomsVernaculaires'));
-  planteSelect = element(by.id('field_plante'));
+  planteBotaniqueSelect = element(by.id('field_planteBotanique'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getText();
@@ -200,20 +200,20 @@ export class PlanteUpdatePage {
     return await this.nomsVernaculairesSelect.element(by.css('option:checked')).getText();
   }
 
-  async planteSelectLastOption(): Promise<void> {
-    await this.planteSelect.all(by.tagName('option')).last().click();
+  async planteBotaniqueSelectLastOption(): Promise<void> {
+    await this.planteBotaniqueSelect.all(by.tagName('option')).last().click();
   }
 
-  async planteSelectOption(option: string): Promise<void> {
-    await this.planteSelect.sendKeys(option);
+  async planteBotaniqueSelectOption(option: string): Promise<void> {
+    await this.planteBotaniqueSelect.sendKeys(option);
   }
 
-  getPlanteSelect(): ElementFinder {
-    return this.planteSelect;
+  getPlanteBotaniqueSelect(): ElementFinder {
+    return this.planteBotaniqueSelect;
   }
 
-  async getPlanteSelectedOption(): Promise<string> {
-    return await this.planteSelect.element(by.css('option:checked')).getText();
+  async getPlanteBotaniqueSelectedOption(): Promise<string> {
+    return await this.planteBotaniqueSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

@@ -1,0 +1,166 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="classificationCronquist">
+      <h2 data-cy="classificationCronquistDetailsHeading"><span>Classification Cronquist</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.id }}</span>
+        </dd>
+        <dt><span>Super Regne</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.superRegne }}</span>
+        </dd>
+        <dt><span>Regne</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.regne }}</span>
+        </dd>
+        <dt><span>Sous Regne</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousRegne }}</span>
+        </dd>
+        <dt><span>Rameau</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.rameau }}</span>
+        </dd>
+        <dt><span>Infra Regne</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.infraRegne }}</span>
+        </dd>
+        <dt><span>Super Embranchement</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.superEmbranchement }}</span>
+        </dd>
+        <dt><span>Division</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.division }}</span>
+        </dd>
+        <dt><span>Sous Embranchement</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousEmbranchement }}</span>
+        </dd>
+        <dt><span>Infra Embranchement</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.infraEmbranchement }}</span>
+        </dd>
+        <dt><span>Micro Embranchement</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.microEmbranchement }}</span>
+        </dd>
+        <dt><span>Super Classe</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.superClasse }}</span>
+        </dd>
+        <dt><span>Classe</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.classe }}</span>
+        </dd>
+        <dt><span>Sous Classe</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousClasse }}</span>
+        </dd>
+        <dt><span>Infra Classe</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.infraClasse }}</span>
+        </dd>
+        <dt><span>Super Ordre</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.superOrdre }}</span>
+        </dd>
+        <dt><span>Ordre</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.ordre }}</span>
+        </dd>
+        <dt><span>Sous Ordre</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousOrdre }}</span>
+        </dd>
+        <dt><span>Infra Ordre</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.infraOrdre }}</span>
+        </dd>
+        <dt><span>Micro Ordre</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.microOrdre }}</span>
+        </dd>
+        <dt><span>Super Famille</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.superFamille }}</span>
+        </dd>
+        <dt><span>Famille</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.famille }}</span>
+        </dd>
+        <dt><span>Sous Famille</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousFamille }}</span>
+        </dd>
+        <dt><span>Tribu</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.tribu }}</span>
+        </dd>
+        <dt><span>Sous Tribu</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousTribu }}</span>
+        </dd>
+        <dt><span>Genre</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.genre }}</span>
+        </dd>
+        <dt><span>Sous Genre</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousGenre }}</span>
+        </dd>
+        <dt><span>Section</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.section }}</span>
+        </dd>
+        <dt><span>Sous Section</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousSection }}</span>
+        </dd>
+        <dt><span>Espece</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.espece }}</span>
+        </dd>
+        <dt><span>Sous Espece</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousEspece }}</span>
+        </dd>
+        <dt><span>Variete</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.variete }}</span>
+        </dd>
+        <dt><span>Sous Variete</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.sousVariete }}</span>
+        </dd>
+        <dt><span>Forme</span></dt>
+        <dd>
+          <span>{{ classificationCronquist.forme }}</span>
+        </dd>
+        <dt><span>Plante</span></dt>
+        <dd>
+          <div *ngIf="classificationCronquist.plante">
+            <a [routerLink]="['/plante', classificationCronquist.plante?.id, 'view']">{{ classificationCronquist.plante?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/classification-cronquist', classificationCronquist.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

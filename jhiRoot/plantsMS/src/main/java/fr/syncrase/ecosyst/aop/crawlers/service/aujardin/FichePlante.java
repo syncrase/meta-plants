@@ -47,7 +47,7 @@ public class FichePlante {
 
 //		plante.setEntretien(getElementDeDescription(article, "Floraison"));
 
-        plante.setClassification(getClassification(article));
+//        plante.setClassification(getClassification(article));
     }
 
     private Set<NomVernaculaire> getNomsVernaculaires(Document page) {
@@ -64,14 +64,14 @@ public class FichePlante {
         return nomVernaculaireSet;
     }
 
-    private Classification getClassification(Element article) {
-        // TODO Auto-generated method stub
-        Classification classification = new Classification();
-//        Cronquist cronquist = new Cronquist();
-        // TODO
-//		cronquist.set
-        return null;
-    }
+//    private Classification getClassification(Element article) {
+//        // TODO Auto-generated method stub
+//        Classification classification = new Classification();
+////        Cronquist cronquist = new Cronquist();
+//        // TODO
+////		cronquist.set
+//        return null;
+//    }
 
     private CycleDeVie getCycleDeVie(Element article) {
         // Récupération de la floraison

@@ -56,9 +56,9 @@
                                  referencedColumnNames="id"
                                  referencedTableName="nom_vernaculaire"/>
 
-        <addForeignKeyConstraint baseColumnNames="plante_id"
+        <addForeignKeyConstraint baseColumnNames="plante_botanique_id"
                                  baseTableName="plante"
-                                 constraintName="fk_plante__plante_id"
+                                 constraintName="fk_plante__plante_botanique_id"
                                  referencedColumnNames="id"
                                  referencedTableName="plante"/>
     </changeSet>

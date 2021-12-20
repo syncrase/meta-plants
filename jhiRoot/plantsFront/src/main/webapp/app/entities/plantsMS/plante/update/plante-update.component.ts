@@ -51,7 +51,7 @@ export class PlanteUpdateComponent implements OnInit {
     strate: [],
     feuillage: [],
     nomsVernaculaires: [],
-    plante: [],
+    planteBotanique: [],
   });
 
   constructor(
@@ -165,10 +165,10 @@ export class PlanteUpdateComponent implements OnInit {
       strate: plante.strate,
       feuillage: plante.feuillage,
       nomsVernaculaires: plante.nomsVernaculaires,
-      plante: plante.plante,
+      planteBotanique: plante.planteBotanique,
     });
 
-    this.plantesSharedCollection = this.planteService.addPlanteToCollectionIfMissing(this.plantesSharedCollection, plante.plante);
+    this.plantesSharedCollection = this.planteService.addPlanteToCollectionIfMissing(this.plantesSharedCollection, plante.planteBotanique);
     this.cycleDeViesSharedCollection = this.cycleDeVieService.addCycleDeVieToCollectionIfMissing(
       this.cycleDeViesSharedCollection,
       plante.cycleDeVie
@@ -194,7 +194,9 @@ export class PlanteUpdateComponent implements OnInit {
     this.planteService
       .query()
       .pipe(map((res: HttpResponse<IPlante[]>) => res.body ?? []))
-      .pipe(map((plantes: IPlante[]) => this.planteService.addPlanteToCollectionIfMissing(plantes, this.editForm.get('plante')!.value)))
+      .pipe(
+        map((plantes: IPlante[]) => this.planteService.addPlanteToCollectionIfMissing(plantes, this.editForm.get('planteBotanique')!.value))
+      )
       .subscribe((plantes: IPlante[]) => (this.plantesSharedCollection = plantes));
 
     this.cycleDeVieService
@@ -274,7 +276,7 @@ export class PlanteUpdateComponent implements OnInit {
       strate: this.editForm.get(['strate'])!.value,
       feuillage: this.editForm.get(['feuillage'])!.value,
       nomsVernaculaires: this.editForm.get(['nomsVernaculaires'])!.value,
-      plante: this.editForm.get(['plante'])!.value,
+      planteBotanique: this.editForm.get(['planteBotanique'])!.value,
     };
   }
 }

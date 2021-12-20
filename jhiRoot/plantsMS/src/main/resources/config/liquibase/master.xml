@@ -32,6 +32,7 @@
     <include file="config/liquibase/changelog/20211219180031_added_entity_Ensoleillement.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20211219180131_added_entity_TypeSemis.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20211219180231_added_entity_CycleDeVie.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20211220154230_added_entity_ClassificationCronquist.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20211219174631_added_entity_constraints_PeriodeAnnee.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20211219174831_added_entity_constraints_Plante.xml" relativeToChangelogFile="false"/>
@@ -40,6 +41,7 @@
     <include file="config/liquibase/changelog/20211219175631_added_entity_constraints_Allelopathie.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20211219180031_added_entity_constraints_Ensoleillement.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20211219180231_added_entity_constraints_CycleDeVie.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20211220154230_added_entity_constraints_ClassificationCronquist.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

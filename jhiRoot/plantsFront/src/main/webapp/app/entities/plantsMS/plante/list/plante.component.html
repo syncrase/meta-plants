@@ -43,7 +43,7 @@
           <th scope="col" permaSortBy="racine.id"><span>Racine</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="strate.id"><span>Strate</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="feuillage.id"><span>Feuillage</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" permaSortBy="plante.id"><span>Plante</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="planteBotanique.id"><span>Plante Botanique</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -87,8 +87,8 @@
             </div>
           </td>
           <td>
-            <div *ngIf="plante.plante">
-              <a [routerLink]="['/plante', plante.plante?.id, 'view']">{{ plante.plante?.id }}</a>
+            <div *ngIf="plante.planteBotanique">
+              <a [routerLink]="['/plante', plante.planteBotanique?.id, 'view']">{{ plante.planteBotanique?.id }}</a>
             </div>
           </td>
           <td class="text-right">

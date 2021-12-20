@@ -176,10 +176,22 @@ public class PlanteQueryService extends QueryService<Plante> {
                         )
                     );
             }
-            if (criteria.getPlanteId() != null) {
+            if (criteria.getClassificationCronquistId() != null) {
                 specification =
                     specification.and(
-                        buildSpecification(criteria.getPlanteId(), root -> root.join(Plante_.plante, JoinType.LEFT).get(Plante_.id))
+                        buildSpecification(
+                            criteria.getClassificationCronquistId(),
+                            root -> root.join(Plante_.classificationCronquist, JoinType.LEFT).get(ClassificationCronquist_.id)
+                        )
+                    );
+            }
+            if (criteria.getPlanteBotaniqueId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getPlanteBotaniqueId(),
+                            root -> root.join(Plante_.planteBotanique, JoinType.LEFT).get(Plante_.id)
+                        )
                     );
             }
         }

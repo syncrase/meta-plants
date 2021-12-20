@@ -1,16 +1,13 @@
 {
   "generator-jhipster": {
-    "appsFolders": [
-      "plantsFront",
-      "plantsMS",
-      "classificationMS"
-    ],
+    "appsFolders": ["plantsFront", "plantsMS", "classificationMS"],
     "directoryPath": "../",
     "gatewayType": "SpringCloudGateway",
     "clusteredDbApps": [],
     "monitoring": "no",
     "serviceDiscoveryType": "eureka",
     "deploymentType": "docker-compose",
-    "dockerRepositoryName": "dockerRepo"
+    "dockerRepositoryName": "dockerRepo",
+    "jwtSecretKey": "ZDBkMzQ2Mzg3YzBiMzBlNjdjYWEyMzkxM2JiOGM0MGZlYTVjZmI3YTM1ZTQ4YWFjM2RlODdiZjQwODcwMzNhYmNmNjUzZmY0ZGUwYzI1YTI0NDFlZDhkYzk3ODFhOTM1ZTk1Mw=="
   }
 }

@@ -76,8 +76,9 @@
       "Germination",
       "Ensoleillement",
       "TypeSemis",
-      "CycleDeVie"
+      "CycleDeVie",
+      "ClassificationCronquist"
     ],
-    "lastLiquibaseTimestamp": 1639937071000
+    "lastLiquibaseTimestamp": 1640014950000
   }
 }

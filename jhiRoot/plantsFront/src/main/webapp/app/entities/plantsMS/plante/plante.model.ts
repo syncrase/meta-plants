@@ -7,6 +7,7 @@ import { IRacine } from 'app/entities/plantsMS/racine/racine.model';
 import { IStrate } from 'app/entities/plantsMS/strate/strate.model';
 import { IFeuillage } from 'app/entities/plantsMS/feuillage/feuillage.model';
 import { INomVernaculaire } from 'app/entities/plantsMS/nom-vernaculaire/nom-vernaculaire.model';
+import { IClassificationCronquist } from 'app/entities/plantsMS/classification-cronquist/classification-cronquist.model';
 
 export interface IPlante {
   id?: number;
@@ -24,7 +25,8 @@ export interface IPlante {
   strate?: IStrate | null;
   feuillage?: IFeuillage | null;
   nomsVernaculaires?: INomVernaculaire[] | null;
-  plante?: IPlante | null;
+  classificationCronquist?: IClassificationCronquist | null;
+  planteBotanique?: IPlante | null;
 }
 
 export class Plante implements IPlante {
@@ -44,7 +46,8 @@ export class Plante implements IPlante {
     public strate?: IStrate | null,
     public feuillage?: IFeuillage | null,
     public nomsVernaculaires?: INomVernaculaire[] | null,
-    public plante?: IPlante | null
+    public classificationCronquist?: IClassificationCronquist | null,
+    public planteBotanique?: IPlante | null
   ) {}
 }
 

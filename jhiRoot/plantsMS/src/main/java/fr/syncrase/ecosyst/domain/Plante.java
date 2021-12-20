@@ -57,7 +57,7 @@ public class Plante implements Serializable {
     @ApiModelProperty(
         value = "Une plante peut avoir beaucoup de variantes potagère\nUne plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)"
     )
-    @OneToMany(mappedBy = "plante")
+    @OneToMany(mappedBy = "planteBotanique")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(
         value = {
@@ -71,7 +71,8 @@ public class Plante implements Serializable {
             "strate",
             "feuillage",
             "nomsVernaculaires",
-            "plante",
+            "classificationCronquist",
+            "planteBotanique",
         },
         allowSetters = true
     )
@@ -115,6 +116,10 @@ public class Plante implements Serializable {
     @JsonIgnoreProperties(value = { "plantes" }, allowSetters = true)
     private Set<NomVernaculaire> nomsVernaculaires = new HashSet<>();
 
+    @JsonIgnoreProperties(value = { "plante" }, allowSetters = true)
+    @OneToOne(mappedBy = "plante")
+    private ClassificationCronquist classificationCronquist;
+
     @ManyToOne
     @JsonIgnoreProperties(
         value = {
@@ -128,11 +133,12 @@ public class Plante implements Serializable {
             "strate",
             "feuillage",
             "nomsVernaculaires",
-            "plante",
+            "classificationCronquist",
+            "planteBotanique",
         },
         allowSetters = true
     )
-    private Plante plante;
+    private Plante planteBotanique;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -269,10 +275,10 @@ public class Plante implements Serializable {
 
     public void setPlantesPotageres(Set<Plante> plantes) {
         if (this.plantesPotageres != null) {
-            this.plantesPotageres.forEach(i -> i.setPlante(null));
+            this.plantesPotageres.forEach(i -> i.setPlanteBotanique(null));
         }
         if (plantes != null) {
-            plantes.forEach(i -> i.setPlante(this));
+            plantes.forEach(i -> i.setPlanteBotanique(this));
         }
         this.plantesPotageres = plantes;
     }
@@ -284,13 +290,13 @@ public class Plante implements Serializable {
 
     public Plante addPlantesPotageres(Plante plante) {
         this.plantesPotageres.add(plante);
-        plante.setPlante(this);
+        plante.setPlanteBotanique(this);
         return this;
     }
 
     public Plante removePlantesPotageres(Plante plante) {
         this.plantesPotageres.remove(plante);
-        plante.setPlante(null);
+        plante.setPlanteBotanique(null);
         return this;
     }
 
@@ -397,16 +403,35 @@ public class Plante implements Serializable {
         return this;
     }
 
-    public Plante getPlante() {
-        return this.plante;
+    public ClassificationCronquist getClassificationCronquist() {
+        return this.classificationCronquist;
     }
 
-    public void setPlante(Plante plante) {
-        this.plante = plante;
+    public void setClassificationCronquist(ClassificationCronquist classificationCronquist) {
+        if (this.classificationCronquist != null) {
+            this.classificationCronquist.setPlante(null);
+        }
+        if (classificationCronquist != null) {
+            classificationCronquist.setPlante(this);
+        }
+        this.classificationCronquist = classificationCronquist;
     }
 
-    public Plante plante(Plante plante) {
-        this.setPlante(plante);
+    public Plante classificationCronquist(ClassificationCronquist classificationCronquist) {
+        this.setClassificationCronquist(classificationCronquist);
+        return this;
+    }
+
+    public Plante getPlanteBotanique() {
+        return this.planteBotanique;
+    }
+
+    public void setPlanteBotanique(Plante plante) {
+        this.planteBotanique = plante;
+    }
+
+    public Plante planteBotanique(Plante plante) {
+        this.setPlanteBotanique(plante);
         return this;
     }
 

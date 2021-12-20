@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
+import fr.syncrase.ecosyst.domain.ClassificationCronquist;
 import fr.syncrase.ecosyst.domain.CycleDeVie;
 import fr.syncrase.ecosyst.domain.Ensoleillement;
 import fr.syncrase.ecosyst.domain.Feuillage;
@@ -802,28 +803,55 @@ class PlanteResourceIT {
 
     @Test
     @Transactional
-    void getAllPlantesByPlanteIsEqualToSomething() throws Exception {
+    void getAllPlantesByClassificationCronquistIsEqualToSomething() throws Exception {
         // Initialize the database
         planteRepository.saveAndFlush(plante);
-        Plante plante;
-        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
-            plante = PlanteResourceIT.createEntity(em);
-            em.persist(plante);
+        ClassificationCronquist classificationCronquist;
+        if (TestUtil.findAll(em, ClassificationCronquist.class).isEmpty()) {
+            classificationCronquist = ClassificationCronquistResourceIT.createEntity(em);
+            em.persist(classificationCronquist);
             em.flush();
         } else {
-            plante = TestUtil.findAll(em, Plante.class).get(0);
+            classificationCronquist = TestUtil.findAll(em, ClassificationCronquist.class).get(0);
         }
-        em.persist(plante);
+        em.persist(classificationCronquist);
         em.flush();
-        plante.setPlante(plante);
+        plante.setClassificationCronquist(classificationCronquist);
+        classificationCronquist.setPlante(plante);
         planteRepository.saveAndFlush(plante);
-        Long planteId = plante.getId();
+        Long classificationCronquistId = classificationCronquist.getId();
 
-        // Get all the planteList where plante equals to planteId
-        defaultPlanteShouldBeFound("planteId.equals=" + planteId);
+        // Get all the planteList where classificationCronquist equals to classificationCronquistId
+        defaultPlanteShouldBeFound("classificationCronquistId.equals=" + classificationCronquistId);
 
-        // Get all the planteList where plante equals to (planteId + 1)
-        defaultPlanteShouldNotBeFound("planteId.equals=" + (planteId + 1));
+        // Get all the planteList where classificationCronquist equals to (classificationCronquistId + 1)
+        defaultPlanteShouldNotBeFound("classificationCronquistId.equals=" + (classificationCronquistId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllPlantesByPlanteBotaniqueIsEqualToSomething() throws Exception {
+        // Initialize the database
+        planteRepository.saveAndFlush(plante);
+        Plante planteBotanique;
+        if (TestUtil.findAll(em, Plante.class).isEmpty()) {
+            planteBotanique = PlanteResourceIT.createEntity(em);
+            em.persist(planteBotanique);
+            em.flush();
+        } else {
+            planteBotanique = TestUtil.findAll(em, Plante.class).get(0);
+        }
+        em.persist(planteBotanique);
+        em.flush();
+        plante.setPlanteBotanique(planteBotanique);
+        planteRepository.saveAndFlush(plante);
+        Long planteBotaniqueId = planteBotanique.getId();
+
+        // Get all the planteList where planteBotanique equals to planteBotaniqueId
+        defaultPlanteShouldBeFound("planteBotaniqueId.equals=" + planteBotaniqueId);
+
+        // Get all the planteList where planteBotanique equals to (planteBotaniqueId + 1)
+        defaultPlanteShouldNotBeFound("planteBotaniqueId.equals=" + (planteBotaniqueId + 1));
     }
 
     /**

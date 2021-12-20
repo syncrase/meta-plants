@@ -34,7 +34,7 @@
     {
       "relationshipType": "one-to-many",
       "otherEntityName": "plante",
-      "otherEntityRelationshipName": "plante",
+      "otherEntityRelationshipName": "planteBotanique",
       "javadoc": "Une plante peut avoir beaucoup de variantes potagère\\nUne plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)",
       "relationshipName": "plantesPotageres"
     },
@@ -84,10 +84,17 @@
       "ownerSide": true
     },
     {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "classificationCronquist",
+      "otherEntityRelationshipName": "plante",
+      "relationshipName": "classificationCronquist",
+      "ownerSide": false
+    },
+    {
       "relationshipType": "many-to-one",
       "otherEntityName": "plante",
       "otherEntityRelationshipName": "plantesPotageres",
-      "relationshipName": "plante"
+      "relationshipName": "planteBotanique"
     }
   ],
   "javadoc": "Une plante est soit une plante botanique qui correspond à une unique classification (et n'est associée à aucune autre plante, elle est unique) soit une plante potagère qui correspond à une unique plante botanique",

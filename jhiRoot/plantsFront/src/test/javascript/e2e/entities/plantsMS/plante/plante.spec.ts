@@ -54,7 +54,7 @@ describe('Plante e2e test', () => {
       planteUpdatePage.strateSelectLastOption(),
       planteUpdatePage.feuillageSelectLastOption(),
       // planteUpdatePage.nomsVernaculairesSelectLastOption(),
-      planteUpdatePage.planteSelectLastOption(),
+      planteUpdatePage.planteBotaniqueSelectLastOption(),
     ]);
 
     await planteUpdatePage.save();

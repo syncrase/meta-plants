@@ -1,0 +1,166 @@
+<div>
+  <h2 id="page-heading" data-cy="ClassificationCronquistHeading">
+    <span>Classification Cronquists</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-classification-cronquist"
+        [routerLink]="['/classification-cronquist/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Classification Cronquist </span>
+      </button>
+    </div>
+  </h2>
+
+  <perma-alert-error></perma-alert-error>
+
+  <perma-alert></perma-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="classificationCronquists?.length === 0">
+    <span>No classificationCronquists found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="classificationCronquists && classificationCronquists.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr permaSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" permaSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superRegne"><span>Super Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="regne"><span>Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousRegne"><span>Sous Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="rameau"><span>Rameau</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraRegne"><span>Infra Regne</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superEmbranchement"><span>Super Embranchement</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="division"><span>Division</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousEmbranchement"><span>Sous Embranchement</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraEmbranchement"><span>Infra Embranchement</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="microEmbranchement"><span>Micro Embranchement</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superClasse"><span>Super Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="classe"><span>Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousClasse"><span>Sous Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraClasse"><span>Infra Classe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superOrdre"><span>Super Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="ordre"><span>Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousOrdre"><span>Sous Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="infraOrdre"><span>Infra Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="microOrdre"><span>Micro Ordre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="superFamille"><span>Super Famille</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="famille"><span>Famille</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousFamille"><span>Sous Famille</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="tribu"><span>Tribu</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousTribu"><span>Sous Tribu</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="genre"><span>Genre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousGenre"><span>Sous Genre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="section"><span>Section</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousSection"><span>Sous Section</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="espece"><span>Espece</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousEspece"><span>Sous Espece</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="variete"><span>Variete</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="sousVariete"><span>Sous Variete</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="forme"><span>Forme</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" permaSortBy="plante.id"><span>Plante</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let classificationCronquist of classificationCronquists; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/classification-cronquist', classificationCronquist.id, 'view']">{{ classificationCronquist.id }}</a>
+          </td>
+          <td>{{ classificationCronquist.superRegne }}</td>
+          <td>{{ classificationCronquist.regne }}</td>
+          <td>{{ classificationCronquist.sousRegne }}</td>
+          <td>{{ classificationCronquist.rameau }}</td>
+          <td>{{ classificationCronquist.infraRegne }}</td>
+          <td>{{ classificationCronquist.superEmbranchement }}</td>
+          <td>{{ classificationCronquist.division }}</td>
+          <td>{{ classificationCronquist.sousEmbranchement }}</td>
+          <td>{{ classificationCronquist.infraEmbranchement }}</td>
+          <td>{{ classificationCronquist.microEmbranchement }}</td>
+          <td>{{ classificationCronquist.superClasse }}</td>
+          <td>{{ classificationCronquist.classe }}</td>
+          <td>{{ classificationCronquist.sousClasse }}</td>
+          <td>{{ classificationCronquist.infraClasse }}</td>
+          <td>{{ classificationCronquist.superOrdre }}</td>
+          <td>{{ classificationCronquist.ordre }}</td>
+          <td>{{ classificationCronquist.sousOrdre }}</td>
+          <td>{{ classificationCronquist.infraOrdre }}</td>
+          <td>{{ classificationCronquist.microOrdre }}</td>
+          <td>{{ classificationCronquist.superFamille }}</td>
+          <td>{{ classificationCronquist.famille }}</td>
+          <td>{{ classificationCronquist.sousFamille }}</td>
+          <td>{{ classificationCronquist.tribu }}</td>
+          <td>{{ classificationCronquist.sousTribu }}</td>
+          <td>{{ classificationCronquist.genre }}</td>
+          <td>{{ classificationCronquist.sousGenre }}</td>
+          <td>{{ classificationCronquist.section }}</td>
+          <td>{{ classificationCronquist.sousSection }}</td>
+          <td>{{ classificationCronquist.espece }}</td>
+          <td>{{ classificationCronquist.sousEspece }}</td>
+          <td>{{ classificationCronquist.variete }}</td>
+          <td>{{ classificationCronquist.sousVariete }}</td>
+          <td>{{ classificationCronquist.forme }}</td>
+          <td>
+            <div *ngIf="classificationCronquist.plante">
+              <a [routerLink]="['/plante', classificationCronquist.plante?.id, 'view']">{{ classificationCronquist.plante?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/classification-cronquist', classificationCronquist.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/classification-cronquist', classificationCronquist.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(classificationCronquist)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="classificationCronquists && classificationCronquists.length > 0">
+    <div class="row justify-content-center">
+      <perma-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></perma-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

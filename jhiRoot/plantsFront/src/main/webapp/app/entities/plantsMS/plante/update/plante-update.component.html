@@ -147,11 +147,19 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" for="field_plante">Plante</label>
-          <select class="form-control" id="field_plante" data-cy="plante" name="plante" formControlName="plante">
+          <label class="form-control-label" for="field_planteBotanique">Plante Botanique</label>
+          <select
+            class="form-control"
+            id="field_planteBotanique"
+            data-cy="planteBotanique"
+            name="planteBotanique"
+            formControlName="planteBotanique"
+          >
             <option [ngValue]="null"></option>
             <option
-              [ngValue]="planteOption.id === editForm.get('plante')!.value?.id ? editForm.get('plante')!.value : planteOption"
+              [ngValue]="
+                planteOption.id === editForm.get('planteBotanique')!.value?.id ? editForm.get('planteBotanique')!.value : planteOption
+              "
               *ngFor="let planteOption of plantesSharedCollection; trackBy: trackPlanteById"
             >
               {{ planteOption.id }}

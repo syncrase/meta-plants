@@ -1,0 +1,159 @@
+{
+  "name": "ClassificationCronquist",
+  "fields": [
+    {
+      "fieldName": "superRegne",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "regne",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousRegne",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "rameau",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "infraRegne",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "superEmbranchement",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "division",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousEmbranchement",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "infraEmbranchement",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "microEmbranchement",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "superClasse",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "classe",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousClasse",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "infraClasse",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "superOrdre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ordre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousOrdre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "infraOrdre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "microOrdre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "superFamille",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "famille",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousFamille",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tribu",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousTribu",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "genre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousGenre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "section",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousSection",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "espece",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousEspece",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "variete",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sousVariete",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "forme",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "plante",
+      "otherEntityRelationshipName": "classificationCronquist",
+      "relationshipName": "plante",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "classification_cronquist",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "plantsMS"],
+  "microserviceName": "plantsMS",
+  "clientRootFolder": "plantsMS",
+  "databaseType": "sql",
+  "changelogDate": "20211220154230"
+}

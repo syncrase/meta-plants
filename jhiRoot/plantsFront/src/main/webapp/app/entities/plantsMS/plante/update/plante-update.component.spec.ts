@@ -65,12 +65,12 @@ describe('Plante Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call Plante query and add missing value', () => {
       const plante: IPlante = { id: 456 };
-      const plante: IPlante = { id: 85393 };
-      plante.plante = plante;
+      const planteBotanique: IPlante = { id: 85393 };
+      plante.planteBotanique = planteBotanique;
 
       const planteCollection: IPlante[] = [{ id: 40948 }];
       jest.spyOn(planteService, 'query').mockReturnValue(of(new HttpResponse({ body: planteCollection })));
-      const additionalPlantes = [plante];
+      const additionalPlantes = [planteBotanique];
       const expectedCollection: IPlante[] = [...additionalPlantes, ...planteCollection];
       jest.spyOn(planteService, 'addPlanteToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -220,8 +220,8 @@ describe('Plante Management Update Component', () => {
 
     it('Should update editForm', () => {
       const plante: IPlante = { id: 456 };
-      const plante: IPlante = { id: 67581 };
-      plante.plante = plante;
+      const planteBotanique: IPlante = { id: 67581 };
+      plante.planteBotanique = planteBotanique;
       const cycleDeVie: ICycleDeVie = { id: 2310 };
       plante.cycleDeVie = cycleDeVie;
       const sol: ISol = { id: 687 };
@@ -241,7 +241,7 @@ describe('Plante Management Update Component', () => {
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(plante));
-      expect(comp.plantesSharedCollection).toContain(plante);
+      expect(comp.plantesSharedCollection).toContain(planteBotanique);
       expect(comp.cycleDeViesSharedCollection).toContain(cycleDeVie);
       expect(comp.solsSharedCollection).toContain(sol);
       expect(comp.temperaturesSharedCollection).toContain(temperature);

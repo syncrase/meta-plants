@@ -100,6 +100,12 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'CycleDeVies' },
         loadChildren: () => import('./plantsMS/cycle-de-vie/cycle-de-vie.module').then(m => m.PlantsMsCycleDeVieModule),
       },
+      {
+        path: 'classification-cronquist',
+        data: { pageTitle: 'ClassificationCronquists' },
+        loadChildren: () =>
+          import('./plantsMS/classification-cronquist/classification-cronquist.module').then(m => m.PlantsMsClassificationCronquistModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

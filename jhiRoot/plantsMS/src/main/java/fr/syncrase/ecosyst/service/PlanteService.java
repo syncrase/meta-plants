@@ -1,6 +1,7 @@
 package fr.syncrase.ecosyst.service;
 
 import fr.syncrase.ecosyst.domain.Plante;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,12 @@ public interface PlanteService {
      * @return the list of entities.
      */
     Page<Plante> findAll(Pageable pageable);
+    /**
+     * Get all the Plante where ClassificationCronquist is {@code null}.
+     *
+     * @return the {@link List} of entities.
+     */
+    List<Plante> findAllWhereClassificationCronquistIsNull();
 
     /**
      * Get all the plantes with eager load of many-to-many relationships.

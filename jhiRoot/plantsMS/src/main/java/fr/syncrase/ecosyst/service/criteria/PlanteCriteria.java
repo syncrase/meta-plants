@@ -54,7 +54,9 @@ public class PlanteCriteria implements Serializable, Criteria {
 
     private LongFilter nomsVernaculairesId;
 
-    private LongFilter planteId;
+    private LongFilter classificationCronquistId;
+
+    private LongFilter planteBotaniqueId;
 
     private Boolean distinct;
 
@@ -76,7 +78,8 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.strateId = other.strateId == null ? null : other.strateId.copy();
         this.feuillageId = other.feuillageId == null ? null : other.feuillageId.copy();
         this.nomsVernaculairesId = other.nomsVernaculairesId == null ? null : other.nomsVernaculairesId.copy();
-        this.planteId = other.planteId == null ? null : other.planteId.copy();
+        this.classificationCronquistId = other.classificationCronquistId == null ? null : other.classificationCronquistId.copy();
+        this.planteBotaniqueId = other.planteBotaniqueId == null ? null : other.planteBotaniqueId.copy();
         this.distinct = other.distinct;
     }
 
@@ -310,19 +313,34 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.nomsVernaculairesId = nomsVernaculairesId;
     }
 
-    public LongFilter getPlanteId() {
-        return planteId;
+    public LongFilter getClassificationCronquistId() {
+        return classificationCronquistId;
     }
 
-    public LongFilter planteId() {
-        if (planteId == null) {
-            planteId = new LongFilter();
+    public LongFilter classificationCronquistId() {
+        if (classificationCronquistId == null) {
+            classificationCronquistId = new LongFilter();
         }
-        return planteId;
+        return classificationCronquistId;
     }
 
-    public void setPlanteId(LongFilter planteId) {
-        this.planteId = planteId;
+    public void setClassificationCronquistId(LongFilter classificationCronquistId) {
+        this.classificationCronquistId = classificationCronquistId;
+    }
+
+    public LongFilter getPlanteBotaniqueId() {
+        return planteBotaniqueId;
+    }
+
+    public LongFilter planteBotaniqueId() {
+        if (planteBotaniqueId == null) {
+            planteBotaniqueId = new LongFilter();
+        }
+        return planteBotaniqueId;
+    }
+
+    public void setPlanteBotaniqueId(LongFilter planteBotaniqueId) {
+        this.planteBotaniqueId = planteBotaniqueId;
     }
 
     public Boolean getDistinct() {
@@ -358,7 +376,8 @@ public class PlanteCriteria implements Serializable, Criteria {
             Objects.equals(strateId, that.strateId) &&
             Objects.equals(feuillageId, that.feuillageId) &&
             Objects.equals(nomsVernaculairesId, that.nomsVernaculairesId) &&
-            Objects.equals(planteId, that.planteId) &&
+            Objects.equals(classificationCronquistId, that.classificationCronquistId) &&
+            Objects.equals(planteBotaniqueId, that.planteBotaniqueId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -381,7 +400,8 @@ public class PlanteCriteria implements Serializable, Criteria {
             strateId,
             feuillageId,
             nomsVernaculairesId,
-            planteId,
+            classificationCronquistId,
+            planteBotaniqueId,
             distinct
         );
     }
@@ -405,7 +425,8 @@ public class PlanteCriteria implements Serializable, Criteria {
             (strateId != null ? "strateId=" + strateId + ", " : "") +
             (feuillageId != null ? "feuillageId=" + feuillageId + ", " : "") +
             (nomsVernaculairesId != null ? "nomsVernaculairesId=" + nomsVernaculairesId + ", " : "") +
-            (planteId != null ? "planteId=" + planteId + ", " : "") +
+            (classificationCronquistId != null ? "classificationCronquistId=" + classificationCronquistId + ", " : "") +
+            (planteBotaniqueId != null ? "planteBotaniqueId=" + planteBotaniqueId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

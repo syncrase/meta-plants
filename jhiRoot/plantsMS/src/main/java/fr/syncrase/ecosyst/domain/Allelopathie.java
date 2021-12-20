@@ -49,7 +49,8 @@ public class Allelopathie implements Serializable {
             "strate",
             "feuillage",
             "nomsVernaculaires",
-            "plante",
+            "classificationCronquist",
+            "planteBotanique",
         },
         allowSetters = true
     )
@@ -69,7 +70,8 @@ public class Allelopathie implements Serializable {
             "strate",
             "feuillage",
             "nomsVernaculaires",
-            "plante",
+            "classificationCronquist",
+            "planteBotanique",
         },
         allowSetters = true
     )

@@ -44,7 +44,7 @@
             <column name="feuillage_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="plante_id" type="bigint">
+            <column name="plante_botanique_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
