@@ -39,7 +39,6 @@ public class Allelopathie implements Serializable {
     @NotNull
     @JsonIgnoreProperties(
         value = {
-            "classification",
             "confusions",
             "ensoleillements",
             "plantesPotageres",
@@ -60,7 +59,6 @@ public class Allelopathie implements Serializable {
     @NotNull
     @JsonIgnoreProperties(
         value = {
-            "classification",
             "confusions",
             "ensoleillements",
             "plantesPotageres",

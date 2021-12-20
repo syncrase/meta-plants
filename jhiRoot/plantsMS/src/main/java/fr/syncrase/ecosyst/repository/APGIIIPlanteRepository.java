@@ -1,6 +1,5 @@
 package fr.syncrase.ecosyst.repository;
 
-import fr.syncrase.ecosyst.domain.APGIIIPlante;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

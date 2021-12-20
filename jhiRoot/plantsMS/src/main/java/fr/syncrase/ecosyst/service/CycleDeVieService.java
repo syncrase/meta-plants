@@ -1,57 +1,29 @@
 package fr.syncrase.ecosyst.service;
 
 import fr.syncrase.ecosyst.domain.CycleDeVie;
-import fr.syncrase.ecosyst.repository.CycleDeVieRepository;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link CycleDeVie}.
+ * Service Interface for managing {@link CycleDeVie}.
  */
-@Service
-@Transactional
-public class CycleDeVieService {
-
-    private final Logger log = LoggerFactory.getLogger(CycleDeVieService.class);
-
-    private final CycleDeVieRepository cycleDeVieRepository;
-
-    public CycleDeVieService(CycleDeVieRepository cycleDeVieRepository) {
-        this.cycleDeVieRepository = cycleDeVieRepository;
-    }
-
+public interface CycleDeVieService {
     /**
      * Save a cycleDeVie.
      *
      * @param cycleDeVie the entity to save.
      * @return the persisted entity.
      */
-    public CycleDeVie save(CycleDeVie cycleDeVie) {
-        log.debug("Request to save CycleDeVie : {}", cycleDeVie);
-        return cycleDeVieRepository.save(cycleDeVie);
-    }
+    CycleDeVie save(CycleDeVie cycleDeVie);
 
     /**
-     * Partially update a cycleDeVie.
+     * Partially updates a cycleDeVie.
      *
      * @param cycleDeVie the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<CycleDeVie> partialUpdate(CycleDeVie cycleDeVie) {
-        log.debug("Request to partially update CycleDeVie : {}", cycleDeVie);
-
-        return cycleDeVieRepository
-            .findById(cycleDeVie.getId())
-            .map(existingCycleDeVie -> {
-                return existingCycleDeVie;
-            })
-            .map(cycleDeVieRepository::save);
-    }
+    Optional<CycleDeVie> partialUpdate(CycleDeVie cycleDeVie);
 
     /**
      * Get all the cycleDeVies.
@@ -59,31 +31,20 @@ public class CycleDeVieService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    @Transactional(readOnly = true)
-    public Page<CycleDeVie> findAll(Pageable pageable) {
-        log.debug("Request to get all CycleDeVies");
-        return cycleDeVieRepository.findAll(pageable);
-    }
+    Page<CycleDeVie> findAll(Pageable pageable);
 
     /**
-     * Get one cycleDeVie by id.
+     * Get the "id" cycleDeVie.
      *
      * @param id the id of the entity.
      * @return the entity.
      */
-    @Transactional(readOnly = true)
-    public Optional<CycleDeVie> findOne(Long id) {
-        log.debug("Request to get CycleDeVie : {}", id);
-        return cycleDeVieRepository.findById(id);
-    }
+    Optional<CycleDeVie> findOne(Long id);
 
     /**
-     * Delete the cycleDeVie by id.
+     * Delete the "id" cycleDeVie.
      *
      * @param id the id of the entity.
      */
-    public void delete(Long id) {
-        log.debug("Request to delete CycleDeVie : {}", id);
-        cycleDeVieRepository.deleteById(id);
-    }
+    void delete(Long id);
 }

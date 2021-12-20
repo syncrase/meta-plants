@@ -68,7 +68,7 @@ application {
         embeddableLaunchScript false,
     }
     
-    //entities Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis
+    entities Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis
 }
 
 application {
@@ -100,7 +100,7 @@ application {
         embeddableLaunchScript false,
     }
     
-    //entities Url, CronquistRank
+    entities Url, CronquistRank
 }
 
 // https://www.jhipster.tech/jdl/deployments
@@ -109,57 +109,6 @@ deployment {
     dockerRepositoryName "dockerRepo"
     appsFolders [plantsFront, plantsMS, classificationMS]
 }
-
-
-    
-//***********************************************************
-//***********************************************************
-// CRONQUIST, PlantsMS : Shared entities
-//***********************************************************
-//***********************************************************
-
-/**
-* Entité partagé pour communiquer sur l'arborescence
-*/
-entity CronquistPlante {
-    superRegne String,
-    regne String,
-    sousRegne String,
-    rameau String,
-    infraRegne String,
-    superEmbranchement String,
-    division String,
-    sousEmbranchement String,
-    infraEmbranchement String,
-    microEmbranchement String,
-    superClasse String,
-    classe String,
-    sousClasse String,
-    infraClasse String,
-    superOrdre String,
-    ordre String,
-    sousOrdre String,
-    infraOrdre String,
-    microOrdre String,
-    superFamille String,
-    famille String,
-    sousFamille String,
-    tribu String,
-    sousTribu String,
-    genre String,
-    sousGenre String,
-    section String,
-    sousSection String,
-    espece String,
-    sousEspece String,
-    variete String,
-    sousVariete String,
-    forme String,
-}
-
-entity Classification {
-}
-
 
 //***********************************************************
 //***********************************************************
@@ -201,41 +150,6 @@ entity NomVernaculaire {
     nom String required,
     description String
 }
-
-entity Classification {
-}
-
-//entity RaunkierPlante {
-//    type String required
-//}
-//
-//entity Clade {
-//    nom String required
-//}
-//
-//entity APGIPlante {
-//    ordre String required,
-//    famille String required
-//}
-//
-//entity APGIIPlante {
-//    ordre String required,
-//    famille String required
-//}
-//
-//entity APGIIIPlante {
-//    ordre String required,
-//    famille String required,
-//    sousFamille String required,
-//    tribu String,
-//    sousTribu String,
-//    genre String required
-//}
-//
-//entity APGIVPlante {
-//    ordre String required // ENUM
-//    famille String required // ENUM
-//}
 
 entity Semis {
 
@@ -347,29 +261,11 @@ entity Url {
     url String required
 }
 
-
 //***********************************************************
 //***********************************************************
 // PlantsMS associations
 //***********************************************************
 //***********************************************************
-
-
-relationship OneToOne {
-    //Classification{raunkier} to RaunkierPlante,
-    Classification{cronquist} to CronquistPlante,
-    //Classification{apg1} to APGIPlante,
-    //Classification{apg2} to APGIIPlante,
-    //Classification{apg3} to APGIIIPlante,
-    //Classification{apg4} to APGIVPlante,
-    /** 
-    * Une plante ne correspond qu'à une seule classification
-    * Mais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes
-    * Mais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique
-    */
-    Plante{classification} to Classification{plante},
-    
-}
 
 relationship OneToMany {
     // TODO gestion de la ressemblance
@@ -435,8 +331,6 @@ relationship ManyToOne {
 //***********************************************************
 //***********************************************************
 
-
-
 relationship OneToMany {
     CronquistRank{children(nomFr)} to CronquistRank{parent(nomFr)},
     CronquistRank{urls} to Url,
@@ -444,18 +338,20 @@ relationship OneToMany {
 
 }
 
+//***********************************************************
+//***********************************************************
+// Global options
+//***********************************************************
+//***********************************************************
 
-//, CronquistPlante, Classification
-microservice Url, CronquistRank, CronquistPlante, Classification with classificationMS
+microservice Url, CronquistRank with classificationMS
 
-microservice Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, CronquistPlante, Classification with plantsMS
+microservice Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis with plantsMS
 
 
 paginate * with pagination
-// dto * with mapstruct
 filter *
 service * with serviceImpl
-// use mapstruct, serviceImpl, pagination for all
 
 
 

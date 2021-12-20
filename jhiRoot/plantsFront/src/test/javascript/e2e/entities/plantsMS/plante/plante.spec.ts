@@ -47,7 +47,6 @@ describe('Plante e2e test', () => {
       planteUpdatePage.setHistoireInput('histoire'),
       planteUpdatePage.setVitesseCroissanceInput('vitesseCroissance'),
       planteUpdatePage.setExpositionInput('exposition'),
-      planteUpdatePage.classificationSelectLastOption(),
       planteUpdatePage.cycleDeVieSelectLastOption(),
       planteUpdatePage.solSelectLastOption(),
       planteUpdatePage.temperatureSelectLastOption(),

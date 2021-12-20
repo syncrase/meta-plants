@@ -35,7 +35,6 @@ export class PlanteUpdatePage {
   vitesseCroissanceInput = element(by.id('field_vitesseCroissance'));
   expositionInput = element(by.id('field_exposition'));
 
-  classificationSelect = element(by.id('field_classification'));
   cycleDeVieSelect = element(by.id('field_cycleDeVie'));
   solSelect = element(by.id('field_sol'));
   temperatureSelect = element(by.id('field_temperature'));
@@ -87,22 +86,6 @@ export class PlanteUpdatePage {
 
   async getExpositionInput(): Promise<string> {
     return await this.expositionInput.getAttribute('value');
-  }
-
-  async classificationSelectLastOption(): Promise<void> {
-    await this.classificationSelect.all(by.tagName('option')).last().click();
-  }
-
-  async classificationSelectOption(option: string): Promise<void> {
-    await this.classificationSelect.sendKeys(option);
-  }
-
-  getClassificationSelect(): ElementFinder {
-    return this.classificationSelect;
-  }
-
-  async getClassificationSelectedOption(): Promise<string> {
-    return await this.classificationSelect.element(by.css('option:checked')).getText();
   }
 
   async cycleDeVieSelectLastOption(): Promise<void> {

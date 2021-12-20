@@ -9,8 +9,6 @@ import { of, Subject } from 'rxjs';
 
 import { PlanteService } from '../service/plante.service';
 import { IPlante, Plante } from '../plante.model';
-import { IClassification } from 'app/entities/plantsMS/classification/classification.model';
-import { ClassificationService } from 'app/entities/plantsMS/classification/service/classification.service';
 import { ICycleDeVie } from 'app/entities/plantsMS/cycle-de-vie/cycle-de-vie.model';
 import { CycleDeVieService } from 'app/entities/plantsMS/cycle-de-vie/service/cycle-de-vie.service';
 import { ISol } from 'app/entities/plantsMS/sol/sol.model';
@@ -33,7 +31,6 @@ describe('Plante Management Update Component', () => {
   let fixture: ComponentFixture<PlanteUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let planteService: PlanteService;
-  let classificationService: ClassificationService;
   let cycleDeVieService: CycleDeVieService;
   let solService: SolService;
   let temperatureService: TemperatureService;
@@ -54,7 +51,6 @@ describe('Plante Management Update Component', () => {
     fixture = TestBed.createComponent(PlanteUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
     planteService = TestBed.inject(PlanteService);
-    classificationService = TestBed.inject(ClassificationService);
     cycleDeVieService = TestBed.inject(CycleDeVieService);
     solService = TestBed.inject(SolService);
     temperatureService = TestBed.inject(TemperatureService);
@@ -67,24 +63,6 @@ describe('Plante Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call classification query and add missing value', () => {
-      const plante: IPlante = { id: 456 };
-      const classification: IClassification = { id: 65054 };
-      plante.classification = classification;
-
-      const classificationCollection: IClassification[] = [{ id: 69779 }];
-      jest.spyOn(classificationService, 'query').mockReturnValue(of(new HttpResponse({ body: classificationCollection })));
-      const expectedCollection: IClassification[] = [classification, ...classificationCollection];
-      jest.spyOn(classificationService, 'addClassificationToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ plante });
-      comp.ngOnInit();
-
-      expect(classificationService.query).toHaveBeenCalled();
-      expect(classificationService.addClassificationToCollectionIfMissing).toHaveBeenCalledWith(classificationCollection, classification);
-      expect(comp.classificationsCollection).toEqual(expectedCollection);
-    });
-
     it('Should call Plante query and add missing value', () => {
       const plante: IPlante = { id: 456 };
       const plante: IPlante = { id: 85393 };
@@ -242,8 +220,6 @@ describe('Plante Management Update Component', () => {
 
     it('Should update editForm', () => {
       const plante: IPlante = { id: 456 };
-      const classification: IClassification = { id: 62985 };
-      plante.classification = classification;
       const plante: IPlante = { id: 67581 };
       plante.plante = plante;
       const cycleDeVie: ICycleDeVie = { id: 2310 };
@@ -265,7 +241,6 @@ describe('Plante Management Update Component', () => {
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(plante));
-      expect(comp.classificationsCollection).toContain(classification);
       expect(comp.plantesSharedCollection).toContain(plante);
       expect(comp.cycleDeViesSharedCollection).toContain(cycleDeVie);
       expect(comp.solsSharedCollection).toContain(sol);
@@ -342,14 +317,6 @@ describe('Plante Management Update Component', () => {
   });
 
   describe('Tracking relationships identifiers', () => {
-    describe('trackClassificationById', () => {
-      it('Should return tracked Classification primary key', () => {
-        const entity = { id: 123 };
-        const trackResult = comp.trackClassificationById(0, entity);
-        expect(trackResult).toEqual(entity.id);
-      });
-    });
-
     describe('trackPlanteById', () => {
       it('Should return tracked Plante primary key', () => {
         const entity = { id: 123 };

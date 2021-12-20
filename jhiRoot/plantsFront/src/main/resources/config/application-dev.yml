@@ -47,7 +47,7 @@ spring:
       # it can be set to any label, branch or commit of the configuration source Git repository
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
+    contexts: dev
     url: jdbc:postgresql://localhost:5432/plantsfront
   mail:
     host: localhost
@@ -102,7 +102,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: ZTg2ODhhMTM3YzA2N2Y0MTVmYjE2YjFmNzgzMjNjNDYyNzI3MDFhMWFlZjc0NmUwMDQyNmM3ODQ0Y2IyOWZjNTRkNDZjMDYzZjYyMzk3MzVlYWY0YjU0Yzg0Yzk2MjdlNWNhNTkyYWZmODFhZWJmZTQ0NjA2M2Q1ZTQ2NzA3NDY=
+        base64-secret: OGMxYjgzN2EzMDFhY2U4OTUyZDE5NWUwMDlkYWQyOTM3NTY5M2UwOTUyZGQ2YWY1ODAyODgyNTYyOWY4NGFlOTg3OTZhYjlhOTY5MzJhNmRmY2JhMGM0ODkxNDRmOGE0NDM1OGJlYjRmNjA5ZGE3MzU1MTczNTZiMjhhODllZjc=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

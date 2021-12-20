@@ -20,14 +20,6 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "classification",
-      "otherEntityRelationshipName": "plante",
-      "javadoc": "Une plante ne correspond qu'à une seule classification\\nMais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes\\nMais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique",
-      "relationshipName": "classification",
-      "ownerSide": true
-    },
-    {
       "relationshipType": "one-to-many",
       "otherEntityName": "ressemblance",
       "otherEntityRelationshipName": "planteRessemblant",
@@ -102,7 +94,7 @@
   "entityTableName": "plante",
   "dto": "no",
   "pagination": "pagination",
-  "service": "serviceClass",
+  "service": "serviceImpl",
   "jpaMetamodelFiltering": true,
   "fluentMethods": true,
   "readOnly": false,
@@ -111,5 +103,5 @@
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211212183100"
+  "changelogDate": "20211219174831"
 }

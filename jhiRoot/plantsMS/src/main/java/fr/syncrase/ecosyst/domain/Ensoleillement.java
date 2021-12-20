@@ -31,7 +31,6 @@ public class Ensoleillement implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(
         value = {
-            "classification",
             "confusions",
             "ensoleillements",
             "plantesPotageres",

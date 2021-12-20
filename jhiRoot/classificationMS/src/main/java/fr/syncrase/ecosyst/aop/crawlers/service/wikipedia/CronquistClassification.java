@@ -1,737 +1,492 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.wrappers.*;
-import fr.syncrase.ecosyst.domain.*;
+import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService.DEFAULT_NAME_FOR_CONNECTOR_RANK;
 
-@Component
 public class CronquistClassification {
 
     private final Logger log = LoggerFactory.getLogger(CronquistClassification.class);
 
-    private SuperRegne superRegne;
-    private Regne regne;
-    private SousRegne sousRegne;
-    private Rameau rameau;
-    private InfraRegne infraRegne;
-    private SuperDivision superDivision;
-    private Division division;
-    private SousDivision sousDivision;
-    private InfraEmbranchement infraEmbranchement;
-    private MicroEmbranchement microEmbranchement;
-    private SuperClasse superClasse;
-    private Classe classe;
-    private SousClasse sousClasse;
-    private InfraClasse infraClasse;
-    private SuperOrdre superOrdre;
-    private Ordre ordre;
-    private SousOrdre sousOrdre;
-    private InfraOrdre infraOrdre;
-    private MicroOrdre microOrdre;
-    private SuperFamille superFamille;
-    private Famille famille;
-    private SousFamille sousFamille;
-    private Tribu tribu;
-    private SousTribu sousTribu;
-    private Genre genre;
-    private SousGenre sousGenre;
-    private Section section;
-    private SousSection sousSection;
-    private Espece espece;
-    private SousEspece sousEspece;
-    private Variete variete;
-    private SousVariete sousVariete;
-    private Forme forme;
-    private SousForme sousForme;
+    /**
+     * Liste de tous les rangs de la classification<br>
+     * L'élément 0 est le rang le plus haut : le super règne
+     */
+    private List<CronquistRank> classificationCronquist;
+    private CronquistRank superRegne;
+    private CronquistRank regne;
+    private CronquistRank sousRegne;
+    private CronquistRank rameau;
+    private CronquistRank infraRegne;
+    private CronquistRank superEmbranchement;
+    private CronquistRank embranchement;
+    private CronquistRank sousEmbranchement;
+    private CronquistRank infraEmbranchement;
+    private CronquistRank microEmbranchement;
+    private CronquistRank superClasse;
+    private CronquistRank classe;
+    private CronquistRank sousClasse;
+    private CronquistRank infraClasse;
+    private CronquistRank superOrdre;
+    private CronquistRank ordre;
+    private CronquistRank sousOrdre;
+    private CronquistRank infraOrdre;
+    private CronquistRank microOrdre;
+    private CronquistRank superFamille;
+    private CronquistRank famille;
+    private CronquistRank sousFamille;
+    private CronquistRank tribu;
+    private CronquistRank sousTribu;
+    private CronquistRank genre;
+    private CronquistRank sousGenre;
+    private CronquistRank section;
+    private CronquistRank sousSection;
+    private CronquistRank espece;
+    private CronquistRank sousEspece;
+    private CronquistRank variete;
+    private CronquistRank sousVariete;
+    private CronquistRank forme;
+    private CronquistRank sousForme;
 
+    /**
+     * Construit une classification vierge
+     */
     public CronquistClassification() {
-        // Descendance
-        this.sousForme = new SousForme().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.forme = new Forme().addSousFormes(sousForme).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousVariete = new SousVariete().addFormes(forme).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.variete = new Variete().addSousVarietes(sousVariete).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousEspece = new SousEspece().addVarietes(variete).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.espece = new Espece().addSousEspeces(sousEspece).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousSection = new SousSection().addEspeces(espece).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.section = new Section().addSousSections(sousSection).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousGenre = new SousGenre().addSections(section).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.genre = new Genre().addSousGenres(sousGenre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousTribu = new SousTribu().addGenres(genre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.tribu = new Tribu().addSousTribus(sousTribu).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousFamille = new SousFamille().addTribus(tribu).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.famille = new Famille().addSousFamilles(sousFamille).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superFamille = new SuperFamille().addFamilles(famille).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.microOrdre = new MicroOrdre().addSuperFamilles(superFamille).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraOrdre = new InfraOrdre().addMicroOrdres(microOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousOrdre = new SousOrdre().addInfraOrdres(infraOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.ordre = new Ordre().addSousOrdres(sousOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superOrdre = new SuperOrdre().addOrdres(ordre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraClasse = new InfraClasse().addSuperOrdres(superOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousClasse = new SousClasse().addInfraClasses(infraClasse).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.classe = new Classe().addSousClasses(sousClasse).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superClasse = new SuperClasse().addClasses(classe).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.microEmbranchement = new MicroEmbranchement().addSuperClasses(superClasse).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraEmbranchement = new InfraEmbranchement().addMicroEmbranchements(microEmbranchement).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousDivision = new SousDivision().addInfraEmbranchements(infraEmbranchement).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.division = new Division().addSousDivisions(sousDivision).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superDivision = new SuperDivision().addDivisions(division).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraRegne = new InfraRegne().addSuperDivisions(superDivision).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.rameau = new Rameau().addInfraRegnes(infraRegne).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousRegne = new SousRegne().addRameaus(rameau).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.regne = new Regne().addSousRegnes(sousRegne).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superRegne = new SuperRegne().addRegnes(regne).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-
-        // Ascendance
-        this.regne.setSuperRegne(superRegne);
-        this.sousRegne.setRegne(regne);
-        this.rameau.setSousRegne(sousRegne);
-        this.infraRegne.setRameau(rameau);
-        this.superDivision.setInfraRegne(infraRegne);
-        this.division.setSuperDivision(superDivision);
-        this.sousDivision.setDivision(division);
-        this.infraEmbranchement.setSousDivision(sousDivision);
-        this.microEmbranchement.setInfraEmbranchement(infraEmbranchement);
-        this.superClasse.setMicroEmbranchement(microEmbranchement);
-        this.classe.setSuperClasse(superClasse);
-        this.sousClasse.setClasse(classe);
-        this.infraClasse.setSousClasse(sousClasse);
-        this.superOrdre.setInfraClasse(infraClasse);
-        this.ordre.setSuperOrdre(superOrdre);
-        this.sousOrdre.setOrdre(ordre);
-        this.infraOrdre.setSousOrdre(sousOrdre);
-        this.microOrdre.setInfraOrdre(infraOrdre);
-        this.superFamille.setMicroOrdre(microOrdre);
-        this.famille.setSuperFamille(superFamille);
-        this.sousFamille.setFamille(famille);
-        this.tribu.setSousFamille(sousFamille);
-        this.sousTribu.setTribu(tribu);
-        this.genre.setSousTribu(sousTribu);
-        this.sousGenre.setGenre(genre);
-        this.section.setSousGenre(sousGenre);
-        this.sousSection.setSection(section);
-        this.espece.setSousSection(sousSection);
-        this.sousEspece.setEspece(espece);
-        this.variete.setSousEspece(sousEspece);
-        this.sousVariete.setVariete(variete);
-        this.forme.setSousVariete(sousVariete);
-        this.sousForme.setForme(forme);
+        initClassification();
     }
 
+    /**
+     * Construit une classification à partir d'une arborescence déjà existante
+     *
+     */
     public CronquistClassification(@NotNull CronquistRank cronquistRank) {
-        CronquistRank currentRank;
-        while (cronquistRank.get() != null) {
-            currentRank = cronquistRank.get();
-            // Make things with the current rank
-            currentRank = currentRank.getParent();
-        }
-        if (cronquistRank.get() instanceof SousForme) {
-            this.sousForme = (SousForme) cronquistRank.get();
-        }
-        // Descendance
-        this.forme = new Forme().addSousFormes(sousForme).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousVariete = new SousVariete().addFormes(forme).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.variete = new Variete().addSousVarietes(sousVariete).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousEspece = new SousEspece().addVarietes(variete).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.espece = new Espece().addSousEspeces(sousEspece).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousSection = new SousSection().addEspeces(espece).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.section = new Section().addSousSections(sousSection).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousGenre = new SousGenre().addSections(section).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.genre = new Genre().addSousGenres(sousGenre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousTribu = new SousTribu().addGenres(genre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.tribu = new Tribu().addSousTribus(sousTribu).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousFamille = new SousFamille().addTribus(tribu).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.famille = new Famille().addSousFamilles(sousFamille).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superFamille = new SuperFamille().addFamilles(famille).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.microOrdre = new MicroOrdre().addSuperFamilles(superFamille).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraOrdre = new InfraOrdre().addMicroOrdres(microOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousOrdre = new SousOrdre().addInfraOrdres(infraOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.ordre = new Ordre().addSousOrdres(sousOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superOrdre = new SuperOrdre().addOrdres(ordre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraClasse = new InfraClasse().addSuperOrdres(superOrdre).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousClasse = new SousClasse().addInfraClasses(infraClasse).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.classe = new Classe().addSousClasses(sousClasse).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superClasse = new SuperClasse().addClasses(classe).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.microEmbranchement = new MicroEmbranchement().addSuperClasses(superClasse).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraEmbranchement = new InfraEmbranchement().addMicroEmbranchements(microEmbranchement).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousDivision = new SousDivision().addInfraEmbranchements(infraEmbranchement).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.division = new Division().addSousDivisions(sousDivision).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superDivision = new SuperDivision().addDivisions(division).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.infraRegne = new InfraRegne().addSuperDivisions(superDivision).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.rameau = new Rameau().addInfraRegnes(infraRegne).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.sousRegne = new SousRegne().addRameaus(rameau).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.regne = new Regne().addSousRegnes(sousRegne).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
-        this.superRegne = new SuperRegne().addRegnes(regne).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK);
 
-        // Ascendance
-        this.regne.setSuperRegne(superRegne);
-        this.sousRegne.setRegne(regne);
-        this.rameau.setSousRegne(sousRegne);
-        this.infraRegne.setRameau(rameau);
-        this.superDivision.setInfraRegne(infraRegne);
-        this.division.setSuperDivision(superDivision);
-        this.sousDivision.setDivision(division);
-        this.infraEmbranchement.setSousDivision(sousDivision);
-        this.microEmbranchement.setInfraEmbranchement(infraEmbranchement);
-        this.superClasse.setMicroEmbranchement(microEmbranchement);
-        this.classe.setSuperClasse(superClasse);
-        this.sousClasse.setClasse(classe);
-        this.infraClasse.setSousClasse(sousClasse);
-        this.superOrdre.setInfraClasse(infraClasse);
-        this.ordre.setSuperOrdre(superOrdre);
-        this.sousOrdre.setOrdre(ordre);
-        this.infraOrdre.setSousOrdre(sousOrdre);
-        this.microOrdre.setInfraOrdre(infraOrdre);
-        this.superFamille.setMicroOrdre(microOrdre);
-        this.famille.setSuperFamille(superFamille);
-        this.sousFamille.setFamille(famille);
-        this.tribu.setSousFamille(sousFamille);
-        this.sousTribu.setTribu(tribu);
-        this.genre.setSousTribu(sousTribu);
-        this.sousGenre.setGenre(genre);
-        this.section.setSousGenre(sousGenre);
-        this.sousSection.setSection(section);
-        this.espece.setSousSection(sousSection);
-        this.sousEspece.setEspece(espece);
-        this.variete.setSousEspece(sousEspece);
-        this.sousVariete.setVariete(variete);
-        this.forme.setSousVariete(sousVariete);
-        this.sousForme.setForme(forme);
+        initClassification();
+        // Récupère le premier rang
+//        List<CronquistRank> foundElement =
+        Optional<CronquistRank> first = classificationCronquist.stream()
+            .filter(rank -> rank.getRank().equals(cronquistRank.getRank()))
+            .findFirst();
+
+        if (first.isPresent()) {
+            // Ajoute tous les parents à l'objet en cours (this)
+            int firstExistingRankIndex = classificationCronquist.indexOf(first.get());
+
+            CronquistRank currentRank = cronquistRank;
+            do {
+                if (!classificationCronquist.get(firstExistingRankIndex).getRank().equals(currentRank.getRank())) {
+                    log.error("Tentative d'assigner à un rang les valeurs d'un rang différent");
+                }
+                classificationCronquist.get(firstExistingRankIndex).setChildren(currentRank.getChildren());
+                classificationCronquist.get(firstExistingRankIndex).setParent(currentRank.getParent());
+                classificationCronquist.get(firstExistingRankIndex).setId(currentRank.getId());
+                classificationCronquist.get(firstExistingRankIndex).setNomFr(currentRank.getNomFr());
+                classificationCronquist.get(firstExistingRankIndex).setNomLantin(currentRank.getNomLantin());
+                classificationCronquist.get(firstExistingRankIndex).setSynonymes(currentRank.getSynonymes());
+                classificationCronquist.get(firstExistingRankIndex).setUrls(currentRank.getUrls());
+                firstExistingRankIndex--;
+                currentRank = currentRank.getParent();
+                if (firstExistingRankIndex < 0 && currentRank != null || firstExistingRankIndex > 0 && currentRank == null) {
+                    log.error("Arrivé au bout des rangs à renseigner amis il en reste à traiter. Revoir les index!");
+                }
+            } while (currentRank != null);
+            this.clearTail();
+        }
+
+
     }
 
-    public SuperRegne getSuperRegne() {
+    private void initClassification() {
+        constructAscendance();
+        constructDescendance();
+        constructList();
+    }
+
+    private void constructAscendance() {
+        this.superRegne = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERREGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(null);
+        this.regne = new CronquistRank().rank(CronquistTaxonomikRanks.REGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superRegne);
+        this.sousRegne = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSREGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(regne);
+        this.rameau = new CronquistRank().rank(CronquistTaxonomikRanks.RAMEAU).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousRegne);
+        this.infraRegne = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAREGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(rameau);
+        this.superEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.SUPEREMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraRegne);
+        this.embranchement = new CronquistRank().rank(CronquistTaxonomikRanks.EMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superEmbranchement);
+        this.sousEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSEMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(embranchement);
+        this.infraEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAEMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousEmbranchement);
+        this.microEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.MICROEMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraEmbranchement);
+        this.superClasse = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERCLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(microEmbranchement);
+        this.classe = new CronquistRank().rank(CronquistTaxonomikRanks.CLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superClasse);
+        this.sousClasse = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSCLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(classe);
+        this.infraClasse = new CronquistRank().rank(CronquistTaxonomikRanks.INFRACLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousClasse);
+        this.superOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraClasse);
+        this.ordre = new CronquistRank().rank(CronquistTaxonomikRanks.ORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superOrdre);
+        this.sousOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(ordre);
+        this.infraOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousOrdre);
+        this.microOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.MICROORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraOrdre);
+        this.superFamille = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERFAMILLE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(microOrdre);
+        this.famille = new CronquistRank().rank(CronquistTaxonomikRanks.FAMILLE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superFamille);
+        this.sousFamille = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSFAMILLE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(famille);
+        this.tribu = new CronquistRank().rank(CronquistTaxonomikRanks.TRIBU).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousFamille);
+        this.sousTribu = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSTRIBU).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(tribu);
+        this.genre = new CronquistRank().rank(CronquistTaxonomikRanks.GENRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousTribu);
+        this.sousGenre = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSGENRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(genre);
+        this.section = new CronquistRank().rank(CronquistTaxonomikRanks.SECTION).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousGenre);
+        this.sousSection = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSSECTION).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(section);
+        this.espece = new CronquistRank().rank(CronquistTaxonomikRanks.ESPECE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousSection);
+        this.sousEspece = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSESPECE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(espece);
+        this.variete = new CronquistRank().rank(CronquistTaxonomikRanks.VARIETE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousEspece);
+        this.sousVariete = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSVARIETE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(variete);
+        this.forme = new CronquistRank().rank(CronquistTaxonomikRanks.FORME).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousVariete);
+        this.sousForme = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSFORME).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(forme);
+    }
+
+    private void constructDescendance() {
+        this.superRegne.addChildren(regne);
+        this.regne.addChildren(sousRegne);
+        this.sousRegne.addChildren(rameau);
+        this.rameau.addChildren(infraRegne);
+        this.infraRegne.addChildren(superEmbranchement);
+        this.superEmbranchement.addChildren(embranchement);
+        this.embranchement.addChildren(sousEmbranchement);
+        this.sousEmbranchement.addChildren(infraEmbranchement);
+        this.infraEmbranchement.addChildren(microEmbranchement);
+        this.microEmbranchement.addChildren(superClasse);
+        this.superClasse.addChildren(classe);
+        this.classe.addChildren(sousClasse);
+        this.sousClasse.addChildren(infraClasse);
+        this.infraClasse.addChildren(superOrdre);
+        this.superOrdre.addChildren(ordre);
+        this.ordre.addChildren(sousOrdre);
+        this.sousOrdre.addChildren(infraOrdre);
+        this.infraOrdre.addChildren(microOrdre);
+        this.microOrdre.addChildren(superFamille);
+        this.superFamille.addChildren(famille);
+        this.famille.addChildren(sousFamille);
+        this.sousFamille.addChildren(tribu);
+        this.tribu.addChildren(sousTribu);
+        this.sousTribu.addChildren(genre);
+        this.genre.addChildren(sousGenre);
+        this.sousGenre.addChildren(section);
+        this.section.addChildren(sousSection);
+        this.sousSection.addChildren(espece);
+        this.espece.addChildren(sousEspece);
+        this.sousEspece.addChildren(variete);
+        this.variete.addChildren(sousVariete);
+        this.sousVariete.addChildren(forme);
+        this.forme.addChildren(sousForme);
+        this.sousForme.getChildren().add(null);
+//        this.sousForme.addChildren(null);// TODO addChildren also add parent!
+    }
+
+    private void constructList() {
+        classificationCronquist = new ArrayList<>();
+        classificationCronquist.add(this.superRegne);
+        classificationCronquist.add(this.regne);
+        classificationCronquist.add(this.sousRegne);
+        classificationCronquist.add(this.rameau);
+        classificationCronquist.add(this.infraRegne);
+        classificationCronquist.add(this.superEmbranchement);
+        classificationCronquist.add(this.embranchement);
+        classificationCronquist.add(this.sousEmbranchement);
+        classificationCronquist.add(this.infraEmbranchement);
+        classificationCronquist.add(this.microEmbranchement);
+        classificationCronquist.add(this.superClasse);
+        classificationCronquist.add(this.classe);
+        classificationCronquist.add(this.sousClasse);
+        classificationCronquist.add(this.infraClasse);
+        classificationCronquist.add(this.superOrdre);
+        classificationCronquist.add(this.ordre);
+        classificationCronquist.add(this.sousOrdre);
+        classificationCronquist.add(this.infraOrdre);
+        classificationCronquist.add(this.microOrdre);
+        classificationCronquist.add(this.superFamille);
+        classificationCronquist.add(this.famille);
+        classificationCronquist.add(this.sousFamille);
+        classificationCronquist.add(this.tribu);
+        classificationCronquist.add(this.sousTribu);
+        classificationCronquist.add(this.genre);
+        classificationCronquist.add(this.sousGenre);
+        classificationCronquist.add(this.section);
+        classificationCronquist.add(this.sousSection);
+        classificationCronquist.add(this.espece);
+        classificationCronquist.add(this.sousEspece);
+        classificationCronquist.add(this.variete);
+        classificationCronquist.add(this.sousVariete);
+        classificationCronquist.add(this.forme);
+        classificationCronquist.add(this.sousForme);
+    }
+
+    public CronquistRank getSuperRegne() {
         return superRegne;
     }
 
-    public Regne getRegne() {
-        if (this.getSuperRegne().getRegnes().size() > 1) {
+    public CronquistRank getRegne() {
+        if (this.getSuperRegne().getChildren().size() > 1) {
             log.error("Les règnes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.regne;
     }
 
-    public SousRegne getSousRegne() {
-        if (this.getRegne().getSousRegnes().size() > 1) {
+    public CronquistRank getSousRegne() {
+        if (this.getRegne().getChildren().size() > 1) {
             log.error("Les sous-règnes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousRegne;
     }
 
-    public Rameau getRameau() {
-        if (this.getSousRegne().getRameaus().size() > 1) {
+    public CronquistRank getRameau() {
+        if (this.getSousRegne().getChildren().size() > 1) {
             log.error("Les rameaux sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.rameau;
     }
 
-    public InfraRegne getInfraRegne() {
-        if (this.getRameau().getInfraRegnes().size() > 1) {
+    public CronquistRank getInfraRegne() {
+        if (this.getRameau().getChildren().size() > 1) {
             log.error("Les infra règnes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.infraRegne;
     }
 
-    public SuperDivision getSuperDivision() {
-        if (this.getInfraRegne().getSuperDivisions().size() > 1) {
+    public CronquistRank getSuperDivision() {
+        if (this.getInfraRegne().getChildren().size() > 1) {
             log.error("Les super divisions sont trop nombreux. Erreur dans l'algorithme");
         }
-        return this.superDivision;
+        return this.superEmbranchement;
     }
 
-    public Division getDivision() {
-        if (this.getSuperDivision().getDivisions().size() > 1) {
+    public CronquistRank getEmbranchement() {
+        if (this.getSuperDivision().getChildren().size() > 1) {
             log.error("Les divisions sont trop nombreux. Erreur dans l'algorithme");
         }
-        return this.division;
+        return this.embranchement;
     }
 
-    public SousDivision getSousDivision() {
-        if (this.getDivision().getSousDivisions().size() > 1) {
+    public CronquistRank getSousEmbranchement() {
+        if (this.getEmbranchement().getChildren().size() > 1) {
             log.error("Les sous-divisions sont trop nombreux. Erreur dans l'algorithme");
         }
-        return this.sousDivision;
+        return this.sousEmbranchement;
     }
 
-    public InfraEmbranchement getInfraEmbranchement() {
-        if (this.getSousDivision().getInfraEmbranchements().size() > 1) {
+    public CronquistRank getInfraEmbranchement() {
+        if (this.getSousEmbranchement().getChildren().size() > 1) {
             log.error("Les infra-embranchements sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.infraEmbranchement;
     }
 
-    public MicroEmbranchement getMicroEmbranchement() {
-        if (this.getInfraEmbranchement().getMicroEmbranchements().size() > 1) {
+    public CronquistRank getMicroEmbranchement() {
+        if (this.getInfraEmbranchement().getChildren().size() > 1) {
             log.error("Les micro-embranchements sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.microEmbranchement;
     }
 
-    public SuperClasse getSuperClasse() {
-        if (this.getMicroEmbranchement().getSuperClasses().size() > 1) {
+    public CronquistRank getSuperClasse() {
+        if (this.getMicroEmbranchement().getChildren().size() > 1) {
             log.error("Les super-classes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.superClasse;
     }
 
-    public Classe getClasse() {
-        if (this.getSuperClasse().getClasses().size() > 1) {
+    public CronquistRank getClasse() {
+        if (this.getSuperClasse().getChildren().size() > 1) {
             log.error("Les classes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.classe;
     }
 
-    public SousClasse getSousClasse() {
-        if (this.getClasse().getSousClasses().size() > 1) {
+    public CronquistRank getSousClasse() {
+        if (this.getClasse().getChildren().size() > 1) {
             log.error("Les sous-classes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousClasse;
     }
 
-    public InfraClasse getInfraClasse() {
-        if (this.getSousClasse().getInfraClasses().size() > 1) {
+    public CronquistRank getInfraClasse() {
+        if (this.getSousClasse().getChildren().size() > 1) {
             log.error("Les infra-classes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.infraClasse;
     }
 
-    public SuperOrdre getSuperOrdre() {
-        if (this.getInfraClasse().getSuperOrdres().size() > 1) {
+    public CronquistRank getSuperOrdre() {
+        if (this.getInfraClasse().getChildren().size() > 1) {
             log.error("Les super-ordres sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.superOrdre;
     }
 
-    public Ordre getOrdre() {
-        if (this.getSuperOrdre().getOrdres().size() > 1) {
+    public CronquistRank getOrdre() {
+        if (this.getSuperOrdre().getChildren().size() > 1) {
             log.error("Les super-ordres sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.ordre;
     }
 
-    public SousOrdre getSousOrdre() {
-        if (this.getOrdre().getSousOrdres().size() > 1) {
+    public CronquistRank getSousOrdre() {
+        if (this.getOrdre().getChildren().size() > 1) {
             log.error("Les sous-ordres sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousOrdre;
     }
 
-    public InfraOrdre getInfraOrdre() {
-        if (this.getSousOrdre().getInfraOrdres().size() > 1) {
+    public CronquistRank getInfraOrdre() {
+        if (this.getSousOrdre().getChildren().size() > 1) {
             log.error("Les infra-ordres sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.infraOrdre;
     }
 
-    public MicroOrdre getMicroOrdre() {
-        if (this.getInfraOrdre().getMicroOrdres().size() > 1) {
+    public CronquistRank getMicroOrdre() {
+        if (this.getInfraOrdre().getChildren().size() > 1) {
             log.error("Les micro-ordres sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.microOrdre;
     }
 
-    public SuperFamille getSuperFamille() {
-        if (this.getMicroOrdre().getSuperFamilles().size() > 1) {
+    public CronquistRank getSuperFamille() {
+        if (this.getMicroOrdre().getChildren().size() > 1) {
             log.error("Les super-familles sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.superFamille;
     }
 
-    public Famille getFamille() {
-        if (this.getSuperFamille().getFamilles().size() > 1) {
+    public CronquistRank getFamille() {
+        if (this.getSuperFamille().getChildren().size() > 1) {
             log.error("Les super-familles sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.famille;
     }
 
-    public SousFamille getSousFamille() {
-        if (this.getFamille().getSousFamilles().size() > 1) {
+    public CronquistRank getSousFamille() {
+        if (this.getFamille().getChildren().size() > 1) {
             log.error("Les sous-familles sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousFamille;
     }
 
-    public Tribu getTribu() {
-        if (this.getSousFamille().getTribuses().size() > 1) {
+    public CronquistRank getTribu() {
+        if (this.getSousFamille().getChildren().size() > 1) {
             log.error("Les tribus sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.tribu;
     }
 
-    public SousTribu getSousTribu() {
-        if (this.getTribu().getSousTribuses().size() > 1) {
+    public CronquistRank getSousTribu() {
+        if (this.getTribu().getChildren().size() > 1) {
             log.error("Les sous-tribus sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousTribu;
     }
 
-    public Genre getGenre() {
-        if (this.getSousTribu().getGenres().size() > 1) {
+    public CronquistRank getGenre() {
+        if (this.getSousTribu().getChildren().size() > 1) {
             log.error("Les sous-tribus sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.genre;
     }
 
-    public SousGenre getSousGenre() {
-        if (this.getGenre().getSousGenres().size() > 1) {
+    public CronquistRank getSousGenre() {
+        if (this.getGenre().getChildren().size() > 1) {
             log.error("Les sous-genres sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousGenre;
     }
 
-    public Section getSection() {
-        if (this.getSousGenre().getSections().size() > 1) {
+    public CronquistRank getSection() {
+        if (this.getSousGenre().getChildren().size() > 1) {
             log.error("Les sections sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.section;
     }
 
-    public SousSection getSousSection() {
-        if (this.getSection().getSousSections().size() > 1) {
+    public CronquistRank getSousSection() {
+        if (this.getSection().getChildren().size() > 1) {
             log.error("Les sous-sections sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousSection;
     }
 
-    public Espece getEspece() {
-        if (this.getSousSection().getEspeces().size() > 1) {
+    public CronquistRank getEspece() {
+        if (this.getSousSection().getChildren().size() > 1) {
             log.error("Les espèces sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.espece;
     }
 
-    public SousEspece getSousEspece() {
-        if (this.getEspece().getSousEspeces().size() > 1) {
+    public CronquistRank getSousEspece() {
+        if (this.getEspece().getChildren().size() > 1) {
             log.error("Les sous-espèces sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousEspece;
     }
 
-    public Variete getVariete() {
-        if (this.getSousEspece().getVarietes().size() > 1) {
+    public CronquistRank getVariete() {
+        if (this.getSousEspece().getChildren().size() > 1) {
             log.error("Les variétés sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.variete;
     }
 
-    public SousVariete getSousVariete() {
-        if (this.getVariete().getSousVarietes().size() > 1) {
+    public CronquistRank getSousVariete() {
+        if (this.getVariete().getChildren().size() > 1) {
             log.error("Les sous-variétés sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousVariete;
     }
 
-    public Forme getForme() {
-        if (this.getSousVariete().getFormes().size() > 1) {
+    public CronquistRank getForme() {
+        if (this.getSousVariete().getChildren().size() > 1) {
             log.error("Les sous-variétés sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.forme;
     }
 
-    public SousForme getSousForme() {
-        if (this.getForme().getSousFormes().size() > 1) {
+    public CronquistRank getSousForme() {
+        if (this.getForme().getChildren().size() > 1) {
             log.error("Les sous-formes sont trop nombreux. Erreur dans l'algorithme");
         }
         return this.sousForme;
     }
 
     public void clearTail() {
-//        if (sousForme.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-//            sousForme=null;
-//        } else{
-//            return;
-//        }
-//        for (; sousForme.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK); ) {
-//            sousForme=null;
-//            return;
-//        }
-        if (!sousForme.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
+        for (int i = classificationCronquist.size() - 1; i > 0; i--) {
+            if (!Objects.equals(classificationCronquist.get(i).getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+                break;
+            }
+            classificationCronquist.remove(i);
+            classificationCronquist.get(i - 1).setChildren(null);
         }
-        sousForme = null;
-        forme.setSousFormes(null);
-        if (!forme.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        forme = null;
-        sousVariete.setFormes(null);
-        if (!sousVariete.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousVariete = null;
-        variete.setSousEspece(null);
-        if (!variete.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        variete = null;
-        sousEspece.setVarietes(null);
-        if (!sousEspece.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousEspece = null;
-        espece.setSousEspeces(null);
-        if (!espece.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        espece = null;
-        sousSection.setEspeces(null);
-        if (!sousSection.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousSection = null;
-        section.setSection(null);
-        if (!section.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        section = null;
-        sousGenre.setSections(null);
-        if (!sousGenre.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousGenre = null;
-        genre.setSousGenres(null);
-        if (!genre.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        genre = null;
-        sousTribu.setGenres(null);
-        if (!sousTribu.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousTribu = null;
-        tribu.setSousTribuses(null);
-        if (!tribu.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        tribu = null;
-        sousFamille.setTribuses(null);
-        if (!sousFamille.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousFamille = null;
-        famille.setSousFamilles(null);
-        if (!famille.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        famille = null;
-        superFamille.setFamilles(null);
-        if (!superFamille.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        superFamille = null;
-        microOrdre.setSuperFamilles(null);
-        if (!microOrdre.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        microOrdre = null;
-        infraOrdre.setMicroOrdres(null);
-        if (!infraOrdre.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        infraOrdre = null;
-        sousOrdre.setInfraOrdres(null);
-        if (!sousOrdre.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousOrdre = null;
-        ordre.setSousOrdres(null);
-        if (!ordre.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        ordre = null;
-        superOrdre.setOrdres(null);
-        if (!superOrdre.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        superOrdre = null;
-        infraClasse.setSuperOrdres(null);
-        if (!infraClasse.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        infraClasse = null;
-        sousClasse.setInfraClasses(null);
-        if (!sousClasse.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousClasse = null;
-        classe.setSousClasses(null);
-        if (!classe.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        classe = null;
-        superClasse.setClasses(null);
-        if (!superClasse.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        superClasse = null;
-        microEmbranchement.setSuperClasses(null);
-        if (!microEmbranchement.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        microEmbranchement = null;
-        infraEmbranchement.setMicroEmbranchements(null);
-        if (!infraEmbranchement.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        infraEmbranchement = null;
-        sousDivision.setInfraEmbranchements(null);
-        if (!sousDivision.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousDivision = null;
-        division.setSousDivisions(null);
-        if (!division.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        division = null;
-        superDivision.setDivisions(null);
-        if (!superDivision.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        superDivision = null;
-        infraRegne.setSuperDivisions(null);
-        if (!infraRegne.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        infraRegne = null;
-        rameau.setInfraRegnes(null);
-        if (!rameau.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        rameau = null;
-        sousRegne.setRameaus(null);
-        if (!sousRegne.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        sousRegne = null;
-        regne.setSousRegnes(null);
-        if (!regne.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        regne = null;
-        superRegne.setRegnes(null);
-        if (!superRegne.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-            return;
-        }
-        superRegne = null;
     }
 
     /**
-     * Construit une liste ascendante des éléments de la classification
+     * Construit une liste descendante des éléments de la classification
      *
-     * @param cronquistService contains all autowired services. Each of these are passed to the
      * @return La classification de cronquist complète sous forme de liste. Les éléments null ne sont pas intégré à la liste
      */
-    public List<CronquistRank> getAsList(CronquistService cronquistService) {
+    public List<CronquistRank> getList() {
+        return classificationCronquist;
+    }
+
+    /**
+     * Construit une liste descendante des éléments de la classification
+     *
+     * @return La classification de cronquist complète sous forme de liste. Les éléments null ne sont pas intégré à la liste
+     */
+    public List<CronquistRank> getReverseList() {
         List<CronquistRank> list = new ArrayList<>();
-        // Attention : l'ordre est important puisque cette liste correspond à la classification
-        if (sousForme != null) {
-            list.add(new SousFormeWrapper(sousForme, cronquistService.getSousFormeQueryService(), cronquistService.getSousFormeRepository()));
-        }
-        if (forme != null) {
-            list.add(new FormeWrapper(forme, cronquistService.getFormeQueryService(), cronquistService.getFormeRepository()));
-        }
-        if (sousVariete != null) {
-            list.add(new SousVarieteWrapper(sousVariete, cronquistService.getSousVarieteQueryService(), cronquistService.getSousVarieteRepository()));
-        }
-        if (variete != null) {
-            list.add(new VarieteWrapper(variete, cronquistService.getVarieteQueryService(), cronquistService.getVarieteRepository()));
-        }
-        if (sousEspece != null) {
-            list.add(new SousEspeceWrapper(sousEspece, cronquistService.getSousEspeceQueryService(), cronquistService.getSousEspeceRepository()));
-        }
-        if (espece != null) {
-            list.add(new EspeceWrapper(espece, cronquistService.getEspeceQueryService(), cronquistService.getEspeceRepository()));
-        }
-        if (sousSection != null) {
-            list.add(new SousSectionWrapper(sousSection, cronquistService.getSousSectionQueryService(), cronquistService.getSousSectionRepository()));
-        }
-        if (section != null) {
-            list.add(new SectionWrapper(section, cronquistService.getSectionQueryService(), cronquistService.getSectionRepository()));
-        }
-        if (sousGenre != null) {
-            list.add(new SousGenreWrapper(sousGenre, cronquistService.getSousGenreQueryService(), cronquistService.getSousGenreRepository()));
-        }
-        if (genre != null) {
-            list.add(new GenreWrapper(genre, cronquistService.getGenreQueryService(), cronquistService.getGenreRepository()));
-        }
-        if (sousTribu != null) {
-            list.add(new SousTribuWrapper(sousTribu, cronquistService.getSousTribuQueryService(), cronquistService.getSousTribuRepository()));
-        }
-        if (tribu != null) {
-            list.add(new TribuWrapper(tribu, cronquistService.getTribuQueryService(), cronquistService.getTribuRepository()));
-        }
-        if (sousFamille != null) {
-            list.add(new SousFamilleWrapper(sousFamille, cronquistService.getSousFamilleQueryService(), cronquistService.getSousFamilleRepository()));
-        }
-        if (famille != null) {
-            list.add(new FamilleWrapper(famille, cronquistService.getFamilleQueryService(), cronquistService.getFamilleRepository()));
-        }
-        if (superFamille != null) {
-            list.add(new SuperFamilleWrapper(superFamille, cronquistService.getSuperFamilleQueryService(), cronquistService.getSuperFamilleRepository()));
-        }
-        if (microOrdre != null) {
-            list.add(new MicroOrdreWrapper(microOrdre, cronquistService.getMicroOrdreQueryService(), cronquistService.getMicroOrdreRepository()));
-        }
-        if (infraOrdre != null) {
-            list.add(new InfraOrdreWrapper(infraOrdre, cronquistService.getInfraOrdreQueryService(), cronquistService.getInfraOrdreRepository()));
-        }
-        if (sousOrdre != null) {
-            list.add(new SousOrdreWrapper(sousOrdre, cronquistService.getSousOrdreQueryService(), cronquistService.getSousOrdreRepository()));
-        }
-        if (ordre != null) {
-            list.add(new OrdreWrapper(ordre, cronquistService.getOrdreQueryService(), cronquistService.getOrdreRepository()));
-        }
-        if (superOrdre != null) {
-            list.add(new SuperOrdreWrapper(superOrdre, cronquistService.getSuperOrdreQueryService(), cronquistService.getSuperOrdreRepository()));
-        }
-        if (infraClasse != null) {
-            list.add(new InfraClasseWrapper(infraClasse, cronquistService.getInfraClasseQueryService(), cronquistService.getInfraClasseRepository()));
-        }
-        if (sousClasse != null) {
-            list.add(new SousClasseWrapper(sousClasse, cronquistService.getSousClasseQueryService(), cronquistService.getSousClasseRepository()));
-        }
-        if (classe != null) {
-            list.add(new ClasseWrapper(classe, cronquistService.getClasseQueryService(), cronquistService.getClasseRepository()));
-        }
-        if (superClasse != null) {
-            list.add(new SuperClasseWrapper(superClasse, cronquistService.getSuperClasseQueryService(), cronquistService.getSuperClasseRepository()));
-        }
-        if (microEmbranchement != null) {
-            list.add(new MicroEmbranchementWrapper(microEmbranchement, cronquistService.getMicroEmbranchementQueryService(), cronquistService.getMicroEmbranchementRepository()));
-        }
-        if (infraEmbranchement != null) {
-            list.add(new InfraEmbranchementWrapper(infraEmbranchement, cronquistService.getInfraEmbranchementQueryService(), cronquistService.getInfraEmbranchementRepository()));
-        }
-        if (sousDivision != null) {
-            list.add(new SousDivisionWrapper(sousDivision, cronquistService.getSousDivisionQueryService(), cronquistService.getSousDivisionRepository()));
-        }
-        if (division != null) {
-            list.add(new DivisionWrapper(division, cronquistService.getDivisionQueryService(), cronquistService.getDivisionRepository()));
-        }
-        if (superDivision != null) {
-            list.add(new SuperDivisionWrapper(superDivision, cronquistService.getSuperDivisionQueryService(), cronquistService.getSuperDivisionRepository()));
-        }
-        if (infraRegne != null) {
-            list.add(new InfraRegneWrapper(infraRegne, cronquistService.getInfraRegneQueryService(), cronquistService.getInfraRegneRepository()));
-        }
-        if (rameau != null) {
-            list.add(new RameauWrapper(rameau, cronquistService.getRameauQueryService(), cronquistService.getRameauRepository()));
-        }
-        if (sousRegne != null) {
-            list.add(new SousRegneWrapper(sousRegne, cronquistService.getSousRegneQueryService(), cronquistService.getSousRegneRepository()));
-        }
-        if (regne != null) {
-            list.add(new RegneWrapper(regne, cronquistService.getRegneQueryService(), cronquistService.getRegneRepository()));
-        }
-        if (superRegne != null) {
-            list.add(new SuperRegneWrapper(superRegne, cronquistService.getSuperRegneQueryService(), cronquistService.getSuperRegneRepository()));
+        for (int i = classificationCronquist.size() - 1; i >= 0; i--) {
+            list.add(classificationCronquist.get(i));
         }
         return list;
     }

@@ -60,7 +60,7 @@
   "entityTableName": "cycle_de_vie",
   "dto": "no",
   "pagination": "pagination",
-  "service": "serviceClass",
+  "service": "serviceImpl",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
@@ -69,5 +69,5 @@
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211212192400"
+  "changelogDate": "20211219180431"
 }

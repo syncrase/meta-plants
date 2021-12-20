@@ -41,17 +41,6 @@ public class Plante implements Serializable {
     @Column(name = "exposition")
     private String exposition;
 
-    /**
-     * Une plante ne correspond qu'à une seule classification\nMais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes\nMais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique
-     */
-    @ApiModelProperty(
-        value = "Une plante ne correspond qu'à une seule classification\nMais, étant donnée les plantes potagère, une classification pourrait correspondre à plusieurs plantes\nMais je décide qu'une plante potagère n'est pas liée à la classification, c'est le rôle de la plante botanique"
-    )
-    @JsonIgnoreProperties(value = { "raunkier", "cronquist", "apg1", "apg2", "apg3", "apg4", "plante" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Classification classification;
-
     @OneToMany(mappedBy = "planteRessemblant")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "planteRessemblant" }, allowSetters = true)
@@ -72,7 +61,6 @@ public class Plante implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(
         value = {
-            "classification",
             "confusions",
             "ensoleillements",
             "plantesPotageres",
@@ -130,7 +118,6 @@ public class Plante implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(
         value = {
-            "classification",
             "confusions",
             "ensoleillements",
             "plantesPotageres",
@@ -212,19 +199,6 @@ public class Plante implements Serializable {
 
     public void setExposition(String exposition) {
         this.exposition = exposition;
-    }
-
-    public Classification getClassification() {
-        return this.classification;
-    }
-
-    public void setClassification(Classification classification) {
-        this.classification = classification;
-    }
-
-    public Plante classification(Classification classification) {
-        this.setClassification(classification);
-        return this;
     }
 
     public Set<Ressemblance> getConfusions() {

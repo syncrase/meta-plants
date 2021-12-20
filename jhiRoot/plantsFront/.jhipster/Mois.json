@@ -16,7 +16,7 @@
   "entityTableName": "mois",
   "dto": "no",
   "pagination": "pagination",
-  "service": "serviceClass",
+  "service": "serviceImpl",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
@@ -25,5 +25,5 @@
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211212191000"
+  "changelogDate": "20211219180031"
 }

@@ -1,16 +1,23 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.repository.*;
-import fr.syncrase.ecosyst.service.*;
+import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.domain.Url;
+import fr.syncrase.ecosyst.repository.CronquistRankRepository;
+import fr.syncrase.ecosyst.repository.UrlRepository;
+import fr.syncrase.ecosyst.service.CronquistRankQueryService;
+import fr.syncrase.ecosyst.service.UrlQueryService;
+import fr.syncrase.ecosyst.service.criteria.CronquistRankCriteria;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.filter.StringFilter;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -21,691 +28,35 @@ public class CronquistService {
      * Une valeur par défaut permet de lier ces deux rangs avec des rangs vides.<br>
      * Si ultérieurement ces rangs sont déterminés, les valeurs par défaut sont mises à jour
      */
-    public static final String DEFAULT_NAME_FOR_CONNECTOR_RANK = "";
+    public static final String DEFAULT_NAME_FOR_CONNECTOR_RANK = null;
     private final Logger log = LoggerFactory.getLogger(CronquistService.class);
 
-    // Repositories
-    private SuperRegneRepository superRegneRepository;
-    private RegneRepository regneRepository;
-    private SousRegneRepository sousRegneRepository;
-    private RameauRepository rameauRepository;
-    private InfraRegneRepository infraRegneRepository;
-    private SuperDivisionRepository superDivisionRepository;
-    private DivisionRepository divisionRepository;
-    private SousDivisionRepository sousDivisionRepository;
-    private InfraEmbranchementRepository infraEmbranchementRepository;
-    private MicroEmbranchementRepository microEmbranchementRepository;
-    private SuperClasseRepository superClasseRepository;
-    private ClasseRepository classeRepository;
-    private SousClasseRepository sousClasseRepository;
-    private InfraClasseRepository infraClasseRepository;
-    private SuperOrdreRepository superOrdreRepository;
-    private OrdreRepository ordreRepository;
-    private SousOrdreRepository sousOrdreRepository;
-    private InfraOrdreRepository infraOrdreRepository;
-    private MicroOrdreRepository microOrdreRepository;
-    private SuperFamilleRepository superFamilleRepository;
-    private FamilleRepository familleRepository;
-    private SousFamilleRepository sousFamilleRepository;
-    private TribuRepository tribuRepository;
-    private SousTribuRepository sousTribuRepository;
-    private GenreRepository genreRepository;
-    private SousGenreRepository sousGenreRepository;
-    private SectionRepository sectionRepository;
-    private SousSectionRepository sousSectionRepository;
-    private EspeceRepository especeRepository;
-    private SousEspeceRepository sousEspeceRepository;
-    private VarieteRepository varieteRepository;
-    private SousVarieteRepository sousVarieteRepository;
-    private FormeRepository formeRepository;
-    private SousFormeRepository sousFormeRepository;
+    private CronquistRankRepository superRegneRepository;
 
-    // Query services
-    private SuperRegneQueryService superRegneQueryService;
-    private RegneQueryService regneQueryService;
-    private SousRegneQueryService sousRegneQueryService;
-    private RameauQueryService rameauQueryService;
-    private InfraRegneQueryService infraRegneQueryService;
-    private SuperDivisionQueryService superDivisionQueryService;
-    private DivisionQueryService divisionQueryService;
-    private SousDivisionQueryService sousDivisionQueryService;
-    private InfraEmbranchementQueryService infraEmbranchementQueryService;
-    private MicroEmbranchementQueryService microEmbranchementQueryService;
-    private SuperClasseQueryService superClasseQueryService;
-    private ClasseQueryService classeQueryService;
-    private SousClasseQueryService sousClasseQueryService;
-    private InfraClasseQueryService infraClasseQueryService;
-    private SuperOrdreQueryService superOrdreQueryService;
-    private OrdreQueryService ordreQueryService;
-    private SousOrdreQueryService sousOrdreQueryService;
-    private InfraOrdreQueryService infraOrdreQueryService;
-    private MicroOrdreQueryService microOrdreQueryService;
-    private SuperFamilleQueryService superFamilleQueryService;
-    private FamilleQueryService familleQueryService;
-    private SousFamilleQueryService sousFamilleQueryService;
-    private TribuQueryService tribuQueryService;
-    private SousTribuQueryService sousTribuQueryService;
-    private GenreQueryService genreQueryService;
-    private SousGenreQueryService sousGenreQueryService;
-    private SectionQueryService sectionQueryService;
-    private SousSectionQueryService sousSectionQueryService;
-    private EspeceQueryService especeQueryService;
-    private SousEspeceQueryService sousEspeceQueryService;
-    private VarieteQueryService varieteQueryService;
-    private SousVarieteQueryService sousVarieteQueryService;
-    private FormeQueryService formeQueryService;
-    private SousFormeQueryService sousFormeQueryService;
+    private CronquistRankQueryService superRegneQueryService;
 
-    public SuperRegneRepository getSuperRegneRepository() {
-        return superRegneRepository;
-    }
+    private UrlRepository urlRepository;
+
+    private UrlQueryService urlQueryService;
 
     @Autowired
-    public void setSuperRegneRepository(SuperRegneRepository superRegneRepository) {
-        this.superRegneRepository = superRegneRepository;
-    }
-
-    public RegneRepository getRegneRepository() {
-        return regneRepository;
-    }
-
-    @Autowired
-    public void setRegneRepository(RegneRepository regneRepository) {
-        this.regneRepository = regneRepository;
-    }
-
-    public SousRegneRepository getSousRegneRepository() {
-        return sousRegneRepository;
-    }
-
-    @Autowired
-    public void setSousRegneRepository(SousRegneRepository sousRegneRepository) {
-        this.sousRegneRepository = sousRegneRepository;
-    }
-
-    public RameauRepository getRameauRepository() {
-        return rameauRepository;
-    }
-
-    @Autowired
-    public void setRameauRepository(RameauRepository rameauRepository) {
-        this.rameauRepository = rameauRepository;
-    }
-
-    public InfraRegneRepository getInfraRegneRepository() {
-        return infraRegneRepository;
-    }
-
-    @Autowired
-    public void setInfraRegneRepository(InfraRegneRepository infraRegneRepository) {
-        this.infraRegneRepository = infraRegneRepository;
-    }
-
-    public SuperDivisionRepository getSuperDivisionRepository() {
-        return superDivisionRepository;
-    }
-
-    @Autowired
-    public void setSuperDivisionRepository(SuperDivisionRepository superDivisionRepository) {
-        this.superDivisionRepository = superDivisionRepository;
-    }
-
-    public DivisionRepository getDivisionRepository() {
-        return divisionRepository;
-    }
-
-    @Autowired
-    public void setDivisionRepository(DivisionRepository divisionRepository) {
-        this.divisionRepository = divisionRepository;
-    }
-
-    public SousDivisionRepository getSousDivisionRepository() {
-        return sousDivisionRepository;
-    }
-
-    @Autowired
-    public void setSousDivisionRepository(SousDivisionRepository sousDivisionRepository) {
-        this.sousDivisionRepository = sousDivisionRepository;
-    }
-
-    public InfraEmbranchementRepository getInfraEmbranchementRepository() {
-        return infraEmbranchementRepository;
-    }
-
-    @Autowired
-    public void setInfraEmbranchementRepository(InfraEmbranchementRepository infraEmbranchementRepository) {
-        this.infraEmbranchementRepository = infraEmbranchementRepository;
-    }
-
-    public MicroEmbranchementRepository getMicroEmbranchementRepository() {
-        return microEmbranchementRepository;
-    }
-
-    @Autowired
-    public void setMicroEmbranchementRepository(MicroEmbranchementRepository microEmbranchementRepository) {
-        this.microEmbranchementRepository = microEmbranchementRepository;
-    }
-
-    public SuperClasseRepository getSuperClasseRepository() {
-        return superClasseRepository;
-    }
-
-    @Autowired
-    public void setSuperClasseRepository(SuperClasseRepository superClasseRepository) {
-        this.superClasseRepository = superClasseRepository;
-    }
-
-    public ClasseRepository getClasseRepository() {
-        return classeRepository;
-    }
-
-    @Autowired
-    public void setClasseRepository(ClasseRepository classeRepository) {
-        this.classeRepository = classeRepository;
-    }
-
-    public SousClasseRepository getSousClasseRepository() {
-        return sousClasseRepository;
-    }
-
-    @Autowired
-    public void setSousClasseRepository(SousClasseRepository sousClasseRepository) {
-        this.sousClasseRepository = sousClasseRepository;
-    }
-
-    public InfraClasseRepository getInfraClasseRepository() {
-        return infraClasseRepository;
-    }
-
-    @Autowired
-    public void setInfraClasseRepository(InfraClasseRepository infraClasseRepository) {
-        this.infraClasseRepository = infraClasseRepository;
-    }
-
-    public SuperOrdreRepository getSuperOrdreRepository() {
-        return superOrdreRepository;
-    }
-
-    @Autowired
-    public void setSuperOrdreRepository(SuperOrdreRepository superOrdreRepository) {
-        this.superOrdreRepository = superOrdreRepository;
-    }
-
-    public OrdreRepository getOrdreRepository() {
-        return ordreRepository;
-    }
-
-    @Autowired
-    public void setOrdreRepository(OrdreRepository ordreRepository) {
-        this.ordreRepository = ordreRepository;
-    }
-
-    public SousOrdreRepository getSousOrdreRepository() {
-        return sousOrdreRepository;
-    }
-
-    @Autowired
-    public void setSousOrdreRepository(SousOrdreRepository sousOrdreRepository) {
-        this.sousOrdreRepository = sousOrdreRepository;
-    }
-
-    public InfraOrdreRepository getInfraOrdreRepository() {
-        return infraOrdreRepository;
-    }
-
-    @Autowired
-    public void setInfraOrdreRepository(InfraOrdreRepository infraOrdreRepository) {
-        this.infraOrdreRepository = infraOrdreRepository;
-    }
-
-    public MicroOrdreRepository getMicroOrdreRepository() {
-        return microOrdreRepository;
-    }
-
-    @Autowired
-    public void setMicroOrdreRepository(MicroOrdreRepository microOrdreRepository) {
-        this.microOrdreRepository = microOrdreRepository;
-    }
-
-    public SuperFamilleRepository getSuperFamilleRepository() {
-        return superFamilleRepository;
-    }
-
-    @Autowired
-    public void setSuperFamilleRepository(SuperFamilleRepository superFamilleRepository) {
-        this.superFamilleRepository = superFamilleRepository;
-    }
-
-    public FamilleRepository getFamilleRepository() {
-        return familleRepository;
-    }
-
-    @Autowired
-    public void setFamilleRepository(FamilleRepository familleRepository) {
-        this.familleRepository = familleRepository;
-    }
-
-    public SousFamilleRepository getSousFamilleRepository() {
-        return sousFamilleRepository;
-    }
-
-    @Autowired
-    public void setSousFamilleRepository(SousFamilleRepository sousFamilleRepository) {
-        this.sousFamilleRepository = sousFamilleRepository;
-    }
-
-    public TribuRepository getTribuRepository() {
-        return tribuRepository;
-    }
-
-    @Autowired
-    public void setTribuRepository(TribuRepository tribuRepository) {
-        this.tribuRepository = tribuRepository;
-    }
-
-    public SousTribuRepository getSousTribuRepository() {
-        return sousTribuRepository;
-    }
-
-    @Autowired
-    public void setSousTribuRepository(SousTribuRepository sousTribuRepository) {
-        this.sousTribuRepository = sousTribuRepository;
-    }
-
-    public GenreRepository getGenreRepository() {
-        return genreRepository;
-    }
-
-    @Autowired
-    public void setGenreRepository(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
-    }
-
-    public SousGenreRepository getSousGenreRepository() {
-        return sousGenreRepository;
-    }
-
-    @Autowired
-    public void setSousGenreRepository(SousGenreRepository sousGenreRepository) {
-        this.sousGenreRepository = sousGenreRepository;
-    }
-
-    public SectionRepository getSectionRepository() {
-        return sectionRepository;
-    }
-
-    @Autowired
-    public void setSectionRepository(SectionRepository sectionRepository) {
-        this.sectionRepository = sectionRepository;
-    }
-
-    public SousSectionRepository getSousSectionRepository() {
-        return sousSectionRepository;
-    }
-
-    @Autowired
-    public void setSousSectionRepository(SousSectionRepository sousSectionRepository) {
-        this.sousSectionRepository = sousSectionRepository;
-    }
-
-    public EspeceRepository getEspeceRepository() {
-        return especeRepository;
-    }
-
-    @Autowired
-    public void setEspeceRepository(EspeceRepository especeRepository) {
-        this.especeRepository = especeRepository;
-    }
-
-    public SousEspeceRepository getSousEspeceRepository() {
-        return sousEspeceRepository;
-    }
-
-    @Autowired
-    public void setSousEspeceRepository(SousEspeceRepository sousEspeceRepository) {
-        this.sousEspeceRepository = sousEspeceRepository;
-    }
-
-    public VarieteRepository getVarieteRepository() {
-        return varieteRepository;
-    }
-
-    @Autowired
-    public void setVarieteRepository(VarieteRepository varieteRepository) {
-        this.varieteRepository = varieteRepository;
-    }
-
-    public SousVarieteRepository getSousVarieteRepository() {
-        return sousVarieteRepository;
-    }
-
-    @Autowired
-    public void setSousVarieteRepository(SousVarieteRepository sousVarieteRepository) {
-        this.sousVarieteRepository = sousVarieteRepository;
-    }
-
-    public FormeRepository getFormeRepository() {
-        return formeRepository;
-    }
-
-    @Autowired
-    public void setFormeRepository(FormeRepository formeRepository) {
-        this.formeRepository = formeRepository;
-    }
-
-    public SousFormeRepository getSousFormeRepository() {
-        return sousFormeRepository;
-    }
-
-    @Autowired
-    public void setSousFormeRepository(SousFormeRepository sousFormeRepository) {
-        this.sousFormeRepository = sousFormeRepository;
-    }
-
-    public SuperRegneQueryService getSuperRegneQueryService() {
-        return superRegneQueryService;
-    }
-
-    @Autowired
-    public void setSuperRegneQueryService(SuperRegneQueryService superRegneQueryService) {
+    public void setSuperRegneQueryService(CronquistRankQueryService superRegneQueryService) {
         this.superRegneQueryService = superRegneQueryService;
     }
 
-    public RegneQueryService getRegneQueryService() {
-        return regneQueryService;
+    @Autowired
+    public void setSuperRegneRepository(CronquistRankRepository superRegneRepository) {
+        this.superRegneRepository = superRegneRepository;
     }
 
     @Autowired
-    public void setRegneQueryService(RegneQueryService regneQueryService) {
-        this.regneQueryService = regneQueryService;
-    }
-
-    public SousRegneQueryService getSousRegneQueryService() {
-        return sousRegneQueryService;
+    public void setUrlRepository(UrlRepository urlRepository) {
+        this.urlRepository = urlRepository;
     }
 
     @Autowired
-    public void setSousRegneQueryService(SousRegneQueryService sousRegneQueryService) {
-        this.sousRegneQueryService = sousRegneQueryService;
-    }
-
-    public RameauQueryService getRameauQueryService() {
-        return rameauQueryService;
-    }
-
-    @Autowired
-    public void setRameauQueryService(RameauQueryService rameauQueryService) {
-        this.rameauQueryService = rameauQueryService;
-    }
-
-    public InfraRegneQueryService getInfraRegneQueryService() {
-        return infraRegneQueryService;
-    }
-
-    @Autowired
-    public void setInfraRegneQueryService(InfraRegneQueryService infraRegneQueryService) {
-        this.infraRegneQueryService = infraRegneQueryService;
-    }
-
-    public SuperDivisionQueryService getSuperDivisionQueryService() {
-        return superDivisionQueryService;
-    }
-
-    @Autowired
-    public void setSuperDivisionQueryService(SuperDivisionQueryService superDivisionQueryService) {
-        this.superDivisionQueryService = superDivisionQueryService;
-    }
-
-    public DivisionQueryService getDivisionQueryService() {
-        return divisionQueryService;
-    }
-
-    @Autowired
-    public void setDivisionQueryService(DivisionQueryService divisionQueryService) {
-        this.divisionQueryService = divisionQueryService;
-    }
-
-    public SousDivisionQueryService getSousDivisionQueryService() {
-        return sousDivisionQueryService;
-    }
-
-    @Autowired
-    public void setSousDivisionQueryService(SousDivisionQueryService sousDivisionQueryService) {
-        this.sousDivisionQueryService = sousDivisionQueryService;
-    }
-
-    public InfraEmbranchementQueryService getInfraEmbranchementQueryService() {
-        return infraEmbranchementQueryService;
-    }
-
-    @Autowired
-    public void setInfraEmbranchementQueryService(InfraEmbranchementQueryService infraEmbranchementQueryService) {
-        this.infraEmbranchementQueryService = infraEmbranchementQueryService;
-    }
-
-    public MicroEmbranchementQueryService getMicroEmbranchementQueryService() {
-        return microEmbranchementQueryService;
-    }
-
-    @Autowired
-    public void setMicroEmbranchementQueryService(MicroEmbranchementQueryService microEmbranchementQueryService) {
-        this.microEmbranchementQueryService = microEmbranchementQueryService;
-    }
-
-    public SuperClasseQueryService getSuperClasseQueryService() {
-        return superClasseQueryService;
-    }
-
-    @Autowired
-    public void setSuperClasseQueryService(SuperClasseQueryService superClasseQueryService) {
-        this.superClasseQueryService = superClasseQueryService;
-    }
-
-    public ClasseQueryService getClasseQueryService() {
-        return classeQueryService;
-    }
-
-    @Autowired
-    public void setClasseQueryService(ClasseQueryService classeQueryService) {
-        this.classeQueryService = classeQueryService;
-    }
-
-    public SousClasseQueryService getSousClasseQueryService() {
-        return sousClasseQueryService;
-    }
-
-    @Autowired
-    public void setSousClasseQueryService(SousClasseQueryService sousClasseQueryService) {
-        this.sousClasseQueryService = sousClasseQueryService;
-    }
-
-    public InfraClasseQueryService getInfraClasseQueryService() {
-        return infraClasseQueryService;
-    }
-
-    @Autowired
-    public void setInfraClasseQueryService(InfraClasseQueryService infraClasseQueryService) {
-        this.infraClasseQueryService = infraClasseQueryService;
-    }
-
-    public SuperOrdreQueryService getSuperOrdreQueryService() {
-        return superOrdreQueryService;
-    }
-
-    @Autowired
-    public void setSuperOrdreQueryService(SuperOrdreQueryService superOrdreQueryService) {
-        this.superOrdreQueryService = superOrdreQueryService;
-    }
-
-    public OrdreQueryService getOrdreQueryService() {
-        return ordreQueryService;
-    }
-
-    @Autowired
-    public void setOrdreQueryService(OrdreQueryService ordreQueryService) {
-        this.ordreQueryService = ordreQueryService;
-    }
-
-    public SousOrdreQueryService getSousOrdreQueryService() {
-        return sousOrdreQueryService;
-    }
-
-    @Autowired
-    public void setSousOrdreQueryService(SousOrdreQueryService sousOrdreQueryService) {
-        this.sousOrdreQueryService = sousOrdreQueryService;
-    }
-
-    public InfraOrdreQueryService getInfraOrdreQueryService() {
-        return infraOrdreQueryService;
-    }
-
-    @Autowired
-    public void setInfraOrdreQueryService(InfraOrdreQueryService infraOrdreQueryService) {
-        this.infraOrdreQueryService = infraOrdreQueryService;
-    }
-
-    public MicroOrdreQueryService getMicroOrdreQueryService() {
-        return microOrdreQueryService;
-    }
-
-    @Autowired
-    public void setMicroOrdreQueryService(MicroOrdreQueryService microOrdreQueryService) {
-        this.microOrdreQueryService = microOrdreQueryService;
-    }
-
-    public SuperFamilleQueryService getSuperFamilleQueryService() {
-        return superFamilleQueryService;
-    }
-
-    @Autowired
-    public void setSuperFamilleQueryService(SuperFamilleQueryService superFamilleQueryService) {
-        this.superFamilleQueryService = superFamilleQueryService;
-    }
-
-    public FamilleQueryService getFamilleQueryService() {
-        return familleQueryService;
-    }
-
-    @Autowired
-    public void setFamilleQueryService(FamilleQueryService familleQueryService) {
-        this.familleQueryService = familleQueryService;
-    }
-
-    public SousFamilleQueryService getSousFamilleQueryService() {
-        return sousFamilleQueryService;
-    }
-
-    @Autowired
-    public void setSousFamilleQueryService(SousFamilleQueryService sousFamilleQueryService) {
-        this.sousFamilleQueryService = sousFamilleQueryService;
-    }
-
-    public TribuQueryService getTribuQueryService() {
-        return tribuQueryService;
-    }
-
-    @Autowired
-    public void setTribuQueryService(TribuQueryService tribuQueryService) {
-        this.tribuQueryService = tribuQueryService;
-    }
-
-    public SousTribuQueryService getSousTribuQueryService() {
-        return sousTribuQueryService;
-    }
-
-    @Autowired
-    public void setSousTribuQueryService(SousTribuQueryService sousTribuQueryService) {
-        this.sousTribuQueryService = sousTribuQueryService;
-    }
-
-    public GenreQueryService getGenreQueryService() {
-        return genreQueryService;
-    }
-
-    @Autowired
-    public void setGenreQueryService(GenreQueryService genreQueryService) {
-        this.genreQueryService = genreQueryService;
-    }
-
-    public SousGenreQueryService getSousGenreQueryService() {
-        return sousGenreQueryService;
-    }
-
-    @Autowired
-    public void setSousGenreQueryService(SousGenreQueryService sousGenreQueryService) {
-        this.sousGenreQueryService = sousGenreQueryService;
-    }
-
-    public SectionQueryService getSectionQueryService() {
-        return sectionQueryService;
-    }
-
-    @Autowired
-    public void setSectionQueryService(SectionQueryService sectionQueryService) {
-        this.sectionQueryService = sectionQueryService;
-    }
-
-    public SousSectionQueryService getSousSectionQueryService() {
-        return sousSectionQueryService;
-    }
-
-    @Autowired
-    public void setSousSectionQueryService(SousSectionQueryService sousSectionQueryService) {
-        this.sousSectionQueryService = sousSectionQueryService;
-    }
-
-    public EspeceQueryService getEspeceQueryService() {
-        return especeQueryService;
-    }
-
-    @Autowired
-    public void setEspeceQueryService(EspeceQueryService especeQueryService) {
-        this.especeQueryService = especeQueryService;
-    }
-
-    public SousEspeceQueryService getSousEspeceQueryService() {
-        return sousEspeceQueryService;
-    }
-
-    @Autowired
-    public void setSousEspeceQueryService(SousEspeceQueryService sousEspeceQueryService) {
-        this.sousEspeceQueryService = sousEspeceQueryService;
-    }
-
-    public VarieteQueryService getVarieteQueryService() {
-        return varieteQueryService;
-    }
-
-    @Autowired
-    public void setVarieteQueryService(VarieteQueryService varieteQueryService) {
-        this.varieteQueryService = varieteQueryService;
-    }
-
-    public SousVarieteQueryService getSousVarieteQueryService() {
-        return sousVarieteQueryService;
-    }
-
-    @Autowired
-    public void setSousVarieteQueryService(SousVarieteQueryService sousVarieteQueryService) {
-        this.sousVarieteQueryService = sousVarieteQueryService;
-    }
-
-    public FormeQueryService getFormeQueryService() {
-        return formeQueryService;
-    }
-
-    @Autowired
-    public void setFormeQueryService(FormeQueryService formeQueryService) {
-        this.formeQueryService = formeQueryService;
-    }
-
-    public SousFormeQueryService getSousFormeQueryService() {
-        return sousFormeQueryService;
-    }
-
-    @Autowired
-    public void setSousFormeQueryService(SousFormeQueryService sousFormeQueryService) {
-        this.sousFormeQueryService = sousFormeQueryService;
+    public void setUrlQueryService(UrlQueryService urlQueryService) {
+        this.urlQueryService = urlQueryService;
     }
 
     /**
@@ -728,44 +79,62 @@ public class CronquistService {
      * </ul>
      *
      * @param cronquistClassification side effect
+     * @param urlWiki                 url du wiki d'où à été extrait la classification
      */
-    public void saveCronquist(@NotNull CronquistClassification cronquistClassification) {
+    public void saveCronquist(@NotNull CronquistClassification cronquistClassification, String urlWiki) {
 
         // Les rangs inférieurs sans valeur n'ont pas de raison d'être puisque la raison d'être des rangs vides et de lier deux rangs dont les noms sont connus : nettoyage de l'arborescence au commencement
         cronquistClassification.clearTail();
-        List<CronquistRank> list = cronquistClassification.getAsList(this);
-        // Différence de taille entre la classification connue et celle que l'on souhaite enregistrer
-        Integer offset = 0;
+        List<CronquistRank> list = cronquistClassification.getReverseList();
+        list.get(0).addUrls(new Url().url(urlWiki));
         // Parcours du plus bas rang jusqu'au plus élevé pour trouver le premier rang existant en base
-        List<CronquistRank> existingClassification = null;
+        CronquistClassification existingClassification = null;
         for (CronquistRank cronquistRank : list) {
-            // question : si je modifie un élément dans le liste, ce même élément dans cronquistClassification est-il modifié ? OUI dans la liste entre parent et enfants ainsi que dans le cronquistClassification
-            // TODO possible : retirer l'implémentation de getParent et getChildren dans les domain + method default qui throw une erreur pour dire qu'elle n'est pas implémentée (puisque je le définie dans le wrapper)
             // Si je n'ai toujours pas récupéré de rang connu, je regarde encore pour ce nouveau rang
-            if (existingClassification == null) {
-                List<? extends CronquistRank> existing = cronquistRank.findExistingRank();
-                // Si je viens d'en trouver un
-                if (existing != null && existing.size() != 0) {
-                    // À partir de ce moment-là, il n'est plus nécessaire d'interroger la base.
-                    // On a obtenu l'arborescence ascendante complète du rang taxonomique
-                    existingClassification = getCronquistRankList(existing);
-                } else {
-                    offset++;
+            List<CronquistRank> existing = findExistingRank(cronquistRank);
+            // Si je viens d'en trouver un
+            if (existing != null && existing.size() != 0) {
+                // À partir de ce moment-là, il n'est plus nécessaire d'interroger la base.
+                // On a obtenu l'arborescence ascendante complète du rang taxonomique
+                if (existing.size() > 1) {
+                    log.error("Plus d'un rang existant à été trouvé. Un rang doit être unique. Erreur");
                 }
+                existingClassification = new CronquistClassification(existing.get(0));
+                break;
             }
         }
 
-        setIdsOfExistingRanks(list, existingClassification, offset);
+        setIdsOfExistingRanks(list, existingClassification != null ? existingClassification.getReverseList() : Collections.EMPTY_LIST);
         save(list);
+    }
+
+    /**
+     * @param cronquistRank Rang dont il faut vérifier la présence en base
+     * @return La liste des rangs qui correspondent en base. Soit une liste vide, soit une liste d'un unique élément
+     */
+    private List<CronquistRank> findExistingRank(@NotNull CronquistRank cronquistRank) {
+        if (Objects.equals(cronquistRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK) && cronquistRank.getId() == null) {
+            return Collections.EMPTY_LIST;
+        }
+        CronquistRankCriteria rankCrit = new CronquistRankCriteria();
+
+        StringFilter nomFrFilter = new StringFilter();
+        nomFrFilter.setEquals(cronquistRank.getNomFr());
+        rankCrit.setNomFr(nomFrFilter);
+        CronquistRankCriteria.CronquistTaxonomikRanksFilter rankFilter = new CronquistRankCriteria.CronquistTaxonomikRanksFilter();
+        rankFilter.setEquals(cronquistRank.getRank());
+        rankCrit.setRank(rankFilter);
+        return superRegneQueryService.findByCriteria(rankCrit);
     }
 
 
     private void save(@NotNull List<CronquistRank> list) {
         // Etant donné qu'un rang inférieur doit contenir le rang supérieur, l'enregistrement des classifications doit se faire en commençant par le rang supérieur
         int size = list.size() - 1;
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = size; i >= 0; i--) {
             // TODO question les IDs des parents sont-ils bien contenus dans les enfants ?
-            list.get(size - i).save();
+            superRegneRepository.save(list.get(i));
+            urlRepository.saveAll(list.get(i).getUrls());
         }
     }
 
@@ -773,47 +142,40 @@ public class CronquistService {
      * Mis à jour des IDs des éléments de la première liste pour qu'ils pointent vers les éléments déjà enregistrés en base
      *
      * @param rankToInsertList           Liste des rangs que l'on souhaite enregistrer. Aucun des rangs n'a d'ID
-     * @param existingClassificationList List des rangs de l'arborescence
-     * @param offset                     Écart de taille entre les deux listes. Correspond à tous les rangs qu'il a fallu tester pour obtenir un rang existant en base de données
+     * @param existingClassificationList List des rangs de l'arborescence existante en base de données
      */
-    private void setIdsOfExistingRanks(@NotNull List<CronquistRank> rankToInsertList, List<CronquistRank> existingClassificationList, int offset) {
-        // checks
-        if (existingClassificationList == null || existingClassificationList.size() == 0) {
+    private void setIdsOfExistingRanks(@NotNull List<CronquistRank> rankToInsertList, @NotNull List<CronquistRank> existingClassificationList) {
+        if (existingClassificationList.size() == 0) {
             log.info("No existing entity in the database");
             return;
         }
         // Les deux premiers items sont égaux
+        int offset = rankToInsertList.size() - existingClassificationList.size();
         if (!rankToInsertList.get(offset).getNomFr().equals(existingClassificationList.get(0).getNomFr())) {
             log.error("Erreur : les deux premiers items égaux sont censé être égaux");
             return;
         }
-        // Les tailles sont cohérentes
-        if (rankToInsertList.size() != existingClassificationList.size() + offset) {
-            log.error("Impossible de traiter ces deux listes. Tailles incohérentes.{offset = {}, ranksSize = {}, existingRanksSize = {}}", offset, rankToInsertList.size(), existingClassificationList.size());
-            return;
-        }
 
         CronquistRank existingRank, rankToInsert;
-        // Parcours des éléments à partir de l'élément connu en base pour compléter avec les IDs correspondants
-        for (int i = offset; i < rankToInsertList.size(); i++) {
-            // Possibilité de sortir cette gestion pour ne pas mélanger avec la récupération du premier item connu
-            existingRank = existingClassificationList.get(i - offset);
-            rankToInsert = rankToInsertList.get(i);
+        // Parcours des éléments pour ajouter les IDs des éléments connus
+        for (int i = 0; i < existingClassificationList.size(); i++) {
+            existingRank = existingClassificationList.get(i);
+            rankToInsert = rankToInsertList.get(offset + i);
             // Chaine vide && chaine non vide
-            if (rankToInsert.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK) && !existingRank.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+            if (Objects.equals(rankToInsert.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK) && !Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
                 // mon rang intermédiaire se trouve avoir un nom en base → ajout du nom et de l'id dans mon objet
                 rankToInsert.setId(existingRank.getId());
                 rankToInsert.setNomFr(existingRank.getNomFr());
                 continue;
             }
             // Quelque current && chaine vide
-            if (existingRank.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+            if (Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
                 // mon rang avec (ou sans) nom n'en a pas en base → ajout de l'id à mon rang pour que soit update le nom trouvé
                 rankToInsert.setId(existingRank.getId());
                 continue;
             }
             // Chaine non vide && chaine non vide
-            if (!rankToInsert.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK) && !existingRank.getNomFr().equals(DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+            if (!Objects.equals(rankToInsert.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK) && !Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
                 // Les deux noms existent
                 if (!rankToInsert.getNomFr().equals(existingRank.getNomFr())) {
                     // TODO gestion des synonymes (après mise à jour du modèle)
@@ -827,16 +189,6 @@ public class CronquistService {
                 }
             }
         }
-    }
-
-    private @NotNull List<CronquistRank> getCronquistRankList(@NotNull List<? extends CronquistRank> existing) {
-        List<CronquistRank> existingClassification = new ArrayList<>();
-        CronquistRank cronquistRank = existing.get(0);
-        // currentRank != null dans le cas du super regne qui retourne null en parent
-        for (CronquistRank currentRank = cronquistRank.get(); currentRank != null && currentRank.get() != null; currentRank = currentRank.getParent()) {
-            existingClassification.add(currentRank);
-        }
-        return existingClassification;
     }
 
 }

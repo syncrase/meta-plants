@@ -34,8 +34,6 @@ public class PlanteCriteria implements Serializable, Criteria {
 
     private StringFilter exposition;
 
-    private LongFilter classificationId;
-
     private LongFilter confusionsId;
 
     private LongFilter ensoleillementsId;
@@ -68,7 +66,6 @@ public class PlanteCriteria implements Serializable, Criteria {
         this.histoire = other.histoire == null ? null : other.histoire.copy();
         this.vitesseCroissance = other.vitesseCroissance == null ? null : other.vitesseCroissance.copy();
         this.exposition = other.exposition == null ? null : other.exposition.copy();
-        this.classificationId = other.classificationId == null ? null : other.classificationId.copy();
         this.confusionsId = other.confusionsId == null ? null : other.confusionsId.copy();
         this.ensoleillementsId = other.ensoleillementsId == null ? null : other.ensoleillementsId.copy();
         this.plantesPotageresId = other.plantesPotageresId == null ? null : other.plantesPotageresId.copy();
@@ -161,21 +158,6 @@ public class PlanteCriteria implements Serializable, Criteria {
 
     public void setExposition(StringFilter exposition) {
         this.exposition = exposition;
-    }
-
-    public LongFilter getClassificationId() {
-        return classificationId;
-    }
-
-    public LongFilter classificationId() {
-        if (classificationId == null) {
-            classificationId = new LongFilter();
-        }
-        return classificationId;
-    }
-
-    public void setClassificationId(LongFilter classificationId) {
-        this.classificationId = classificationId;
     }
 
     public LongFilter getConfusionsId() {
@@ -366,7 +348,6 @@ public class PlanteCriteria implements Serializable, Criteria {
             Objects.equals(histoire, that.histoire) &&
             Objects.equals(vitesseCroissance, that.vitesseCroissance) &&
             Objects.equals(exposition, that.exposition) &&
-            Objects.equals(classificationId, that.classificationId) &&
             Objects.equals(confusionsId, that.confusionsId) &&
             Objects.equals(ensoleillementsId, that.ensoleillementsId) &&
             Objects.equals(plantesPotageresId, that.plantesPotageresId) &&
@@ -390,7 +371,6 @@ public class PlanteCriteria implements Serializable, Criteria {
             histoire,
             vitesseCroissance,
             exposition,
-            classificationId,
             confusionsId,
             ensoleillementsId,
             plantesPotageresId,
@@ -415,7 +395,6 @@ public class PlanteCriteria implements Serializable, Criteria {
             (histoire != null ? "histoire=" + histoire + ", " : "") +
             (vitesseCroissance != null ? "vitesseCroissance=" + vitesseCroissance + ", " : "") +
             (exposition != null ? "exposition=" + exposition + ", " : "") +
-            (classificationId != null ? "classificationId=" + classificationId + ", " : "") +
             (confusionsId != null ? "confusionsId=" + confusionsId + ", " : "") +
             (ensoleillementsId != null ? "ensoleillementsId=" + ensoleillementsId + ", " : "") +
             (plantesPotageresId != null ? "plantesPotageresId=" + plantesPotageresId + ", " : "") +

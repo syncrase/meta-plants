@@ -1,6 +1,5 @@
 package fr.syncrase.ecosyst.repository;
 
-import fr.syncrase.ecosyst.domain.APGII;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 

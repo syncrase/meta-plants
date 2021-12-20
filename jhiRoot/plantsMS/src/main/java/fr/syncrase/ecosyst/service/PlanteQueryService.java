@@ -97,15 +97,6 @@ public class PlanteQueryService extends QueryService<Plante> {
             if (criteria.getExposition() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getExposition(), Plante_.exposition));
             }
-            if (criteria.getClassificationId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getClassificationId(),
-                            root -> root.join(Plante_.classification, JoinType.LEFT).get(Classification_.id)
-                        )
-                    );
-            }
             if (criteria.getConfusionsId() != null) {
                 specification =
                     specification.and(

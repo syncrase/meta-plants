@@ -7,8 +7,6 @@ import { finalize, map } from 'rxjs/operators';
 
 import { IPlante, Plante } from '../plante.model';
 import { PlanteService } from '../service/plante.service';
-import { IClassification } from 'app/entities/plantsMS/classification/classification.model';
-import { ClassificationService } from 'app/entities/plantsMS/classification/service/classification.service';
 import { ICycleDeVie } from 'app/entities/plantsMS/cycle-de-vie/cycle-de-vie.model';
 import { CycleDeVieService } from 'app/entities/plantsMS/cycle-de-vie/service/cycle-de-vie.service';
 import { ISol } from 'app/entities/plantsMS/sol/sol.model';
@@ -31,7 +29,6 @@ import { NomVernaculaireService } from 'app/entities/plantsMS/nom-vernaculaire/s
 export class PlanteUpdateComponent implements OnInit {
   isSaving = false;
 
-  classificationsCollection: IClassification[] = [];
   plantesSharedCollection: IPlante[] = [];
   cycleDeViesSharedCollection: ICycleDeVie[] = [];
   solsSharedCollection: ISol[] = [];
@@ -47,7 +44,6 @@ export class PlanteUpdateComponent implements OnInit {
     histoire: [],
     vitesseCroissance: [],
     exposition: [],
-    classification: [],
     cycleDeVie: [],
     sol: [],
     temperature: [],
@@ -60,7 +56,6 @@ export class PlanteUpdateComponent implements OnInit {
 
   constructor(
     protected planteService: PlanteService,
-    protected classificationService: ClassificationService,
     protected cycleDeVieService: CycleDeVieService,
     protected solService: SolService,
     protected temperatureService: TemperatureService,
@@ -92,10 +87,6 @@ export class PlanteUpdateComponent implements OnInit {
     } else {
       this.subscribeToSaveResponse(this.planteService.create(plante));
     }
-  }
-
-  trackClassificationById(index: number, item: IClassification): number {
-    return item.id!;
   }
 
   trackPlanteById(index: number, item: IPlante): number {
@@ -167,7 +158,6 @@ export class PlanteUpdateComponent implements OnInit {
       histoire: plante.histoire,
       vitesseCroissance: plante.vitesseCroissance,
       exposition: plante.exposition,
-      classification: plante.classification,
       cycleDeVie: plante.cycleDeVie,
       sol: plante.sol,
       temperature: plante.temperature,
@@ -178,10 +168,6 @@ export class PlanteUpdateComponent implements OnInit {
       plante: plante.plante,
     });
 
-    this.classificationsCollection = this.classificationService.addClassificationToCollectionIfMissing(
-      this.classificationsCollection,
-      plante.classification
-    );
     this.plantesSharedCollection = this.planteService.addPlanteToCollectionIfMissing(this.plantesSharedCollection, plante.plante);
     this.cycleDeViesSharedCollection = this.cycleDeVieService.addCycleDeVieToCollectionIfMissing(
       this.cycleDeViesSharedCollection,
@@ -205,16 +191,6 @@ export class PlanteUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.classificationService
-      .query({ filter: 'plante-is-null' })
-      .pipe(map((res: HttpResponse<IClassification[]>) => res.body ?? []))
-      .pipe(
-        map((classifications: IClassification[]) =>
-          this.classificationService.addClassificationToCollectionIfMissing(classifications, this.editForm.get('classification')!.value)
-        )
-      )
-      .subscribe((classifications: IClassification[]) => (this.classificationsCollection = classifications));
-
     this.planteService
       .query()
       .pipe(map((res: HttpResponse<IPlante[]>) => res.body ?? []))
@@ -291,7 +267,6 @@ export class PlanteUpdateComponent implements OnInit {
       histoire: this.editForm.get(['histoire'])!.value,
       vitesseCroissance: this.editForm.get(['vitesseCroissance'])!.value,
       exposition: this.editForm.get(['exposition'])!.value,
-      classification: this.editForm.get(['classification'])!.value,
       cycleDeVie: this.editForm.get(['cycleDeVie'])!.value,
       sol: this.editForm.get(['sol'])!.value,
       temperature: this.editForm.get(['temperature'])!.value,

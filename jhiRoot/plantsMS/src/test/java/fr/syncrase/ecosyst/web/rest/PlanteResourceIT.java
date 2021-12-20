@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
-import fr.syncrase.ecosyst.domain.Classification;
 import fr.syncrase.ecosyst.domain.CycleDeVie;
 import fr.syncrase.ecosyst.domain.Ensoleillement;
 import fr.syncrase.ecosyst.domain.Feuillage;
@@ -539,32 +538,6 @@ class PlanteResourceIT {
 
         // Get all the planteList where exposition does not contain UPDATED_EXPOSITION
         defaultPlanteShouldBeFound("exposition.doesNotContain=" + UPDATED_EXPOSITION);
-    }
-
-    @Test
-    @Transactional
-    void getAllPlantesByClassificationIsEqualToSomething() throws Exception {
-        // Initialize the database
-        planteRepository.saveAndFlush(plante);
-        Classification classification;
-        if (TestUtil.findAll(em, Classification.class).isEmpty()) {
-            classification = ClassificationResourceIT.createEntity(em);
-            em.persist(classification);
-            em.flush();
-        } else {
-            classification = TestUtil.findAll(em, Classification.class).get(0);
-        }
-        em.persist(classification);
-        em.flush();
-        plante.setClassification(classification);
-        planteRepository.saveAndFlush(plante);
-        Long classificationId = classification.getId();
-
-        // Get all the planteList where classification equals to classificationId
-        defaultPlanteShouldBeFound("classificationId.equals=" + classificationId);
-
-        // Get all the planteList where classification equals to (classificationId + 1)
-        defaultPlanteShouldNotBeFound("classificationId.equals=" + (classificationId + 1));
     }
 
     @Test

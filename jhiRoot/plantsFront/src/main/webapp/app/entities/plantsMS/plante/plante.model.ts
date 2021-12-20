@@ -1,4 +1,3 @@
-import { IClassification } from 'app/entities/plantsMS/classification/classification.model';
 import { IRessemblance } from 'app/entities/plantsMS/ressemblance/ressemblance.model';
 import { IEnsoleillement } from 'app/entities/plantsMS/ensoleillement/ensoleillement.model';
 import { ICycleDeVie } from 'app/entities/plantsMS/cycle-de-vie/cycle-de-vie.model';
@@ -15,7 +14,6 @@ export interface IPlante {
   histoire?: string | null;
   vitesseCroissance?: string | null;
   exposition?: string | null;
-  classification?: IClassification | null;
   confusions?: IRessemblance[] | null;
   ensoleillements?: IEnsoleillement[] | null;
   plantesPotageres?: IPlante[] | null;
@@ -36,7 +34,6 @@ export class Plante implements IPlante {
     public histoire?: string | null,
     public vitesseCroissance?: string | null,
     public exposition?: string | null,
-    public classification?: IClassification | null,
     public confusions?: IRessemblance[] | null,
     public ensoleillements?: IEnsoleillement[] | null,
     public plantesPotageres?: IPlante[] | null,

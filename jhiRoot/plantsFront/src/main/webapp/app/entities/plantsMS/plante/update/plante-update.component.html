@@ -46,29 +46,6 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" for="field_classification">Classification</label>
-          <select
-            class="form-control"
-            id="field_classification"
-            data-cy="classification"
-            name="classification"
-            formControlName="classification"
-          >
-            <option [ngValue]="null"></option>
-            <option
-              [ngValue]="
-                classificationOption.id === editForm.get('classification')!.value?.id
-                  ? editForm.get('classification')!.value
-                  : classificationOption
-              "
-              *ngFor="let classificationOption of classificationsCollection; trackBy: trackClassificationById"
-            >
-              {{ classificationOption.id }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
           <label class="form-control-label" for="field_cycleDeVie">Cycle De Vie</label>
           <select class="form-control" id="field_cycleDeVie" data-cy="cycleDeVie" name="cycleDeVie" formControlName="cycleDeVie">
             <option [ngValue]="null"></option>

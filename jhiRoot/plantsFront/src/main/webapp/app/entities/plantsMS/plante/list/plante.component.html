@@ -37,7 +37,6 @@
           <th scope="col" permaSortBy="histoire"><span>Histoire</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="vitesseCroissance"><span>Vitesse Croissance</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="exposition"><span>Exposition</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" permaSortBy="classification.id"><span>Classification</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="cycleDeVie.id"><span>Cycle De Vie</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="sol.id"><span>Sol</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="temperature.id"><span>Temperature</span> <fa-icon icon="sort"></fa-icon></th>
@@ -57,11 +56,6 @@
           <td>{{ plante.histoire }}</td>
           <td>{{ plante.vitesseCroissance }}</td>
           <td>{{ plante.exposition }}</td>
-          <td>
-            <div *ngIf="plante.classification">
-              <a [routerLink]="['/classification', plante.classification?.id, 'view']">{{ plante.classification?.id }}</a>
-            </div>
-          </td>
           <td>
             <div *ngIf="plante.cycleDeVie">
               <a [routerLink]="['/cycle-de-vie', plante.cycleDeVie?.id, 'view']">{{ plante.cycleDeVie?.id }}</a>

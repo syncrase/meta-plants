@@ -23,7 +23,7 @@
   "entityTableName": "nom_vernaculaire",
   "dto": "no",
   "pagination": "pagination",
-  "service": "serviceClass",
+  "service": "serviceImpl",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
@@ -32,5 +32,5 @@
   "microserviceName": "plantsMS",
   "clientRootFolder": "plantsMS",
   "databaseType": "sql",
-  "changelogDate": "20211212185400"
+  "changelogDate": "20211219175531"
 }

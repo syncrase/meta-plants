@@ -1,6 +1,5 @@
 package fr.syncrase.ecosyst.repository;
 
-import fr.syncrase.ecosyst.domain.Clade;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 

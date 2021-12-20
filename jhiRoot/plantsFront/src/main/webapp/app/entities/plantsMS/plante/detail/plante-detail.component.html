@@ -30,12 +30,6 @@
         <dd>
           <span>{{ plante.exposition }}</span>
         </dd>
-        <dt><span>Classification</span></dt>
-        <dd>
-          <div *ngIf="plante.classification">
-            <a [routerLink]="['/classification', plante.classification?.id, 'view']">{{ plante.classification?.id }}</a>
-          </div>
-        </dd>
         <dt><span>Cycle De Vie</span></dt>
         <dd>
           <div *ngIf="plante.cycleDeVie">

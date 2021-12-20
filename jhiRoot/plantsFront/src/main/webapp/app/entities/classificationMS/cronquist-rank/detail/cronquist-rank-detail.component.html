@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cronquistRank">
+      <h2 data-cy="cronquistRankDetailsHeading"><span>Cronquist Rank</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ cronquistRank.id }}</span>
+        </dd>
+        <dt><span>Rank</span></dt>
+        <dd>
+          <span>{{ cronquistRank.rank }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ cronquistRank.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Lantin</span></dt>
+        <dd>
+          <span>{{ cronquistRank.nomLantin }}</span>
+        </dd>
+        <dt><span>Parent</span></dt>
+        <dd>
+          <div *ngIf="cronquistRank.parent">
+            <a [routerLink]="['/cronquist-rank', cronquistRank.parent?.id, 'view']">{{ cronquistRank.parent?.nomFr }}</a>
+          </div>
+        </dd>
+        <dt><span>Cronquist Rank</span></dt>
+        <dd>
+          <div *ngIf="cronquistRank.cronquistRank">
+            <a [routerLink]="['/cronquist-rank', cronquistRank.cronquistRank?.id, 'view']">{{ cronquistRank.cronquistRank?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/cronquist-rank', cronquistRank.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
