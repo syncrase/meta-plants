@@ -68,7 +68,7 @@ application {
         embeddableLaunchScript false,
     }
     
-    entities Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis
+    entities Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, ClassificationCronquist
 }
 
 application {
@@ -207,6 +207,41 @@ entity Feuillage {
     type String
 }
 
+entity ClassificationCronquist {
+    superRegne String,
+    regne String,
+    sousRegne String,
+    rameau String,
+    infraRegne String,
+    superEmbranchement String,
+    division String,
+    sousEmbranchement String,
+    infraEmbranchement String,
+    microEmbranchement String,
+    superClasse String,
+    classe String,
+    sousClasse String,
+    infraClasse String,
+    superOrdre String,
+    ordre String,
+    sousOrdre String,
+    infraOrdre String,
+    microOrdre String,
+    superFamille String,
+    famille String,
+    sousFamille String,
+    tribu String,
+    sousTribu String,
+    genre String,
+    sousGenre String,
+    section String,
+    sousSection String,
+    espece String,
+    sousEspece String,
+    variete String,
+    sousVariete String,
+    forme String
+}
 
 //***********************************************************
 //***********************************************************
@@ -267,6 +302,11 @@ entity Url {
 //***********************************************************
 //***********************************************************
 
+relationship OneToOne {
+    ClassificationCronquist to Plante
+    
+}
+
 relationship OneToMany {
     // TODO gestion de la ressemblance
     Plante{confusions} to Ressemblance{planteRessemblant},
@@ -276,9 +316,9 @@ relationship OneToMany {
     * Une plante peut avoir beaucoup de variantes potagère
     * Une plante potagère ne correspond qu'à une seule plante botanique et n'est associé à aucune classification (contenu dans le plante botanique)
     */
-    Plante{plantesPotageres} to Plante,
+    Plante{plantesPotageres} to Plante{planteBotanique},
 
-    Reproduction to CycleDeVie,
+    Reproduction to CycleDeVie
     
 }
 
@@ -286,7 +326,7 @@ relationship ManyToMany {
     /**
     * Un même nom vernaculaire peut qualifier plusieurs plantes distinctes et très différentes
     */
-    Plante{nomsVernaculaires(nom)} to NomVernaculaire{plantes},
+    Plante{nomsVernaculaires(nom)} to NomVernaculaire{plantes}
 }
 
 relationship ManyToOne {
@@ -321,7 +361,7 @@ relationship ManyToOne {
 
     // Il peut y avoir plusieurs mois identique pour le début et pour la fin
     PeriodeAnnee{debut(nom) required} to Mois,
-    PeriodeAnnee{fin(nom) required} to Mois,
+    PeriodeAnnee{fin(nom) required} to Mois
 }
 
 
@@ -334,7 +374,7 @@ relationship ManyToOne {
 relationship OneToMany {
     CronquistRank{children(nomFr)} to CronquistRank{parent(nomFr)},
     CronquistRank{urls} to Url,
-    CronquistRank{synonymes(nomFr)} to CronquistRank,
+    CronquistRank{synonymes(nomFr)} to CronquistRank
 
 }
 
@@ -346,7 +386,7 @@ relationship OneToMany {
 
 microservice Url, CronquistRank with classificationMS
 
-microservice Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis with plantsMS
+microservice Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, ClassificationCronquist with plantsMS
 
 
 paginate * with pagination
