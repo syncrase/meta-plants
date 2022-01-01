@@ -6,29 +6,36 @@ import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.repository.ClassificationCronquistRepository;
 import fr.syncrase.ecosyst.repository.NomVernaculaireRepository;
 import fr.syncrase.ecosyst.repository.PlanteRepository;
+import fr.syncrase.ecosyst.security.SecurityUtils;
+import fr.syncrase.ecosyst.service.PlanteQueryService;
+import fr.syncrase.ecosyst.service.criteria.PlanteCriteria;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import tech.jhipster.service.filter.LongFilter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InsertPlants {
 
     private final Logger log = LoggerFactory.getLogger(InsertPlants.class);
 
-//    private final ClassificationRepository classificationRepository;
+    //    private final ClassificationRepository classificationRepository;
     private final ClassificationCronquistRepository classificationCronquistRepository;
     private final NomVernaculaireRepository nomVernaculaireRepository;
     private final PlanteRepository planteRepository;
+    private final PlanteQueryService planteQueryService;
 
-    public InsertPlants(ClassificationCronquistRepository classificationCronquistRepository, NomVernaculaireRepository nomVernaculaireRepository, PlanteRepository planteRepository) {
+    public InsertPlants(ClassificationCronquistRepository classificationCronquistRepository, NomVernaculaireRepository nomVernaculaireRepository, PlanteRepository planteRepository, PlanteQueryService planteQueryService) {
 //        this.classificationRepository = classificationRepository;
         this.classificationCronquistRepository = classificationCronquistRepository;
         this.nomVernaculaireRepository = nomVernaculaireRepository;
         this.planteRepository = planteRepository;
+        this.planteQueryService = planteQueryService;
     }
 
     /**
@@ -37,92 +44,109 @@ public class InsertPlants {
     protected Map<String, Plante> insertAllPlants() {
         Map<String, Plante> insertedPlants = new HashMap<>();
 
-        RestTemplate restTemplate = new RestTemplate();
 //        {
 //            "plantesId.equals": plant.id
 //        }
-
+        String url = "http://localhost:8082/api/cronquist-ranks";
         Map<String, String> variables = new HashMap<String, String>(3);
         variables.put("cronquistRankId", "48601");
 //        variables.put("id", photo.getAttribute("id"));
 //        variables.put("secret", photo.getAttribute("secret"));
-        Object forObject = restTemplate.getForObject("http://localhost:8082/cronquist-ranks", Object.class, variables);
+//        Object forObject = restTemplate.getForObject(url, Object.class, variables);
+        // TODO aucun utilisateur n'est connecté au chargement de l'application => pas de JWT
+        Optional<String> tokenOpt = SecurityUtils.getCurrentUserJWT();
+        if (tokenOpt.isPresent()) {
+            String token = tokenOpt.get();
+//            Object forObject = new RestTemplate().getForObject("http://localhost:9000/services/classificationms/api/cronquist-ranks", Object.class, variables);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            headers.setBearerAuth(token);
+            HttpEntity<String> entity = new HttpEntity<>("body", headers);
+
+            ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            String body = exchange.getBody();
+        }
+
         // TODO call classificationMS
         ClassificationCronquist daucusCarotaCron = getOrInsertCronquist(new ClassificationCronquist().ordre("apiales").famille("apiaceae").genre("daucus").espece("daucus carota"));
-//        Classification daucusCarotaClassif = getOrInsertClassification(new Classification().cronquist(daucusCarotaCron));
-        Plante carotte = getOrInsertPlante(new Plante().classificationCronquist(daucusCarotaCron).addNomsVernaculaires(new NomVernaculaire().nom("carotte")));
+        Set<NomVernaculaire> daucusCarotaNoms = getSynchronizedNomsVernaculaires("carotte");
+        Plante carotte = getSynchronizedPlante(daucusCarotaNoms, daucusCarotaCron);
         insertedPlants.put("carotte", carotte);
-        insertedPlants.put("carotte jaune du doubs", insertPlantePotagere(carotte, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("carotte jaune du doubs"))));
+        insertedPlants.put("carotte jaune du doubs", insertPlantePotagere(carotte, "carotte jaune du doubs"));
 
+        ClassificationCronquist betaVulgarisCron = getOrInsertCronquist(new ClassificationCronquist().ordre("caryophyllales").famille("chenopodiaceae").genre("beta").espece("beta vulgaris"));
+        Set<NomVernaculaire> betaVulgarisNoms = getSynchronizedNomsVernaculaires("carotte");
+        Plante betterave = getSynchronizedPlante(betaVulgarisNoms, betaVulgarisCron);
+        insertedPlants.put("betterave", betterave);
+        insertedPlants.put("bette", insertPlantePotagere(betterave, "bette"));
+        insertedPlants.put("betterave de détroit améliorée 3", insertPlantePotagere(betterave, "betterave de détroit améliorée 3"));
 
-//        ClassificationCronquist betaVulgarisCron = getOrInsertCronquist(new ClassificationCronquist().ordre("caryophyllales").famille("chenopodiaceae").genre("beta").espece("beta vulgaris"));
-//        Classification betaVulgarisClassif = getOrInsertClassification(new Classification().cronquist(betaVulgarisCron));
-//        Plante betterave = getOrInsertPlante(new Plante().classification(betaVulgarisClassif).addNomsVernaculaires(new NomVernaculaire().nom("betterave")));
-//        insertedPlants.put("betterave", betterave);
-//        insertedPlants.put("bette", insertPlantePotagere(betterave, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("bette"))));
-//        insertedPlants.put("betterave de détroit améliorée 3", insertPlantePotagere(betterave, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("betterave de détroit améliorée 3"))));
-//
-//
-//        ClassificationCronquist solanumLycopersicumCron = getOrInsertCronquist(new ClassificationCronquist().ordre("solanales").famille("solanaceae").genre("solanum").espece("solanum lycopersicum"));
-//        Classification solanumLycopersicumClassif = getOrInsertClassification(new Classification().cronquist(solanumLycopersicumCron));
-//        Plante tomate = getOrInsertPlante(new Plante().classification(solanumLycopersicumClassif).addNomsVernaculaires(new NomVernaculaire().nom("tomate")));
-//        insertedPlants.put("tomate", tomate);
-//        insertedPlants.put("tomate noire russe", insertPlantePotagere(tomate, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("tomate noire russe"))));
-//        insertedPlants.put("tomate beefsteak", insertPlantePotagere(tomate, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("tomate beefsteak"))));
-//
-//
-//        ClassificationCronquist lactucaSativaCron = getOrInsertCronquist(new ClassificationCronquist().ordre("asterales").famille("asteraceae").genre("lactuca").espece("lactuca sativa"));
-//        Classification lactucaSativaClassif = getOrInsertClassification(new Classification().cronquist(lactucaSativaCron));
-//        Plante laitue = getOrInsertPlante(new Plante().classification(lactucaSativaClassif).addNomsVernaculaires(new NomVernaculaire().nom("laitue")));
-//        insertedPlants.put("laitue", laitue);
-//        insertedPlants.put("laitue rouge grenobloise", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue rouge grenobloise"))));
-//        insertedPlants.put("laitue reine de mai de pleine terre", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue reine de mai de pleine terre"))));
-//        insertedPlants.put("laitue batavia lollo rossa", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue batavia lollo rossa"))));
-//        insertedPlants.put("laitue pommée grosse blonde paresseuse", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue pommée grosse blonde paresseuse"))));
-//        insertedPlants.put("laitue pommée reine de mai", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue pommée reine de mai"))));
-//        insertedPlants.put("laitue batavia iceberg reine des glaces", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue batavia iceberg reine des glaces"))));
-//        insertedPlants.put("laitue cressonnette marocaine", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue cressonnette marocaine"))));
-//        insertedPlants.put("laitue à couper", insertPlantePotagere(laitue, new Plante().addNomsVernaculaires(new NomVernaculaire().nom("laitue à couper"))));
-//
-//
-//        ClassificationCronquist phaseolusVulgarisCron = getOrInsertCronquist(new ClassificationCronquist().ordre("fabales").famille("fabaceae").genre("phaseolus").espece("phaseolus vulgaris"));
-//        Classification phaseolusVulgarisClassif = getOrInsertClassification(new Classification().cronquist(phaseolusVulgarisCron));
-//        Plante haricot = getOrInsertPlante(new Plante().classification(phaseolusVulgarisClassif).addNomsVernaculaires(new NomVernaculaire().nom("haricot")));
-//        insertedPlants.put("haricot", haricot);
-//
-//
-//        ClassificationCronquist fragariaVescaCron = getOrInsertCronquist(new ClassificationCronquist().ordre("rosales").famille("rosaceae").genre("fragaria").espece("fragaria vesca"));
-//        Classification fragariaVescaClassif = getOrInsertClassification(new Classification().cronquist(fragariaVescaCron));
-//        Plante fraisierDesBois = getOrInsertPlante(new Plante().classification(fragariaVescaClassif).addNomsVernaculaires(new NomVernaculaire().nom("fraisier des bois")));
-//        insertedPlants.put("fraisier des bois", fraisierDesBois);
-//
-//
-//        ClassificationCronquist alliumSchoenoprasumCron = getOrInsertCronquist(new ClassificationCronquist().ordre("liliales").famille("liliaceae").genre("allium").espece("allium schoenoprasum"));
-//        Classification alliumSchoenoprasumClassif = getOrInsertClassification(new Classification().cronquist(alliumSchoenoprasumCron));
-//        Plante ciboulette = getOrInsertPlante(new Plante().classification(alliumSchoenoprasumClassif).addNomsVernaculaires(new NomVernaculaire().nom("ciboulette")));
-//        insertedPlants.put("ciboulette", ciboulette);
-//        insertedPlants.put("ciboulette commune", insertPlantePotagere(ciboulette, new Plante()
-//                .addNomsVernaculaires(new NomVernaculaire().nom("ciboulette commune"))
-//                .addNomsVernaculaires(new NomVernaculaire().nom("civette"))
-//            )
-//        );
+        ClassificationCronquist solanumLycopersicumCron = getOrInsertCronquist(new ClassificationCronquist().ordre("solanales").famille("solanaceae").genre("solanum").espece("solanum lycopersicum"));
+        Set<NomVernaculaire> solanumLycopersicumNoms = getSynchronizedNomsVernaculaires("tomate");
+        Plante tomate = getSynchronizedPlante(solanumLycopersicumNoms, solanumLycopersicumCron);
+        insertedPlants.put("tomate", tomate);
+        insertedPlants.put("tomate noire russe", insertPlantePotagere(tomate, "tomate noire russe"));
+        insertedPlants.put("tomate beefsteak", insertPlantePotagere(tomate, "tomate beefsteak"));
 
+        ClassificationCronquist lactucaSativaCron = getOrInsertCronquist(new ClassificationCronquist().ordre("asterales").famille("asteraceae").genre("lactuca").espece("lactuca sativa"));
+        Set<NomVernaculaire> lactucaSativaNoms = getSynchronizedNomsVernaculaires("laitue");
+        Plante laitue = getSynchronizedPlante(lactucaSativaNoms, lactucaSativaCron);
+        insertedPlants.put("laitue", laitue);
+        insertedPlants.put("laitue rouge grenobloise", insertPlantePotagere(laitue, "laitue rouge grenobloise"));
+        insertedPlants.put("laitue reine de mai de pleine terre", insertPlantePotagere(laitue, "laitue reine de mai de pleine terre"));
+        insertedPlants.put("laitue batavia lollo rossa", insertPlantePotagere(laitue, "laitue batavia lollo rossa"));
+        insertedPlants.put("laitue pommée grosse blonde paresseuse", insertPlantePotagere(laitue, "laitue pommée grosse blonde paresseuse"));
+        insertedPlants.put("laitue pommée reine de mai", insertPlantePotagere(laitue, "laitue pommée reine de mai"));
+        insertedPlants.put("laitue batavia iceberg reine des glaces", insertPlantePotagere(laitue, "laitue batavia iceberg reine des glaces"));
+        insertedPlants.put("laitue cressonnette marocaine", insertPlantePotagere(laitue, "laitue cressonnette marocaine"));
+        insertedPlants.put("laitue à couper", insertPlantePotagere(laitue, "laitue à couper"));
 
+        ClassificationCronquist phaseolusVulgarisCron = getOrInsertCronquist(new ClassificationCronquist().ordre("fabales").famille("fabaceae").genre("phaseolus").espece("phaseolus vulgaris"));
+        Set<NomVernaculaire> phaseolusVulgarisNoms = getSynchronizedNomsVernaculaires("haricot");
+        Plante haricot = getSynchronizedPlante(phaseolusVulgarisNoms, phaseolusVulgarisCron);
+        insertedPlants.put("haricot", haricot);
+
+        ClassificationCronquist fragariaVescaCron = getOrInsertCronquist(new ClassificationCronquist().ordre("rosales").famille("rosaceae").genre("fragaria").espece("fragaria vesca"));
+        Set<NomVernaculaire> fragariaVescaNoms = getSynchronizedNomsVernaculaires("fraisier des bois");
+        Plante fraisierDesBois = getSynchronizedPlante(fragariaVescaNoms, fragariaVescaCron);
+        insertedPlants.put("fraisier des bois", fraisierDesBois);
+
+        ClassificationCronquist alliumSchoenoprasumCron = getOrInsertCronquist(new ClassificationCronquist().ordre("liliales").famille("liliaceae").genre("allium").espece("allium schoenoprasum"));
+        Set<NomVernaculaire> alliumSchoenoprasumNoms = getSynchronizedNomsVernaculaires("ciboulette", "ciboulette commune", "civette");
+        Plante ciboulette = getSynchronizedPlante(alliumSchoenoprasumNoms, alliumSchoenoprasumCron);
+        insertedPlants.put("ciboulette", ciboulette);
         return insertedPlants;
+    }
+
+    @NotNull
+    private Set<NomVernaculaire> getSynchronizedNomsVernaculaires(String @NotNull ... noms) {
+        Set<NomVernaculaire> daucusCarotaNoms = new HashSet<>();
+        if (noms.length == 0) {
+            return daucusCarotaNoms;
+        }
+        for (String nom : noms) {
+            daucusCarotaNoms.add(new NomVernaculaire().nom(nom));
+        }
+        ;
+        return persistAllNomsVernaculaires(daucusCarotaNoms);
     }
 
     /**
      * Une plante potagère déjà existante ne verra pas ses noms vernaculaires enregistrés
      *
-     * @param planteBotanique plante associée à la classification qui contient les plantes potagères
-     * @param plantePotagere  plante non associée à aucune classification, mais associée à une plante botanique
+     * @param planteBotanique Plante associée à la classification qui contient les plantes potagères. Cette plante doit déjà être synchronisée avec la base de données
+     * @param noms            Plantes potagères qui seront associées à la plante botanique
      * @return la plante potagère avec son id
      */
-    private Plante insertPlantePotagere(Plante planteBotanique, Plante plantePotagere) {
+    private @NotNull Plante insertPlantePotagere(@NotNull Plante planteBotanique, @NotNull String... noms) {
+        if (planteBotanique.getId() == null) {
+            throw new IllegalArgumentException("La plante botanique doit posséder un id");
+        }
         // Enregistre la plante potagère
-        persistNomsVernaculaires(plantePotagere);
-        planteRepository.save(plantePotagere);
-
+        Set<NomVernaculaire> nomVernaculaires = Arrays.stream(noms).map(nom -> new NomVernaculaire().nom(nom)).collect(Collectors.toSet());
+        Set<NomVernaculaire> synchronizedNomsVernaculaires = persistAllNomsVernaculaires(nomVernaculaires);
+        Plante plantePotagere = getSynchronizedPlante(synchronizedNomsVernaculaires, null);
         // Ajoute la plante potagère à la plante botanique
         planteBotanique.addPlantesPotageres(plantePotagere);
         // Enregistre la plante botanique
@@ -132,34 +156,66 @@ public class InsertPlants {
     }
 
     /**
-     * @param plantePotagere side effect : complete nomsvernaculaires with ids
+     * @param nomsVernaculaires liste des noms vernaculaires à synchroniser avec la base de données
+     * @return Le set des noms synchronisés en base
      */
-    private void persistNomsVernaculaires(Plante plantePotagere) {
-        if (plantePotagere.getNomsVernaculaires().size() > 0) {
-            for (NomVernaculaire nomVernaculaire : plantePotagere.getNomsVernaculaires()) {
-                getOrInsertNomVernaculaire(nomVernaculaire);
+    private @NotNull Set<NomVernaculaire> persistAllNomsVernaculaires(@NotNull Set<NomVernaculaire> nomsVernaculaires) {
+        Set<NomVernaculaire> synchronizedNomsVernaculaires = new HashSet<>();
+        if (nomsVernaculaires.size() > 0) {
+            for (NomVernaculaire nomVernaculaire : nomsVernaculaires) {
+                synchronizedNomsVernaculaires.add(getOrInsertNomVernaculaire(nomVernaculaire));
             }
         }
+        return synchronizedNomsVernaculaires;
     }
 
-    private Plante getOrInsertPlante(Plante plante) {
-        persistNomsVernaculaires(plante);
-        if (!planteRepository.exists(Example.of(plante))) {
+    /**
+     * @param nomVernaculaireSet      Noms vernaculaires de la plante à enregistrer. Ils doivent déjà être synchronisés
+     * @param classificationCronquist Peut-être null dans le cas d'une plante potagère
+     * @return La plante synchronisée avec la base de données
+     */
+    private Plante getSynchronizedPlante(@NotNull Set<NomVernaculaire> nomVernaculaireSet, ClassificationCronquist classificationCronquist) {
+        PlanteCriteria planteCriteria = new PlanteCriteria();
+        // Filtre sur la classification
+        if (classificationCronquist != null) {
+            LongFilter idClassificationFilter = new LongFilter();
+            idClassificationFilter.setEquals(classificationCronquist.getId());
+            planteCriteria.setClassificationCronquistId(idClassificationFilter);
+        }
+        // Filtre sur les noms vernaculaires
+        LongFilter nomVernaculaireFilter = new LongFilter();
+        nomVernaculaireFilter.setIn(nomVernaculaireSet.stream().map(NomVernaculaire::getId).collect(Collectors.toList()));
+        planteCriteria.setNomsVernaculairesId(nomVernaculaireFilter);
+
+        Plante plante = null;
+        List<Plante> foundPlants = removeDoublons(planteQueryService.findByCriteria(planteCriteria));
+        if (foundPlants.size() == 0) {
+            plante = new Plante();
+            plante.nomsVernaculaires(nomVernaculaireSet).classificationCronquist(classificationCronquist);
             planteRepository.save(plante);
         } else {
-            Optional<Plante> returned = planteRepository.findOne(Example.of(plante));
-            if (returned.isPresent()) {
-                plante = returned.get();
-//                nom.addPlantes(plante);
-//                nomVernaculaireRepository.save(nom);
+            if (foundPlants.size() == 1) {
+                plante = foundPlants.get(0);
             } else {
-                log.error("Unable to get instance of : " + plante);
+                log.error("Found multiple instances of : " + nomVernaculaireSet);
             }
         }
         return plante;
     }
 
-    private void getOrInsertNomVernaculaire(NomVernaculaire nom) {
+    @NotNull
+    private List<Plante> removeDoublons(@NotNull List<Plante> foundPlants) {
+        if (foundPlants.size() == 0) {
+            return foundPlants;
+        }
+        Map<Long, List<Plante>> plantesMap = foundPlants.stream().collect(Collectors.groupingBy(Plante::getId));
+        List<Plante> foundPlants2 = new ArrayList<>();
+        plantesMap.keySet().forEach(id -> foundPlants2.add(plantesMap.get(id).get(0)));
+        foundPlants = foundPlants2;
+        return foundPlants;
+    }
+
+    private NomVernaculaire getOrInsertNomVernaculaire(NomVernaculaire nom) {
 
         if (!nomVernaculaireRepository.exists(Example.of(nom))) {
             nomVernaculaireRepository.save(nom);
@@ -171,9 +227,10 @@ public class InsertPlants {
                 log.error("Unable to get instance of : " + nom);
             }
         }
+        return nom;
     }
 
-    private ClassificationCronquist getOrInsertCronquist(ClassificationCronquist cronquist) {
+    private ClassificationCronquist getOrInsertCronquist(@NotNull ClassificationCronquist cronquist) {
         ClassificationCronquist simplifiedCronquist = new ClassificationCronquist();
         simplifiedCronquist.setEspece(cronquist.getEspece());
         if (!classificationCronquistRepository.exists(Example.of(simplifiedCronquist))) {

@@ -3,39 +3,51 @@ package fr.syncrase.ecosyst.aop.insertdata;
 import fr.syncrase.ecosyst.domain.Allelopathie;
 import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.repository.AllelopathieRepository;
+import fr.syncrase.ecosyst.service.AllelopathieQueryService;
+import fr.syncrase.ecosyst.service.criteria.AllelopathieCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
+import tech.jhipster.service.filter.LongFilter;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class InsertInteractions {
 
     private final Logger log = LoggerFactory.getLogger(InsertInteractions.class);
     private final Map<String, Plante> insertedPlants;
-    private final AllelopathieRepository allelopathieRepository;
+    private final AllelopathieQueryService allelopathieQueryService;
+    private AllelopathieRepository allelopathieRepository;
 
-    public InsertInteractions(Map<String, Plante> insertedPlants, AllelopathieRepository allelopathieRepository) {
-        this.allelopathieRepository = allelopathieRepository;
-
+    public InsertInteractions(Map<String, Plante> insertedPlants, AllelopathieQueryService allelopathieQueryService, AllelopathieRepository allelopathieRepository) {
+        this.allelopathieQueryService = allelopathieQueryService;
         this.insertedPlants = insertedPlants;
-//        insertAllInteractions(this.insertedPlants);
+        this.allelopathieRepository = allelopathieRepository;
     }
 
     private Allelopathie getOrInsertAllelopathie(Allelopathie allelopathie) {
 
-        List<Allelopathie> all = allelopathieRepository.findAll(Example.of(allelopathie));
-        log.info("Is there multiple allelopathie " + all.size());
+        AllelopathieCriteria allelopathieCriteria = new AllelopathieCriteria();
 
+        LongFilter cibleIdFilter = new LongFilter();
+        cibleIdFilter.setEquals(allelopathie.getCible().getId());
+        allelopathieCriteria.setCibleId(cibleIdFilter);
 
-        if (!allelopathieRepository.exists(Example.of(allelopathie))) {
+        LongFilter origineIdFilter = new LongFilter();
+        origineIdFilter.setEquals(allelopathie.getOrigine().getId());
+        allelopathieCriteria.setOrigineId(origineIdFilter);
+
+        List<Allelopathie> allelopathies = allelopathieQueryService.findByCriteria(allelopathieCriteria);
+
+//        List<Allelopathie> all = allelopathieQueryService.findAll(Example.of(allelopathie));
+//        log.info("Is there multiple allelopathie " + all.size());
+
+        if (allelopathies.size() == 0) {
             allelopathieRepository.save(allelopathie);
         } else {
-            Optional<Allelopathie> returned = allelopathieRepository.findOne(Example.of(allelopathie));
-            if (returned.isPresent()) {
-                allelopathie = returned.get();
+//            Optional<Allelopathie> returned = allelopathieQueryService.findOne(Example.of(allelopathie));
+            if (allelopathies.size() == 1) {
+                allelopathie = allelopathies.get(0);
                 log.info("Existing allélopathie : " + allelopathie);
             } else {
                 log.error("Unable to get instance of : " + allelopathie);

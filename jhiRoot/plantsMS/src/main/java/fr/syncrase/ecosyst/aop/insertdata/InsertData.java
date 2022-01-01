@@ -2,6 +2,8 @@ package fr.syncrase.ecosyst.aop.insertdata;
 
 import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.repository.*;
+import fr.syncrase.ecosyst.service.AllelopathieQueryService;
+import fr.syncrase.ecosyst.service.PlanteQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,9 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     private SolRepository solRepository;
     private FeuillageRepository feuillageRepository;
     private PlanteRepository planteRepository;
+    private PlanteQueryService planteQueryService;
     private AllelopathieRepository allelopathieRepository;
+    private AllelopathieQueryService allelopathieQueryService;
 //    private ClassificationRepository classificationRepository;
 //    private CronquistPlanteRepository cronquistRepository;
     private NomVernaculaireRepository nomVernaculaireRepository;
@@ -31,6 +35,16 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
     private PeriodeAnneeRepository periodeAnneeRepository;
     private SemisRepository semisRepository;
     private ClassificationCronquistRepository classificationCronquistRepository;
+
+    @Autowired
+    public void setAllelopathieQueryService(AllelopathieQueryService allelopathieQueryService) {
+        this.allelopathieQueryService = allelopathieQueryService;
+    }
+
+    @Autowired
+    public void setPlanteQueryService(PlanteQueryService planteQueryService) {
+        this.planteQueryService = planteQueryService;
+    }
 
     @Autowired
     public void setClassificationCronquistRepository(ClassificationCronquistRepository classificationCronquistRepository) {
@@ -117,10 +131,10 @@ public class InsertData implements ApplicationListener<ContextRefreshedEvent> {
         InsertSols solSetter = new InsertSols(solRepository);
         solSetter.insertAllSols();
 
-        InsertPlants plantsSetter = new InsertPlants(classificationCronquistRepository, nomVernaculaireRepository, planteRepository);
+        InsertPlants plantsSetter = new InsertPlants(classificationCronquistRepository, nomVernaculaireRepository, planteRepository, planteQueryService);
         Map<String, Plante> insertedPlants = plantsSetter.insertAllPlants();
 
-        InsertInteractions interactionSetter = new InsertInteractions(insertedPlants, allelopathieRepository);
+        InsertInteractions interactionSetter = new InsertInteractions(insertedPlants, allelopathieQueryService, allelopathieRepository);
         interactionSetter.insertAllInteractions();
 
         InsertCycleDeVie cycleDeVieSetter = new InsertCycleDeVie(insertedPlants, cycleDeVieRepository, periodeAnneeRepository, semisRepository, planteRepository, moisSetter);
