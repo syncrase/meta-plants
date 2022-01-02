@@ -5,6 +5,7 @@ import fr.syncrase.ecosyst.domain.Plante;
 import fr.syncrase.ecosyst.repository.AllelopathieRepository;
 import fr.syncrase.ecosyst.service.AllelopathieQueryService;
 import fr.syncrase.ecosyst.service.criteria.AllelopathieCriteria;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.jhipster.service.filter.LongFilter;
@@ -25,8 +26,7 @@ public class InsertInteractions {
         this.allelopathieRepository = allelopathieRepository;
     }
 
-    private Allelopathie getOrInsertAllelopathie(Allelopathie allelopathie) {
-
+    private Allelopathie getOrInsertAllelopathie(@NotNull Allelopathie allelopathie) {
         AllelopathieCriteria allelopathieCriteria = new AllelopathieCriteria();
 
         LongFilter cibleIdFilter = new LongFilter();
@@ -39,13 +39,9 @@ public class InsertInteractions {
 
         List<Allelopathie> allelopathies = allelopathieQueryService.findByCriteria(allelopathieCriteria);
 
-//        List<Allelopathie> all = allelopathieQueryService.findAll(Example.of(allelopathie));
-//        log.info("Is there multiple allelopathie " + all.size());
-
         if (allelopathies.size() == 0) {
             allelopathieRepository.save(allelopathie);
         } else {
-//            Optional<Allelopathie> returned = allelopathieQueryService.findOne(Example.of(allelopathie));
             if (allelopathies.size() == 1) {
                 allelopathie = allelopathies.get(0);
                 log.info("Existing allélopathie : " + allelopathie);
