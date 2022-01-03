@@ -17,22 +17,19 @@ public class CronquistClassificationExtractor {
     private final Logger log = LoggerFactory.getLogger(CronquistClassificationExtractor.class);
     CronquistClassification cronquistClassification;
 
-    public CronquistClassification getClassification(Element mainTable) {
-        // TODO je crée un nouveau super regne et je l'ajoute à la fin. (pour pouvoir rajouter un rang inférieur quand les rangs supérieur n'existe pas, je ne fais que renseigner les valeurs vides présentes)
-
-//        Element mainTable = tables.get(0);
+    public CronquistClassification getClassification(@NotNull Element mainTable) {
         Elements elementsDeClassification = mainTable.select("tbody tr");
 
         cronquistClassification = new CronquistClassification();
         for (Element classificationItem : elementsDeClassification) {
             setCronquistTaxonomyItemFromElement(classificationItem);
         }
-        // TODO Je merge le superRegne obtenu avec le superRegne initial
 
         Map<String, RangTaxonomique> rangTaxonMap = extractionRangsTaxonomiquesInferieurs(mainTable);
         if (rangTaxonMap.keySet().size() > 0) {
             rangTaxonMap.forEach(this::setCronquistTaxonomyItem);
         }
+        cronquistClassification.clearTail();
         return cronquistClassification;
     }
 
@@ -58,12 +55,15 @@ public class CronquistClassificationExtractor {
                 updateRank(cronquistClassification.getInfraRegne(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
                 break;
             case "Super-division":
+            case "Super-embranchement":
                 updateRank(cronquistClassification.getSuperDivision(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
                 break;
             case "Division":
+            case "Embranchement":
                 updateRank(cronquistClassification.getEmbranchement(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
                 break;
             case "Sous-division":
+            case "Sous-embranchement":
                 updateRank(cronquistClassification.getSousEmbranchement(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
                 break;
             case "Infra-embranchement":

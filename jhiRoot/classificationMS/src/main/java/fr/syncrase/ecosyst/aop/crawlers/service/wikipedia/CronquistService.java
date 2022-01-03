@@ -31,22 +31,22 @@ public class CronquistService {
     public static final String DEFAULT_NAME_FOR_CONNECTOR_RANK = null;
     private final Logger log = LoggerFactory.getLogger(CronquistService.class);
 
-    private CronquistRankRepository superRegneRepository;
+    private CronquistRankRepository cronquistRankRepositoryRepository;
 
-    private CronquistRankQueryService superRegneQueryService;
+    private CronquistRankQueryService cronquistRankQueryService;
 
     private UrlRepository urlRepository;
 
     private UrlQueryService urlQueryService;
 
     @Autowired
-    public void setSuperRegneQueryService(CronquistRankQueryService superRegneQueryService) {
-        this.superRegneQueryService = superRegneQueryService;
+    public void setCronquistRankQueryService(CronquistRankQueryService cronquistRankQueryService) {
+        this.cronquistRankQueryService = cronquistRankQueryService;
     }
 
     @Autowired
-    public void setSuperRegneRepository(CronquistRankRepository superRegneRepository) {
-        this.superRegneRepository = superRegneRepository;
+    public void setCronquistRankRepositoryRepository(CronquistRankRepository cronquistRankRepositoryRepository) {
+        this.cronquistRankRepositoryRepository = cronquistRankRepositoryRepository;
     }
 
     @Autowired
@@ -62,7 +62,7 @@ public class CronquistService {
     /**
      * Tous les rangs sont mis à jour avec l'ID et les noms, mais ascendant ni descendants <br>
      * Vérifie s'il n'y a pas de différence entre la classification enregistrée et celle que l'on souhaite enregistrer. <br>
-     * Par exemple : L'ordre 'Arecales' a une unique ascendance, s'il y a une différence dans l'ascendance, il faut le repérer TODO et la corriger scrapper aussi aussi <br>
+     * Par exemple : L'ordre 'Arecales' a une unique ascendance, s'il y a une différence dans l'ascendance, il faut le repérer <br>
      * Vérifie tous les rangs à partir du plus inférieur pour trouver un rang où les taxons correspondent. À partir de celui-là, la classification doit être commune <br>
      *
      * <h1>Pourquoi précharger tous les IDs ?</h1>
@@ -86,6 +86,7 @@ public class CronquistService {
         // Les rangs inférieurs sans valeur n'ont pas de raison d'être puisque la raison d'être des rangs vides et de lier deux rangs dont les noms sont connus : nettoyage de l'arborescence au commencement
         cronquistClassification.clearTail();
         List<CronquistRank> list = cronquistClassification.getReverseList();
+        // TODO fix url : une nouvelles url est enregistrée à chaque fois [#1t9hzm8]
         list.get(0).addUrls(new Url().url(urlWiki));
         // Parcours du plus bas rang jusqu'au plus élevé pour trouver le premier rang existant en base
         CronquistClassification existingClassification = null;
@@ -124,7 +125,8 @@ public class CronquistService {
         CronquistRankCriteria.CronquistTaxonomikRanksFilter rankFilter = new CronquistRankCriteria.CronquistTaxonomikRanksFilter();
         rankFilter.setEquals(cronquistRank.getRank());
         rankCrit.setRank(rankFilter);
-        return superRegneQueryService.findByCriteria(rankCrit);
+        List<CronquistRank> byCriteria = cronquistRankQueryService.findByCriteria(rankCrit);
+        return byCriteria;
     }
 
 
@@ -132,8 +134,7 @@ public class CronquistService {
         // Etant donné qu'un rang inférieur doit contenir le rang supérieur, l'enregistrement des classifications doit se faire en commençant par le rang supérieur
         int size = list.size() - 1;
         for (int i = size; i >= 0; i--) {
-            // TODO question les IDs des parents sont-ils bien contenus dans les enfants ?
-            superRegneRepository.save(list.get(i));
+            cronquistRankRepositoryRepository.save(list.get(i));
             urlRepository.saveAll(list.get(i).getUrls());
         }
     }

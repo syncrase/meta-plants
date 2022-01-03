@@ -72,31 +72,24 @@ public class CronquistClassification {
 
         initClassification();
         // Récupère le premier rang
-//        List<CronquistRank> foundElement =
-        Optional<CronquistRank> first = classificationCronquist.stream()
+        Optional<CronquistRank> matchingRankInNestedClassification = classificationCronquist.stream()
             .filter(rank -> rank.getRank().equals(cronquistRank.getRank()))
             .findFirst();
 
-        if (first.isPresent()) {
+        if (matchingRankInNestedClassification.isPresent()) {
             // Ajoute tous les parents à l'objet en cours (this)
-            int firstExistingRankIndex = classificationCronquist.indexOf(first.get());
+            int classificationDepthIndex = classificationCronquist.indexOf(matchingRankInNestedClassification.get());
 
             CronquistRank currentRank = cronquistRank;
             do {
-                if (!classificationCronquist.get(firstExistingRankIndex).getRank().equals(currentRank.getRank())) {
+                if (!classificationCronquist.get(classificationDepthIndex).getRank().equals(currentRank.getRank())) {
                     log.error("Tentative d'assigner à un rang les valeurs d'un rang différent");
                 }
-                classificationCronquist.get(firstExistingRankIndex).setChildren(currentRank.getChildren());
-                classificationCronquist.get(firstExistingRankIndex).setParent(currentRank.getParent());
-                classificationCronquist.get(firstExistingRankIndex).setId(currentRank.getId());
-                classificationCronquist.get(firstExistingRankIndex).setNomFr(currentRank.getNomFr());
-                classificationCronquist.get(firstExistingRankIndex).setNomLantin(currentRank.getNomLantin());
-                classificationCronquist.get(firstExistingRankIndex).setSynonymes(currentRank.getSynonymes());
-                classificationCronquist.get(firstExistingRankIndex).setUrls(currentRank.getUrls());
-                firstExistingRankIndex--;
+                classificationCronquist.set(classificationDepthIndex, currentRank);
+                classificationDepthIndex--;
                 currentRank = currentRank.getParent();
-                if (firstExistingRankIndex < 0 && currentRank != null || firstExistingRankIndex > 0 && currentRank == null) {
-                    log.error("Arrivé au bout des rangs à renseigner amis il en reste à traiter. Revoir les index!");
+                if (classificationDepthIndex < 0 && currentRank != null || classificationDepthIndex > 0 && currentRank == null) {
+                    log.error("Arrivé au bout des rangs à renseigner mais il en reste à traiter. Revoir les index!");
                 }
             } while (currentRank != null);
             this.clearTail();
@@ -183,7 +176,6 @@ public class CronquistClassification {
         this.sousVariete.addChildren(forme);
         this.forme.addChildren(sousForme);
         this.sousForme.getChildren().add(null);
-//        this.sousForme.addChildren(null);// TODO addChildren also add parent!
     }
 
     private void constructList() {
@@ -464,8 +456,8 @@ public class CronquistClassification {
             if (!Objects.equals(classificationCronquist.get(i).getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
                 break;
             }
+            classificationCronquist.get(i - 1).removeChildren(classificationCronquist.get(i));
             classificationCronquist.remove(i);
-            classificationCronquist.get(i - 1).setChildren(null);
         }
     }
 

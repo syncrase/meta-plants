@@ -25,8 +25,17 @@ public class WikipediaCrawler {
             /*
              Enregistrement d'une sous-tribu
              */
-            // TODO j'ai deux familles 'Arecacae' alors que je ne devrait en avoir qu'une seule
-//            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
+            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");
+            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");
+            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");
+
+            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
             /*
             AssertThat
             - j'ai 24 entrées en bdd
@@ -35,7 +44,7 @@ public class WikipediaCrawler {
             /*
             Enregistrement d'une espèce partageant la même famille avec la plante précédente
              */
-            scrapWiki("https://fr.wikipedia.org/wiki/Palmier_%C3%A0_huile");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Palmier_%C3%A0_huile");
             /*
             AssertThat
             - j'ai +8 entrées en bdd = 32
@@ -44,7 +53,6 @@ public class WikipediaCrawler {
             - le rang est bien enregistré en base
             - TODO les classes sont synonymes
              */
-//            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
             // https://fr.wikipedia.org/wiki/Ptychospermatinae rang inférieur
             // https://fr.wikipedia.org/wiki/Forsythia_%C3%97intermedia rang inférieur
             // https://fr.wikipedia.org/wiki/Ch%C3%A8vrefeuille rang inférieur
@@ -183,21 +191,19 @@ public class WikipediaCrawler {
 
 
 
-    // TODO add apgiii model
 //    private APGIII extractionApg3(@NotNull Elements encadreTaxonomique) {
 //        log.info("Extract APGIII classification");
 //        Elements elementsDeClassification = encadreTaxonomique.select("tbody tr");
 //        APGIII apgiii = new APGIII();
 //        for (Element classificationItem : elementsDeClassification) {
 //            // Get th = rang taxonomique et td = taxon
-//            // TODO setClades, addClades, setSousFamille, setGenre
 ////            Elements rangTaxonomiqueElement = classificationItem.select("th a");
 ////            String classificationItemKey = rangTaxonomiqueElement
 ////                .get(0)// ne contient qu'un seul titre
 ////                .childNode(0)// TextNode value
 ////                .toString();
 //            String classificationItemKey = selectText(classificationItem, "th a");
-//            // TODO dans le cas des clades la cssQuery devient "td span a span"
+//            // dans le cas des clades la cssQuery devient "td span a span"
 //            switch (classificationItemKey) {
 //                case "Règne":
 //                    log.debug("\tRègne NOT YET IMPLEMENTED");
