@@ -27,8 +27,8 @@ public class CronquistClassificationMerger {
     private final Logger log = LoggerFactory.getLogger(CronquistClassificationMerger.class);
 
     private final MergeResult persistanceResult;
-    private CronquistClassification existingClassification;
     private final CronquistRankQueryService cronquistRankQueryService;
+    private CronquistClassification existingClassification;
 
 
     public CronquistClassificationMerger(@NotNull CronquistClassification cronquistClassification, String urlWiki, CronquistRankQueryService cronquistRankQueryService) {
@@ -36,14 +36,12 @@ public class CronquistClassificationMerger {
 //        List<CronquistRank> list, CronquistClassification existingClassification
 //        this.existingClassification = existingClassification;
         persistanceResult = new MergeResult();
-        persistanceResult.rangsIntermediairesASupprimer = new ArrayList<>();
 
 
         cronquistClassification.clearTail();
-        persistanceResult.list  = cronquistClassification.getClassificationAscendante();
+        persistanceResult.list = cronquistClassification.getClassificationAscendante();
         persistanceResult.list.get(0).addUrls(new Url().url(urlWiki));
         // Parcours du plus bas rang jusqu'au plus élevé pour trouver le premier rang existant en base
-//        CronquistClassification existingClassification = null;
         for (CronquistRank cronquistRank : persistanceResult.list) {
             // Si je n'ai toujours pas récupéré de rang connu, je regarde encore pour ce nouveau rang
             List<CronquistRank> existing = findExistingRank(cronquistRank);
@@ -180,12 +178,21 @@ public class CronquistClassificationMerger {
 
         CronquistRank existingRank, rankToInsert;
         existingRank = existingClassificationList.get(i);
-        rankToInsert = rankToInsertList.get(offset + i);
+        rankToInsert = rankToInsertList.get(offset + i);// url des hamamelidaceae pour l'ordre des saxifragales
 
+        // TODO correction du problème d'url => vient de la gestion des synonymes
+        boolean saxifragales = Objects.equals(rankToInsert.getNomFr(), "Saxifragales") &&
+            rankToInsert.getUrls().size() > 0 &&
+            rankToInsert.getUrls().stream().anyMatch(url -> url.getUrl().equals("https://fr.wikipedia.org/wiki/Hamamelidales"));
+        if (saxifragales) {
+            saxifragales = saxifragales;
+        }
         if (existingRank.getUrls().size() > 0) {
             if (rankToInsert.getUrls().size() > 0) {// Must be = 1. Check > 1 and throw error?
                 Url urlsAInserer = new ArrayList<>(rankToInsert.getUrls()).get(0);
+                // l'ordre des saxifragales, ascendant de la famille hamamelidaceae, à une url null !
                 Optional<Url> matchingExistingUrl = existingRank.getUrls().stream()
+//                    .filter(Objects::nonNull)
                     .filter(url -> url.getUrl().equals(urlsAInserer.getUrl()))
                     .findFirst();
                 if (matchingExistingUrl.isPresent()) {
@@ -201,5 +208,9 @@ public class CronquistClassificationMerger {
 
         List<Long> rangsIntermediairesASupprimer;
         List<CronquistRank> list;
+
+        public MergeResult() {
+            rangsIntermediairesASupprimer = new ArrayList<>();
+        }
     }
 }
