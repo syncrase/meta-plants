@@ -12,8 +12,3 @@ with recursive tr(from_id, to_id, level, rank, nom) as (
 select *
 from tr;
 
--- Liste les rangs corrompus (sans parent)
-SELECT *
-from cronquist_rank
-where parent_id is null
-  and rank <> 'SUPERREGNE';

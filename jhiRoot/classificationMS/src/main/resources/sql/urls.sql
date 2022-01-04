@@ -10,6 +10,7 @@ SELECT (
 
 
 -- Combien de doublons pour chaque url?
-select count(*), url from url
+select count(*), url
+from url
 group by url
 order by count(*);

@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService.DEFAULT_NAME_FOR_CONNECTOR_RANK;
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistUtils.DEFAULT_NAME_FOR_CONNECTOR_RANK;
+
 
 public class CronquistClassification {
 
@@ -468,11 +469,11 @@ public class CronquistClassification {
     }
 
     /**
-     * Construit une liste descendante des éléments de la classification
+     * Construit une liste ascendante des éléments de la classification
      *
-     * @return La classification de cronquist complète sous forme de liste. Les éléments null ne sont pas intégré à la liste
+     * @return La classification de cronquist complète sous forme de liste
      */
-    public List<CronquistRank> getReverseList() {
+    public List<CronquistRank> getClassificationAscendante() {
         List<CronquistRank> list = new ArrayList<>();
         for (int i = classificationCronquist.size() - 1; i >= 0; i--) {
             list.add(classificationCronquist.get(i));
