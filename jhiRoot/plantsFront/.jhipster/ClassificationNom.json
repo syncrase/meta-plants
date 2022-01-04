@@ -1,0 +1,36 @@
+{
+  "name": "ClassificationNom",
+  "fields": [
+    {
+      "fieldName": "nomFr",
+      "fieldType": "String",
+      "fieldValidateRules": ["unique"]
+    },
+    {
+      "fieldName": "nomLatin",
+      "fieldType": "String",
+      "fieldValidateRules": ["unique"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "cronquistRank",
+      "otherEntityRelationshipName": "noms",
+      "relationshipName": "cronquistRank"
+    }
+  ],
+  "entityTableName": "classification_nom",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["plantsFront", "classificationMS"],
+  "microserviceName": "classificationMS",
+  "clientRootFolder": "classificationMS",
+  "databaseType": "sql",
+  "changelogDate": "20220104213217"
+}

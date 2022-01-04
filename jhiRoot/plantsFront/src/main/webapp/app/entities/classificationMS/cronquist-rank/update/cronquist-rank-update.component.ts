@@ -22,10 +22,7 @@ export class CronquistRankUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     rank: [null, [Validators.required]],
-    nomFr: [null, []],
-    nomLantin: [null, []],
     parent: [],
-    cronquistRank: [],
   });
 
   constructor(protected cronquistRankService: CronquistRankService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
@@ -79,16 +76,12 @@ export class CronquistRankUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: cronquistRank.id,
       rank: cronquistRank.rank,
-      nomFr: cronquistRank.nomFr,
-      nomLantin: cronquistRank.nomLantin,
       parent: cronquistRank.parent,
-      cronquistRank: cronquistRank.cronquistRank,
     });
 
     this.cronquistRanksSharedCollection = this.cronquistRankService.addCronquistRankToCollectionIfMissing(
       this.cronquistRanksSharedCollection,
-      cronquistRank.parent,
-      cronquistRank.cronquistRank
+      cronquistRank.parent
     );
   }
 
@@ -98,11 +91,7 @@ export class CronquistRankUpdateComponent implements OnInit {
       .pipe(map((res: HttpResponse<ICronquistRank[]>) => res.body ?? []))
       .pipe(
         map((cronquistRanks: ICronquistRank[]) =>
-          this.cronquistRankService.addCronquistRankToCollectionIfMissing(
-            cronquistRanks,
-            this.editForm.get('parent')!.value,
-            this.editForm.get('cronquistRank')!.value
-          )
+          this.cronquistRankService.addCronquistRankToCollectionIfMissing(cronquistRanks, this.editForm.get('parent')!.value)
         )
       )
       .subscribe((cronquistRanks: ICronquistRank[]) => (this.cronquistRanksSharedCollection = cronquistRanks));
@@ -113,10 +102,7 @@ export class CronquistRankUpdateComponent implements OnInit {
       ...new CronquistRank(),
       id: this.editForm.get(['id'])!.value,
       rank: this.editForm.get(['rank'])!.value,
-      nomFr: this.editForm.get(['nomFr'])!.value,
-      nomLantin: this.editForm.get(['nomLantin'])!.value,
       parent: this.editForm.get(['parent'])!.value,
-      cronquistRank: this.editForm.get(['cronquistRank'])!.value,
     };
   }
 }

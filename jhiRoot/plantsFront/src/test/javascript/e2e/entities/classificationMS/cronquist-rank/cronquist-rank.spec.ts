@@ -45,13 +45,7 @@ describe('CronquistRank e2e test', () => {
 
     await cronquistRankComponentsPage.clickOnCreateButton();
 
-    await promise.all([
-      cronquistRankUpdatePage.rankSelectLastOption(),
-      cronquistRankUpdatePage.setNomFrInput('nomFr'),
-      cronquistRankUpdatePage.setNomLantinInput('nomLantin'),
-      cronquistRankUpdatePage.parentSelectLastOption(),
-      cronquistRankUpdatePage.cronquistRankSelectLastOption(),
-    ]);
+    await promise.all([cronquistRankUpdatePage.rankSelectLastOption(), cronquistRankUpdatePage.parentSelectLastOption()]);
 
     await cronquistRankUpdatePage.save();
     expect(await cronquistRankUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;

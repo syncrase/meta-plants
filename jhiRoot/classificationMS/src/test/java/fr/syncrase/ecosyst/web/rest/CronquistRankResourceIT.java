@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
+import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
@@ -36,12 +37,6 @@ class CronquistRankResourceIT {
     private static final CronquistTaxonomikRanks DEFAULT_RANK = CronquistTaxonomikRanks.SUPERREGNE;
     private static final CronquistTaxonomikRanks UPDATED_RANK = CronquistTaxonomikRanks.REGNE;
 
-    private static final String DEFAULT_NOM_FR = "AAAAAAAAAA";
-    private static final String UPDATED_NOM_FR = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NOM_LANTIN = "AAAAAAAAAA";
-    private static final String UPDATED_NOM_LANTIN = "BBBBBBBBBB";
-
     private static final String ENTITY_API_URL = "/api/cronquist-ranks";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -66,7 +61,7 @@ class CronquistRankResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static CronquistRank createEntity(EntityManager em) {
-        CronquistRank cronquistRank = new CronquistRank().rank(DEFAULT_RANK).nomFr(DEFAULT_NOM_FR).nomLantin(DEFAULT_NOM_LANTIN);
+        CronquistRank cronquistRank = new CronquistRank().rank(DEFAULT_RANK);
         return cronquistRank;
     }
 
@@ -77,7 +72,7 @@ class CronquistRankResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static CronquistRank createUpdatedEntity(EntityManager em) {
-        CronquistRank cronquistRank = new CronquistRank().rank(UPDATED_RANK).nomFr(UPDATED_NOM_FR).nomLantin(UPDATED_NOM_LANTIN);
+        CronquistRank cronquistRank = new CronquistRank().rank(UPDATED_RANK);
         return cronquistRank;
     }
 
@@ -100,8 +95,6 @@ class CronquistRankResourceIT {
         assertThat(cronquistRankList).hasSize(databaseSizeBeforeCreate + 1);
         CronquistRank testCronquistRank = cronquistRankList.get(cronquistRankList.size() - 1);
         assertThat(testCronquistRank.getRank()).isEqualTo(DEFAULT_RANK);
-        assertThat(testCronquistRank.getNomFr()).isEqualTo(DEFAULT_NOM_FR);
-        assertThat(testCronquistRank.getNomLantin()).isEqualTo(DEFAULT_NOM_LANTIN);
     }
 
     @Test
@@ -151,9 +144,7 @@ class CronquistRankResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cronquistRank.getId().intValue())))
-            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK.toString())))
-            .andExpect(jsonPath("$.[*].nomFr").value(hasItem(DEFAULT_NOM_FR)))
-            .andExpect(jsonPath("$.[*].nomLantin").value(hasItem(DEFAULT_NOM_LANTIN)));
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK.toString())));
     }
 
     @Test
@@ -168,9 +159,7 @@ class CronquistRankResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(cronquistRank.getId().intValue()))
-            .andExpect(jsonPath("$.rank").value(DEFAULT_RANK.toString()))
-            .andExpect(jsonPath("$.nomFr").value(DEFAULT_NOM_FR))
-            .andExpect(jsonPath("$.nomLantin").value(DEFAULT_NOM_LANTIN));
+            .andExpect(jsonPath("$.rank").value(DEFAULT_RANK.toString()));
     }
 
     @Test
@@ -245,162 +234,6 @@ class CronquistRankResourceIT {
 
     @Test
     @Transactional
-    void getAllCronquistRanksByNomFrIsEqualToSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomFr equals to DEFAULT_NOM_FR
-        defaultCronquistRankShouldBeFound("nomFr.equals=" + DEFAULT_NOM_FR);
-
-        // Get all the cronquistRankList where nomFr equals to UPDATED_NOM_FR
-        defaultCronquistRankShouldNotBeFound("nomFr.equals=" + UPDATED_NOM_FR);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomFrIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomFr not equals to DEFAULT_NOM_FR
-        defaultCronquistRankShouldNotBeFound("nomFr.notEquals=" + DEFAULT_NOM_FR);
-
-        // Get all the cronquistRankList where nomFr not equals to UPDATED_NOM_FR
-        defaultCronquistRankShouldBeFound("nomFr.notEquals=" + UPDATED_NOM_FR);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomFrIsInShouldWork() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomFr in DEFAULT_NOM_FR or UPDATED_NOM_FR
-        defaultCronquistRankShouldBeFound("nomFr.in=" + DEFAULT_NOM_FR + "," + UPDATED_NOM_FR);
-
-        // Get all the cronquistRankList where nomFr equals to UPDATED_NOM_FR
-        defaultCronquistRankShouldNotBeFound("nomFr.in=" + UPDATED_NOM_FR);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomFrIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomFr is not null
-        defaultCronquistRankShouldBeFound("nomFr.specified=true");
-
-        // Get all the cronquistRankList where nomFr is null
-        defaultCronquistRankShouldNotBeFound("nomFr.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomFrContainsSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomFr contains DEFAULT_NOM_FR
-        defaultCronquistRankShouldBeFound("nomFr.contains=" + DEFAULT_NOM_FR);
-
-        // Get all the cronquistRankList where nomFr contains UPDATED_NOM_FR
-        defaultCronquistRankShouldNotBeFound("nomFr.contains=" + UPDATED_NOM_FR);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomFrNotContainsSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomFr does not contain DEFAULT_NOM_FR
-        defaultCronquistRankShouldNotBeFound("nomFr.doesNotContain=" + DEFAULT_NOM_FR);
-
-        // Get all the cronquistRankList where nomFr does not contain UPDATED_NOM_FR
-        defaultCronquistRankShouldBeFound("nomFr.doesNotContain=" + UPDATED_NOM_FR);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomLantinIsEqualToSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomLantin equals to DEFAULT_NOM_LANTIN
-        defaultCronquistRankShouldBeFound("nomLantin.equals=" + DEFAULT_NOM_LANTIN);
-
-        // Get all the cronquistRankList where nomLantin equals to UPDATED_NOM_LANTIN
-        defaultCronquistRankShouldNotBeFound("nomLantin.equals=" + UPDATED_NOM_LANTIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomLantinIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomLantin not equals to DEFAULT_NOM_LANTIN
-        defaultCronquistRankShouldNotBeFound("nomLantin.notEquals=" + DEFAULT_NOM_LANTIN);
-
-        // Get all the cronquistRankList where nomLantin not equals to UPDATED_NOM_LANTIN
-        defaultCronquistRankShouldBeFound("nomLantin.notEquals=" + UPDATED_NOM_LANTIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomLantinIsInShouldWork() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomLantin in DEFAULT_NOM_LANTIN or UPDATED_NOM_LANTIN
-        defaultCronquistRankShouldBeFound("nomLantin.in=" + DEFAULT_NOM_LANTIN + "," + UPDATED_NOM_LANTIN);
-
-        // Get all the cronquistRankList where nomLantin equals to UPDATED_NOM_LANTIN
-        defaultCronquistRankShouldNotBeFound("nomLantin.in=" + UPDATED_NOM_LANTIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomLantinIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomLantin is not null
-        defaultCronquistRankShouldBeFound("nomLantin.specified=true");
-
-        // Get all the cronquistRankList where nomLantin is null
-        defaultCronquistRankShouldNotBeFound("nomLantin.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomLantinContainsSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomLantin contains DEFAULT_NOM_LANTIN
-        defaultCronquistRankShouldBeFound("nomLantin.contains=" + DEFAULT_NOM_LANTIN);
-
-        // Get all the cronquistRankList where nomLantin contains UPDATED_NOM_LANTIN
-        defaultCronquistRankShouldNotBeFound("nomLantin.contains=" + UPDATED_NOM_LANTIN);
-    }
-
-    @Test
-    @Transactional
-    void getAllCronquistRanksByNomLantinNotContainsSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-
-        // Get all the cronquistRankList where nomLantin does not contain DEFAULT_NOM_LANTIN
-        defaultCronquistRankShouldNotBeFound("nomLantin.doesNotContain=" + DEFAULT_NOM_LANTIN);
-
-        // Get all the cronquistRankList where nomLantin does not contain UPDATED_NOM_LANTIN
-        defaultCronquistRankShouldBeFound("nomLantin.doesNotContain=" + UPDATED_NOM_LANTIN);
-    }
-
-    @Test
-    @Transactional
     void getAllCronquistRanksByChildrenIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRankRepository.saveAndFlush(cronquistRank);
@@ -453,28 +286,28 @@ class CronquistRankResourceIT {
 
     @Test
     @Transactional
-    void getAllCronquistRanksBySynonymesIsEqualToSomething() throws Exception {
+    void getAllCronquistRanksByNomsIsEqualToSomething() throws Exception {
         // Initialize the database
         cronquistRankRepository.saveAndFlush(cronquistRank);
-        CronquistRank synonymes;
-        if (TestUtil.findAll(em, CronquistRank.class).isEmpty()) {
-            synonymes = CronquistRankResourceIT.createEntity(em);
-            em.persist(synonymes);
+        ClassificationNom noms;
+        if (TestUtil.findAll(em, ClassificationNom.class).isEmpty()) {
+            noms = ClassificationNomResourceIT.createEntity(em);
+            em.persist(noms);
             em.flush();
         } else {
-            synonymes = TestUtil.findAll(em, CronquistRank.class).get(0);
+            noms = TestUtil.findAll(em, ClassificationNom.class).get(0);
         }
-        em.persist(synonymes);
+        em.persist(noms);
         em.flush();
-        cronquistRank.addSynonymes(synonymes);
+        cronquistRank.addNoms(noms);
         cronquistRankRepository.saveAndFlush(cronquistRank);
-        Long synonymesId = synonymes.getId();
+        Long nomsId = noms.getId();
 
-        // Get all the cronquistRankList where synonymes equals to synonymesId
-        defaultCronquistRankShouldBeFound("synonymesId.equals=" + synonymesId);
+        // Get all the cronquistRankList where noms equals to nomsId
+        defaultCronquistRankShouldBeFound("nomsId.equals=" + nomsId);
 
-        // Get all the cronquistRankList where synonymes equals to (synonymesId + 1)
-        defaultCronquistRankShouldNotBeFound("synonymesId.equals=" + (synonymesId + 1));
+        // Get all the cronquistRankList where noms equals to (nomsId + 1)
+        defaultCronquistRankShouldNotBeFound("nomsId.equals=" + (nomsId + 1));
     }
 
     @Test
@@ -503,32 +336,6 @@ class CronquistRankResourceIT {
         defaultCronquistRankShouldNotBeFound("parentId.equals=" + (parentId + 1));
     }
 
-    @Test
-    @Transactional
-    void getAllCronquistRanksByCronquistRankIsEqualToSomething() throws Exception {
-        // Initialize the database
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-        CronquistRank cronquistRank;
-        if (TestUtil.findAll(em, CronquistRank.class).isEmpty()) {
-            cronquistRank = CronquistRankResourceIT.createEntity(em);
-            em.persist(cronquistRank);
-            em.flush();
-        } else {
-            cronquistRank = TestUtil.findAll(em, CronquistRank.class).get(0);
-        }
-        em.persist(cronquistRank);
-        em.flush();
-        cronquistRank.setCronquistRank(cronquistRank);
-        cronquistRankRepository.saveAndFlush(cronquistRank);
-        Long cronquistRankId = cronquistRank.getId();
-
-        // Get all the cronquistRankList where cronquistRank equals to cronquistRankId
-        defaultCronquistRankShouldBeFound("cronquistRankId.equals=" + cronquistRankId);
-
-        // Get all the cronquistRankList where cronquistRank equals to (cronquistRankId + 1)
-        defaultCronquistRankShouldNotBeFound("cronquistRankId.equals=" + (cronquistRankId + 1));
-    }
-
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -538,9 +345,7 @@ class CronquistRankResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cronquistRank.getId().intValue())))
-            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK.toString())))
-            .andExpect(jsonPath("$.[*].nomFr").value(hasItem(DEFAULT_NOM_FR)))
-            .andExpect(jsonPath("$.[*].nomLantin").value(hasItem(DEFAULT_NOM_LANTIN)));
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK.toString())));
 
         // Check, that the count call also returns 1
         restCronquistRankMockMvc
@@ -588,7 +393,7 @@ class CronquistRankResourceIT {
         CronquistRank updatedCronquistRank = cronquistRankRepository.findById(cronquistRank.getId()).get();
         // Disconnect from session so that the updates on updatedCronquistRank are not directly saved in db
         em.detach(updatedCronquistRank);
-        updatedCronquistRank.rank(UPDATED_RANK).nomFr(UPDATED_NOM_FR).nomLantin(UPDATED_NOM_LANTIN);
+        updatedCronquistRank.rank(UPDATED_RANK);
 
         restCronquistRankMockMvc
             .perform(
@@ -603,8 +408,6 @@ class CronquistRankResourceIT {
         assertThat(cronquistRankList).hasSize(databaseSizeBeforeUpdate);
         CronquistRank testCronquistRank = cronquistRankList.get(cronquistRankList.size() - 1);
         assertThat(testCronquistRank.getRank()).isEqualTo(UPDATED_RANK);
-        assertThat(testCronquistRank.getNomFr()).isEqualTo(UPDATED_NOM_FR);
-        assertThat(testCronquistRank.getNomLantin()).isEqualTo(UPDATED_NOM_LANTIN);
     }
 
     @Test
@@ -675,8 +478,6 @@ class CronquistRankResourceIT {
         CronquistRank partialUpdatedCronquistRank = new CronquistRank();
         partialUpdatedCronquistRank.setId(cronquistRank.getId());
 
-        partialUpdatedCronquistRank.nomLantin(UPDATED_NOM_LANTIN);
-
         restCronquistRankMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedCronquistRank.getId())
@@ -690,8 +491,6 @@ class CronquistRankResourceIT {
         assertThat(cronquistRankList).hasSize(databaseSizeBeforeUpdate);
         CronquistRank testCronquistRank = cronquistRankList.get(cronquistRankList.size() - 1);
         assertThat(testCronquistRank.getRank()).isEqualTo(DEFAULT_RANK);
-        assertThat(testCronquistRank.getNomFr()).isEqualTo(DEFAULT_NOM_FR);
-        assertThat(testCronquistRank.getNomLantin()).isEqualTo(UPDATED_NOM_LANTIN);
     }
 
     @Test
@@ -706,7 +505,7 @@ class CronquistRankResourceIT {
         CronquistRank partialUpdatedCronquistRank = new CronquistRank();
         partialUpdatedCronquistRank.setId(cronquistRank.getId());
 
-        partialUpdatedCronquistRank.rank(UPDATED_RANK).nomFr(UPDATED_NOM_FR).nomLantin(UPDATED_NOM_LANTIN);
+        partialUpdatedCronquistRank.rank(UPDATED_RANK);
 
         restCronquistRankMockMvc
             .perform(
@@ -721,8 +520,6 @@ class CronquistRankResourceIT {
         assertThat(cronquistRankList).hasSize(databaseSizeBeforeUpdate);
         CronquistRank testCronquistRank = cronquistRankList.get(cronquistRankList.size() - 1);
         assertThat(testCronquistRank.getRank()).isEqualTo(UPDATED_RANK);
-        assertThat(testCronquistRank.getNomFr()).isEqualTo(UPDATED_NOM_FR);
-        assertThat(testCronquistRank.getNomLantin()).isEqualTo(UPDATED_NOM_LANTIN);
     }
 
     @Test

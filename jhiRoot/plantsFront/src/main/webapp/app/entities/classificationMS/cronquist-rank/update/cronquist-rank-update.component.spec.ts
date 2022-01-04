@@ -39,12 +39,10 @@ describe('CronquistRank Management Update Component', () => {
       const cronquistRank: ICronquistRank = { id: 456 };
       const parent: ICronquistRank = { id: 7986 };
       cronquistRank.parent = parent;
-      const cronquistRank: ICronquistRank = { id: 38058 };
-      cronquistRank.cronquistRank = cronquistRank;
 
-      const cronquistRankCollection: ICronquistRank[] = [{ id: 96515 }];
+      const cronquistRankCollection: ICronquistRank[] = [{ id: 38058 }];
       jest.spyOn(cronquistRankService, 'query').mockReturnValue(of(new HttpResponse({ body: cronquistRankCollection })));
-      const additionalCronquistRanks = [parent, cronquistRank];
+      const additionalCronquistRanks = [parent];
       const expectedCollection: ICronquistRank[] = [...additionalCronquistRanks, ...cronquistRankCollection];
       jest.spyOn(cronquistRankService, 'addCronquistRankToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -61,17 +59,14 @@ describe('CronquistRank Management Update Component', () => {
 
     it('Should update editForm', () => {
       const cronquistRank: ICronquistRank = { id: 456 };
-      const parent: ICronquistRank = { id: 46229 };
+      const parent: ICronquistRank = { id: 96515 };
       cronquistRank.parent = parent;
-      const cronquistRank: ICronquistRank = { id: 20537 };
-      cronquistRank.cronquistRank = cronquistRank;
 
       activatedRoute.data = of({ cronquistRank });
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(cronquistRank));
       expect(comp.cronquistRanksSharedCollection).toContain(parent);
-      expect(comp.cronquistRanksSharedCollection).toContain(cronquistRank);
     });
   });
 

@@ -106,6 +106,12 @@ import { RouterModule } from '@angular/router';
         loadChildren: () =>
           import('./plantsMS/classification-cronquist/classification-cronquist.module').then(m => m.PlantsMsClassificationCronquistModule),
       },
+      {
+        path: 'classification-nom',
+        data: { pageTitle: 'ClassificationNoms' },
+        loadChildren: () =>
+          import('./classificationMS/classification-nom/classification-nom.module').then(m => m.ClassificationMsClassificationNomModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

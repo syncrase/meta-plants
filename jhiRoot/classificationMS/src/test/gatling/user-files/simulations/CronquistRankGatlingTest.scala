@@ -72,8 +72,6 @@ class CronquistRankGatlingTest extends Simulation {
             .headers(headers_http_authenticated)
             .body(StringBody("""{
                 "rank":"SUPERREGNE"
-                , "nomFr":"SAMPLE_TEXT"
-                , "nomLantin":"SAMPLE_TEXT"
                 }""")).asJson
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_cronquistRank_url"))).exitHereIfFailed

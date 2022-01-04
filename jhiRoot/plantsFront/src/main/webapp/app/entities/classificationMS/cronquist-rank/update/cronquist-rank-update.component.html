@@ -25,18 +25,6 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" for="field_nomFr">Nom Fr</label>
-          <input type="text" class="form-control" name="nomFr" id="field_nomFr" data-cy="nomFr" formControlName="nomFr" />
-          <div *ngIf="editForm.get('nomFr')!.invalid && (editForm.get('nomFr')!.dirty || editForm.get('nomFr')!.touched)"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" for="field_nomLantin">Nom Lantin</label>
-          <input type="text" class="form-control" name="nomLantin" id="field_nomLantin" data-cy="nomLantin" formControlName="nomLantin" />
-          <div *ngIf="editForm.get('nomLantin')!.invalid && (editForm.get('nomLantin')!.dirty || editForm.get('nomLantin')!.touched)"></div>
-        </div>
-
-        <div class="form-group">
           <label class="form-control-label" for="field_parent">Parent</label>
           <select class="form-control" id="field_parent" data-cy="parent" name="parent" formControlName="parent">
             <option [ngValue]="null"></option>
@@ -45,29 +33,6 @@
               *ngFor="let cronquistRankOption of cronquistRanksSharedCollection; trackBy: trackCronquistRankById"
             >
               {{ cronquistRankOption.nomFr }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" for="field_cronquistRank">Cronquist Rank</label>
-          <select
-            class="form-control"
-            id="field_cronquistRank"
-            data-cy="cronquistRank"
-            name="cronquistRank"
-            formControlName="cronquistRank"
-          >
-            <option [ngValue]="null"></option>
-            <option
-              [ngValue]="
-                cronquistRankOption.id === editForm.get('cronquistRank')!.value?.id
-                  ? editForm.get('cronquistRank')!.value
-                  : cronquistRankOption
-              "
-              *ngFor="let cronquistRankOption of cronquistRanksSharedCollection; trackBy: trackCronquistRankById"
-            >
-              {{ cronquistRankOption.id }}
             </option>
           </select>
         </div>

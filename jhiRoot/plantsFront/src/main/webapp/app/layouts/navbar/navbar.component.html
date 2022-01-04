@@ -312,6 +312,18 @@
               <span>Classification Cronquist</span>
             </a>
           </li>
+          <li>
+            <a
+              class="dropdown-item"
+              routerLink="classification-nom"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="collapseNavbar()"
+            >
+              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+              <span>Classification Nom</span>
+            </a>
+          </li>
           <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
         </ul>
       </li>

@@ -28,7 +28,7 @@ public class Url implements Serializable {
     private String url;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "children", "urls", "synonymes", "parent", "cronquistRank" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "children", "urls", "noms", "parent" }, allowSetters = true)
     private CronquistRank cronquistRank;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

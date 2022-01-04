@@ -13,11 +13,5 @@
                                  constraintName="fk_cronquist_rank__parent_id"
                                  referencedColumnNames="id"
                                  referencedTableName="cronquist_rank"/>
-
-        <addForeignKeyConstraint baseColumnNames="cronquist_rank_id"
-                                 baseTableName="cronquist_rank"
-                                 constraintName="fk_cronquist_rank__cronquist_rank_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="cronquist_rank"/>
     </changeSet>
 </databaseChangeLog>

@@ -77,8 +77,9 @@
       "Ensoleillement",
       "TypeSemis",
       "CycleDeVie",
-      "ClassificationCronquist"
+      "ClassificationCronquist",
+      "ClassificationNom"
     ],
-    "lastLiquibaseTimestamp": 1640014950000
+    "lastLiquibaseTimestamp": 1641331937000
   }
 }

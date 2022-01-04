@@ -31,11 +31,8 @@ export class CronquistRankUpdatePage {
 
   idInput = element(by.id('field_id'));
   rankSelect = element(by.id('field_rank'));
-  nomFrInput = element(by.id('field_nomFr'));
-  nomLantinInput = element(by.id('field_nomLantin'));
 
   parentSelect = element(by.id('field_parent'));
-  cronquistRankSelect = element(by.id('field_cronquistRank'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getText();
@@ -61,22 +58,6 @@ export class CronquistRankUpdatePage {
     await this.rankSelect.all(by.tagName('option')).last().click();
   }
 
-  async setNomFrInput(nomFr: string): Promise<void> {
-    await this.nomFrInput.sendKeys(nomFr);
-  }
-
-  async getNomFrInput(): Promise<string> {
-    return await this.nomFrInput.getAttribute('value');
-  }
-
-  async setNomLantinInput(nomLantin: string): Promise<void> {
-    await this.nomLantinInput.sendKeys(nomLantin);
-  }
-
-  async getNomLantinInput(): Promise<string> {
-    return await this.nomLantinInput.getAttribute('value');
-  }
-
   async parentSelectLastOption(): Promise<void> {
     await this.parentSelect.all(by.tagName('option')).last().click();
   }
@@ -91,22 +72,6 @@ export class CronquistRankUpdatePage {
 
   async getParentSelectedOption(): Promise<string> {
     return await this.parentSelect.element(by.css('option:checked')).getText();
-  }
-
-  async cronquistRankSelectLastOption(): Promise<void> {
-    await this.cronquistRankSelect.all(by.tagName('option')).last().click();
-  }
-
-  async cronquistRankSelectOption(option: string): Promise<void> {
-    await this.cronquistRankSelect.sendKeys(option);
-  }
-
-  getCronquistRankSelect(): ElementFinder {
-    return this.cronquistRankSelect;
-  }
-
-  async getCronquistRankSelectedOption(): Promise<string> {
-    return await this.cronquistRankSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="classificationNom">
+      <h2 data-cy="classificationNomDetailsHeading"><span>Classification Nom</span></h2>
+
+      <hr />
+
+      <perma-alert-error></perma-alert-error>
+
+      <perma-alert></perma-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ classificationNom.id }}</span>
+        </dd>
+        <dt><span>Nom Fr</span></dt>
+        <dd>
+          <span>{{ classificationNom.nomFr }}</span>
+        </dd>
+        <dt><span>Nom Latin</span></dt>
+        <dd>
+          <span>{{ classificationNom.nomLatin }}</span>
+        </dd>
+        <dt><span>Cronquist Rank</span></dt>
+        <dd>
+          <div *ngIf="classificationNom.cronquistRank">
+            <a [routerLink]="['/cronquist-rank', classificationNom.cronquistRank?.id, 'view']">{{ classificationNom.cronquistRank?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/classification-nom', classificationNom.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

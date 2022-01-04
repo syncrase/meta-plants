@@ -34,10 +34,7 @@
         <tr permaSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
           <th scope="col" permaSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="rank"><span>Rank</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" permaSortBy="nomFr"><span>Nom Fr</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" permaSortBy="nomLantin"><span>Nom Lantin</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" permaSortBy="parent.nomFr"><span>Parent</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" permaSortBy="cronquistRank.id"><span>Cronquist Rank</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -47,16 +44,9 @@
             <a [routerLink]="['/cronquist-rank', cronquistRank.id, 'view']">{{ cronquistRank.id }}</a>
           </td>
           <td>{{ cronquistRank.rank }}</td>
-          <td>{{ cronquistRank.nomFr }}</td>
-          <td>{{ cronquistRank.nomLantin }}</td>
           <td>
             <div *ngIf="cronquistRank.parent">
               <a [routerLink]="['/cronquist-rank', cronquistRank.parent?.id, 'view']">{{ cronquistRank.parent?.nomFr }}</a>
-            </div>
-          </td>
-          <td>
-            <div *ngIf="cronquistRank.cronquistRank">
-              <a [routerLink]="['/cronquist-rank', cronquistRank.cronquistRank?.id, 'view']">{{ cronquistRank.cronquistRank?.id }}</a>
             </div>
           </td>
           <td class="text-right">

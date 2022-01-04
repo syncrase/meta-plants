@@ -88,12 +88,6 @@ public class CronquistRankQueryService extends QueryService<CronquistRank> {
             if (criteria.getRank() != null) {
                 specification = specification.and(buildSpecification(criteria.getRank(), CronquistRank_.rank));
             }
-            if (criteria.getNomFr() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNomFr(), CronquistRank_.nomFr));
-            }
-            if (criteria.getNomLantin() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNomLantin(), CronquistRank_.nomLantin));
-            }
             if (criteria.getChildrenId() != null) {
                 specification =
                     specification.and(
@@ -109,12 +103,12 @@ public class CronquistRankQueryService extends QueryService<CronquistRank> {
                         buildSpecification(criteria.getUrlsId(), root -> root.join(CronquistRank_.urls, JoinType.LEFT).get(Url_.id))
                     );
             }
-            if (criteria.getSynonymesId() != null) {
+            if (criteria.getNomsId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getSynonymesId(),
-                            root -> root.join(CronquistRank_.synonymes, JoinType.LEFT).get(CronquistRank_.id)
+                            criteria.getNomsId(),
+                            root -> root.join(CronquistRank_.noms, JoinType.LEFT).get(ClassificationNom_.id)
                         )
                     );
             }
@@ -124,15 +118,6 @@ public class CronquistRankQueryService extends QueryService<CronquistRank> {
                         buildSpecification(
                             criteria.getParentId(),
                             root -> root.join(CronquistRank_.parent, JoinType.LEFT).get(CronquistRank_.id)
-                        )
-                    );
-            }
-            if (criteria.getCronquistRankId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getCronquistRankId(),
-                            root -> root.join(CronquistRank_.cronquistRank, JoinType.LEFT).get(CronquistRank_.id)
                         )
                     );
             }

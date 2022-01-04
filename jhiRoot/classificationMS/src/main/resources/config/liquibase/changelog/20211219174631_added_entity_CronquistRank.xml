@@ -17,16 +17,7 @@
             <column name="rank" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="nom_fr" type="varchar(255)">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_cronquist_rank__nom_fr" />
-            </column>
-            <column name="nom_lantin" type="varchar(255)">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_cronquist_rank__nom_lantin" />
-            </column>
             <column name="parent_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-            <column name="cronquist_rank_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->

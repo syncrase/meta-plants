@@ -46,19 +46,13 @@ public class CronquistRankCriteria implements Serializable, Criteria {
 
     private CronquistTaxonomikRanksFilter rank;
 
-    private StringFilter nomFr;
-
-    private StringFilter nomLantin;
-
     private LongFilter childrenId;
 
     private LongFilter urlsId;
 
-    private LongFilter synonymesId;
+    private LongFilter nomsId;
 
     private LongFilter parentId;
-
-    private LongFilter cronquistRankId;
 
     private Boolean distinct;
 
@@ -67,13 +61,10 @@ public class CronquistRankCriteria implements Serializable, Criteria {
     public CronquistRankCriteria(CronquistRankCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.rank = other.rank == null ? null : other.rank.copy();
-        this.nomFr = other.nomFr == null ? null : other.nomFr.copy();
-        this.nomLantin = other.nomLantin == null ? null : other.nomLantin.copy();
         this.childrenId = other.childrenId == null ? null : other.childrenId.copy();
         this.urlsId = other.urlsId == null ? null : other.urlsId.copy();
-        this.synonymesId = other.synonymesId == null ? null : other.synonymesId.copy();
+        this.nomsId = other.nomsId == null ? null : other.nomsId.copy();
         this.parentId = other.parentId == null ? null : other.parentId.copy();
-        this.cronquistRankId = other.cronquistRankId == null ? null : other.cronquistRankId.copy();
         this.distinct = other.distinct;
     }
 
@@ -112,36 +103,6 @@ public class CronquistRankCriteria implements Serializable, Criteria {
         this.rank = rank;
     }
 
-    public StringFilter getNomFr() {
-        return nomFr;
-    }
-
-    public StringFilter nomFr() {
-        if (nomFr == null) {
-            nomFr = new StringFilter();
-        }
-        return nomFr;
-    }
-
-    public void setNomFr(StringFilter nomFr) {
-        this.nomFr = nomFr;
-    }
-
-    public StringFilter getNomLantin() {
-        return nomLantin;
-    }
-
-    public StringFilter nomLantin() {
-        if (nomLantin == null) {
-            nomLantin = new StringFilter();
-        }
-        return nomLantin;
-    }
-
-    public void setNomLantin(StringFilter nomLantin) {
-        this.nomLantin = nomLantin;
-    }
-
     public LongFilter getChildrenId() {
         return childrenId;
     }
@@ -172,19 +133,19 @@ public class CronquistRankCriteria implements Serializable, Criteria {
         this.urlsId = urlsId;
     }
 
-    public LongFilter getSynonymesId() {
-        return synonymesId;
+    public LongFilter getNomsId() {
+        return nomsId;
     }
 
-    public LongFilter synonymesId() {
-        if (synonymesId == null) {
-            synonymesId = new LongFilter();
+    public LongFilter nomsId() {
+        if (nomsId == null) {
+            nomsId = new LongFilter();
         }
-        return synonymesId;
+        return nomsId;
     }
 
-    public void setSynonymesId(LongFilter synonymesId) {
-        this.synonymesId = synonymesId;
+    public void setNomsId(LongFilter nomsId) {
+        this.nomsId = nomsId;
     }
 
     public LongFilter getParentId() {
@@ -200,21 +161,6 @@ public class CronquistRankCriteria implements Serializable, Criteria {
 
     public void setParentId(LongFilter parentId) {
         this.parentId = parentId;
-    }
-
-    public LongFilter getCronquistRankId() {
-        return cronquistRankId;
-    }
-
-    public LongFilter cronquistRankId() {
-        if (cronquistRankId == null) {
-            cronquistRankId = new LongFilter();
-        }
-        return cronquistRankId;
-    }
-
-    public void setCronquistRankId(LongFilter cronquistRankId) {
-        this.cronquistRankId = cronquistRankId;
     }
 
     public Boolean getDistinct() {
@@ -237,20 +183,17 @@ public class CronquistRankCriteria implements Serializable, Criteria {
         return (
             Objects.equals(id, that.id) &&
             Objects.equals(rank, that.rank) &&
-            Objects.equals(nomFr, that.nomFr) &&
-            Objects.equals(nomLantin, that.nomLantin) &&
             Objects.equals(childrenId, that.childrenId) &&
             Objects.equals(urlsId, that.urlsId) &&
-            Objects.equals(synonymesId, that.synonymesId) &&
+            Objects.equals(nomsId, that.nomsId) &&
             Objects.equals(parentId, that.parentId) &&
-            Objects.equals(cronquistRankId, that.cronquistRankId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, rank, nomFr, nomLantin, childrenId, urlsId, synonymesId, parentId, cronquistRankId, distinct);
+        return Objects.hash(id, rank, childrenId, urlsId, nomsId, parentId, distinct);
     }
 
     // prettier-ignore
@@ -259,13 +202,10 @@ public class CronquistRankCriteria implements Serializable, Criteria {
         return "CronquistRankCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
             (rank != null ? "rank=" + rank + ", " : "") +
-            (nomFr != null ? "nomFr=" + nomFr + ", " : "") +
-            (nomLantin != null ? "nomLantin=" + nomLantin + ", " : "") +
             (childrenId != null ? "childrenId=" + childrenId + ", " : "") +
             (urlsId != null ? "urlsId=" + urlsId + ", " : "") +
-            (synonymesId != null ? "synonymesId=" + synonymesId + ", " : "") +
+            (nomsId != null ? "nomsId=" + nomsId + ", " : "") +
             (parentId != null ? "parentId=" + parentId + ", " : "") +
-            (cronquistRankId != null ? "cronquistRankId=" + cronquistRankId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

@@ -23,8 +23,6 @@ describe('CronquistRank Service', () => {
     elemDefault = {
       id: 0,
       rank: CronquistTaxonomikRanks.SUPERREGNE,
-      nomFr: 'AAAAAAA',
-      nomLantin: 'AAAAAAA',
     };
   });
 
@@ -61,8 +59,6 @@ describe('CronquistRank Service', () => {
         {
           id: 1,
           rank: 'BBBBBB',
-          nomFr: 'BBBBBB',
-          nomLantin: 'BBBBBB',
         },
         elemDefault
       );
@@ -77,13 +73,7 @@ describe('CronquistRank Service', () => {
     });
 
     it('should partial update a CronquistRank', () => {
-      const patchObject = Object.assign(
-        {
-          nomFr: 'BBBBBB',
-          nomLantin: 'BBBBBB',
-        },
-        new CronquistRank()
-      );
+      const patchObject = Object.assign({}, new CronquistRank());
 
       const returnedFromService = Object.assign(patchObject, elemDefault);
 
@@ -101,8 +91,6 @@ describe('CronquistRank Service', () => {
         {
           id: 1,
           rank: 'BBBBBB',
-          nomFr: 'BBBBBB',
-          nomLantin: 'BBBBBB',
         },
         elemDefault
       );
@@ -154,7 +142,7 @@ describe('CronquistRank Service', () => {
       });
 
       it('should add only unique CronquistRank to an array', () => {
-        const cronquistRankArray: ICronquistRank[] = [{ id: 123 }, { id: 456 }, { id: 40199 }];
+        const cronquistRankArray: ICronquistRank[] = [{ id: 123 }, { id: 456 }, { id: 67191 }];
         const cronquistRankCollection: ICronquistRank[] = [{ id: 123 }];
         expectedResult = service.addCronquistRankToCollectionIfMissing(cronquistRankCollection, ...cronquistRankArray);
         expect(expectedResult).toHaveLength(3);

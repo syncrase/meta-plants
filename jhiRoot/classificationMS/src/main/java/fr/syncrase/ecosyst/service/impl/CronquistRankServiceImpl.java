@@ -42,12 +42,6 @@ public class CronquistRankServiceImpl implements CronquistRankService {
                 if (cronquistRank.getRank() != null) {
                     existingCronquistRank.setRank(cronquistRank.getRank());
                 }
-                if (cronquistRank.getNomFr() != null) {
-                    existingCronquistRank.setNomFr(cronquistRank.getNomFr());
-                }
-                if (cronquistRank.getNomLantin() != null) {
-                    existingCronquistRank.setNomLantin(cronquistRank.getNomLantin());
-                }
 
                 return existingCronquistRank;
             })

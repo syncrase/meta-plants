@@ -31,15 +31,9 @@ public class CronquistRank implements Serializable {
     @Column(name = "rank", nullable = false)
     private CronquistTaxonomikRanks rank;
 
-    @Column(name = "nom_fr", unique = true)
-    private String nomFr;
-
-    @Column(name = "nom_lantin", unique = true)
-    private String nomLantin;
-
     @OneToMany(mappedBy = "parent")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "children", "urls", "synonymes", "parent", "cronquistRank" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "children", "urls", "noms", "parent" }, allowSetters = true)
     private Set<CronquistRank> children = new HashSet<>();
 
     @OneToMany(mappedBy = "cronquistRank")
@@ -49,16 +43,12 @@ public class CronquistRank implements Serializable {
 
     @OneToMany(mappedBy = "cronquistRank")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "children", "urls", "synonymes", "parent", "cronquistRank" }, allowSetters = true)
-    private Set<CronquistRank> synonymes = new HashSet<>();
+    @JsonIgnoreProperties(value = { "cronquistRank" }, allowSetters = true)
+    private Set<ClassificationNom> noms = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "children", "urls", "synonymes", "parent", "cronquistRank" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "children", "urls", "noms", "parent" }, allowSetters = true)
     private CronquistRank parent;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "children", "urls", "synonymes", "parent", "cronquistRank" }, allowSetters = true)
-    private CronquistRank cronquistRank;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -86,32 +76,6 @@ public class CronquistRank implements Serializable {
 
     public void setRank(CronquistTaxonomikRanks rank) {
         this.rank = rank;
-    }
-
-    public String getNomFr() {
-        return this.nomFr;
-    }
-
-    public CronquistRank nomFr(String nomFr) {
-        this.setNomFr(nomFr);
-        return this;
-    }
-
-    public void setNomFr(String nomFr) {
-        this.nomFr = nomFr;
-    }
-
-    public String getNomLantin() {
-        return this.nomLantin;
-    }
-
-    public CronquistRank nomLantin(String nomLantin) {
-        this.setNomLantin(nomLantin);
-        return this;
-    }
-
-    public void setNomLantin(String nomLantin) {
-        this.nomLantin = nomLantin;
     }
 
     public Set<CronquistRank> getChildren() {
@@ -176,34 +140,34 @@ public class CronquistRank implements Serializable {
         return this;
     }
 
-    public Set<CronquistRank> getSynonymes() {
-        return this.synonymes;
+    public Set<ClassificationNom> getNoms() {
+        return this.noms;
     }
 
-    public void setSynonymes(Set<CronquistRank> cronquistRanks) {
-        if (this.synonymes != null) {
-            this.synonymes.forEach(i -> i.setCronquistRank(null));
+    public void setNoms(Set<ClassificationNom> classificationNoms) {
+        if (this.noms != null) {
+            this.noms.forEach(i -> i.setCronquistRank(null));
         }
-        if (cronquistRanks != null) {
-            cronquistRanks.forEach(i -> i.setCronquistRank(this));
+        if (classificationNoms != null) {
+            classificationNoms.forEach(i -> i.setCronquistRank(this));
         }
-        this.synonymes = cronquistRanks;
+        this.noms = classificationNoms;
     }
 
-    public CronquistRank synonymes(Set<CronquistRank> cronquistRanks) {
-        this.setSynonymes(cronquistRanks);
+    public CronquistRank noms(Set<ClassificationNom> classificationNoms) {
+        this.setNoms(classificationNoms);
         return this;
     }
 
-    public CronquistRank addSynonymes(CronquistRank cronquistRank) {
-        this.synonymes.add(cronquistRank);
-        cronquistRank.setCronquistRank(this);
+    public CronquistRank addNoms(ClassificationNom classificationNom) {
+        this.noms.add(classificationNom);
+        classificationNom.setCronquistRank(this);
         return this;
     }
 
-    public CronquistRank removeSynonymes(CronquistRank cronquistRank) {
-        this.synonymes.remove(cronquistRank);
-        cronquistRank.setCronquistRank(null);
+    public CronquistRank removeNoms(ClassificationNom classificationNom) {
+        this.noms.remove(classificationNom);
+        classificationNom.setCronquistRank(null);
         return this;
     }
 
@@ -217,19 +181,6 @@ public class CronquistRank implements Serializable {
 
     public CronquistRank parent(CronquistRank cronquistRank) {
         this.setParent(cronquistRank);
-        return this;
-    }
-
-    public CronquistRank getCronquistRank() {
-        return this.cronquistRank;
-    }
-
-    public void setCronquistRank(CronquistRank cronquistRank) {
-        this.cronquistRank = cronquistRank;
-    }
-
-    public CronquistRank cronquistRank(CronquistRank cronquistRank) {
-        this.setCronquistRank(cronquistRank);
         return this;
     }
 
@@ -258,8 +209,6 @@ public class CronquistRank implements Serializable {
         return "CronquistRank{" +
             "id=" + getId() +
             ", rank='" + getRank() + "'" +
-            ", nomFr='" + getNomFr() + "'" +
-            ", nomLantin='" + getNomLantin() + "'" +
             "}";
     }
 }

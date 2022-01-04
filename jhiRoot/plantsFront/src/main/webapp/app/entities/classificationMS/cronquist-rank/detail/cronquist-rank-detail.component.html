@@ -18,24 +18,10 @@
         <dd>
           <span>{{ cronquistRank.rank }}</span>
         </dd>
-        <dt><span>Nom Fr</span></dt>
-        <dd>
-          <span>{{ cronquistRank.nomFr }}</span>
-        </dd>
-        <dt><span>Nom Lantin</span></dt>
-        <dd>
-          <span>{{ cronquistRank.nomLantin }}</span>
-        </dd>
         <dt><span>Parent</span></dt>
         <dd>
           <div *ngIf="cronquistRank.parent">
             <a [routerLink]="['/cronquist-rank', cronquistRank.parent?.id, 'view']">{{ cronquistRank.parent?.nomFr }}</a>
-          </div>
-        </dd>
-        <dt><span>Cronquist Rank</span></dt>
-        <dd>
-          <div *ngIf="cronquistRank.cronquistRank">
-            <a [routerLink]="['/cronquist-rank', cronquistRank.cronquistRank?.id, 'view']">{{ cronquistRank.cronquistRank?.id }}</a>
           </div>
         </dd>
       </dl>
