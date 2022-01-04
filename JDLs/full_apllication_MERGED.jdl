@@ -37,6 +37,10 @@ application {
     
     entities *
 
+    microservice Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, ClassificationCronquist with plantsMS
+
+    microservice Url, CronquistRank, ClassificationNom with classificationMS
+
 }
 
 application {
@@ -100,7 +104,7 @@ application {
         embeddableLaunchScript false,
     }
     
-    entities Url, CronquistRank
+    entities Url, CronquistRank, ClassificationNom
 }
 
 // https://www.jhipster.tech/jdl/deployments
@@ -251,8 +255,11 @@ entity ClassificationCronquist {
 
 entity CronquistRank {
     rank CronquistTaxonomikRanks required
+}
+
+entity ClassificationNom {
     nomFr String unique,
-    nomLantin String unique
+    nomLatin String unique
 }
 
 enum CronquistTaxonomikRanks {
@@ -374,7 +381,7 @@ relationship ManyToOne {
 relationship OneToMany {
     CronquistRank{children(nomFr)} to CronquistRank{parent(nomFr)},
     CronquistRank{urls} to Url,
-    CronquistRank{synonymes(nomFr)} to CronquistRank
+    CronquistRank{noms} to ClassificationNom{cronquistRank},
 
 }
 
@@ -384,9 +391,9 @@ relationship OneToMany {
 //***********************************************************
 //***********************************************************
 
-microservice Url, CronquistRank with classificationMS
+//microservice Url, CronquistRank, ClassificationNom with classificationMS
 
-microservice Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, ClassificationCronquist with plantsMS
+//microservice Allelopathie, CycleDeVie, Ensoleillement, Feuillage, Germination, Mois, NomVernaculaire, PeriodeAnnee, Plante, Racine, Reproduction, Ressemblance, Semis, Sol, Strate, Temperature, TypeSemis, ClassificationCronquist with plantsMS
 
 
 paginate * with pagination
