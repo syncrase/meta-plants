@@ -1,4 +1,5 @@
 
+-- récupère une classification complète à partir de l'élément le plus profond
 with recursive tr(from_id, to_id, level, rank, nom) as (
     select cronRank.id, cronRank.parent_id, 1, cronRank.rank, cronRank.nom_fr as level
     from cronquist_rank cronRank
@@ -10,3 +11,9 @@ with recursive tr(from_id, to_id, level, rank, nom) as (
 )
 select *
 from tr;
+
+-- Liste les rangs corrompus (sans parent)
+SELECT *
+from cronquist_rank
+where parent_id is null
+  and rank <> 'SUPERREGNE';

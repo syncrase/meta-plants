@@ -25,17 +25,17 @@ public class WikipediaCrawler {
             /*
              Enregistrement d'une sous-tribu
              */
-            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
             scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
             scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
             scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");
-            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");
-            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");
 
-            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
-            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
             /*
             AssertThat
             - j'ai 24 entrées en bdd

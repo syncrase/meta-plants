@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.filter.StringFilter;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Transactional
@@ -105,7 +103,10 @@ public class CronquistService {
             }
         }
 
-        setIdsOfExistingRanks(list, existingClassification != null ? existingClassification.getReverseList() : Collections.EMPTY_LIST);
+        updateFieldsWithExisting(
+            list,
+            existingClassification != null ? existingClassification.getReverseList() : Collections.EMPTY_LIST
+        );
         save(list);
     }
 
@@ -145,15 +146,14 @@ public class CronquistService {
      * @param rankToInsertList           Liste des rangs que l'on souhaite enregistrer. Aucun des rangs n'a d'ID
      * @param existingClassificationList List des rangs de l'arborescence existante en base de données
      */
-    private void setIdsOfExistingRanks(@NotNull List<CronquistRank> rankToInsertList, @NotNull List<CronquistRank> existingClassificationList) {
+    private void updateFieldsWithExisting(@NotNull List<CronquistRank> rankToInsertList, @NotNull List<CronquistRank> existingClassificationList) {
         if (existingClassificationList.size() == 0) {
             log.info("No existing entity in the database");
             return;
         }
-        // Les deux premiers items sont égaux
         int offset = rankToInsertList.size() - existingClassificationList.size();
         if (!rankToInsertList.get(offset).getNomFr().equals(existingClassificationList.get(0).getNomFr())) {
-            log.error("Erreur : les deux premiers items égaux sont censé être égaux");
+            log.error("At the depth of the first known rank, ranks names must be equals");
             return;
         }
 
@@ -162,32 +162,51 @@ public class CronquistService {
         for (int i = 0; i < existingClassificationList.size(); i++) {
             existingRank = existingClassificationList.get(i);
             rankToInsert = rankToInsertList.get(offset + i);
-            // Chaine vide && chaine non vide
-            if (Objects.equals(rankToInsert.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK) && !Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-                // mon rang intermédiaire se trouve avoir un nom en base → ajout du nom et de l'id dans mon objet
+            updateNameAndId(existingRank, rankToInsert);
+            updateUrl(existingRank, rankToInsert);
+        }
+    }
+
+    private void updateNameAndId(CronquistRank existingRank, @NotNull CronquistRank rankToInsert) {
+        if (Objects.equals(rankToInsert.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK) && !Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+            // mon rang intermédiaire se trouve avoir un nom en base → ajout du nom et de l'id dans mon objet
+            rankToInsert.setId(existingRank.getId());
+            rankToInsert.setNomFr(existingRank.getNomFr());
+            return;
+        }
+        if (Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+            // mon rang avec (ou sans) nom n'en a pas en base → ajout de l'id à mon rang pour que soit update le nom trouvé
+            rankToInsert.setId(existingRank.getId());
+            return;
+        }
+        if (!Objects.equals(rankToInsert.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK) && !Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+            // Les deux noms existent
+            if (!rankToInsert.getNomFr().equals(existingRank.getNomFr())) {
+                // Ils sont différents
+                // TODO gestion des synonymes (après mise à jour du modèle)
+                log.warn("Synonymes: TO BE IMPLEMENTED");
+                // En base j'ai un autre nom, je la crois et je mets à jour mon objet
                 rankToInsert.setId(existingRank.getId());
                 rankToInsert.setNomFr(existingRank.getNomFr());
-                continue;
-            }
-            // Quelque current && chaine vide
-            if (Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-                // mon rang avec (ou sans) nom n'en a pas en base → ajout de l'id à mon rang pour que soit update le nom trouvé
+            } else {
+                // Ils sont égaux
                 rankToInsert.setId(existingRank.getId());
-                continue;
             }
-            // Chaine non vide && chaine non vide
-            if (!Objects.equals(rankToInsert.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK) && !Objects.equals(existingRank.getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
-                // Les deux noms existent
-                if (!rankToInsert.getNomFr().equals(existingRank.getNomFr())) {
-                    // TODO gestion des synonymes (après mise à jour du modèle)
-                    // Ils sont différents
-                    // En base j'ai un autre nom, je la crois et je met à jour mon objet
-                    rankToInsert.setId(existingRank.getId());
-                    rankToInsert.setNomFr(existingRank.getNomFr());
-                } else {
-                    // Ils sont égaux
-                    rankToInsert.setId(existingRank.getId());
+        }
+    }
+
+    private void updateUrl(@NotNull CronquistRank existingRank, @NotNull CronquistRank rankToInsert) {
+        if (existingRank.getUrls().size() > 0) {
+            if (rankToInsert.getUrls().size() > 0) {// Must be = 1. Check > 1 and throw error?
+                Url urlsAInserer = new ArrayList<>(rankToInsert.getUrls()).get(0);
+                Optional<Url> matchingExistingUrl = existingRank.getUrls().stream()
+                    .filter(url -> url.getUrl().equals(urlsAInserer.getUrl()))
+                    .findFirst();
+                if (matchingExistingUrl.isPresent()) {
+                    rankToInsert.getUrls().forEach(url -> url.setId(matchingExistingUrl.get().getId()));
                 }
+            } else {
+                rankToInsert.getUrls().addAll(existingRank.getUrls());
             }
         }
     }

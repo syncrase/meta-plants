@@ -69,17 +69,13 @@ public class CronquistClassification {
      *
      */
     public CronquistClassification(@NotNull CronquistRank cronquistRank) {
-
         initClassification();
-        // Récupère le premier rang
         Optional<CronquistRank> matchingRankInNestedClassification = classificationCronquist.stream()
             .filter(rank -> rank.getRank().equals(cronquistRank.getRank()))
             .findFirst();
 
         if (matchingRankInNestedClassification.isPresent()) {
-            // Ajoute tous les parents à l'objet en cours (this)
             int classificationDepthIndex = classificationCronquist.indexOf(matchingRankInNestedClassification.get());
-
             CronquistRank currentRank = cronquistRank;
             do {
                 if (!classificationCronquist.get(classificationDepthIndex).getRank().equals(currentRank.getRank())) {
@@ -94,8 +90,6 @@ public class CronquistClassification {
             } while (currentRank != null);
             this.clearTail();
         }
-
-
     }
 
     private void initClassification() {
