@@ -159,8 +159,8 @@ public class CronquistClassificationExtractor {
     }
 
     /**
-     * @param classificationItemKey   rang taxonomique
-     * @param rangValues taxon
+     * @param classificationItemKey rang taxonomique
+     * @param rangValues            taxon
      */
     private void setCronquistTaxonomyItem(@NotNull String classificationItemKey, RangTaxonomique rangValues) {
         switch (classificationItemKey) {

@@ -66,7 +66,6 @@ public class CronquistClassification {
 
     /**
      * Construit une classification à partir d'une arborescence déjà existante
-     *
      */
     public CronquistClassification(@NotNull CronquistRank cronquistRank) {
         initClassification();
@@ -445,6 +444,10 @@ public class CronquistClassification {
         return this.sousForme;
     }
 
+    /**
+     * La raison d'être des rangs intermédiaires (sans nom) est de lier deux rangs dont les noms sont connus.<br>
+     * Cette méthode nettoie les rangs intermédiaires enfants du dernier rang de la classification
+     */
     public void clearTail() {
         for (int i = classificationCronquist.size() - 1; i > 0; i--) {
             if (!Objects.equals(classificationCronquist.get(i).getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {

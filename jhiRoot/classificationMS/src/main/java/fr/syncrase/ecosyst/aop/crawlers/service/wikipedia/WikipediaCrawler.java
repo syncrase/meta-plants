@@ -22,41 +22,31 @@ public class WikipediaCrawler {
 
         try {
 //            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
-            /*
-             Enregistrement d'une sous-tribu
-             */
-//            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
             scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
             scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
             scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");
+            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");
+            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");
+            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
 
-//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
             /*
-            AssertThat
-            - j'ai 24 entrées en bdd
-            - même si j'exécute plusieurs fois
-             */
-            /*
-            Enregistrement d'une espèce partageant la même famille avec la plante précédente
-             */
-//            scrapWiki("https://fr.wikipedia.org/wiki/Palmier_%C3%A0_huile");
-            /*
-            AssertThat
-            - j'ai +8 entrées en bdd = 32
-            - un enregistrement  n'enregistre qu'un seul élément de chaque rang
-            - enregistrer une deuxième fois une espece ne duplique pas les sous rangs
-            - le rang est bien enregistré en base
+            TEST
+            - Deux enregistrements d'un même n'enregistre qu'un seul rang
+            - Enregistrement d'une espèce partageant un même rang avec une autre classification => la classification se rattache à l'existant, le rang en commun possède un enfant supplémentaire
+
             - TODO les classes sont synonymes
              */
             // https://fr.wikipedia.org/wiki/Ptychospermatinae rang inférieur
             // https://fr.wikipedia.org/wiki/Forsythia_%C3%97intermedia rang inférieur
             // https://fr.wikipedia.org/wiki/Ch%C3%A8vrefeuille rang inférieur
+            // TODO ajouter la classification des insectes
             // https://fr.wikipedia.org/wiki/Altise_des_tubercules Autre format pour la table de taxonomie des insectes
+
+            // TODO ajouter le scrapping des formats des pages suivantes
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Cristasemen autre format de liste
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Donaldia
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Bracteibegonia
@@ -65,8 +55,9 @@ public class WikipediaCrawler {
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Baccabegonia
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Apterobegonia
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Alicida
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Gyrostemonaceae
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Pilderia
+
+            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Gyrostemonaceae
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Rapateaceae
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Columelliaceae
             // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Clethraceae
@@ -79,6 +70,14 @@ public class WikipediaCrawler {
             e.printStackTrace();
         }
         log.info("All classification from Wikipedia had been scrapped");
+    }
+
+    @Contract(pure = true)
+    static @NotNull String getValidUrl(@NotNull String scrappedUrl) {
+        if (scrappedUrl.contains(("http"))) {
+            return scrappedUrl;
+        }
+        return "https://fr.wikipedia.org" + scrappedUrl;
     }
 
     private void scrapWikiList(String urlWikiListe) throws IOException {
@@ -176,20 +175,6 @@ public class WikipediaCrawler {
         return "Cronquist";
     }
 
-    private CronquistClassification extractionCronquist(@NotNull Elements encadreTaxonomique) {
-        Elements tables = encadreTaxonomique.select("table.taxobox_classification");
-        Element mainTable = tables.get(0);
-
-        CronquistClassificationExtractor cronquistClassificationExtractor = new CronquistClassificationExtractor();
-        CronquistClassification cronquistClassification = cronquistClassificationExtractor.getClassification(mainTable);
-
-
-        log.info("Created Cronquist classification : " + cronquistClassification);
-        return cronquistClassification;
-    }
-
-
-
 
 //    private APGIII extractionApg3(@NotNull Elements encadreTaxonomique) {
 //        log.info("Extract APGIII classification");
@@ -237,12 +222,16 @@ public class WikipediaCrawler {
 //        return apgiii;
 //    }
 
-    @Contract(pure = true)
-    static @NotNull String getValidUrl(String scrappedUrl) {
-        if (scrappedUrl.contains(("http"))) {
-            return scrappedUrl;
-        }
-        return "https://fr.wikipedia.org" + scrappedUrl;
+    private CronquistClassification extractionCronquist(@NotNull Elements encadreTaxonomique) {
+        Elements tables = encadreTaxonomique.select("table.taxobox_classification");
+        Element mainTable = tables.get(0);
+
+        CronquistClassificationExtractor cronquistClassificationExtractor = new CronquistClassificationExtractor();
+        CronquistClassification cronquistClassification = cronquistClassificationExtractor.getClassification(mainTable);
+
+
+        log.info("Created Cronquist classification : " + cronquistClassification);
+        return cronquistClassification;
     }
 
 }

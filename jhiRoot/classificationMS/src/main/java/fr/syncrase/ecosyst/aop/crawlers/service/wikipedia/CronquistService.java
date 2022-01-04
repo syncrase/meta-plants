@@ -77,14 +77,11 @@ public class CronquistService {
      * </ul>
      *
      * @param cronquistClassification side effect
-     * @param urlWiki                 url du wiki d'où à été extrait la classification
+     * @param urlWiki                 url du wiki d'où a été extrait la classification
      */
     public void saveCronquist(@NotNull CronquistClassification cronquistClassification, String urlWiki) {
-
-        // Les rangs inférieurs sans valeur n'ont pas de raison d'être puisque la raison d'être des rangs vides et de lier deux rangs dont les noms sont connus : nettoyage de l'arborescence au commencement
         cronquistClassification.clearTail();
         List<CronquistRank> list = cronquistClassification.getReverseList();
-        // TODO fix url : une nouvelles url est enregistrée à chaque fois [#1t9hzm8]
         list.get(0).addUrls(new Url().url(urlWiki));
         // Parcours du plus bas rang jusqu'au plus élevé pour trouver le premier rang existant en base
         CronquistClassification existingClassification = null;
@@ -126,8 +123,8 @@ public class CronquistService {
         CronquistRankCriteria.CronquistTaxonomikRanksFilter rankFilter = new CronquistRankCriteria.CronquistTaxonomikRanksFilter();
         rankFilter.setEquals(cronquistRank.getRank());
         rankCrit.setRank(rankFilter);
-        List<CronquistRank> byCriteria = cronquistRankQueryService.findByCriteria(rankCrit);
-        return byCriteria;
+        List<CronquistRank> existingCronquistRanks = cronquistRankQueryService.findByCriteria(rankCrit);
+        return existingCronquistRanks;
     }
 
 
