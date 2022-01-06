@@ -89,8 +89,11 @@ public class CronquistService {
         removeObsoleteInermediatesRanks(aReturn.rangsIntermediairesASupprimer);
     }
 
-    private void removeObsoleteInermediatesRanks(List<Long> rangsIntermediairesASupprimer) {
-        cronquistRankRepository.deleteAllById(rangsIntermediairesASupprimer);
+    private void removeObsoleteInermediatesRanks(@NotNull List<CronquistRank> rangsIntermediairesASupprimer) {
+        for (CronquistRank rankToRemove : rangsIntermediairesASupprimer) {
+            classificationNomRepository.deleteAll(rankToRemove.getNoms());
+            cronquistRankRepository.delete(rankToRemove);
+        }
     }
 
     /**

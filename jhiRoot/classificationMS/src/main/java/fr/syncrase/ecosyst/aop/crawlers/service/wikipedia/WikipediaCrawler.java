@@ -23,34 +23,34 @@ public class WikipediaCrawler {
         try {
 //            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
 
-//            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
-//            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
-//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae
-//            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Buckleya");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
+            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
+            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
+            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae
+            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Buckleya");
+            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
+            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
             scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
-//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
+            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
+            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
             scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Kielmeyera");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Kielmeyera");
+            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
 
 //            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
 

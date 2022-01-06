@@ -272,7 +272,7 @@ public class CronquistClassificationMerger {
             if (existingClassificationList.get(index).equals(classificationReverseList.get(index - i))) {
                 break;
             }
-            persistanceResult.rangsIntermediairesASupprimer.add(existingClassificationList.get(index).getId());
+            persistanceResult.rangsIntermediairesASupprimer.add(existingClassificationList.get(index));
             existingClassificationList.set(index, classificationReverseList.get(index - i));
         }
     }
@@ -296,7 +296,7 @@ public class CronquistClassificationMerger {
 
     static class MergeResult {
 
-        List<Long> rangsIntermediairesASupprimer;
+        List<CronquistRank> rangsIntermediairesASupprimer;
         List<CronquistRank> list;
 
         public MergeResult() {
