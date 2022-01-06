@@ -1,5 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
+import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistUtils.DEFAULT_NAME_FOR_CONNECTOR_RANK;
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistUtils.isRangIntermediaire;
 
 
 public class CronquistClassification {
@@ -99,40 +101,40 @@ public class CronquistClassification {
     }
 
     private void constructAscendance() {
-        this.superRegne = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERREGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(null);
-        this.regne = new CronquistRank().rank(CronquistTaxonomikRanks.REGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superRegne);
-        this.sousRegne = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSREGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(regne);
-        this.rameau = new CronquistRank().rank(CronquistTaxonomikRanks.RAMEAU).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousRegne);
-        this.infraRegne = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAREGNE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(rameau);
-        this.superEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.SUPEREMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraRegne);
-        this.embranchement = new CronquistRank().rank(CronquistTaxonomikRanks.EMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superEmbranchement);
-        this.sousEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSEMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(embranchement);
-        this.infraEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAEMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousEmbranchement);
-        this.microEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.MICROEMBRANCHEMENT).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraEmbranchement);
-        this.superClasse = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERCLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(microEmbranchement);
-        this.classe = new CronquistRank().rank(CronquistTaxonomikRanks.CLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superClasse);
-        this.sousClasse = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSCLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(classe);
-        this.infraClasse = new CronquistRank().rank(CronquistTaxonomikRanks.INFRACLASSE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousClasse);
-        this.superOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraClasse);
-        this.ordre = new CronquistRank().rank(CronquistTaxonomikRanks.ORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superOrdre);
-        this.sousOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(ordre);
-        this.infraOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousOrdre);
-        this.microOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.MICROORDRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(infraOrdre);
-        this.superFamille = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERFAMILLE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(microOrdre);
-        this.famille = new CronquistRank().rank(CronquistTaxonomikRanks.FAMILLE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(superFamille);
-        this.sousFamille = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSFAMILLE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(famille);
-        this.tribu = new CronquistRank().rank(CronquistTaxonomikRanks.TRIBU).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousFamille);
-        this.sousTribu = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSTRIBU).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(tribu);
-        this.genre = new CronquistRank().rank(CronquistTaxonomikRanks.GENRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousTribu);
-        this.sousGenre = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSGENRE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(genre);
-        this.section = new CronquistRank().rank(CronquistTaxonomikRanks.SECTION).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousGenre);
-        this.sousSection = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSSECTION).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(section);
-        this.espece = new CronquistRank().rank(CronquistTaxonomikRanks.ESPECE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousSection);
-        this.sousEspece = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSESPECE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(espece);
-        this.variete = new CronquistRank().rank(CronquistTaxonomikRanks.VARIETE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousEspece);
-        this.sousVariete = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSVARIETE).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(variete);
-        this.forme = new CronquistRank().rank(CronquistTaxonomikRanks.FORME).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(sousVariete);
-        this.sousForme = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSFORME).nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK).parent(forme);
+        this.superRegne = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERREGNE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(null);
+        this.regne = new CronquistRank().rank(CronquistTaxonomikRanks.REGNE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(superRegne);
+        this.sousRegne = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSREGNE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(regne);
+        this.rameau = new CronquistRank().rank(CronquistTaxonomikRanks.RAMEAU).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousRegne);
+        this.infraRegne = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAREGNE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(rameau);
+        this.superEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.SUPEREMBRANCHEMENT).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(infraRegne);
+        this.embranchement = new CronquistRank().rank(CronquistTaxonomikRanks.EMBRANCHEMENT).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(superEmbranchement);
+        this.sousEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSEMBRANCHEMENT).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(embranchement);
+        this.infraEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAEMBRANCHEMENT).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousEmbranchement);
+        this.microEmbranchement = new CronquistRank().rank(CronquistTaxonomikRanks.MICROEMBRANCHEMENT).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(infraEmbranchement);
+        this.superClasse = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERCLASSE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(microEmbranchement);
+        this.classe = new CronquistRank().rank(CronquistTaxonomikRanks.CLASSE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(superClasse);
+        this.sousClasse = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSCLASSE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(classe);
+        this.infraClasse = new CronquistRank().rank(CronquistTaxonomikRanks.INFRACLASSE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousClasse);
+        this.superOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERORDRE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(infraClasse);
+        this.ordre = new CronquistRank().rank(CronquistTaxonomikRanks.ORDRE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(superOrdre);
+        this.sousOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSORDRE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(ordre);
+        this.infraOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.INFRAORDRE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousOrdre);
+        this.microOrdre = new CronquistRank().rank(CronquistTaxonomikRanks.MICROORDRE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(infraOrdre);
+        this.superFamille = new CronquistRank().rank(CronquistTaxonomikRanks.SUPERFAMILLE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(microOrdre);
+        this.famille = new CronquistRank().rank(CronquistTaxonomikRanks.FAMILLE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(superFamille);
+        this.sousFamille = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSFAMILLE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(famille);
+        this.tribu = new CronquistRank().rank(CronquistTaxonomikRanks.TRIBU).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousFamille);
+        this.sousTribu = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSTRIBU).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(tribu);
+        this.genre = new CronquistRank().rank(CronquistTaxonomikRanks.GENRE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousTribu);
+        this.sousGenre = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSGENRE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(genre);
+        this.section = new CronquistRank().rank(CronquistTaxonomikRanks.SECTION).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousGenre);
+        this.sousSection = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSSECTION).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(section);
+        this.espece = new CronquistRank().rank(CronquistTaxonomikRanks.ESPECE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousSection);
+        this.sousEspece = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSESPECE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(espece);
+        this.variete = new CronquistRank().rank(CronquistTaxonomikRanks.VARIETE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousEspece);
+        this.sousVariete = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSVARIETE).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(variete);
+        this.forme = new CronquistRank().rank(CronquistTaxonomikRanks.FORME).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(sousVariete);
+        this.sousForme = new CronquistRank().rank(CronquistTaxonomikRanks.SOUSFORME).addNoms(new ClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK)).parent(forme);
     }
 
     private void constructDescendance() {
@@ -451,7 +453,7 @@ public class CronquistClassification {
      */
     public void clearTail() {
         for (int i = classificationCronquist.size() - 1; i > 0; i--) {
-            if (!Objects.equals(classificationCronquist.get(i).getNomFr(), DEFAULT_NAME_FOR_CONNECTOR_RANK)) {
+            if (!isRangIntermediaire(classificationCronquist.get(i))) {
                 break;
             }
             classificationCronquist.get(i - 1).removeChildren(classificationCronquist.get(i));

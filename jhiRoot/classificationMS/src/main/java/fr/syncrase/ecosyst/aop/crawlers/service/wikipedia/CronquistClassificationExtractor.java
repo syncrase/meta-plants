@@ -1,5 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
+import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistUtils.addNameToCronquistRank;
 
 public class CronquistClassificationExtractor {
 
@@ -153,9 +156,11 @@ public class CronquistClassificationExtractor {
         }
     }
 
-    private void updateRank(@NotNull CronquistRank rank, String rankNomFr, String rankUrl) {
-        rank.setNomFr(rankNomFr);
-        rank.addUrls(new Url().url(WikipediaCrawler.getValidUrl(rankUrl)));
+    private void updateRank(@NotNull CronquistRank rank, String rankNomFr, String url) {
+        addNameToCronquistRank(rank, new ClassificationNom().nomFr(rankNomFr));
+        if ((url != null) && (!url.equals(""))) {
+            rank.addUrls(new Url().url(WikipediaCrawler.getValidUrl(url)));
+        }
     }
 
     /**
@@ -165,106 +170,109 @@ public class CronquistClassificationExtractor {
     private void setCronquistTaxonomyItem(@NotNull String classificationItemKey, RangTaxonomique rangValues) {
         switch (classificationItemKey) {
             case "Super-Règne":
-                cronquistClassification.getSuperRegne().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSuperRegne(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Règne":
-                cronquistClassification.getRegne().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getRegne(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-règne":
-                cronquistClassification.getSousRegne().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousRegne(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Rameau":
-                cronquistClassification.getRameau().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getRameau(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Infra-règne":
-                cronquistClassification.getInfraRegne().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getInfraRegne(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Super-division":
-                cronquistClassification.getSuperDivision().setNomFr(rangValues.getTaxonName());
+            case "Super-embranchement":
+                updateRank(cronquistClassification.getSuperDivision(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Division":
-                cronquistClassification.getEmbranchement().setNomFr(rangValues.getTaxonName());
+            case "Embranchement":
+                updateRank(cronquistClassification.getEmbranchement(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-division":
-                cronquistClassification.getSousEmbranchement().setNomFr(rangValues.getTaxonName());
+            case "Sous-embranchement":
+                updateRank(cronquistClassification.getSousEmbranchement(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Infra-embranchement":
-                cronquistClassification.getInfraEmbranchement().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getInfraEmbranchement(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Micro-embranchement":
-                cronquistClassification.getMicroEmbranchement().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getMicroEmbranchement(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Super-classe":
-                cronquistClassification.getSuperClasse().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSuperClasse(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Classe":
-                cronquistClassification.getClasse().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getClasse(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-classe":
-                cronquistClassification.getSousClasse().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousClasse(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Infra-classe":
-                cronquistClassification.getInfraClasse().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getInfraClasse(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Super-ordre":
-                cronquistClassification.getSuperOrdre().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSuperOrdre(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Ordre":
-                cronquistClassification.getOrdre().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getOrdre(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-ordre":
-                cronquistClassification.getSousOrdre().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousOrdre(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Infra-ordre":
-                cronquistClassification.getInfraOrdre().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getInfraOrdre(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Micro-ordre":
-                cronquistClassification.getMicroOrdre().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getMicroOrdre(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Super-famille":
-                cronquistClassification.getSuperFamille().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSuperFamille(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Famille":
-                cronquistClassification.getFamille().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getFamille(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-famille":
-                cronquistClassification.getSousFamille().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousFamille(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Tribu":
-                cronquistClassification.getTribu().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getTribu(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-tribu":
-                cronquistClassification.getSousTribu().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousTribu(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Genre":
-                cronquistClassification.getGenre().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getGenre(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-genre":
-                cronquistClassification.getSousGenre().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousGenre(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Section":
-                cronquistClassification.getSection().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSection(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-section":
-                cronquistClassification.getSousSection().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousSection(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Espèce":
-                cronquistClassification.getEspece().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getEspece(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-espèce":
-                cronquistClassification.getSousEspece().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousEspece(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Variété":
-                cronquistClassification.getVariete().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getVariete(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-variété":
-                cronquistClassification.getSousVariete().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousVariete(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Forme":
-                cronquistClassification.getForme().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getForme(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "Sous-forme":
-                cronquistClassification.getSousForme().setNomFr(rangValues.getTaxonName());
+                updateRank(cronquistClassification.getSousForme(), rangValues.getTaxonName(), rangValues.getUrl());
                 break;
             case "":
                 log.warn("Rang taxonomique inexistant dans le wiki");
@@ -281,32 +289,30 @@ public class CronquistClassificationExtractor {
         Elements siblings = mainTable.siblingElements();
         // Retire les éléments qui correspondent à autre chose que le rang ou le nom du taxon
         siblings.removeIf(el ->
-                el.className().equals("entete") ||
-                    el.className().equals("images") ||
-                    el.className().equals("legend") ||
-                    el.tagName().equals("table") ||
-                    el.select("p a").attr("title").contains("Classification") ||
-                    el.select("p a").attr("title").contains("Synonyme") ||
-                    el.tagName().equals("ul") ||
-                    el.select("p a").attr("title").contains("Statut de conservation") ||
-                    el.select("p sup").attr("class").equals("reference") ||
-                    el.select("p img").size() != 0 ||
-                    el.select("p").text().equals("Taxons de rang inférieur") ||
-                    el.select("p").text().equals("Répartition géographique") ||
-                    el.select("p").text().equals("(voir texte) ") ||
-                    el.select("div ul").size() != 0 ||
-                    el.select("center").size() != 0 ||
-                    el.select("div div img").attr("alt").equals("Attention !") ||
-                    el.select("p b").text().equals("DD Données insuffisantes") || //https://fr.wikipedia.org/wiki/Alisma_gramineum
-                    el.select("p.mw-empty-elt").size() != 0 ||
-                    el.select("p i").size() != 0 || //https://fr.wikipedia.org/wiki/Alternanthera_reineckii Le synonyme n'est pas dans le div synonyme
-//                el.select("p").text().equals("Espèces de rang inférieur") ||
-//                el.select("p").text().equals("Genres de rang inférieur") ||
-                    el.select("p").text().contains("de rang inférieur") ||
-                    el.select("p br").size() != 0 ||
-                    el.select("div.left").size() != 0 && el.select("div.left").get(0).childrenSize() == 0 || //https://fr.wikipedia.org/wiki/Cryosophila_williamsii
-                    el.select("hr").size() != 0 ||
-                    el.select("dl").size() != 0
+            el.className().equals("entete") ||
+                el.className().equals("images") ||
+                el.className().equals("legend") ||
+                el.tagName().equals("table") ||
+                el.select("p a").attr("title").contains("Classification") ||
+                el.select("p a").attr("title").contains("Synonyme") ||
+                el.tagName().equals("ul") ||
+                el.select("p a").attr("title").contains("Statut de conservation") ||
+                el.select("p sup").attr("class").equals("reference") ||
+                el.select("p img").size() != 0 ||
+                el.select("p").text().equals("Taxons de rang inférieur") ||
+                el.select("p").text().equals("Répartition géographique") ||
+                el.select("p").text().equals("(voir texte) ") ||
+                el.select("div ul").size() != 0 ||
+                el.select("center").size() != 0 ||
+                el.select("div div img").attr("alt").equals("Attention !") ||
+                el.select("p b").text().equals("DD Données insuffisantes") || //https://fr.wikipedia.org/wiki/Alisma_gramineum
+                el.select("p.mw-empty-elt").size() != 0 ||
+                el.select("p i").size() != 0 || //https://fr.wikipedia.org/wiki/Alternanthera_reineckii Le synonyme n'est pas dans le div synonyme
+                el.select("p").text().contains("de rang inférieur") ||
+                el.select("p br").size() != 0 ||
+                el.select("div.left").size() != 0 && el.select("div.left").get(0).childrenSize() == 0 || //https://fr.wikipedia.org/wiki/Cryosophila_williamsii
+                el.select("hr").size() != 0 ||
+                el.select("dl").size() != 0
 
 
         );

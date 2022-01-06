@@ -1,10 +1,11 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
 import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
 import fr.syncrase.ecosyst.repository.UrlRepository;
+import fr.syncrase.ecosyst.service.ClassificationNomQueryService;
 import fr.syncrase.ecosyst.service.CronquistRankQueryService;
-import fr.syncrase.ecosyst.service.UrlQueryService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 @Transactional
@@ -20,13 +21,28 @@ public class CronquistService {
 
     private final Logger log = LoggerFactory.getLogger(CronquistService.class);
 
-    private CronquistRankRepository cronquistRankRepositoryRepository;
+    private CronquistRankRepository cronquistRankRepository;
 
     private CronquistRankQueryService cronquistRankQueryService;
 
+    private ClassificationNomQueryService classificationNomQueryService;
+
+    private ClassificationNomRepository classificationNomRepository;
+
     private UrlRepository urlRepository;
 
-    private UrlQueryService urlQueryService;
+    public CronquistService() {
+    }
+
+    @Autowired
+    public void setClassificationNomRepository(ClassificationNomRepository classificationNomRepository) {
+        this.classificationNomRepository = classificationNomRepository;
+    }
+
+    @Autowired
+    public void setClassificationNom(ClassificationNomQueryService classificationNomQueryService) {
+        this.classificationNomQueryService = classificationNomQueryService;
+    }
 
     @Autowired
     public void setCronquistRankQueryService(CronquistRankQueryService cronquistRankQueryService) {
@@ -34,18 +50,13 @@ public class CronquistService {
     }
 
     @Autowired
-    public void setCronquistRankRepositoryRepository(CronquistRankRepository cronquistRankRepositoryRepository) {
-        this.cronquistRankRepositoryRepository = cronquistRankRepositoryRepository;
+    public void setCronquistRankRepository(CronquistRankRepository cronquistRankRepository) {
+        this.cronquistRankRepository = cronquistRankRepository;
     }
 
     @Autowired
     public void setUrlRepository(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
-    }
-
-    @Autowired
-    public void setUrlQueryService(UrlQueryService urlQueryService) {
-        this.urlQueryService = urlQueryService;
     }
 
     /**
@@ -72,23 +83,28 @@ public class CronquistService {
      */
     public void saveCronquist(@NotNull CronquistClassification cronquistClassification, String urlWiki) {
 
-        CronquistClassificationMerger.MergeResult aReturn = new CronquistClassificationMerger(cronquistClassification, urlWiki, cronquistRankQueryService).mergeClassifications();
+        CronquistClassificationMerger.MergeResult aReturn = new CronquistClassificationMerger(cronquistClassification, urlWiki, cronquistRankQueryService, classificationNomQueryService).synchronizeClassifications();
 
         save(aReturn.list);
         removeObsoleteInermediatesRanks(aReturn.rangsIntermediairesASupprimer);
     }
 
     private void removeObsoleteInermediatesRanks(List<Long> rangsIntermediairesASupprimer) {
-        cronquistRankRepositoryRepository.deleteAllById(rangsIntermediairesASupprimer);
+        cronquistRankRepository.deleteAllById(rangsIntermediairesASupprimer);
     }
 
-
-    private void save(@NotNull List<CronquistRank> list) {
+    /**
+     * Enregistre la classification du rang supérieur (Super règne) jusqu'au rang le plus profond
+     *
+     * @param flatClassification classification à enregistrer
+     */
+    private void save(@NotNull List<CronquistRank> flatClassification) {
         // Etant donné qu'un rang inférieur doit contenir le rang supérieur, l'enregistrement des classifications doit se faire en commençant par le rang supérieur
-        int size = list.size() - 1;
+        int size = flatClassification.size() - 1;
         for (int i = size; i >= 0; i--) {
-            cronquistRankRepositoryRepository.save(list.get(i));
-            urlRepository.saveAll(list.get(i).getUrls());
+            cronquistRankRepository.save(flatClassification.get(i));
+            classificationNomRepository.saveAll(flatClassification.get(i).getNoms());
+            urlRepository.saveAll(flatClassification.get(i).getUrls());
         }
     }
 

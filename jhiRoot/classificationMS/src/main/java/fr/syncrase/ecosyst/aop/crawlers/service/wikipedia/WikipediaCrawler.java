@@ -27,8 +27,8 @@ public class WikipediaCrawler {
 //            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
 //            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
-//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae
-//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
 //            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae
 //            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
@@ -36,12 +36,12 @@ public class WikipediaCrawler {
 //            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
+//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
 //            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");
+            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
 //            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
@@ -58,8 +58,6 @@ public class WikipediaCrawler {
             TEST
             - Deux enregistrements d'un même n'enregistre qu'un seul rang
             - Enregistrement d'une espèce partageant un même rang avec une autre classification => la classification se rattache à l'existant, le rang en commun possède un enfant supplémentaire
-
-            - TODO les classes sont synonymes
              */
             // https://fr.wikipedia.org/wiki/Ptychospermatinae rang inférieur
             // https://fr.wikipedia.org/wiki/Forsythia_%C3%97intermedia rang inférieur
