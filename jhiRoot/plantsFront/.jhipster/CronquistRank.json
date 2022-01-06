@@ -26,6 +26,7 @@
       "relationshipType": "one-to-many",
       "otherEntityName": "classificationNom",
       "otherEntityRelationshipName": "cronquistRank",
+      "relationshipValidateRules": "required",
       "relationshipName": "noms"
     },
     {

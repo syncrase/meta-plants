@@ -62,6 +62,16 @@ class ClassificationNomResourceIT {
      */
     public static ClassificationNom createEntity(EntityManager em) {
         ClassificationNom classificationNom = new ClassificationNom().nomFr(DEFAULT_NOM_FR).nomLatin(DEFAULT_NOM_LATIN);
+        // Add required entity
+        CronquistRank cronquistRank;
+        if (TestUtil.findAll(em, CronquistRank.class).isEmpty()) {
+            cronquistRank = CronquistRankResourceIT.createEntity(em);
+            em.persist(cronquistRank);
+            em.flush();
+        } else {
+            cronquistRank = TestUtil.findAll(em, CronquistRank.class).get(0);
+        }
+        classificationNom.setCronquistRank(cronquistRank);
         return classificationNom;
     }
 
@@ -73,6 +83,16 @@ class ClassificationNomResourceIT {
      */
     public static ClassificationNom createUpdatedEntity(EntityManager em) {
         ClassificationNom classificationNom = new ClassificationNom().nomFr(UPDATED_NOM_FR).nomLatin(UPDATED_NOM_LATIN);
+        // Add required entity
+        CronquistRank cronquistRank;
+        if (TestUtil.findAll(em, CronquistRank.class).isEmpty()) {
+            cronquistRank = CronquistRankResourceIT.createUpdatedEntity(em);
+            em.persist(cronquistRank);
+            em.flush();
+        } else {
+            cronquistRank = TestUtil.findAll(em, CronquistRank.class).get(0);
+        }
+        classificationNom.setCronquistRank(cronquistRank);
         return classificationNom;
     }
 

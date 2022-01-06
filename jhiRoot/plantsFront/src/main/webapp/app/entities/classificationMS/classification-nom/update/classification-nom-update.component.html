@@ -32,7 +32,7 @@
             name="cronquistRank"
             formControlName="cronquistRank"
           >
-            <option [ngValue]="null"></option>
+            <option *ngIf="!editForm.get('cronquistRank')!.value" [ngValue]="null" selected></option>
             <option
               [ngValue]="
                 cronquistRankOption.id === editForm.get('cronquistRank')!.value?.id
@@ -44,6 +44,13 @@
               {{ cronquistRankOption.id }}
             </option>
           </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['cronquistRank'])!.invalid && (editForm.get(['cronquistRank'])!.dirty || editForm.get(['cronquistRank'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['cronquistRank'])?.errors?.required"> This field is required. </small>
         </div>
       </div>
 

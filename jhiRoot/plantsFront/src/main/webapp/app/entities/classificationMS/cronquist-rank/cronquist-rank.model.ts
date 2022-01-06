@@ -7,7 +7,7 @@ export interface ICronquistRank {
   rank?: CronquistTaxonomikRanks;
   children?: ICronquistRank[] | null;
   urls?: IUrl[] | null;
-  noms?: IClassificationNom[] | null;
+  noms?: IClassificationNom[];
   parent?: ICronquistRank | null;
 }
 
@@ -17,7 +17,7 @@ export class CronquistRank implements ICronquistRank {
     public rank?: CronquistTaxonomikRanks,
     public children?: ICronquistRank[] | null,
     public urls?: IUrl[] | null,
-    public noms?: IClassificationNom[] | null,
+    public noms?: IClassificationNom[],
     public parent?: ICronquistRank | null
   ) {}
 }

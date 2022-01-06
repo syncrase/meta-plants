@@ -1,9 +1,9 @@
-import { browser, ExpectedConditions as ec, promise } from 'protractor';
+import { browser, ExpectedConditions as ec /* , promise */ } from 'protractor';
 import { NavBarPage, SignInPage } from '../../../page-objects/jhi-page-objects';
 
 import {
   ClassificationNomComponentsPage,
-  ClassificationNomDeleteDialog,
+  /* ClassificationNomDeleteDialog, */
   ClassificationNomUpdatePage,
 } from './classification-nom.page-object';
 
@@ -14,7 +14,7 @@ describe('ClassificationNom e2e test', () => {
   let signInPage: SignInPage;
   let classificationNomComponentsPage: ClassificationNomComponentsPage;
   let classificationNomUpdatePage: ClassificationNomUpdatePage;
-  let classificationNomDeleteDialog: ClassificationNomDeleteDialog;
+  /* let classificationNomDeleteDialog: ClassificationNomDeleteDialog; */
   const username = process.env.E2E_USERNAME ?? 'admin';
   const password = process.env.E2E_PASSWORD ?? 'admin';
 
@@ -44,37 +44,35 @@ describe('ClassificationNom e2e test', () => {
     await classificationNomUpdatePage.cancel();
   });
 
-  it('should create and save ClassificationNoms', async () => {
-    const nbButtonsBeforeCreate = await classificationNomComponentsPage.countDeleteButtons();
+  /* it('should create and save ClassificationNoms', async () => {
+        const nbButtonsBeforeCreate = await classificationNomComponentsPage.countDeleteButtons();
 
-    await classificationNomComponentsPage.clickOnCreateButton();
+        await classificationNomComponentsPage.clickOnCreateButton();
 
-    await promise.all([
-      classificationNomUpdatePage.setNomFrInput('nomFr'),
-      classificationNomUpdatePage.setNomLatinInput('nomLatin'),
-      classificationNomUpdatePage.cronquistRankSelectLastOption(),
-    ]);
+        await promise.all([
+            classificationNomUpdatePage.setNomFrInput('nomFr'),
+            classificationNomUpdatePage.setNomLatinInput('nomLatin'),
+            classificationNomUpdatePage.cronquistRankSelectLastOption(),
+        ]);
 
-    await classificationNomUpdatePage.save();
-    expect(await classificationNomUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
+        await classificationNomUpdatePage.save();
+        expect(await classificationNomUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
-    expect(await classificationNomComponentsPage.countDeleteButtons()).to.eq(
-      nbButtonsBeforeCreate + 1,
-      'Expected one more entry in the table'
-    );
-  });
+        expect(await classificationNomComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1, 'Expected one more entry in the table');
+    }); */
 
-  it('should delete last ClassificationNom', async () => {
-    const nbButtonsBeforeDelete = await classificationNomComponentsPage.countDeleteButtons();
-    await classificationNomComponentsPage.clickOnLastDeleteButton();
+  /* it('should delete last ClassificationNom', async () => {
+        const nbButtonsBeforeDelete = await classificationNomComponentsPage.countDeleteButtons();
+        await classificationNomComponentsPage.clickOnLastDeleteButton();
 
-    classificationNomDeleteDialog = new ClassificationNomDeleteDialog();
-    expect(await classificationNomDeleteDialog.getDialogTitle()).to.eq('Are you sure you want to delete this Classification Nom?');
-    await classificationNomDeleteDialog.clickOnConfirmButton();
-    await browser.wait(ec.visibilityOf(classificationNomComponentsPage.title), 5000);
+        classificationNomDeleteDialog = new ClassificationNomDeleteDialog();
+        expect(await classificationNomDeleteDialog.getDialogTitle())
+            .to.eq('Are you sure you want to delete this Classification Nom?');
+        await classificationNomDeleteDialog.clickOnConfirmButton();
+        await browser.wait(ec.visibilityOf(classificationNomComponentsPage.title), 5000);
 
-    expect(await classificationNomComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
-  });
+        expect(await classificationNomComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
+    }); */
 
   after(async () => {
     await navBarPage.autoSignOut();

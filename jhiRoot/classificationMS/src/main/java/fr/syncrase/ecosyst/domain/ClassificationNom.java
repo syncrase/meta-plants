@@ -29,7 +29,8 @@ public class ClassificationNom implements Serializable {
     @Column(name = "nom_latin", unique = true)
     private String nomLatin;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "children", "urls", "noms", "parent" }, allowSetters = true)
     private CronquistRank cronquistRank;
 
