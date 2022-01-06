@@ -1,16 +1,20 @@
--- Combien d'éléments par table?
-SELECT (
-           SELECT COUNT(*)
-           FROM url
-       ) AS urls,
-       (
-           SELECT COUNT(*)
-           FROM cronquist_rank
-       ) AS cronquists;
-
-
 -- Combien de doublons pour chaque url?
-select count(*), url
+select *
+from (
+         select count(*), url
+         from url
+         group by url
+         order by count(*)) as foo
+where foo.count > 1;
+
+-- Toutes les urls dupliquées
+select *
 from url
-group by url
-order by count(*);
+where url.url = (
+    select url
+    from (
+             select count(*), url
+             from url
+             group by url
+             order by count(*)) as foo
+    where foo.count > 1);

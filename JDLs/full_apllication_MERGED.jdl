@@ -381,7 +381,7 @@ relationship ManyToOne {
 relationship OneToMany {
     CronquistRank{children(nomFr)} to CronquistRank{parent(nomFr)},
     CronquistRank{urls} to Url,
-    CronquistRank{noms} to ClassificationNom{cronquistRank},
+    CronquistRank{noms required} to ClassificationNom{cronquistRank required},
 
 }
 
