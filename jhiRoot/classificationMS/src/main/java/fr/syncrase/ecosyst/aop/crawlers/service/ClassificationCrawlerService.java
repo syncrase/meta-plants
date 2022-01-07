@@ -17,6 +17,8 @@ public class ClassificationCrawlerService {
 
     public void crawl() {
         WikipediaCrawler wikipediaCrawler = new WikipediaCrawler(cronquistService);
+        wikipediaCrawler.crawlAllWikipedia();
+
     }
 
 }

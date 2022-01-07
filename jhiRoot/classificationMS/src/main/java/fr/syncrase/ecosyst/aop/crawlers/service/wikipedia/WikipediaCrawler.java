@@ -19,40 +19,62 @@ public class WikipediaCrawler {
 
     public WikipediaCrawler(CronquistService cronquistService) {
         this.cronquistService = cronquistService;
+    }
 
+    @Contract(pure = true)
+    static @NotNull String getValidUrl(@NotNull String scrappedUrl) {
+        if (scrappedUrl.contains(("http"))) {
+            return scrappedUrl;
+        }
+        return "https://fr.wikipedia.org" + scrappedUrl;
+    }
+
+    public void crawlAllWikipedia() {
         try {
-//            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
+            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
 
-            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
-            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
-            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
-            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
-            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae
-            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Buckleya");
-            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
-            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
-            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
-            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
-            scrapWiki("https://fr.wikipedia.org/wiki/Kielmeyera");
-            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
-
+//            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
+//            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
+//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+//            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae// : merge branch
+//            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Buckleya");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
+//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
+//            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
+//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Kielmeyera");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Lyallia_kerguelensis");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Acanthaceae");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+
+            // Bug null fields : Les deux premiers puis le troisième OK tous ensembles KO
+//            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes Saxifragales
+//            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes Hamamelidales
+//            scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");// Synonymes Hamamelidales
+
+            // TEST merge des branches
+//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
 
             /*
             TEST
@@ -91,15 +113,7 @@ public class WikipediaCrawler {
         log.info("All classification from Wikipedia had been scrapped");
     }
 
-    @Contract(pure = true)
-    static @NotNull String getValidUrl(@NotNull String scrappedUrl) {
-        if (scrappedUrl.contains(("http"))) {
-            return scrappedUrl;
-        }
-        return "https://fr.wikipedia.org" + scrappedUrl;
-    }
-
-    private void scrapWikiList(String urlWikiListe) throws IOException {
+    public void scrapWikiList(String urlWikiListe) throws IOException {
         log.info("Get list from : " + urlWikiListe);
         Document doc = Jsoup.connect(urlWikiListe).get();
         Elements wikiList = doc.select("div.CategoryTreeItem a[href]");
@@ -126,7 +140,7 @@ public class WikipediaCrawler {
         }
     }
 
-    private void scrapWiki(String urlWiki) throws IOException {
+    public void scrapWiki(String urlWiki) throws IOException {
         log.info("Get classification from : " + urlWiki);
         Elements encadreTaxonomique = Jsoup
             .connect(urlWiki)

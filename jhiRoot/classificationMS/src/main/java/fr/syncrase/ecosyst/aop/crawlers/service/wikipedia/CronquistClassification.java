@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistUtils.DEFAULT_NAME_FOR_CONNECTOR_RANK;
@@ -72,12 +71,12 @@ public class CronquistClassification {
      */
     public CronquistClassification(@NotNull CronquistRank cronquistRank) {
         initClassification();
-        Optional<CronquistRank> matchingRankInNestedClassification = classificationCronquist.stream()
+        Optional<CronquistRank> matchingRankInClassificationList = classificationCronquist.stream()
             .filter(rank -> rank.getRank().equals(cronquistRank.getRank()))
             .findFirst();
 
-        if (matchingRankInNestedClassification.isPresent()) {
-            int classificationDepthIndex = classificationCronquist.indexOf(matchingRankInNestedClassification.get());
+        if (matchingRankInClassificationList.isPresent()) {
+            int classificationDepthIndex = classificationCronquist.indexOf(matchingRankInClassificationList.get());
             CronquistRank currentRank = cronquistRank;
             do {
                 if (!classificationCronquist.get(classificationDepthIndex).getRank().equals(currentRank.getRank())) {

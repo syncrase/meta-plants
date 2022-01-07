@@ -6,6 +6,7 @@ import fr.syncrase.ecosyst.repository.CronquistRankRepository;
 import fr.syncrase.ecosyst.repository.UrlRepository;
 import fr.syncrase.ecosyst.service.ClassificationNomQueryService;
 import fr.syncrase.ecosyst.service.CronquistRankQueryService;
+import fr.syncrase.ecosyst.service.UrlQueryService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,22 +15,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
-@Transactional
 public class CronquistService {
 
     private final Logger log = LoggerFactory.getLogger(CronquistService.class);
 
     private CronquistRankRepository cronquistRankRepository;
-
     private CronquistRankQueryService cronquistRankQueryService;
-
     private ClassificationNomQueryService classificationNomQueryService;
-
     private ClassificationNomRepository classificationNomRepository;
-
     private UrlRepository urlRepository;
+    private UrlQueryService urlQueryService;
 
     public CronquistService() {
     }
@@ -59,6 +57,11 @@ public class CronquistService {
         this.urlRepository = urlRepository;
     }
 
+    @Autowired
+    public void setUrlQueryService(UrlQueryService urlQueryService) {
+        this.urlQueryService = urlQueryService;
+    }
+
     /**
      * Tous les rangs sont mis à jour avec l'ID et les noms, mais ascendant ni descendants <br>
      * Vérifie s'il n'y a pas de différence entre la classification enregistrée et celle que l'on souhaite enregistrer. <br>
@@ -71,7 +74,7 @@ public class CronquistService {
      *
      * <h1>Les synonymes</h1>
      * Par définition d'un rang taxonomique, un même rang ne peut avoir qu'une unique arborescence sans dichotomie.<br>
-     * Lors de l'insertion d'un rang, si les parents sont différents alors ce sont les mêmes (ie. des synonymes)<br>
+     * Lors de l'insertion d'un rang, si les parents sont différents alors ce sont les mêmes (c.-à-d. Des synonymes)<br>
      * Ces différents synonymes se positionnent exactement de la même manière dans l'arborescence. Ils ont :<br>
      * <ul>
      *     <li>Les mêmes enfants</li>
@@ -81,15 +84,24 @@ public class CronquistService {
      * @param cronquistClassification side effect
      * @param urlWiki                 url du wiki d'où a été extrait la classification
      */
+    @Transactional
     public void saveCronquist(@NotNull CronquistClassification cronquistClassification, String urlWiki) {
 
-        CronquistClassificationMerger.MergeResult aReturn = new CronquistClassificationMerger(cronquistClassification, urlWiki, cronquistRankQueryService, classificationNomQueryService).synchronizeClassifications();
+        log.info("Traitement pré-enregistrement de la classification extraite de '" + urlWiki + "'");
+        CronquistClassificationSynchronizer synchronizedClassification = new CronquistClassificationSynchronizer(
+            cronquistClassification,
+            urlWiki,
+            cronquistRankQueryService,
+            classificationNomQueryService,
+            urlQueryService
+        );
 
-        save(aReturn.list);
-        removeObsoleteInermediatesRanks(aReturn.rangsIntermediairesASupprimer);
+        log.info("Enregistrement de la classification");
+        save(synchronizedClassification.getToInsertClassification());
+        removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsIntermediairesASupprimer());
     }
 
-    private void removeObsoleteInermediatesRanks(@NotNull List<CronquistRank> rangsIntermediairesASupprimer) {
+    private void removeObsoleteIntermediatesRanks(@NotNull Set<CronquistRank> rangsIntermediairesASupprimer) {
         for (CronquistRank rankToRemove : rangsIntermediairesASupprimer) {
             classificationNomRepository.deleteAll(rankToRemove.getNoms());
             cronquistRankRepository.delete(rankToRemove);
@@ -104,11 +116,12 @@ public class CronquistService {
     private void save(@NotNull List<CronquistRank> flatClassification) {
         // Etant donné qu'un rang inférieur doit contenir le rang supérieur, l'enregistrement des classifications doit se faire en commençant par le rang supérieur
         int size = flatClassification.size() - 1;
+        CronquistRank rank;
         for (int i = size; i >= 0; i--) {
-            cronquistRankRepository.save(flatClassification.get(i));
-            classificationNomRepository.saveAll(flatClassification.get(i).getNoms());
-            urlRepository.saveAll(flatClassification.get(i).getUrls());
+            rank = flatClassification.get(i);
+            cronquistRankRepository.save(rank);
+            classificationNomRepository.saveAll(rank.getNoms());
+            urlRepository.saveAll(rank.getUrls());
         }
     }
-
 }
