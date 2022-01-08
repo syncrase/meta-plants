@@ -39,9 +39,9 @@ public class CronquistClassificationSynchronizer {
     private final CronquistRankQueryService cronquistRankQueryService;
     private final ClassificationNomQueryService classificationNomQueryService;
     private final Set<CronquistRank> rangsIntermediairesASupprimer;
-    private CronquistClassification existingClassification;
-    private List<CronquistRank> toInsertClassification;
     private final UrlQueryService urlQueryService;
+    private List<CronquistRank> existingClassificationList;
+    private List<CronquistRank> toInsertClassification;
 
 
     public CronquistClassificationSynchronizer(@NotNull CronquistClassification cronquistClassification, String urlWiki, CronquistRankQueryService cronquistRankQueryService, ClassificationNomQueryService classificationNomQueryService, UrlQueryService urlQueryService) {
@@ -69,11 +69,23 @@ public class CronquistClassificationSynchronizer {
             CronquistRank existing = findExistingRank(cronquistRank);
             // Si je viens d'en trouver un
             if (existing != null) {
-                existingClassification = new CronquistClassification(existing);
+                CronquistClassification existingClassification = new CronquistClassification(existing);
+                existingClassificationList = existingClassification.getClassificationAscendante();
+                synchronizeAllExistingClassification();
                 // À partir de ce moment-là, il n'est plus nécessaire d'interroger la base.
                 // On a obtenu l'arborescence ascendante complète du rang taxonomique
                 break;
             }
+        }
+        if (existingClassificationList == null) {
+            existingClassificationList = new ArrayList<>();
+        }
+    }
+
+    private void synchronizeAllExistingClassification() {
+        for (CronquistRank rank : existingClassificationList) {
+            addAllNames(rank);
+            addAllUrls(rank);
         }
     }
 
@@ -95,7 +107,7 @@ public class CronquistClassificationSynchronizer {
 
     private CronquistRank fetchExistingRank(@NotNull CronquistRank cronquistRank) {
         LongFilter nomFilter = new LongFilter();
-        nomFilter.setIn(cronquistRank.getNoms().stream().map(ClassificationNom::getId).collect(Collectors.toList()));
+        nomFilter.setIn(cronquistRank.getNoms().stream().map(ClassificationNom::getId).filter(Objects::nonNull).collect(Collectors.toList()));
 
         CronquistRankCriteria.CronquistTaxonomikRanksFilter rankFilter = new CronquistRankCriteria.CronquistTaxonomikRanksFilter();
         rankFilter.setEquals(cronquistRank.getRank());
@@ -103,10 +115,7 @@ public class CronquistClassificationSynchronizer {
         CronquistRankCriteria rankCrit = new CronquistRankCriteria();
         rankCrit.setNomsId(nomFilter);
         rankCrit.setRank(rankFilter);
-        CronquistRank cronquistRankByCriteria = cronquistRankQueryService.findByCriteria(rankCrit).get(0);// Un nom existe, ce rang existe obligatoirement (DB constraint)
-        addAllNames(cronquistRankByCriteria);
-        addAllUrls(cronquistRankByCriteria);
-        return cronquistRankByCriteria;
+        return cronquistRankQueryService.findByCriteria(rankCrit).get(0);
     }
 
     private void updateNomsIds(@NotNull CronquistRank cronquistRank) {
@@ -162,7 +171,7 @@ public class CronquistClassificationSynchronizer {
      * </ul>
      */
     public void synchronizeClassifications() {
-        updateFieldsWithExisting(existingClassification != null ? existingClassification.getClassificationAscendante() : new ArrayList<>());
+        updateFieldsWithExisting(existingClassificationList);
     }
 
     /**
@@ -250,6 +259,7 @@ public class CronquistClassificationSynchronizer {
             } else {
                 // Le rang taxonomique n'existe pas en base → ajoute uniquement l'id du rang intermédiaire qui deviendra alors un rang taxonomique
                 rankToInsert.setId(existingRank.getId());
+                synchronizeNames(existingRank, rankToInsert);
             }
             return;
         }
@@ -274,7 +284,10 @@ public class CronquistClassificationSynchronizer {
         for (ClassificationNom existingClassificationNom : existingRank.getNoms()) {
             for (ClassificationNom toInsertClassificationNom : rankToInsert.getNoms()) {
                 // Ajoute l'id des noms existants
-                if (isRangsIntermediaires(existingRank, rankToInsert) || existingClassificationNom.getNomFr().equals(toInsertClassificationNom.getNomFr())) {
+                if (isRangsIntermediaires(existingRank, rankToInsert) ||
+                    isRangsIntermediaires(existingRank) && !isRangsIntermediaires(rankToInsert) ||
+                    existingClassificationNom.getNomFr().equals(toInsertClassificationNom.getNomFr())
+                ) {
                     toInsertClassificationNom.setId(existingClassificationNom.getId());
                 }
             }

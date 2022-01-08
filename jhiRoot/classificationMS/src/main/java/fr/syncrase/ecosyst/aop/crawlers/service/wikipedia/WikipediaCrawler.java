@@ -33,6 +33,7 @@ public class WikipediaCrawler {
         try {
             scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
 
+//            scrapWiki("https://fr.wikipedia.org/wiki/Acanthaceae");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
 //            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
@@ -52,10 +53,10 @@ public class WikipediaCrawler {
 //            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
@@ -63,18 +64,10 @@ public class WikipediaCrawler {
 //            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Lyallia_kerguelensis");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Acanthaceae");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Molinadendron");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Monodiella");
 //            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
 
-            // Bug null fields : Les deux premiers puis le troisième OK tous ensembles KO
-//            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes Saxifragales
-//            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes Hamamelidales
-//            scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");// Synonymes Hamamelidales
-
-            // TEST merge des branches
-//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
 
             /*
             TEST

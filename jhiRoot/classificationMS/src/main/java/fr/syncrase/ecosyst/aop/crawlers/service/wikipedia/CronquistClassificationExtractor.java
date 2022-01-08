@@ -3,12 +3,15 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +23,12 @@ public class CronquistClassificationExtractor {
     private final Logger log = LoggerFactory.getLogger(CronquistClassificationExtractor.class);
     CronquistClassification cronquistClassification;
 
+    /**
+     * Extract classification from the wikipedia classification table
+     *
+     * @param mainTable classification table
+     * @return The generated classification object
+     */
     public CronquistClassification getClassification(@NotNull Element mainTable) {
         Elements elementsDeClassification = mainTable.select("tbody tr");
 
@@ -37,123 +46,34 @@ public class CronquistClassificationExtractor {
     }
 
     /**
+     * Extract rank values from JSOUP Element
+     *
      * @param classificationItem row of the taxonomy table which contains taxonomy rank and name
      */
     private void setCronquistTaxonomyItemFromElement(Element classificationItem) {
         String classificationItemKey = selectText(classificationItem, "th a");
-        switch (classificationItemKey) {
-            case "Super-Règne":
-                updateRank(cronquistClassification.getSuperRegne(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Règne":
-                updateRank(cronquistClassification.getRegne(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-règne":
-                updateRank(cronquistClassification.getSousRegne(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Rameau":
-                updateRank(cronquistClassification.getRameau(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Infra-règne":
-                updateRank(cronquistClassification.getInfraRegne(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Super-division":
-            case "Super-embranchement":
-                updateRank(cronquistClassification.getSuperDivision(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Division":
-            case "Embranchement":
-                updateRank(cronquistClassification.getEmbranchement(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-division":
-            case "Sous-embranchement":
-                updateRank(cronquistClassification.getSousEmbranchement(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Infra-embranchement":
-                updateRank(cronquistClassification.getInfraEmbranchement(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Micro-embranchement":
-                updateRank(cronquistClassification.getMicroEmbranchement(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Super-classe":
-                updateRank(cronquistClassification.getSuperClasse(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Classe":
-                updateRank(cronquistClassification.getClasse(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-classe":
-                updateRank(cronquistClassification.getSousClasse(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Infra-classe":
-                updateRank(cronquistClassification.getInfraClasse(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Super-ordre":
-                updateRank(cronquistClassification.getSuperOrdre(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Ordre":
-                updateRank(cronquistClassification.getOrdre(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-ordre":
-                updateRank(cronquistClassification.getSousOrdre(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Infra-ordre":
-                updateRank(cronquistClassification.getInfraOrdre(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Micro-ordre":
-                updateRank(cronquistClassification.getMicroOrdre(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Super-famille":
-                updateRank(cronquistClassification.getSuperFamille(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Famille":
-                updateRank(cronquistClassification.getFamille(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-famille":
-                updateRank(cronquistClassification.getSousFamille(), selectText(classificationItem, "td span a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Tribu":
-                updateRank(cronquistClassification.getTribu(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-tribu":
-                updateRank(cronquistClassification.getSousTribu(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Genre":
-                updateRank(cronquistClassification.getGenre(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-genre":
-                updateRank(cronquistClassification.getSousGenre(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Section":
-                updateRank(cronquistClassification.getSection(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-section":
-                updateRank(cronquistClassification.getSousSection(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Espèce":
-                updateRank(cronquistClassification.getEspece(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-espèce":
-                updateRank(cronquistClassification.getSousEspece(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Variété":
-                updateRank(cronquistClassification.getVariete(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-variété":
-                updateRank(cronquistClassification.getSousVariete(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Forme":
-                updateRank(cronquistClassification.getForme(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "Sous-forme":
-                updateRank(cronquistClassification.getSousForme(), selectText(classificationItem, "td a"), classificationItem.select("td a").attr("href"));
-                break;
-            case "":
-                log.warn("Rang taxonomique inexistant dans le wiki");
-                break;
-            default:
-                log.warn(classificationItemKey + " ne correspond pas à du Cronquist ou NOT YET IMPLEMENTED");
-
+        RangTaxonomique rangTaxonomique = new RangTaxonomique(selectText(classificationItem, "td span a", "td a"), classificationItem.select("td a").attr("href"));
+        classificationItemKey = getItemKey(rangTaxonomique.getTaxonName(), classificationItemKey);
+        if (classificationItemKey != null) {
+            setCronquistTaxonomyItem(classificationItemKey, rangTaxonomique);
         }
+    }
+
+    /**
+     * Vérification basique de la concordance entre le rang et le nom du taxon
+     *
+     * @param taxon                 Nom du taxon dont le suffixe doit correspondre au rang
+     * @param classificationItemKey rang du taxon
+     * @return S'il y a une incohérence, retourne null
+     */
+    @Contract(pure = true)
+    private @Nullable String getItemKey(@NotNull String taxon, String classificationItemKey) {
+        if (taxon.endsWith("eae") && !Arrays.asList(new String[]{"Famille"}).contains(classificationItemKey) ||
+            taxon.endsWith("les") && !Arrays.asList(new String[]{"Ordre"}).contains(classificationItemKey)) {
+            log.error("Le taxon {} est signalé comme étant de rang {}. Erreur dans le wiki", taxon, classificationItemKey);
+            return null;
+        }
+        return classificationItemKey;
     }
 
     private void updateRank(@NotNull CronquistRank rank, String rankNomFr, String url) {
@@ -344,14 +264,18 @@ public class CronquistClassificationExtractor {
     }
 
     /**
-     * @param item     Element from which the contained string is extract
-     * @param cssQuery La query DOIT retourner un unique élément
+     * @param item       Element from which the contained string is extract
+     * @param cssQueries Ensemble de cssQueries qui sont testées. La première qui retourne un résultat est utilisée. La query DOIT retourner un unique élément
      * @return the text value of the node or an empty string
      */
     private @NotNull
-    String selectText(@NotNull Element item, String cssQuery) {
-        Optional<Element> el = item.select(cssQuery).stream().findFirst();
-        return el.map(Element::text).orElse("");
+    String selectText(@NotNull Element item, String @NotNull ... cssQueries) {
+        for (String cssQuery : cssQueries) {
+            Optional<Element> el = item.select(cssQuery).stream().findFirst();
+            if (el.isPresent())
+                return el.map(Element::text).get();//.orElse("")
+        }
+        return "";
     }
 
     private static class RangTaxonomique {

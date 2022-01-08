@@ -79,7 +79,7 @@ public class CronquistUtils {
     /**
      * Retourne un set vide de ClassificationNom dont la comparaison se fait sur le nomFr
      *
-     * @return Treeset vide avec comparaison personnalisée
+     * @return Tree set vide avec comparaison personnalisée
      */
     @NotNull
     private static TreeSet<ClassificationNom> getClassificationNomTreeSet() {

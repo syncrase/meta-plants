@@ -1,5 +1,11 @@
 # meta-plants
 
+Ce projet à pour but de permettre la visualisation des caractéristiques des plantes. Par exemple :
+ - les données de classification botanique des plantes
+ - les associations entre plantes et les associations avec les insectes
+ - les périodes de semis, de floraison, de fructifiction
+ - les caractéristiques de la plantes (système racinaire, mode de reproduction, classification)
+
  - The jhiRoot folder is where Jhipster projects must be generated
  - The integration folder contains some files to be integrated to the project
  - The JDLs folder contains all JDLs to re-run jhipster
