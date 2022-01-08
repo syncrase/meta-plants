@@ -31,44 +31,45 @@ public class WikipediaCrawler {
 
     public void crawlAllWikipedia() {
         try {
-            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
+//            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
 
-//            scrapWiki("https://fr.wikipedia.org/wiki/Acanthaceae");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
-//            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
-//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Buckleya");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
-//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Kielmeyera");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Lyallia_kerguelensis");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Molinadendron");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Monodiella");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acanthaceae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");
+            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
+            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
+            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");
+            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");
+            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae// : merge branch
+            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
+            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
+            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");
+            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
+            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Hostaceae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Montrouziera_cauliflora");
+            scrapWiki("https://fr.wikipedia.org/wiki/Oxera_neriifolia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Pachystachys");
+            scrapWiki("https://fr.wikipedia.org/wiki/Pachystachys_coccinea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Pachystachys_spicata");
+            scrapWiki("https://fr.wikipedia.org/wiki/Parrotia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Parrotia_persica");
+            scrapWiki("https://fr.wikipedia.org/wiki/Parrotia_subaequalis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Peristrophe");
+            scrapWiki("https://fr.wikipedia.org/wiki/Peristrophe_speciosa");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Scleropyrum");
+            scrapWiki("https://fr.wikipedia.org/wiki/Selaginaceae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Spirogardnera");
+            scrapWiki("https://fr.wikipedia.org/wiki/Tetrameristaceae");
 
-
+            
             /*
             TEST
             - Deux enregistrements d'un même n'enregistre qu'un seul rang

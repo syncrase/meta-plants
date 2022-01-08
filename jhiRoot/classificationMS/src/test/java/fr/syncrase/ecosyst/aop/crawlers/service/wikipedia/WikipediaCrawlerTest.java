@@ -93,6 +93,19 @@ class WikipediaCrawlerTest {
     }
 
     @Test
+    void enregistrementDUnRangSynonymeAvecMerge() {
+        Assertions.assertEquals(2, 2);
+//        try {
+//            scrapWiki("https://fr.wikipedia.org/wiki/Oxera_neriifolia");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Hostaceae");
+//            scrapWiki("https://fr.wikipedia.org/wiki/Selaginaceae");
+        // => vérifier la synonymie + les enfants ont bien été mergés
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @Test
     void scrapWiki() {
         Assertions.assertEquals(2, 2);
     }

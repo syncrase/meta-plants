@@ -245,6 +245,11 @@ public class CronquistClassificationSynchronizer {
                 // Ils sont différents
                 rankToInsert.setId(existingRank.getId());
                 addAllNamesToCronquistRank(rankToInsert, existingRank.getNoms());// Ajout des synonymes
+                // En plus d'être synonyme, le rang que je cherche à insérer existe déjà
+                @Nullable CronquistRank rankReplacingTheIntermediateRankList = findExistingRank(rankToInsert);
+                if (rankReplacingTheIntermediateRankList != null) {// Must be = 1. Check if > 1 and throw error ?
+                    mergeTheTwoClassificationBranches(existingClassificationList, i, offset);
+                }
             } else {
                 // Ils sont égaux
                 rankToInsert.setId(existingRank.getId());
