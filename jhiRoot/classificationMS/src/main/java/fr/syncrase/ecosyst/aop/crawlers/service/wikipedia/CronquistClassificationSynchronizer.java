@@ -55,7 +55,7 @@ public class CronquistClassificationSynchronizer {
         rangsASupprimer = new HashSet<>();
 //        rangsFusionnesAvecLaClassification = new HashSet<>();
         setExistingClassification(cronquistClassification, urlWiki);
-        synchronizeClassifications();
+        updateFieldsWithExisting();
     }
 
     /**
@@ -71,6 +71,7 @@ public class CronquistClassificationSynchronizer {
         // Parcours du plus bas rang jusqu'au plus élevé pour trouver le premier rang existant en base
         for (CronquistRank cronquistRank : toInsertClassification) {
             // Si je n'ai toujours pas récupéré de rang connu, je regarde encore pour ce nouveau rang
+
             CronquistRank existing = findExistingRank(cronquistRank);
             // Si je viens d'en trouver un
             if (existing != null) {
@@ -141,7 +142,7 @@ public class CronquistClassificationSynchronizer {
     }
 
     private void addAllNames(@NotNull CronquistRank cronquistRank) {
-        if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() == null)) {
+//        if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() == null)) {
             cronquistRank.getNoms().removeIf(classificationNom -> classificationNom.getId() == null);
             LongFilter idFilter = new LongFilter();
             idFilter.setEquals(cronquistRank.getId());
@@ -151,11 +152,11 @@ public class CronquistClassificationSynchronizer {
             List<ClassificationNom> classificationNoms = classificationNomQueryService.findByCriteria(classificationNomCriteria);
             HashSet<ClassificationNom> classificationNoms1 = new HashSet<>(classificationNoms);
             cronquistRank.getNoms().addAll(classificationNoms1);
-        }
+//        }
     }
 
     private void addAllUrls(@NotNull CronquistRank cronquistRank) {
-        if (cronquistRank.getUrls().stream().anyMatch(url -> url.getId() == null)) {
+//        if (cronquistRank.getUrls().stream().anyMatch(url -> url.getId() == null)) {
             cronquistRank.getUrls().removeIf(url -> url.getId() == null);
             LongFilter idFilter = new LongFilter();
             idFilter.setEquals(cronquistRank.getId());
@@ -165,26 +166,19 @@ public class CronquistClassificationSynchronizer {
             List<Url> urlByCriteria = urlQueryService.findByCriteria(urlCriteria);
             HashSet<Url> urls = new HashSet<>(urlByCriteria);
             cronquistRank.getUrls().addAll(urls);
-        }
+//        }
     }
 
     /**
+     * Mis à jour des IDs des éléments de la première liste pour qu'ils pointent vers les éléments déjà enregistrés en base
      * Compare chacun des rangs à enregistrer pour les comparer avec la base pour :
      * <ul>
      *     <li>mettre à jour les ids</li>
      *     <li>merger les classification dans le cas où deux portions de classification distinctes se trouvent être les mêmes</li>
      * </ul>
-     */
-    public void synchronizeClassifications() {
-        updateFieldsWithExisting(existingClassificationList);
-    }
-
-    /**
-     * Mis à jour des IDs des éléments de la première liste pour qu'ils pointent vers les éléments déjà enregistrés en base
      *
-     * @param existingClassificationList Liste des rangs de l'arborescence existante en base de données
      */
-    private void updateFieldsWithExisting(@NotNull List<CronquistRank> existingClassificationList) {
+    private void updateFieldsWithExisting() {
         if (existingClassificationList.size() == 0) {
             log.info("No existing entity in the database");
             return;
@@ -440,7 +434,4 @@ public class CronquistClassificationSynchronizer {
         return toInsertClassification;
     }
 
-//    public Set<CronquistRank> getRangsFusionnesAvecLaClassification() {
-//        return rangsFusionnesAvecLaClassification;
-//    }
 }
