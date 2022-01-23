@@ -1,23 +1,49 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
+import fr.syncrase.ecosyst.ClassificationMsApp;
+import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.repository.CronquistRankRepository;
+import fr.syncrase.ecosyst.service.CronquistRankQueryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
 @RunWith(SpringRunner.class)
+//@SpringBootTest(classes = ClassificationMsApp.class)
 @SpringBootTest
+@Import(WikipediaCrawlerTestConfiguration.class)
+//@TestPropertySource(
+//    locations = "classpath:config/application-dev.yml")
+//@ContextConfiguration(classes = { CronquistService.class })
 class WikipediaCrawlerTest {
 
     WikipediaCrawler wikipediaCrawler;
-    //    @SpyBean
+
+    //        @SpyBean
+//    @MockBean  = new CronquistService()
     @Autowired
+//    @Spy
+//    @InjectMocks
     private CronquistService cronquistService;
 
     WikipediaCrawlerTest() {
-//        this.cronquistService = cronquistService;
         wikipediaCrawler = new WikipediaCrawler(cronquistService);
     }
 
@@ -25,11 +51,11 @@ class WikipediaCrawlerTest {
     void enregistrementDUneClassificationDontTousLesRangsSontInconnus() {
         // TODO étrange, la méthode crawlAllWikipedia semble être appelée => à cause de la classe ClassificationCrawler qui surcharge le chargement du contexte
         Assertions.assertEquals(2, 2);
-//        try {
-//            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            wikipediaCrawler.scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -143,8 +169,8 @@ class WikipediaCrawlerTest {
 //        }
     }
 
-    @Test
-    void scrapWiki() {
-        Assertions.assertEquals(2, 2);
-    }
+//    @Test
+//    void scrapWiki() {
+//        Assertions.assertEquals(2, 2);
+//    }
 }

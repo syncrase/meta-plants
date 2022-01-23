@@ -38,7 +38,7 @@ public class CronquistService {
     }
 
     @Autowired
-    public void setClassificationNom(ClassificationNomQueryService classificationNomQueryService) {
+    public void setClassificationNomQueryService(ClassificationNomQueryService classificationNomQueryService) {
         this.classificationNomQueryService = classificationNomQueryService;
     }
 
