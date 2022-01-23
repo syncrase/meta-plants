@@ -33,43 +33,116 @@ public class WikipediaCrawler {
         try {
 //            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
 
-            scrapWiki("https://fr.wikipedia.org/wiki/Acanthaceae");
-            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acanthe");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acanthe_%C3%A0_feuilles_molles");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acanthus_spinosus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_campestre");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_cappadocicum");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_carpinifolium");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_chaneyi");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_circinatum");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_davidii");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_douglasense");
+            scrapWiki("https://fr.wikipedia.org/wiki/Acer_velutinum");
+            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
             scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
-            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Andrographis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Andrographis_paniculata");
+            scrapWiki("https://fr.wikipedia.org/wiki/Anisacanthus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
             scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
-            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");
+            scrapWiki("https://fr.wikipedia.org/wiki/Aphelandra");
+            scrapWiki("https://fr.wikipedia.org/wiki/Aphelandra_sinclairiana");
             scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Asystasia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Asystasia_gangetica");
             scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");
+            scrapWiki("https://fr.wikipedia.org/wiki/Avicennia_germinans");
+            scrapWiki("https://fr.wikipedia.org/wiki/Barleria");
+            scrapWiki("https://fr.wikipedia.org/wiki/Barleria_cristata");
+            scrapWiki("https://fr.wikipedia.org/wiki/Barleria_obtusa");
+            scrapWiki("https://fr.wikipedia.org/wiki/Barleriola");
+            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Blechum");
             scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Buckleya");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_argent%C3%A9");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_%C3%A9corce_de_papier");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_%C3%A9pis");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_cinq_folioles");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_feuille_de_vigne");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_feuilles_d%27obier");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_grandes_feuilles");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_champ%C3%AAtre");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cappadoce");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
+            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Pennsylvanie");
+            scrapWiki("https://fr.wikipedia.org/wiki/Carlowrightia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
+            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
             scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
-            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");
             scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");
+            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
+            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Dicliptera");
+            scrapWiki("https://fr.wikipedia.org/wiki/Dicliptera_suberecta");
+            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
             scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
-            scrapWiki("https://fr.wikipedia.org/wiki/Euclea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Exocarpos_cupressiformis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Hostaceae");
-            scrapWiki("https://fr.wikipedia.org/wiki/Montrouziera_cauliflora");
-            scrapWiki("https://fr.wikipedia.org/wiki/Oxera_neriifolia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Pachystachys");
-            scrapWiki("https://fr.wikipedia.org/wiki/Pachystachys_coccinea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Pachystachys_spicata");
-            scrapWiki("https://fr.wikipedia.org/wiki/Parrotia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Parrotia_persica");
-            scrapWiki("https://fr.wikipedia.org/wiki/Parrotia_subaequalis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Peristrophe");
-            scrapWiki("https://fr.wikipedia.org/wiki/Peristrophe_speciosa");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Graptophyllum");
+            scrapWiki("https://fr.wikipedia.org/wiki/Hemigraphis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Hygrophila_(plante)");
+            scrapWiki("https://fr.wikipedia.org/wiki/Hygrophila_polysperma");
+            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_adhatoda");
+            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_aurea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_betonica");
+            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_californica");
+            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_carnea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_gendarussa");
+            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_spicigera");
+            scrapWiki("https://fr.wikipedia.org/wiki/Kielmeyera");
+            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");
+            scrapWiki("https://fr.wikipedia.org/wiki/Lyallia_kerguelensis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Molinadendron");
+            scrapWiki("https://fr.wikipedia.org/wiki/Monodiella");
+            scrapWiki("https://fr.wikipedia.org/wiki/Odontonema");
+            scrapWiki("https://fr.wikipedia.org/wiki/Oxera_pulchella");
+            scrapWiki("https://fr.wikipedia.org/wiki/Phlogacanthus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Phlogacanthus_turgidus");
+            scrapWiki("https://fr.wikipedia.org/wiki/Picanier_jaune");
+            scrapWiki("https://fr.wikipedia.org/wiki/Pseuderanthemum");
             scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
-            scrapWiki("https://fr.wikipedia.org/wiki/Scleropyrum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Selaginaceae");
-            scrapWiki("https://fr.wikipedia.org/wiki/Spirogardnera");
-            scrapWiki("https://fr.wikipedia.org/wiki/Tetrameristaceae");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_brevifolia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_chartacea");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_devosiana");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_geminiflora");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_schnellii");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_simplex");
+            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_tuberosa");
+            scrapWiki("https://fr.wikipedia.org/wiki/Sanchezia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Strobilanthes_kunthiana");
+            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_alata");
+            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_erecta");
+            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_fragrans");
+            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_grandiflora");
+            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_mysorensis");
+            scrapWiki("https://fr.wikipedia.org/wiki/Whitfieldia");
+            scrapWiki("https://fr.wikipedia.org/wiki/Whitfieldia_elongata");
 
-            
+
+
+
             /*
             TEST
             - Deux enregistrements d'un même n'enregistre qu'un seul rang
@@ -135,13 +208,17 @@ public class WikipediaCrawler {
     }
 
     public void scrapWiki(String urlWiki) throws IOException {
-        log.info("Get classification from : " + urlWiki);
-        Elements encadreTaxonomique = Jsoup
-            .connect(urlWiki)
-            .get()
-            .select("div.infobox_v3.large.taxobox_v3.plante.bordered");
+        try {
+            log.info("Get classification from : " + urlWiki);
+            Elements encadreTaxonomique = Jsoup
+                .connect(urlWiki)
+                .get()
+                .select("div.infobox_v3.large.taxobox_v3.plante.bordered");
 
-        extractPremiereClassification(encadreTaxonomique, urlWiki);
+            extractPremiereClassification(encadreTaxonomique, urlWiki);
+        } catch (IOException e) {
+            log.error("Problème d'accès lors de l'extraction des données de la page wikipédia {}", urlWiki);
+        }
     }
 
     private void extractPremiereClassification(@NotNull Elements encadreTaxonomique, String urlWiki) {

@@ -106,6 +106,44 @@ class WikipediaCrawlerTest {
     }
 
     @Test
+    void enregistrementDUnRangSynonymeAvecMerge2() {
+        Assertions.assertEquals(2, 2);
+//        try {
+//        scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
+//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
+        // => vérifier la synonymie + les enfants ont bien été mergés
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @Test
+    void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs() {
+        Assertions.assertEquals(2, 2);
+//        try {
+//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te");
+//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+        // => vérifier la synonymie + les enfants ont bien été mergés
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @Test
+    void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs2() {
+        Assertions.assertEquals(2, 2);
+//        try {
+//        scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
+//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
+        // => vérifier la synonymie + les enfants ont bien été mergés
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @Test
     void scrapWiki() {
         Assertions.assertEquals(2, 2);
     }

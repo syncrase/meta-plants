@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 @Service
@@ -92,13 +92,17 @@ public class CronquistService {
             cronquistClassification,
             urlWiki,
             cronquistRankQueryService,
-            classificationNomQueryService,
+            cronquistRankRepository, classificationNomQueryService,
             urlQueryService
         );
 
         log.info("Enregistrement de la classification");
-        save(synchronizedClassification.getToInsertClassification());
-        removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsIntermediairesASupprimer());
+        if (synchronizedClassification.getToInsertClassification() != null) {
+            save(synchronizedClassification.getToInsertClassification());
+        }
+        if (synchronizedClassification.getRangsASupprimer() != null) {
+            removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
+        }
     }
 
     private void removeObsoleteIntermediatesRanks(@NotNull Set<CronquistRank> rangsIntermediairesASupprimer) {
@@ -113,12 +117,13 @@ public class CronquistService {
      *
      * @param flatClassification classification à enregistrer
      */
-    private void save(@NotNull List<CronquistRank> flatClassification) {
+    private void save(@NotNull Collection<CronquistRank> flatClassification) {
         // Etant donné qu'un rang inférieur doit contenir le rang supérieur, l'enregistrement des classifications doit se faire en commençant par le rang supérieur
-        int size = flatClassification.size() - 1;
-        CronquistRank rank;
-        for (int i = size; i >= 0; i--) {
-            rank = flatClassification.get(i);
+//        int size = flatClassification.size() - 1;
+//        CronquistRank rank;
+//        for (int i = size; i >= 0; i--) {
+        for (CronquistRank rank : flatClassification) {
+//            rank = flatClassification.get(i);
             cronquistRankRepository.save(rank);
             classificationNomRepository.saveAll(rank.getNoms());
             urlRepository.saveAll(rank.getUrls());

@@ -11,7 +11,10 @@ with recursive tr(from_id, to_id, level, rank, nom) as (
              join tr on cronRank.id = tr.to_id
 )
 select *
-from tr;
+from tr
+-- group because synonyms induce duplications
+group by from_id, to_id, level, rank, nom
+order by level;
 
 
 -- Afficher les synonymes

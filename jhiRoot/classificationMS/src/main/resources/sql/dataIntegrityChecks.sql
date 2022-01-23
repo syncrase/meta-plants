@@ -6,7 +6,7 @@ from (
              select cronRank.id, cronRank.parent_id, 1, cronRank.rank, cn.nom_fr as level
              from cronquist_rank cronRank
                       inner join classification_nom cn on cronRank.id = cn.cronquist_rank_id
-             where id not in (
+             where cronRank.id not in (
                  select parent_id
                  from cronquist_rank
                  where parent_id is not null

@@ -3,6 +3,7 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
+import fr.syncrase.ecosyst.repository.CronquistRankRepository;
 import fr.syncrase.ecosyst.service.ClassificationNomQueryService;
 import fr.syncrase.ecosyst.service.CronquistRankQueryService;
 import fr.syncrase.ecosyst.service.UrlQueryService;
@@ -37,18 +38,22 @@ public class CronquistClassificationSynchronizer {
     private final Logger log = LoggerFactory.getLogger(CronquistClassificationSynchronizer.class);
 
     private final CronquistRankQueryService cronquistRankQueryService;
+    private final CronquistRankRepository cronquistRankRepository;
     private final ClassificationNomQueryService classificationNomQueryService;
-    private final Set<CronquistRank> rangsIntermediairesASupprimer;
+    private Set<CronquistRank> rangsASupprimer;
+    //    private final Set<CronquistRank> rangsFusionnesAvecLaClassification;
     private final UrlQueryService urlQueryService;
     private List<CronquistRank> existingClassificationList;
     private List<CronquistRank> toInsertClassification;
 
 
-    public CronquistClassificationSynchronizer(@NotNull CronquistClassification cronquistClassification, String urlWiki, CronquistRankQueryService cronquistRankQueryService, ClassificationNomQueryService classificationNomQueryService, UrlQueryService urlQueryService) {
+    public CronquistClassificationSynchronizer(@NotNull CronquistClassification cronquistClassification, String urlWiki, CronquistRankQueryService cronquistRankQueryService, CronquistRankRepository cronquistRankRepository, ClassificationNomQueryService classificationNomQueryService, UrlQueryService urlQueryService) {
         this.cronquistRankQueryService = cronquistRankQueryService;
+        this.cronquistRankRepository = cronquistRankRepository;
         this.classificationNomQueryService = classificationNomQueryService;
         this.urlQueryService = urlQueryService;
-        rangsIntermediairesASupprimer = new HashSet<>();
+        rangsASupprimer = new HashSet<>();
+//        rangsFusionnesAvecLaClassification = new HashSet<>();
         setExistingClassification(cronquistClassification, urlWiki);
         synchronizeClassifications();
     }
@@ -187,6 +192,7 @@ public class CronquistClassificationSynchronizer {
         int offset = toInsertClassification.size() - existingClassificationList.size();
         if (!doTheRankHasOneOfTheseNames(toInsertClassification.get(offset), existingClassificationList.get(0).getNoms())) {
             log.error("At the depth of the first known rank, ranks names must be equals");
+            clearFields();
             return;
         }
         // Parcours des éléments pour ajouter les IDs des éléments connus
@@ -194,6 +200,11 @@ public class CronquistClassificationSynchronizer {
             updateNameAndId(existingClassificationList, offset, i);
             synchronizeUrl(existingClassificationList, offset, i);
         }
+    }
+
+    private void clearFields() {
+        toInsertClassification = null;
+        rangsASupprimer = null;
     }
 
     /**
@@ -243,13 +254,13 @@ public class CronquistClassificationSynchronizer {
         if (!isRangIntermediaire(rankToInsert) && !isRangIntermediaire(existingRank)) {
             if (!doTheRankHasOneOfTheseNames(rankToInsert, existingRank.getNoms())) {
                 // Ils sont différents
+                // Si le rang que je cherche à insérer existe déjà
+                @Nullable CronquistRank synchronizedRankToInsert = findExistingRank(rankToInsert);
+                if (synchronizedRankToInsert != null) {
+                    mergeTwoBranches(existingClassificationList, i, offset);
+                }
                 rankToInsert.setId(existingRank.getId());
                 addAllNamesToCronquistRank(rankToInsert, existingRank.getNoms());// Ajout des synonymes
-                // En plus d'être synonyme, le rang que je cherche à insérer existe déjà
-                @Nullable CronquistRank rankReplacingTheIntermediateRankList = findExistingRank(rankToInsert);
-                if (rankReplacingTheIntermediateRankList != null) {// Must be = 1. Check if > 1 and throw error ?
-                    mergeTheTwoClassificationBranches(existingClassificationList, i, offset);
-                }
             } else {
                 // Ils sont égaux
                 rankToInsert.setId(existingRank.getId());
@@ -260,7 +271,7 @@ public class CronquistClassificationSynchronizer {
         if (!isRangIntermediaire(rankToInsert) && isRangIntermediaire(existingRank)) {
             @Nullable CronquistRank rankReplacingTheIntermediateRankList = findExistingRank(rankToInsert);
             if (rankReplacingTheIntermediateRankList != null) {// Must be = 1. Check if > 1 and throw error ?
-                mergeTheTwoClassificationBranches(existingClassificationList, i, offset);
+                transformIntermediateRankToTaxonomyRank(existingClassificationList, i, offset);
             } else {
                 // Le rang taxonomique n'existe pas en base → ajoute uniquement l'id du rang intermédiaire qui deviendra alors un rang taxonomique
                 rankToInsert.setId(existingRank.getId());
@@ -313,7 +324,57 @@ public class CronquistClassificationSynchronizer {
      * @param i                          index de l'élément de classification à partir duquel il faut fusionner les branches
      * @param offset                     Différence de taille des classifications à plat. Correspond au nombre d'éléments de la classification à insérer qui n'est pas encore connu de la base de données
      */
-    private void mergeTheTwoClassificationBranches(@NotNull List<CronquistRank> existingClassificationList, int i, int offset) {
+    private void mergeTwoBranches(@NotNull List<CronquistRank> existingClassificationList, int i, int offset) {
+        CronquistRank mergedRanks = declareAsSynonyms(
+            Objects.requireNonNull(findExistingRank(toInsertClassification.get(offset + i))),
+            existingClassificationList.get(i)
+        );
+        toInsertClassification.get(offset + i).setId(mergedRanks.getId());
+    }
+
+    /**
+     * Ces deux rangs existent en base de données. Fusion de ces deux rangs en un seul qui porte les deux noms
+     *
+     * @param synonymRank         Rang existant dont on vient de trouver un synonyme
+     * @param synonymRankToRemove Rang existant dont on vient de trouver un synonyme. Portion de classification est supprimée dans le processus
+     * @return Le rang existant en base de données représentant la fusion des deux paramètres
+     */
+    private @NotNull CronquistRank declareAsSynonyms(@NotNull CronquistRank synonymRank, @NotNull CronquistRank synonymRankToRemove) {
+        // Changement de parent de tous les enfants du rang synonyme à supprimer
+        Set<CronquistRank> cronquistRankSet = synonymRankToRemove.getChildren().stream().map(child -> {
+            CronquistRank byId = cronquistRankRepository.getById(child.getId());
+            // Detach parent and child using the new
+            byId.setParent(new CronquistRank().id(synonymRank.getId()));
+            cronquistRankRepository.save(byId);
+            addAllNames(byId);
+            addAllUrls(byId);
+            return byId;
+        }).collect(Collectors.toSet());
+        synonymRank.getChildren().addAll(cronquistRankSet);
+
+        // Ajout du nom synonyme
+        addAllNamesToCronquistRank(synonymRank, synonymRankToRemove.getNoms());
+        addAllUrlsToCronquistRank(synonymRank, synonymRankToRemove.getUrls());
+
+        // Suppression des rangs intermédiaires ascendants qui deviennent inutiles par la fusion
+        for (CronquistRank rankToRemove = synonymRankToRemove; isRangsIntermediaires(rankToRemove); rankToRemove = synonymRankToRemove.getParent()) {
+            rangsASupprimer.add(rankToRemove);
+        }
+
+        return synonymRank;
+    }
+
+    /**
+     * Remplace la portion de classification existante pour qu'elle corresponde à la classification corrigée
+     * depuis le rang intermédiaire existant jusqu'au rang taxonomique suivant
+     * par cette même portion au-dessus du rang taxonomique récupéré
+     * et stocke-les ids des rangs intermédiaires qui ont été déconnectés pour pouvoir les supprimer
+     *
+     * @param existingClassificationList classification existante du rang à insérer comportant un rang intermédiaire qui sera supprimé
+     * @param i                          index de l'élément de classification à partir duquel il faut fusionner les branches
+     * @param offset                     Différence de taille des classifications à plat. Correspond au nombre d'éléments de la classification à insérer qui n'est pas encore connu de la base de données
+     */
+    private void transformIntermediateRankToTaxonomyRank(@NotNull List<CronquistRank> existingClassificationList, int i, int offset) {
 
         List<CronquistRank> toBeMergedClassificationList =
             new CronquistClassification(
@@ -333,7 +394,7 @@ public class CronquistClassificationSynchronizer {
              * Supprime la portion de classification obsolète
              * Les IDs seront ajoutés lors des prochaines itérations sur les rangs ascendants
              */
-            rangsIntermediairesASupprimer.add(existant);
+            rangsASupprimer.add(existant);
             existingClassificationList.set(index, toBeMergedClassificationList.get(index - i));
             existant = existingClassificationList.get(++index);
         }
@@ -358,6 +419,9 @@ public class CronquistClassificationSynchronizer {
 
         if (existingRank.getUrls().size() > 0) {
             if (rankToInsert.getUrls().size() > 0) {// Must be = 1. Check > 1 and throw error?
+                if (rankToInsert.getUrls().size() > 1) {
+                    log.warn("Attention: {} urls trouvée. Correction nécessaire", existingRank.getUrls().size());
+                }
                 Url urlsAInserer = new ArrayList<>(rankToInsert.getUrls()).get(0);
                 Optional<Url> matchingExistingUrl = existingRank.getUrls().stream()
                     .filter(url -> url.getUrl().equals(urlsAInserer.getUrl()))
@@ -368,11 +432,15 @@ public class CronquistClassificationSynchronizer {
         }
     }
 
-    public Set<CronquistRank> getRangsIntermediairesASupprimer() {
-        return rangsIntermediairesASupprimer;
+    public Set<CronquistRank> getRangsASupprimer() {
+        return rangsASupprimer;
     }
 
     public List<CronquistRank> getToInsertClassification() {
         return toInsertClassification;
     }
+
+//    public Set<CronquistRank> getRangsFusionnesAvecLaClassification() {
+//        return rangsFusionnesAvecLaClassification;
+//    }
 }
