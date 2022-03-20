@@ -349,10 +349,10 @@ class CronquistRankResourceIT {
         cronquistRankRepository.saveAndFlush(cronquistRank);
         Long parentId = parent.getId();
 
-        // Get all the cronquistRankList where parent equals to parentId
+        // Get all the cronquistRankList where getRangSuperieur equals to parentId
         defaultCronquistRankShouldBeFound("parentId.equals=" + parentId);
 
-        // Get all the cronquistRankList where parent equals to (parentId + 1)
+        // Get all the cronquistRankList where getRangSuperieur equals to (parentId + 1)
         defaultCronquistRankShouldNotBeFound("parentId.equals=" + (parentId + 1));
     }
 

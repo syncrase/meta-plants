@@ -1,7 +1,8 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import org.jetbrains.annotations.Contract;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,9 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WikipediaCrawler {
 
+    public static final String LIST_INDICATOR_IN_URL = "Cat%C3%A9gorie";
+    public static final String HREF = "href";
+    public static final String LIST_SELECTOR_2 = "div.mw-category-group ul li a[href]";
+    public static final String LIST_SELECTOR_1 = "div.CategoryTreeItem a[href]";
+    public static final String CLASSIFICATION_SELECTOR = "div.infobox_v3.large.taxobox_v3.plante.bordered";
+    public static final String MAIN_CLASSIFICATION_SELECTOR = "table.taxobox_classification caption a";
     private final Logger log = LoggerFactory.getLogger(WikipediaCrawler.class);
 
     private final CronquistService cronquistService;
@@ -21,124 +30,22 @@ public class WikipediaCrawler {
         this.cronquistService = cronquistService;
     }
 
-    @Contract(pure = true)
-    static @NotNull String getValidUrl(@NotNull String scrappedUrl) {
-        if (scrappedUrl.contains(("http"))) {
-            return scrappedUrl;
-        }
-        return "https://fr.wikipedia.org" + scrappedUrl;
-    }
-
     public void crawlAllWikipedia() {
-        try {
-//            scrapWikiList("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Classification_de_Cronquist");
+        //            scrapWikiList(Wikipedia.scrappingBaseUrl);
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
 
-            scrapWiki("https://fr.wikipedia.org/wiki/Acanthe");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acanthe_%C3%A0_feuilles_molles");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acanthus_spinosus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_campestre");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_cappadocicum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_carpinifolium");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_chaneyi");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_circinatum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_davidii");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_douglasense");
-            scrapWiki("https://fr.wikipedia.org/wiki/Acer_velutinum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
-            scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
-            scrapWiki("https://fr.wikipedia.org/wiki/Andrographis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Andrographis_paniculata");
-            scrapWiki("https://fr.wikipedia.org/wiki/Anisacanthus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
-            scrapWiki("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
-            scrapWiki("https://fr.wikipedia.org/wiki/Aphelandra");
-            scrapWiki("https://fr.wikipedia.org/wiki/Aphelandra_sinclairiana");
-            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Asystasia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Asystasia_gangetica");
-            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Avicennia_germinans");
-            scrapWiki("https://fr.wikipedia.org/wiki/Barleria");
-            scrapWiki("https://fr.wikipedia.org/wiki/Barleria_cristata");
-            scrapWiki("https://fr.wikipedia.org/wiki/Barleria_obtusa");
-            scrapWiki("https://fr.wikipedia.org/wiki/Barleriola");
-            scrapWiki("https://fr.wikipedia.org/wiki/Blackstonia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Blechum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Buckleya");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_argent%C3%A9");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_%C3%A9corce_de_papier");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_%C3%A9pis");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_cinq_folioles");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_feuille_de_vigne");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_feuilles_d%27obier");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_grandes_feuilles");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_champ%C3%AAtre");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cappadoce");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
-            scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Pennsylvanie");
-            scrapWiki("https://fr.wikipedia.org/wiki/Carlowrightia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Centaurium");
-            scrapWiki("https://fr.wikipedia.org/wiki/Cervantesia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
-            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
-            scrapWiki("https://fr.wikipedia.org/wiki/Deinanthe");
-            scrapWiki("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Dicliptera");
-            scrapWiki("https://fr.wikipedia.org/wiki/Dicliptera_suberecta");
-            scrapWiki("https://fr.wikipedia.org/wiki/Dipterocarpus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_nivea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
-            scrapWiki("https://fr.wikipedia.org/wiki/Graptophyllum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Hemigraphis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Huaceae");
-            scrapWiki("https://fr.wikipedia.org/wiki/Hygrophila_(plante)");
-            scrapWiki("https://fr.wikipedia.org/wiki/Hygrophila_polysperma");
-            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_adhatoda");
-            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_aurea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_betonica");
-            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_californica");
-            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_carnea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_gendarussa");
-            scrapWiki("https://fr.wikipedia.org/wiki/Justicia_spicigera");
-            scrapWiki("https://fr.wikipedia.org/wiki/Kielmeyera");
-            scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Lyallia_kerguelensis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Molinadendron");
-            scrapWiki("https://fr.wikipedia.org/wiki/Monodiella");
-            scrapWiki("https://fr.wikipedia.org/wiki/Odontonema");
-            scrapWiki("https://fr.wikipedia.org/wiki/Oxera_pulchella");
-            scrapWiki("https://fr.wikipedia.org/wiki/Phlogacanthus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Phlogacanthus_turgidus");
-            scrapWiki("https://fr.wikipedia.org/wiki/Picanier_jaune");
-            scrapWiki("https://fr.wikipedia.org/wiki/Pseuderanthemum");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ptychospermatinae");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_brevifolia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_chartacea");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_devosiana");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_geminiflora");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_schnellii");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_simplex");
-            scrapWiki("https://fr.wikipedia.org/wiki/Ruellia_tuberosa");
-            scrapWiki("https://fr.wikipedia.org/wiki/Sanchezia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Strobilanthes_kunthiana");
-            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_alata");
-            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_erecta");
-            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_fragrans");
-            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_grandiflora");
-            scrapWiki("https://fr.wikipedia.org/wiki/Thunbergia_mysorensis");
-            scrapWiki("https://fr.wikipedia.org/wiki/Whitfieldia");
-            scrapWiki("https://fr.wikipedia.org/wiki/Whitfieldia_elongata");
+        wikis.forEach(wiki -> {
+            CronquistClassificationBranch classification;
+            try {
+                classification = scrapWiki(wiki);
+                cronquistService.saveCronquist(classification, wiki);
+            } catch (IOException e) {
+                log.error("unable to scrap wiki : " + e.getMessage());
+            }
+        });
 
 
 
@@ -148,48 +55,45 @@ public class WikipediaCrawler {
             - Deux enregistrements d'un même n'enregistre qu'un seul rang
             - Enregistrement d'une espèce partageant un même rang avec une autre classification => la classification se rattache à l'existant, le rang en commun possède un enfant supplémentaire
              */
-            // https://fr.wikipedia.org/wiki/Ptychospermatinae rang inférieur
-            // https://fr.wikipedia.org/wiki/Forsythia_%C3%97intermedia rang inférieur
-            // https://fr.wikipedia.org/wiki/Ch%C3%A8vrefeuille rang inférieur
-            // TODO ajouter la classification des insectes
-            // https://fr.wikipedia.org/wiki/Altise_des_tubercules Autre format pour la table de taxonomie des insectes
+        // https://fr.wikipedia.org/wiki/Ptychospermatinae rang inférieur
+        // https://fr.wikipedia.org/wiki/Forsythia_%C3%97intermedia rang inférieur
+        // https://fr.wikipedia.org/wiki/Ch%C3%A8vrefeuille rang inférieur
+        // TODO ajouter la classification des insectes
+        // https://fr.wikipedia.org/wiki/Altise_des_tubercules Autre format pour la table de taxonomie des insectes
 
-            // TODO ajouter le scrapping des formats des pages suivantes
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Cristasemen autre format de liste
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Donaldia
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Bracteibegonia
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Baryandra
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Barya
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Baccabegonia
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Apterobegonia
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Alicida
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Pilderia
+        // TODO ajouter le scrapping des formats des pages suivantes
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Cristasemen autre format de liste
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Donaldia
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Bracteibegonia
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Baryandra
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Barya
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Baccabegonia
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Apterobegonia
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Alicida
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Section_Pilderia
 
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Gyrostemonaceae
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Rapateaceae
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Columelliaceae
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Clethraceae
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Circaeasteraceae
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Chloranthaceae
-            // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Cercidiphyllaceae
-            //
-            //
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Gyrostemonaceae
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Rapateaceae
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Columelliaceae
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Clethraceae
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Circaeasteraceae
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Chloranthaceae
+        // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Cercidiphyllaceae
+        //
+        //
         log.info("All classification from Wikipedia had been scrapped");
     }
 
     public void scrapWikiList(String urlWikiListe) throws IOException {
         log.info("Get list from : " + urlWikiListe);
         Document doc = Jsoup.connect(urlWikiListe).get();
-        Elements wikiList = doc.select("div.CategoryTreeItem a[href]");
+        Elements wikiList = doc.select(LIST_SELECTOR_1);
         if (wikiList.size() > 0) {
             log.info(wikiList.size() + " éléments de liste récupérées");
         }
         // Si 0 alors c'est peut-être un autre html/css qui est utilisé
         if (wikiList.size() == 0) {
-            wikiList = doc.select("div.mw-category-group ul li a[href]");
+            wikiList = doc.select(LIST_SELECTOR_2);
             log.info(wikiList.size() + " éléments de liste récupérées avec l'autre CSS");
         }
         if (wikiList.size() == 0) {
@@ -197,31 +101,36 @@ public class WikipediaCrawler {
         }
 
         for (Element listItem : wikiList) {
-            urlWikiListe = listItem.attr("href");
+            urlWikiListe = listItem.attr(HREF);
             // Si l'url contient "Catégorie" alors la page contient une liste
-            if (urlWikiListe.contains("Cat%C3%A9gorie")) {
-                scrapWikiList(getValidUrl(urlWikiListe));
+            String urlWiki = Wikipedia.getValidUrl(urlWikiListe);
+            if (urlWikiListe.contains(LIST_INDICATOR_IN_URL)) {
+                scrapWikiList(urlWiki);
             } else {
-                scrapWiki(getValidUrl(urlWikiListe));
+                CronquistClassificationBranch classification = scrapWiki(urlWiki);
+                // TODO ajouter dans une queue (reçue de l'extérieur)
+//                scrappedClassificationStore.add(classification);
+                cronquistService.saveCronquist(classification, urlWiki);
             }
         }
     }
 
-    public void scrapWiki(String urlWiki) throws IOException {
+    public CronquistClassificationBranch scrapWiki(String urlWiki) throws IOException {
         try {
             log.info("Get classification from : " + urlWiki);
             Elements encadreTaxonomique = Jsoup
                 .connect(urlWiki)
                 .get()
-                .select("div.infobox_v3.large.taxobox_v3.plante.bordered");
+                .select(CLASSIFICATION_SELECTOR);
 
-            extractPremiereClassification(encadreTaxonomique, urlWiki);
+            return extractPremiereClassification(encadreTaxonomique);
         } catch (IOException e) {
-            log.error("Problème d'accès lors de l'extraction des données de la page wikipédia {}", urlWiki);
+            log.error("Problème d'accès lors de l'extraction des données de la page Wikipedia {}", urlWiki);
         }
+        return null;
     }
 
-    private void extractPremiereClassification(@NotNull Elements encadreTaxonomique, String urlWiki) {
+    private @Nullable CronquistClassificationBranch extractPremiereClassification(@NotNull Elements encadreTaxonomique) {
         // TODO Contient plusieurs classifications, en général Cronquist et APGN
         // TODO dans l'état actuel des choses, je ne garde que la PREMIERE section !
 
@@ -230,8 +139,9 @@ public class WikipediaCrawler {
                 log.info("APG III to be implemented");
                 break;
             case "Cronquist":
-                cronquistService.saveCronquist(extractionCronquist(encadreTaxonomique), urlWiki);
-                break;
+                return extractionCronquist(encadreTaxonomique);
+//                cronquistService.saveCronquist(extractionCronquist(encadreTaxonomique), urlWiki);
+//                break;
             case "No classification":
                 log.info("No classification table found in this page");
                 break;
@@ -241,12 +151,13 @@ public class WikipediaCrawler {
             default:
                 log.warn("Classification's type cannot be determined");
         }
+        return null;
     }
 
     private @NotNull String getTypeOfMainClassification(@NotNull Elements encadreTaxonomique) {
 
         Elements taxoTitles = encadreTaxonomique
-            .select("table.taxobox_classification caption a");
+            .select(MAIN_CLASSIFICATION_SELECTOR);
         if (taxoTitles.size() == 0) {
             return "No classification";
         }
@@ -279,59 +190,65 @@ public class WikipediaCrawler {
         return "Cronquist";
     }
 
+/*
+    private APGIII extractionApg3(@NotNull Elements encadreTaxonomique) {
+        log.info("Extract APGIII classification");
+        Elements elementsDeClassification = encadreTaxonomique.select("tbody tr");
+        APGIII apgiii = new APGIII();
+        for (Element classificationItem : elementsDeClassification) {
+            // Get th = rang taxonomique et td = taxon
+//            Elements rangTaxonomiqueElement = classificationItem.select("th a");
+//            String classificationItemKey = rangTaxonomiqueElement
+//                .get(0)// ne contient qu'un seul titre
+//                .childNode(0)// TextNode value
+//                .toString();
+            String classificationItemKey = selectText(classificationItem, "th a");
+            // dans le cas des clades la cssQuery devient "td span a span"
+            switch (classificationItemKey) {
+                case "Règne":
+                    log.debug("\tRègne NOT YET IMPLEMENTED");
+                    break;
+                case "Ordre":
+                    apgiii.setOrdre(selectText(classificationItem, "td span a"));
+                    break;
+                case "Clade":
+                    log.debug("\tClade NOT YET IMPLEMENTED");
+                    break;
+                case "Famille":
+                    apgiii.setFamille(selectText(classificationItem, "td span a"));
+                    break;
+                case "Sous-famille":
+                    log.debug("\tSous-famille NOT YET IMPLEMENTED");
+                    break;
+                case "Tribu":
+                    log.debug("\tTribu NOT YET IMPLEMENTED");
+                    break;
+                case "Sous-tribu":
+                    log.debug("\tSous-tribu NOT YET IMPLEMENTED");
+                    break;
+                case "":
+                    log.warn("Rang taxonomique inexistant");
+                    break;
+                default:
+                    log.warn("\t" + classificationItemKey + " ne correspond pas à du APGIII");
+            }
+        }
+        log.info("(TO BE COMPLETED) Created APG III classification APGIII : " + apgiii);
+        return apgiii;
+    }*/
 
-//    private APGIII extractionApg3(@NotNull Elements encadreTaxonomique) {
-//        log.info("Extract APGIII classification");
-//        Elements elementsDeClassification = encadreTaxonomique.select("tbody tr");
-//        APGIII apgiii = new APGIII();
-//        for (Element classificationItem : elementsDeClassification) {
-//            // Get th = rang taxonomique et td = taxon
-////            Elements rangTaxonomiqueElement = classificationItem.select("th a");
-////            String classificationItemKey = rangTaxonomiqueElement
-////                .get(0)// ne contient qu'un seul titre
-////                .childNode(0)// TextNode value
-////                .toString();
-//            String classificationItemKey = selectText(classificationItem, "th a");
-//            // dans le cas des clades la cssQuery devient "td span a span"
-//            switch (classificationItemKey) {
-//                case "Règne":
-//                    log.debug("\tRègne NOT YET IMPLEMENTED");
-//                    break;
-//                case "Ordre":
-//                    apgiii.setOrdre(selectText(classificationItem, "td span a"));
-//                    break;
-//                case "Clade":
-//                    log.debug("\tClade NOT YET IMPLEMENTED");
-//                    break;
-//                case "Famille":
-//                    apgiii.setFamille(selectText(classificationItem, "td span a"));
-//                    break;
-//                case "Sous-famille":
-//                    log.debug("\tSous-famille NOT YET IMPLEMENTED");
-//                    break;
-//                case "Tribu":
-//                    log.debug("\tTribu NOT YET IMPLEMENTED");
-//                    break;
-//                case "Sous-tribu":
-//                    log.debug("\tSous-tribu NOT YET IMPLEMENTED");
-//                    break;
-//                case "":
-//                    log.warn("Rang taxonomique inexistant");
-//                    break;
-//                default:
-//                    log.warn("\t" + classificationItemKey + " ne correspond pas à du APGIII");
-//            }
-//        }
-//        log.info("(TO BE COMPLETED) Created APG III classification APGIII : " + apgiii);
-//        return apgiii;
-//    }
-
-    private CronquistClassification extractionCronquist(@NotNull Elements encadreTaxonomique) {
+    private CronquistClassificationBranch extractionCronquist(@NotNull Elements encadreTaxonomique) {
         Elements tables = encadreTaxonomique.select("table.taxobox_classification");
         Element mainTable = tables.get(0);
 
         CronquistClassificationExtractor cronquistClassificationExtractor = new CronquistClassificationExtractor();
-        CronquistClassification cronquistClassification = cronquistClassificationExtractor.getClassification(mainTable);
+        CronquistClassificationBranch cronquistClassification = null;
+        try {
+            cronquistClassification = cronquistClassificationExtractor.getClassification(mainTable);
+        } catch (ClassificationReconstructionException e) {
+            log.error("Impossible d'extraire la classification de la page");
+            e.printStackTrace();
+        }
 
 
         log.info("Created Cronquist classification : " + cronquistClassification);

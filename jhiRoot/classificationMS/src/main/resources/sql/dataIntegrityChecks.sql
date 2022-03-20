@@ -25,7 +25,7 @@ from (
      ) as cte;
 
 
--- Liste les rangs corrompus (sans parent)
+-- Liste les rangs corrompus (sans getRangSuperieur)
 SELECT *
 from cronquist_rank
 where parent_id is null

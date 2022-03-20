@@ -1,27 +1,19 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.domain.ClassificationNom;
-import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.domain.Url;
-import fr.syncrase.ecosyst.repository.CronquistRankRepository;
-import fr.syncrase.ecosyst.service.ClassificationNomQueryService;
-import fr.syncrase.ecosyst.service.CronquistRankQueryService;
-import fr.syncrase.ecosyst.service.UrlQueryService;
-import fr.syncrase.ecosyst.service.criteria.ClassificationNomCriteria;
-import fr.syncrase.ecosyst.service.criteria.CronquistRankCriteria;
-import fr.syncrase.ecosyst.service.criteria.UrlCriteria;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicUrl;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-import tech.jhipster.service.filter.LongFilter;
-import tech.jhipster.service.filter.StringFilter;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
-import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistUtils.*;
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank.isRangsIntermediaires;
 
 /**
  * À partir de la classification reçue par le constructeur, merge avec la classification existante en base.<br>
@@ -37,137 +29,14 @@ public class CronquistClassificationSynchronizer {
 
     private final Logger log = LoggerFactory.getLogger(CronquistClassificationSynchronizer.class);
 
-    private final CronquistRankQueryService cronquistRankQueryService;
-    private final CronquistRankRepository cronquistRankRepository;
-    private final ClassificationNomQueryService classificationNomQueryService;
-    private Set<CronquistRank> rangsASupprimer;
-    //    private final Set<CronquistRank> rangsFusionnesAvecLaClassification;
-    private final UrlQueryService urlQueryService;
-    private List<CronquistRank> existingClassificationList;
-    private List<CronquistRank> toInsertClassification;
+    private final ClassificationRepository classificationRepository;
+//    private Set<AtomicCronquistRank> rangsASupprimer;
 
 
-    public CronquistClassificationSynchronizer(@NotNull CronquistClassification cronquistClassification, String urlWiki, CronquistRankQueryService cronquistRankQueryService, CronquistRankRepository cronquistRankRepository, ClassificationNomQueryService classificationNomQueryService, UrlQueryService urlQueryService) {
-        this.cronquistRankQueryService = cronquistRankQueryService;
-        this.cronquistRankRepository = cronquistRankRepository;
-        this.classificationNomQueryService = classificationNomQueryService;
-        this.urlQueryService = urlQueryService;
-        rangsASupprimer = new HashSet<>();
-//        rangsFusionnesAvecLaClassification = new HashSet<>();
-        setExistingClassification(cronquistClassification, urlWiki);
-        updateFieldsWithExisting();
+    public CronquistClassificationSynchronizer(ClassificationRepository classificationRepository) {
+        this.classificationRepository = classificationRepository;
     }
 
-    /**
-     * Récupère le rang connu le plus profond de la classification
-     *
-     * @param cronquistClassification La classification de cronquist aux éléments imbriqués
-     * @param urlWiki                 L'url du wiki d'où a été extraite la classification
-     */
-    private void setExistingClassification(@NotNull CronquistClassification cronquistClassification, String urlWiki) {
-        cronquistClassification.clearTail();
-        toInsertClassification = cronquistClassification.getClassificationAscendante();
-        toInsertClassification.get(0).addUrls(new Url().url(urlWiki));
-        // Parcours du plus bas rang jusqu'au plus élevé pour trouver le premier rang existant en base
-        for (CronquistRank cronquistRank : toInsertClassification) {
-            // Si je n'ai toujours pas récupéré de rang connu, je regarde encore pour ce nouveau rang
-
-            CronquistRank existing = findExistingRank(cronquistRank);
-            // Si je viens d'en trouver un
-            if (existing != null) {
-                CronquistClassification existingClassification = new CronquistClassification(existing);
-                existingClassificationList = existingClassification.getClassificationAscendante();
-                synchronizeAllExistingClassification();
-                // À partir de ce moment-là, il n'est plus nécessaire d'interroger la base.
-                // On a obtenu l'arborescence ascendante complète du rang taxonomique
-                break;
-            }
-        }
-        if (existingClassificationList == null) {
-            existingClassificationList = new ArrayList<>();
-        }
-    }
-
-    private void synchronizeAllExistingClassification() {
-        for (CronquistRank rank : existingClassificationList) {
-            addAllNames(rank);
-            addAllUrls(rank);
-        }
-    }
-
-    /**
-     * @param cronquistRank Rang dont il faut vérifier la présence en base
-     * @return Le rang qui correspond. Null si le rang n'existe pas
-     */
-    private @Nullable CronquistRank findExistingRank(@NotNull CronquistRank cronquistRank) {
-        if (isRangIntermediaire(cronquistRank) && cronquistRank.getId() == null) {
-            return null;
-        }
-        updateNomsIds(cronquistRank);
-        // Pas de nom => rang inconnu en base
-        if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null)) {
-            return fetchExistingRank(cronquistRank);
-        }
-        return null;
-    }
-
-    private CronquistRank fetchExistingRank(@NotNull CronquistRank cronquistRank) {
-        LongFilter nomFilter = new LongFilter();
-        nomFilter.setIn(cronquistRank.getNoms().stream().map(ClassificationNom::getId).filter(Objects::nonNull).collect(Collectors.toList()));
-
-        CronquistRankCriteria.CronquistTaxonomikRanksFilter rankFilter = new CronquistRankCriteria.CronquistTaxonomikRanksFilter();
-        rankFilter.setEquals(cronquistRank.getRank());
-
-        CronquistRankCriteria rankCrit = new CronquistRankCriteria();
-        rankCrit.setNomsId(nomFilter);
-        rankCrit.setRank(rankFilter);
-        return cronquistRankQueryService.findByCriteria(rankCrit).get(0);
-    }
-
-    private void updateNomsIds(@NotNull CronquistRank cronquistRank) {
-        Iterator<ClassificationNom> nomIterator = cronquistRank.getNoms().iterator();
-        ClassificationNom nom;
-        while (nomIterator.hasNext()) {
-            nom = nomIterator.next();
-            StringFilter classifNomFilter = new StringFilter();
-            classifNomFilter.setEquals(nom.getNomFr());
-
-            ClassificationNomCriteria classificationNomCriteria = new ClassificationNomCriteria();
-            classificationNomCriteria.setNomFr(classifNomFilter);
-            List<ClassificationNom> classificationNoms = classificationNomQueryService.findByCriteria(classificationNomCriteria);
-            if (classificationNoms.size() > 0) {// Soit inexistant, soit un unique résultat (unique constraint)
-                nom.setId(classificationNoms.get(0).getId());
-            }
-        }
-    }
-
-    private void addAllNames(@NotNull CronquistRank cronquistRank) {
-//        if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() == null)) {
-            cronquistRank.getNoms().removeIf(classificationNom -> classificationNom.getId() == null);
-            LongFilter idFilter = new LongFilter();
-            idFilter.setEquals(cronquistRank.getId());
-            ClassificationNomCriteria classificationNomCriteria = new ClassificationNomCriteria();
-            classificationNomCriteria.setCronquistRankId(idFilter);
-
-            List<ClassificationNom> classificationNoms = classificationNomQueryService.findByCriteria(classificationNomCriteria);
-            HashSet<ClassificationNom> classificationNoms1 = new HashSet<>(classificationNoms);
-            cronquistRank.getNoms().addAll(classificationNoms1);
-//        }
-    }
-
-    private void addAllUrls(@NotNull CronquistRank cronquistRank) {
-//        if (cronquistRank.getUrls().stream().anyMatch(url -> url.getId() == null)) {
-            cronquistRank.getUrls().removeIf(url -> url.getId() == null);
-            LongFilter idFilter = new LongFilter();
-            idFilter.setEquals(cronquistRank.getId());
-            UrlCriteria urlCriteria = new UrlCriteria();
-            urlCriteria.setCronquistRankId(idFilter);
-
-            List<Url> urlByCriteria = urlQueryService.findByCriteria(urlCriteria);
-            HashSet<Url> urls = new HashSet<>(urlByCriteria);
-            cronquistRank.getUrls().addAll(urls);
-//        }
-    }
 
     /**
      * Mis à jour des IDs des éléments de la première liste pour qu'ils pointent vers les éléments déjà enregistrés en base
@@ -177,84 +46,107 @@ public class CronquistClassificationSynchronizer {
      *     <li>merger les classification dans le cas où deux portions de classification distinctes se trouvent être les mêmes</li>
      * </ul>
      *
+     * @param existingClassification
+     * @param scrappedClassification
      */
-    private void updateFieldsWithExisting() {
+    private void makeItConsistent(
+        @NotNull CronquistClassificationBranch existingClassification, @NotNull CronquistClassificationBranch scrappedClassification
+                                 ) throws ClassificationReconstructionException {
+        Collection<AtomicCronquistRank> existingClassificationList = existingClassification.getClassification();
         if (existingClassificationList.size() == 0) {
             log.info("No existing entity in the database");
             return;
         }
-        int offset = toInsertClassification.size() - existingClassificationList.size();
-        if (!doTheRankHasOneOfTheseNames(toInsertClassification.get(offset), existingClassificationList.get(0).getNoms())) {
-            log.error("At the depth of the first known rank, ranks names must be equals");
-            clearFields();
-            return;
-        }
         // Parcours des éléments pour ajouter les IDs des éléments connus
-        for (int i = 0; i < existingClassificationList.size(); i++) {
-            updateNameAndId(existingClassificationList, offset, i);
-            synchronizeUrl(existingClassificationList, offset, i);
+        CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
+        for (int positionDansLaClassification = existingClassification.ranksCount() - 1; positionDansLaClassification >= 0; positionDansLaClassification--) {
+            AtomicCronquistRank existingClassificationRang = existingClassification.getRang(rangsDisponibles[positionDansLaClassification]);
+            if (existingClassificationRang == null) {
+                continue;
+            }
+            manageRankConsistency(rangsDisponibles[positionDansLaClassification], existingClassification, scrappedClassification);
+//            synchronizeUrl(existingClassificationList, offset, i);
         }
     }
 
-    private void clearFields() {
-        toInsertClassification = null;
-        rangsASupprimer = null;
-    }
 
-    /**
-     * <table>
-     *   <thead>
-     *     <tr>
-     *       <th>rankToInsert intermédiaire</th>
-     *       <th>existingRank intermédiaire</th>
-     *       <th>Action</th>
-     *     </tr>
-     *    </thead>
-     *    <tbody>
-     *      <tr>
-     *        <td>non</td>
-     *        <td>non</td>
-     *        <td>Gestion de deux rangs taxonomiques. Si le nom est inconnu, il est ajouté à la liste des noms (synonyme). Sinon le rang est uniquement synchronisé</td>
-     *      </tr>
-     *      <tr>
-     *        <td>non</td>
-     *        <td>oui</td>
-     *        <td>Le rang intermédiaire devient rang taxonomique. Si le rang à ajouter existe déjà, les deux branches de classification sont fusionnées</td>
-     *      </tr>
-     *      <tr>
-     *        <td>oui</td>
-     *        <td>non</td>
-     *        <td>Le rang intermédiaire à ajouter se trouve être un rang taxonomique. Synchronisation du rang</td>
-     *      </tr>
-     *      <tr>
-     *        <td>oui</td>
-     *        <td>oui</td>
-     *        <td>Synchronisation du rang intermédiaire avec la base de données</td>
-     *      </tr>
-     *      <tr>
-     *      </tr>
-     *   </tbody>
-     * </table>
-     *
-     * @param existingClassificationList classification existante mise à plat
-     * @param offset                     Différence de taille des classifications à plat. Correspond au nombre d'éléments de la classification à insérer qui n'est pas encore connu de la base de données
-     * @param i                          Index de l'élément à traiter dans la classification existante
-     */
-    private void updateNameAndId(@NotNull List<CronquistRank> existingClassificationList, int offset, int i) {
-        CronquistRank existingRank, rankToInsert;
-        existingRank = existingClassificationList.get(i);
-        rankToInsert = toInsertClassification.get(offset + i);
+//    /**
+//     * Mis à jour des IDs des éléments de la première liste pour qu'ils pointent vers les éléments déjà enregistrés en base
+//     * Compare chacun des rangs à enregistrer pour les comparer avec la base pour :
+//     * <ul>
+//     *     <li>mettre à jour les ids</li>
+//     *     <li>merger les classifications dans le cas où deux portions de classification distinctes se trouvent être les mêmes</li>
+//     * </ul>
+//     */
 
-        if (!isRangIntermediaire(rankToInsert) && !isRangIntermediaire(existingRank)) {
-            if (!doTheRankHasOneOfTheseNames(rankToInsert, existingRank.getNoms())) {
+//    private void clearFields() {
+////        toInsertClassification = null;
+//        rangsASupprimer = null;
+//    }
+
+//    /**
+//     * <table>
+//     *   <thead>
+//     *     <tr>
+//     *       <th>rankToInsert intermédiaire</th>
+//     *       <th>existingRank intermédiaire</th>
+//     *       <th>Action</th>
+//     *     </tr>
+//     *    </thead>
+//     *    <tbody>
+//     *      <tr>
+//     *        <td>non</td>
+//     *        <td>non</td>
+//     *        <td>Gestion de deux rangs taxonomiques. Si le nom est inconnu, il est ajouté à la liste des noms (synonyme). Sinon le rang est uniquement synchronisé</td>
+//     *      </tr>
+//     *      <tr>
+//     *        <td>non</td>
+//     *        <td>oui</td>
+//     *        <td>Le rang intermédiaire devient rang taxonomique. Si le rang à ajouter existe déjà, les deux branches de classification sont fusionnées</td>
+//     *      </tr>
+//     *      <tr>
+//     *        <td>oui</td>
+//     *        <td>non</td>
+//     *        <td>Le rang intermédiaire à ajouter se trouve être un rang taxonomique. Synchronisation du rang</td>
+//     *      </tr>
+//     *      <tr>
+//     *        <td>oui</td>
+//     *        <td>oui</td>
+//     *        <td>Synchronisation du rang intermédiaire avec la base de données</td>
+//     *      </tr>
+//     *      <tr>
+//     *      </tr>
+//     *   </tbody>
+//     * </table>
+//     *
+//     * @param existingClassificationList classification existante mise à plat
+//     * @param offset                     Différence de taille des classifications à plat. Correspond au nombre d'éléments de la classification à insérer qui n'est pas encore connu de la base de données
+//     * @param i                          Index de l'élément à traiter dans la classification existante
+//     */
+
+    private void manageRankConsistency(
+        CronquistTaxonomikRanks rankName,
+        @NotNull CronquistClassificationBranch existingClassification,
+        @NotNull CronquistClassificationBranch scrappedClassification
+                                      ) throws ClassificationReconstructionException {
+
+        AtomicCronquistRank existingRank;
+        AtomicCronquistRank rankToInsert;
+        existingRank = existingClassification.getRang(rankName);
+        rankToInsert = scrappedClassification.getRang(rankName);
+
+        boolean lesDeuxRangsSontSignificatifs = !rankToInsert.isRangDeLiaison() && !existingRank.isRangDeLiaison();
+        if (lesDeuxRangsSontSignificatifs) {
+            if (!rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNoms())) {// TODO invert
                 // Ils sont différents
                 // Si le rang que je cherche à insérer existe déjà
-                @Nullable CronquistRank synchronizedRankToInsert = findExistingRank(rankToInsert);
-                if (synchronizedRankToInsert != null) {
-                    mergeTwoBranches(existingClassificationList, i, offset);
+                @Nullable AtomicCronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
+                boolean scrappedRankAlreadyExists = synonym != null;
+                if (scrappedRankAlreadyExists) {
+                    classificationRepository.mergeDeuxRangsSignificatifs(existingClassification, synonym);
                 }
                 rankToInsert.setId(existingRank.getId());
-                addAllNamesToCronquistRank(rankToInsert, existingRank.getNoms());// Ajout des synonymes
+                rankToInsert.addAllNamesToCronquistRank(existingRank.getNoms());// Ajout des synonymes
             } else {
                 // Ils sont égaux
                 rankToInsert.setId(existingRank.getId());
@@ -262,10 +154,12 @@ public class CronquistClassificationSynchronizer {
             }
             return;
         }
-        if (!isRangIntermediaire(rankToInsert) && isRangIntermediaire(existingRank)) {
-            @Nullable CronquistRank rankReplacingTheIntermediateRankList = findExistingRank(rankToInsert);
-            if (rankReplacingTheIntermediateRankList != null) {// Must be = 1. Check if > 1 and throw error ?
-                transformIntermediateRankToTaxonomyRank(existingClassificationList, i, offset);
+
+        boolean uniquementLeRangScrappeEstSignificatif = !rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
+        if (uniquementLeRangScrappeEstSignificatif) {
+            @Nullable AtomicCronquistRank rankReplacingTheIntermediateRankList = classificationRepository.findExistingRank(rankToInsert);
+            if (rankReplacingTheIntermediateRankList != null) {
+                classificationRepository.mergeUnRangSignificatifDansUnRangDeLiaison(existingClassification, rankReplacingTheIntermediateRankList);
             } else {
                 // Le rang taxonomique n'existe pas en base → ajoute uniquement l'id du rang intermédiaire qui deviendra alors un rang taxonomique
                 rankToInsert.setId(existingRank.getId());
@@ -273,14 +167,18 @@ public class CronquistClassificationSynchronizer {
             }
             return;
         }
-        if (isRangIntermediaire(rankToInsert) && !isRangIntermediaire(existingRank)) {
+
+        boolean uniquementLeRangExistantEstSignificatif = rankToInsert.isRangDeLiaison() && !existingRank.isRangDeLiaison();
+        if (uniquementLeRangExistantEstSignificatif) {
             rankToInsert.setId(existingRank.getId());
-            addAllNamesToCronquistRank(rankToInsert, existingRank.getNoms());
+            rankToInsert.addAllNamesToCronquistRank(existingRank.getNoms());
             return;
         }
-        if (isRangIntermediaire(rankToInsert) && isRangIntermediaire(existingRank)) {
+
+        boolean lesDeuxRangsSontDeLiaison = rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
+        if (lesDeuxRangsSontDeLiaison) {
             rankToInsert.setId(existingRank.getId());
-            synchronizeNames(existingRank, rankToInsert);
+            synchronizeNames(existingRank, rankToInsert);// Pour ne pas créer un nouveau rang de liaison
         }
     }
 
@@ -290,148 +188,83 @@ public class CronquistClassificationSynchronizer {
      * @param existingRank rang existant
      * @param rankToInsert nouveau rang à insérer
      */
-    private void synchronizeNames(@NotNull CronquistRank existingRank, CronquistRank rankToInsert) {
-        for (ClassificationNom existingClassificationNom : existingRank.getNoms()) {
-            for (ClassificationNom toInsertClassificationNom : rankToInsert.getNoms()) {
+    private void synchronizeNames(
+        @NotNull AtomicCronquistRank existingRank,
+        AtomicCronquistRank rankToInsert
+                                 ) {
+        for (AtomicClassificationNom existingClassificationNom : existingRank.getNoms()) {
+            for (AtomicClassificationNom toInsertClassificationNom : rankToInsert.getNoms()) {
                 // Ajoute l'id des noms existants
-                if (isRangsIntermediaires(existingRank, rankToInsert) ||
-                    isRangsIntermediaires(existingRank) && !isRangsIntermediaires(rankToInsert) ||
-                    existingClassificationNom.getNomFr().equals(toInsertClassificationNom.getNomFr())
-                ) {
+                if (isRangsIntermediaires(existingRank, rankToInsert) || isRangsIntermediaires(existingRank) && !isRangsIntermediaires(rankToInsert) || existingClassificationNom.getNomFr().equals(toInsertClassificationNom.getNomFr())) {
                     toInsertClassificationNom.setId(existingClassificationNom.getId());
                 }
             }
             // Ajoute le nom existant s'il n'existe pas dans mes noms à insérer
-            if (!hasThisName(rankToInsert, existingClassificationNom.getNomFr())) {
-                addNameToCronquistRank(rankToInsert, existingClassificationNom);
+            if (!rankToInsert.hasThisName(existingClassificationNom.getNomFr())) {
+                rankToInsert.addNameToCronquistRank(existingClassificationNom);
             }
         }
     }
 
-    /**
-     * Remplace la portion de classification existante pour qu'elle corresponde à la classification corrigée
-     * depuis le rang intermédiaire existant jusqu'au rang taxonomique suivant
-     * par cette même portion au-dessus du rang taxonomique récupéré
-     * et stocke-les ids des rangs intermédiaires qui ont été déconnectés pour pouvoir les supprimer
-     *
-     * @param existingClassificationList classification existante du rang à insérer comportant un rang intermédiaire qui sera supprimé
-     * @param i                          index de l'élément de classification à partir duquel il faut fusionner les branches
-     * @param offset                     Différence de taille des classifications à plat. Correspond au nombre d'éléments de la classification à insérer qui n'est pas encore connu de la base de données
-     */
-    private void mergeTwoBranches(@NotNull List<CronquistRank> existingClassificationList, int i, int offset) {
-        CronquistRank mergedRanks = declareAsSynonyms(
-            Objects.requireNonNull(findExistingRank(toInsertClassification.get(offset + i))),
-            existingClassificationList.get(i)
-        );
-        toInsertClassification.get(offset + i).setId(mergedRanks.getId());
-    }
+    public void applyConsistency(
+        @NotNull CronquistClassificationBranch scrappedClassification,
+        String urlWiki
+                                ) throws ClassificationReconstructionException {
 
-    /**
-     * Ces deux rangs existent en base de données. Fusion de ces deux rangs en un seul qui porte les deux noms
-     *
-     * @param synonymRank         Rang existant dont on vient de trouver un synonyme
-     * @param synonymRankToRemove Rang existant dont on vient de trouver un synonyme. Portion de classification est supprimée dans le processus
-     * @return Le rang existant en base de données représentant la fusion des deux paramètres
-     */
-    private @NotNull CronquistRank declareAsSynonyms(@NotNull CronquistRank synonymRank, @NotNull CronquistRank synonymRankToRemove) {
-        // Changement de parent de tous les enfants du rang synonyme à supprimer
-        Set<CronquistRank> cronquistRankSet = synonymRankToRemove.getChildren().stream().map(child -> {
-            CronquistRank byId = cronquistRankRepository.getById(child.getId());
-            // Detach parent and child using the new
-            byId.setParent(new CronquistRank().id(synonymRank.getId()));
-            cronquistRankRepository.save(byId);
-            addAllNames(byId);
-            addAllUrls(byId);
-            return byId;
-        }).collect(Collectors.toSet());
-        synonymRank.getChildren().addAll(cronquistRankSet);
 
-        // Ajout du nom synonyme
-        addAllNamesToCronquistRank(synonymRank, synonymRankToRemove.getNoms());
-        addAllUrlsToCronquistRank(synonymRank, synonymRankToRemove.getUrls());
+        scrappedClassification.getRangDeBase().addUrls(AtomicUrl.newAtomicUrl(urlWiki));
+        CronquistClassificationBranch existingClassification = this.classificationRepository.findExistingPartOfThisClassification(scrappedClassification);
 
-        // Suppression des rangs intermédiaires ascendants qui deviennent inutiles par la fusion
-        for (CronquistRank rankToRemove = synonymRankToRemove; isRangsIntermediaires(rankToRemove); rankToRemove = synonymRankToRemove.getParent()) {
-            rangsASupprimer.add(rankToRemove);
+        if (existingClassification != null) {
+            makeItConsistent(existingClassification, scrappedClassification);
         }
-
-        return synonymRank;
+//        updateFieldsWithExisting();
     }
 
-    /**
-     * Remplace la portion de classification existante pour qu'elle corresponde à la classification corrigée
-     * depuis le rang intermédiaire existant jusqu'au rang taxonomique suivant
-     * par cette même portion au-dessus du rang taxonomique récupéré
-     * et stocke-les ids des rangs intermédiaires qui ont été déconnectés pour pouvoir les supprimer
-     *
-     * @param existingClassificationList classification existante du rang à insérer comportant un rang intermédiaire qui sera supprimé
-     * @param i                          index de l'élément de classification à partir duquel il faut fusionner les branches
-     * @param offset                     Différence de taille des classifications à plat. Correspond au nombre d'éléments de la classification à insérer qui n'est pas encore connu de la base de données
-     */
-    private void transformIntermediateRankToTaxonomyRank(@NotNull List<CronquistRank> existingClassificationList, int i, int offset) {
+//    /**
+//     * Remplace la portion de classification existante pour qu'elle corresponde à la classification corrigée
+//     * depuis le rang intermédiaire existant jusqu'au rang taxonomique suivant
+//     * par cette même portion au-dessus du rang taxonomique récupéré
+//     * et stocke-les ids des rangs intermédiaires qui ont été déconnectés pour pouvoir les supprimer
+//     *
+//     * @param existingClassificationList classification existante du rang à insérer comportant un rang intermédiaire qui sera supprimé
+//     * @param i                          index de l'élément de classification à partir duquel il faut fusionner les branches
+//     * @param offset                     Différence de taille des classifications à plat. Correspond au nombre d'éléments de la classification à insérer qui n'est pas encore connu de la base de données
+//     */
+//    private void mergeDeuxRangsSignificatifs(@NotNull List<CronquistRank> existingClassificationList, int i, int offset) {
+//        CronquistRank mergedRanks = declareAsSynonyms(
+//            Objects.requireNonNull(classificationRepository.findExistingRank(toInsertClassification.get(offset + i))),
+//            existingClassificationList.get(i)
+//        );
+//        toInsertClassification.get(offset + i).setId(mergedRanks.getId());
+//    }
 
-        List<CronquistRank> toBeMergedClassificationList =
-            new CronquistClassification(
-                Objects.requireNonNull(
-                    findExistingRank(
-                        toInsertClassification.get(offset + i)
-                    )
-                )
-            )
-                .getClassificationAscendante();
+//    private void synchronizeUrl(@NotNull List<CronquistRank> existingClassificationList, int offset, int i) {
+//        CronquistRank existingRank, rankToInsert;
+//        existingRank = existingClassificationList.get(i);
+//        rankToInsert = toInsertClassification.get(offset + i);
+//
+//        if (existingRank.getUrls().size() > 0) {
+//            if (rankToInsert.getUrls().size() > 0) {// Must be = 1. Check > 1 and throw error?
+//                if (rankToInsert.getUrls().size() > 1) {
+//                    log.warn("Attention: {} urls trouvée. Correction nécessaire", existingRank.getUrls().size());
+//                }
+//                Url urlsAInserer = new ArrayList<>(rankToInsert.getUrls()).get(0);
+//                Optional<Url> matchingExistingUrl = existingRank.getUrls().stream()
+//                    .filter(url -> url.getUrl().equals(urlsAInserer.getUrl()))
+//                    .findFirst();
+//                matchingExistingUrl.ifPresent(value -> rankToInsert.getUrls().forEach(url -> url.setId(value.getId())));
+//            }
+//            rankToInsert.addAllUrlsToCronquistRank(existingRank.getUrls());
+//        }
+//    }
 
-        int index = i;
-        existingClassificationList.get(index - 1).getParent().setId(toBeMergedClassificationList.get(0).getId());
-        CronquistRank existant = existingClassificationList.get(index);
-        while (isRangsIntermediaires(existant)) {
-            /*
-             * Supprime la portion de classification obsolète
-             * Les IDs seront ajoutés lors des prochaines itérations sur les rangs ascendants
-             */
-            rangsASupprimer.add(existant);
-            existingClassificationList.set(index, toBeMergedClassificationList.get(index - i));
-            existant = existingClassificationList.get(++index);
-        }
+//    public Set<AtomicCronquistRank> getRangsASupprimer() {
+//        return rangsASupprimer;
+//    }
 
-        // Déplace la portion descendante de la section intermédiaire existante
-        index = i - 1;
-        existant = existingClassificationList.get(index);
-        CronquistRank toInsert = toInsertClassification.get(offset + index);
-        while (isRangsIntermediaires(existant)) {
-            toInsert.getParent().setId(existant.getParent().getId());
-
-            existant = existingClassificationList.get(--index);
-            toInsert = toInsertClassification.get(offset + index);
-        }
-
-    }
-
-    private void synchronizeUrl(@NotNull List<CronquistRank> existingClassificationList, int offset, int i) {
-        CronquistRank existingRank, rankToInsert;
-        existingRank = existingClassificationList.get(i);
-        rankToInsert = toInsertClassification.get(offset + i);
-
-        if (existingRank.getUrls().size() > 0) {
-            if (rankToInsert.getUrls().size() > 0) {// Must be = 1. Check > 1 and throw error?
-                if (rankToInsert.getUrls().size() > 1) {
-                    log.warn("Attention: {} urls trouvée. Correction nécessaire", existingRank.getUrls().size());
-                }
-                Url urlsAInserer = new ArrayList<>(rankToInsert.getUrls()).get(0);
-                Optional<Url> matchingExistingUrl = existingRank.getUrls().stream()
-                    .filter(url -> url.getUrl().equals(urlsAInserer.getUrl()))
-                    .findFirst();
-                matchingExistingUrl.ifPresent(value -> rankToInsert.getUrls().forEach(url -> url.setId(value.getId())));
-            }
-            addAllUrlsToCronquistRank(rankToInsert, existingRank.getUrls());
-        }
-    }
-
-    public Set<CronquistRank> getRangsASupprimer() {
-        return rangsASupprimer;
-    }
-
-    public List<CronquistRank> getToInsertClassification() {
-        return toInsertClassification;
-    }
+//    public List<CronquistRank> getToInsertClassification() {
+//        return toInsertClassification;
+//    }
 
 }

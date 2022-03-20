@@ -7,16 +7,16 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClassificationCrawler {
-//  implements ApplicationListener<ContextRefreshedEvent>
+public class ClassificationCrawler implements ApplicationListener<ContextRefreshedEvent> {
+
     final ClassificationCrawlerService crawler;
 
     public ClassificationCrawler(ClassificationCrawlerService crawler) {
         this.crawler = crawler;
     }
 
-//    @Override
-//    public void onApplicationEvent(@NotNull ContextRefreshedEvent event) {
-//        crawler.crawl();
-//    }
+    @Override
+    public void onApplicationEvent(@NotNull ContextRefreshedEvent event) {
+        crawler.crawl();
+    }
 }

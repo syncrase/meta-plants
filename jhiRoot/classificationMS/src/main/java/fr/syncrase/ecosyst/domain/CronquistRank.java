@@ -2,13 +2,13 @@ package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * A CronquistRank.
@@ -19,41 +19,45 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class CronquistRank implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    /**
+     * Deux rangs taxonomiques sont séparés par d'autres rangs dont on ne connait pas forcément le nom.<br>
+     * Une valeur par défaut permet de lier ces deux rangs avec des rangs vides.<br>
+     * Si ultérieurement ces rangs sont déterminés, les valeurs par défaut sont mises à jour
+     */
+    public static final String DEFAULT_NAME_FOR_CONNECTOR_RANK = null;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "rank", nullable = false)
     private CronquistTaxonomikRanks rank;
-
     @OneToMany(mappedBy = "parent")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "children", "urls", "noms", "parent" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"children", "urls", "noms", "getRangSuperieur"}, allowSetters = true)
     private Set<CronquistRank> children = new HashSet<>();
-
     @OneToMany(mappedBy = "cronquistRank")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "cronquistRank" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"cronquistRank"}, allowSetters = true)
     private Set<Url> urls = new HashSet<>();
-
     @OneToMany(mappedBy = "cronquistRank")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "cronquistRank" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"cronquistRank"}, allowSetters = true)
     private Set<ClassificationNom> noms = new HashSet<>();
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "children", "urls", "noms", "parent" }, allowSetters = true)
-    private CronquistRank parent;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToOne
+    @JsonIgnoreProperties(value = {"children", "urls", "noms", "getRangSuperieur"}, allowSetters = true)
+    private CronquistRank parent;
 
     public Long getId() {
         return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public CronquistRank id(Long id) {
@@ -61,21 +65,17 @@ public class CronquistRank implements Serializable {
         return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public CronquistTaxonomikRanks getRank() {
         return this.rank;
+    }
+
+    public void setRank(CronquistTaxonomikRanks rank) {
+        this.rank = rank;
     }
 
     public CronquistRank rank(CronquistTaxonomikRanks rank) {
         this.setRank(rank);
         return this;
-    }
-
-    public void setRank(CronquistTaxonomikRanks rank) {
-        this.rank = rank;
     }
 
     public Set<CronquistRank> getChildren() {
@@ -165,6 +165,8 @@ public class CronquistRank implements Serializable {
         return this;
     }
 
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
     public CronquistRank removeNoms(ClassificationNom classificationNom) {
         this.noms.remove(classificationNom);
         classificationNom.setCronquistRank(null);
@@ -179,36 +181,16 @@ public class CronquistRank implements Serializable {
         this.parent = cronquistRank;
     }
 
-    public CronquistRank parent(CronquistRank cronquistRank) {
-        this.setParent(cronquistRank);
-        return this;
-    }
+    /*
+     *
+     *
+     *
+     *
+     * Les responsabilités de l'entité rang
+     *
+     *
+     *
+     *
+     */
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CronquistRank)) {
-            return false;
-        }
-        return id != null && id.equals(((CronquistRank) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "CronquistRank{" +
-            "id=" + getId() +
-            ", rank='" + getRank() + "'" +
-            "}";
-    }
 }

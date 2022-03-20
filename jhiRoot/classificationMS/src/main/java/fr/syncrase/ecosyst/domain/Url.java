@@ -28,8 +28,12 @@ public class Url implements Serializable {
     private String url;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "children", "urls", "noms", "parent" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "children", "urls", "noms", "getRangSuperieur" }, allowSetters = true)
     private CronquistRank cronquistRank;
+
+    public static Url newUrl(String urlWiki) {
+        return new Url().url(urlWiki);
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 

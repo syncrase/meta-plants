@@ -1,29 +1,17 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.ClassificationMsApp;
-import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.repository.CronquistRankRepository;
-import fr.syncrase.ecosyst.service.CronquistRankQueryService;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = ClassificationMsApp.class)
@@ -51,122 +39,216 @@ class WikipediaCrawlerTest {
     void enregistrementDUneClassificationDontTousLesRangsSontInconnus() {
         // TODO étrange, la méthode crawlAllWikipedia semble être appelée => à cause de la classe ClassificationCrawler qui surcharge le chargement du contexte
         Assertions.assertEquals(2, 2);
-        try {
-            wikipediaCrawler.scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Aldrovanda");
+        wikis.forEach(wiki -> {
+            CronquistClassificationBranch classification;
+            try {
+                classification = wikipediaCrawler.scrapWiki(wiki);
+                cronquistService.saveCronquist(classification, wiki);
+                // TODO vérifier que c'est bien enregistré
+            } catch (IOException e) {
+//                    log.error("unable to scrap wiki : " + e.getMessage());
+            }
+        });
     }
 
     @Test
     void mergeDesBranchesSimples() {
         Assertions.assertEquals(2, 2);
-//        try {
-//            scrapWiki("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-//            scrapWiki("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
     }
 
     @Test
     void mergeDesBranchesAvecSynonymes() {
         Assertions.assertEquals(2, 2);
-//        try {
-//            wikipediaCrawler.scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes Saxifragales
-//            wikipediaCrawler.scrapWiki("https://fr.wikipedia.org/wiki/Distylium");// Synonymes Hamamelidales
-//            wikipediaCrawler.scrapWiki("https://fr.wikipedia.org/wiki/Loropetalum");// Synonymes Hamamelidales
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes Saxifragales
+        wikis.add("https://fr.wikipedia.org/wiki/Distylium");// Synonymes Hamamelidales
+        wikis.add("https://fr.wikipedia.org/wiki/Loropetalum");// Synonymes Hamamelidales
     }
 
     @Test
     void lesNomsDeRangsIncoherentsNeSontPasPrisEnCompte() {
         Assertions.assertEquals(2, 2);
-//        try {
-//        scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
-//        scrapWiki("https://fr.wikipedia.org/wiki/Monodiella");
-//        scrapWiki("https://fr.wikipedia.org/wiki/Aldrovanda");
-//        scrapWiki("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Chironia");
+        wikis.add("https://fr.wikipedia.org/wiki/Monodiella");
+        wikis.add("https://fr.wikipedia.org/wiki/Aldrovanda");
+        wikis.add("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
     }
 
     @Test
     void uneErreurEvidenteDansLaClassificationNEstPasPriseEnCompte() {
         Assertions.assertEquals(2, 2);
-//        try {
-//        scrapWiki("https://fr.wikipedia.org/wiki/Monodiella");
-        // => Le genre monodiella ne possède qu'un seul nom et qu'une seule url
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Monodiella");
+//         => Le genre monodiella ne possède qu'un seul nom et qu'une seule url
     }
 
     @Test
     void transformationDUnRangIntermediaireEnRangTaxonomique() {
         Assertions.assertEquals(2, 2);
-//        try {
-//        scrapWiki("https://fr.wikipedia.org/wiki/Chironia");
-//        scrapWiki("https://fr.wikipedia.org/wiki/Monodiella");
-        // => vérifier qu'il n'y a qu'un seul sous règne
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Chironia");
+        wikis.add("https://fr.wikipedia.org/wiki/Monodiella");
+//         => vérifier qu'il n'y a qu'un seul sous règne
     }
 
     @Test
     void enregistrementDUnRangSynonymeAvecMerge() {
         Assertions.assertEquals(2, 2);
-//        try {
-//            scrapWiki("https://fr.wikipedia.org/wiki/Oxera_neriifolia");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Hostaceae");
-//            scrapWiki("https://fr.wikipedia.org/wiki/Selaginaceae");
-        // => vérifier la synonymie + les enfants ont bien été mergés
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Oxera_neriifolia");
+        wikis.add("https://fr.wikipedia.org/wiki/Hostaceae");
+        wikis.add("https://fr.wikipedia.org/wiki/Selaginaceae");
+//         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
     @Test
     void enregistrementDUnRangSynonymeAvecMerge2() {
         Assertions.assertEquals(2, 2);
-//        try {
-//        scrapWiki("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
-//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
-//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
-        // => vérifier la synonymie + les enfants ont bien été mergés
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
+//         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
     @Test
     void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs() {
         Assertions.assertEquals(2, 2);
-//        try {
-//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te");
-//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
-        // => vérifier la synonymie + les enfants ont bien été mergés
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+//         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
     @Test
     void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs2() {
         Assertions.assertEquals(2, 2);
-//        try {
-//        scrapWiki("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
-//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
-//        scrapWiki("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
-        // => vérifier la synonymie + les enfants ont bien été mergés
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
+//         => vérifier la synonymie + les enfants ont bien été mergés
+    }
+
+    @Test
+    void testAvecToutConfonduDansTousLesSens() {
+        Assertions.assertEquals(2, 2);
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Acanthe");
+        wikis.add("https://fr.wikipedia.org/wiki/Acanthe_%C3%A0_feuilles_molles");
+        wikis.add("https://fr.wikipedia.org/wiki/Acanthus_spinosus");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_campestre");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_cappadocicum");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_carpinifolium");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_chaneyi");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_circinatum");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_davidii");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_douglasense");
+        wikis.add("https://fr.wikipedia.org/wiki/Acer_velutinum");
+        wikis.add("https://fr.wikipedia.org/wiki/Aldrovanda");
+        wikis.add("https://fr.wikipedia.org/wiki/Amphorogyne");// Rosidae
+        wikis.add("https://fr.wikipedia.org/wiki/Andrographis");
+        wikis.add("https://fr.wikipedia.org/wiki/Andrographis_paniculata");
+        wikis.add("https://fr.wikipedia.org/wiki/Anisacanthus");
+        wikis.add("https://fr.wikipedia.org/wiki/Anisoptera_(v%C3%A9g%C3%A9tal)");
+        wikis.add("https://fr.wikipedia.org/wiki/Anthobolus");// Rosidae
+        wikis.add("https://fr.wikipedia.org/wiki/Aphelandra");
+        wikis.add("https://fr.wikipedia.org/wiki/Aphelandra_sinclairiana");
+        wikis.add("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Asystasia");
+        wikis.add("https://fr.wikipedia.org/wiki/Asystasia_gangetica");
+        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Avicennia_germinans");
+        wikis.add("https://fr.wikipedia.org/wiki/Barleria");
+        wikis.add("https://fr.wikipedia.org/wiki/Barleria_cristata");
+        wikis.add("https://fr.wikipedia.org/wiki/Barleria_obtusa");
+        wikis.add("https://fr.wikipedia.org/wiki/Barleriola");
+        wikis.add("https://fr.wikipedia.org/wiki/Blackstonia");
+        wikis.add("https://fr.wikipedia.org/wiki/Blechum");
+        wikis.add("https://fr.wikipedia.org/wiki/Bois_de_Judas");// Rosidae// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
+        wikis.add("https://fr.wikipedia.org/wiki/Buckleya");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_argent%C3%A9");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_%C3%A9corce_de_papier");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_%C3%A9pis");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_cinq_folioles");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_feuille_de_vigne");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_feuilles_d%27obier");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_%C3%A0_grandes_feuilles");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_champ%C3%AAtre");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cappadoce");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
+        wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Pennsylvanie");
+        wikis.add("https://fr.wikipedia.org/wiki/Carlowrightia");
+        wikis.add("https://fr.wikipedia.org/wiki/Centaurium");
+        wikis.add("https://fr.wikipedia.org/wiki/Cervantesia");
+        wikis.add("https://fr.wikipedia.org/wiki/Chironia");
+        wikis.add("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes
+        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
+        wikis.add("https://fr.wikipedia.org/wiki/Deinanthe");
+        wikis.add("https://fr.wikipedia.org/wiki/Diatenopteryx_sorbifolia");
+        wikis.add("https://fr.wikipedia.org/wiki/Dicliptera");
+        wikis.add("https://fr.wikipedia.org/wiki/Dicliptera_suberecta");
+        wikis.add("https://fr.wikipedia.org/wiki/Dipterocarpus");
+        wikis.add("https://fr.wikipedia.org/wiki/Distylium");// Synonymes
+        wikis.add("https://fr.wikipedia.org/wiki/Eremophila_latrobei");
+        wikis.add("https://fr.wikipedia.org/wiki/Eremophila_mitchellii");
+        wikis.add("https://fr.wikipedia.org/wiki/Eremophila_nivea");
+        wikis.add("https://fr.wikipedia.org/wiki/Eremophila_(plante)");
+        wikis.add("https://fr.wikipedia.org/wiki/Graptophyllum");
+        wikis.add("https://fr.wikipedia.org/wiki/Hemigraphis");
+        wikis.add("https://fr.wikipedia.org/wiki/Huaceae");
+        wikis.add("https://fr.wikipedia.org/wiki/Hygrophila_(plante)");
+        wikis.add("https://fr.wikipedia.org/wiki/Hygrophila_polysperma");
+        wikis.add("https://fr.wikipedia.org/wiki/Justicia_adhatoda");
+        wikis.add("https://fr.wikipedia.org/wiki/Justicia_aurea");
+        wikis.add("https://fr.wikipedia.org/wiki/Justicia_betonica");
+        wikis.add("https://fr.wikipedia.org/wiki/Justicia_californica");
+        wikis.add("https://fr.wikipedia.org/wiki/Justicia_carnea");
+        wikis.add("https://fr.wikipedia.org/wiki/Justicia_gendarussa");
+        wikis.add("https://fr.wikipedia.org/wiki/Justicia_spicigera");
+        wikis.add("https://fr.wikipedia.org/wiki/Kielmeyera");
+        wikis.add("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
+        wikis.add("https://fr.wikipedia.org/wiki/Loropetalum");
+        wikis.add("https://fr.wikipedia.org/wiki/Lyallia_kerguelensis");
+        wikis.add("https://fr.wikipedia.org/wiki/Molinadendron");
+        wikis.add("https://fr.wikipedia.org/wiki/Monodiella");
+        wikis.add("https://fr.wikipedia.org/wiki/Odontonema");
+        wikis.add("https://fr.wikipedia.org/wiki/Oxera_pulchella");
+        wikis.add("https://fr.wikipedia.org/wiki/Phlogacanthus");
+        wikis.add("https://fr.wikipedia.org/wiki/Phlogacanthus_turgidus");
+        wikis.add("https://fr.wikipedia.org/wiki/Picanier_jaune");
+        wikis.add("https://fr.wikipedia.org/wiki/Pseuderanthemum");
+        wikis.add("https://fr.wikipedia.org/wiki/Ptychospermatinae");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia_brevifolia");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia_chartacea");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia_devosiana");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia_geminiflora");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia_schnellii");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia_simplex");
+        wikis.add("https://fr.wikipedia.org/wiki/Ruellia_tuberosa");
+        wikis.add("https://fr.wikipedia.org/wiki/Sanchezia");
+        wikis.add("https://fr.wikipedia.org/wiki/Strobilanthes_kunthiana");
+        wikis.add("https://fr.wikipedia.org/wiki/Thunbergia");
+        wikis.add("https://fr.wikipedia.org/wiki/Thunbergia_alata");
+        wikis.add("https://fr.wikipedia.org/wiki/Thunbergia_erecta");
+        wikis.add("https://fr.wikipedia.org/wiki/Thunbergia_fragrans");
+        wikis.add("https://fr.wikipedia.org/wiki/Thunbergia_grandiflora");
+        wikis.add("https://fr.wikipedia.org/wiki/Thunbergia_mysorensis");
+        wikis.add("https://fr.wikipedia.org/wiki/Whitfieldia");
+        wikis.add("https://fr.wikipedia.org/wiki/Whitfieldia_elongata");
+//         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
 //    @Test

@@ -1,5 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
@@ -24,10 +25,13 @@ public class CronquistService {
 
     private CronquistRankRepository cronquistRankRepository;
     private CronquistRankQueryService cronquistRankQueryService;
-    private ClassificationNomQueryService classificationNomQueryService;
     private ClassificationNomRepository classificationNomRepository;
+    private ClassificationNomQueryService classificationNomQueryService;
     private UrlRepository urlRepository;
     private UrlQueryService urlQueryService;
+    private CronquistClassificationSynchronizer synchronizedClassification ;
+
+    private ClassificationRepository classificationRepository;
 
     public CronquistService() {
     }
@@ -62,6 +66,12 @@ public class CronquistService {
         this.urlQueryService = urlQueryService;
     }
 
+    @Autowired
+    public void setClassificationRepository(ClassificationRepository classificationRepository) {
+        this.classificationRepository = classificationRepository;
+        synchronizedClassification = new CronquistClassificationSynchronizer(classificationRepository);
+    }
+
     /**
      * Tous les rangs sont mis à jour avec l'ID et les noms, mais ascendant ni descendants <br>
      * Vérifie s'il n'y a pas de différence entre la classification enregistrée et celle que l'on souhaite enregistrer. <br>
@@ -69,7 +79,7 @@ public class CronquistService {
      * Vérifie tous les rangs à partir du plus inférieur pour trouver un rang où les taxons correspondent. À partir de celui-là, la classification doit être commune <br>
      *
      * <h1>Pourquoi précharger tous les IDs ?</h1>
-     * Ça évite de persister des rangs intermédiaires vides qui seront dé-associer plus bas dans l'arbre quand un rang existant (avec son parent) sera récupéré<br>
+     * Ça évite de persister des rangs intermédiaires vides qui seront dé-associés plus bas dans l'arbre quand un rang existant (avec son getRangSuperieur) sera récupéré<br>
      * <b>Chemin unique</b> : Pour chacun des rangs, les sous-rangs ne sont pas récupérés. L'arborescence sans dichotomie est préservée.
      *
      * <h1>Les synonymes</h1>
@@ -78,30 +88,31 @@ public class CronquistService {
      * Ces différents synonymes se positionnent exactement de la même manière dans l'arborescence. Ils ont :<br>
      * <ul>
      *     <li>Les mêmes enfants</li>
-     *     <li>Le même parent</li>
+     *     <li>Le même getRangSuperieur</li>
      * </ul>
      *
      * @param cronquistClassification side effect
      * @param urlWiki                 url du wiki d'où a été extrait la classification
      */
     @Transactional
-    public void saveCronquist(@NotNull CronquistClassification cronquistClassification, String urlWiki) {
+    public void saveCronquist(@NotNull CronquistClassificationBranch cronquistClassification, String urlWiki) {
 
         log.info("Traitement pré-enregistrement de la classification extraite de '" + urlWiki + "'");
-        CronquistClassificationSynchronizer synchronizedClassification = new CronquistClassificationSynchronizer(
-            cronquistClassification,
-            urlWiki,
-            cronquistRankQueryService,
-            cronquistRankRepository, classificationNomQueryService,
-            urlQueryService
-        );
+//        CronquistClassificationSynchronizer synchronizedClassification = null;
+        try {
+//            synchronizedClassification = new CronquistClassificationSynchronizer(classificationRepository);
+            synchronizedClassification.applyConsistency(cronquistClassification, urlWiki);
 
-        log.info("Enregistrement de la classification");
-        if (synchronizedClassification.getToInsertClassification() != null) {
-            save(synchronizedClassification.getToInsertClassification());
-        }
-        if (synchronizedClassification.getRangsASupprimer() != null) {
-            removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
+            log.info("Enregistrement de la classification");
+            if (cronquistClassification.getClassification() != null) {
+                CronquistRankMapper mapper = new CronquistRankMapper();
+                save(mapper.getClassificationToSave(cronquistClassification.getClassification()));// TODO Use mapper atomic to dbObject and vice versa
+            }
+//            if (synchronizedClassification.getRangsASupprimer() != null) {
+//                removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
+//            }
+        } catch (ClassificationReconstructionException e) {
+            e.printStackTrace();
         }
     }
 

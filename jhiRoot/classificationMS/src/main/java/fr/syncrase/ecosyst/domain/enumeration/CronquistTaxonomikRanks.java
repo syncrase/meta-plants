@@ -1,5 +1,8 @@
 package fr.syncrase.ecosyst.domain.enumeration;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * The CronquistTaxonomikRanks enumeration.
  */
@@ -39,6 +42,7 @@ public enum CronquistTaxonomikRanks {
     FORME("Forme"),
     SOUSFORME("SousForme");
 
+    private static CronquistTaxonomikRanks[] allRanks = values();
     private final String value;
 
     CronquistTaxonomikRanks(String value) {
@@ -47,5 +51,25 @@ public enum CronquistTaxonomikRanks {
 
     public String getValue() {
         return value;
+    }
+
+    @Contract(pure = true)
+    public @Nullable CronquistTaxonomikRanks getRangSuperieur() {
+        int parentOrdinal = this.ordinal() - 1;
+        if (parentOrdinal > -1) {
+            return allRanks[parentOrdinal];
+        } else {
+            return null;
+        }
+    }
+
+    @Contract(pure = true)
+    public @Nullable CronquistTaxonomikRanks getRangInferieur() {
+        int childOrdinal = this.ordinal() + 1;
+        if (childOrdinal < allRanks.length) {
+            return allRanks[childOrdinal];
+        } else {
+            return null;
+        }
     }
 }
