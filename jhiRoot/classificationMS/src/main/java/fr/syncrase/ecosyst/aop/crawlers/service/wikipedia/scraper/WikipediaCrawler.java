@@ -1,5 +1,7 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper;
 
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationReconstructionException;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +37,8 @@ public class WikipediaCrawler {
         //            scrapWikiList(Wikipedia.scrappingBaseUrl);
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
+        //        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
+        //        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
 
         wikis.forEach(wiki -> {
             CronquistClassificationBranch classification;
@@ -109,7 +112,7 @@ public class WikipediaCrawler {
             } else {
                 CronquistClassificationBranch classification = scrapWiki(urlWiki);
                 // TODO ajouter dans une queue (reçue de l'extérieur)
-//                scrappedClassificationStore.add(classification);
+                //                scrappedClassificationStore.add(classification);
                 cronquistService.saveCronquist(classification, urlWiki);
             }
         }
@@ -118,12 +121,11 @@ public class WikipediaCrawler {
     public CronquistClassificationBranch scrapWiki(String urlWiki) throws IOException {
         try {
             log.info("Get classification from : " + urlWiki);
-            Elements encadreTaxonomique = Jsoup
-                .connect(urlWiki)
-                .get()
-                .select(CLASSIFICATION_SELECTOR);
+            Elements encadreTaxonomique = Jsoup.connect(urlWiki).get().select(CLASSIFICATION_SELECTOR);
 
             return extractPremiereClassification(encadreTaxonomique);
+        } catch (SocketTimeoutException e) {
+            log.error("La page Wikipedia ne répond pas {}\n. Vérifier la connexion internet!", urlWiki);
         } catch (IOException e) {
             log.error("Problème d'accès lors de l'extraction des données de la page Wikipedia {}", urlWiki);
         }
@@ -140,8 +142,8 @@ public class WikipediaCrawler {
                 break;
             case "Cronquist":
                 return extractionCronquist(encadreTaxonomique);
-//                cronquistService.saveCronquist(extractionCronquist(encadreTaxonomique), urlWiki);
-//                break;
+            //                cronquistService.saveCronquist(extractionCronquist(encadreTaxonomique), urlWiki);
+            //                break;
             case "No classification":
                 log.info("No classification table found in this page");
                 break;
@@ -156,13 +158,11 @@ public class WikipediaCrawler {
 
     private @NotNull String getTypeOfMainClassification(@NotNull Elements encadreTaxonomique) {
 
-        Elements taxoTitles = encadreTaxonomique
-            .select(MAIN_CLASSIFICATION_SELECTOR);
+        Elements taxoTitles = encadreTaxonomique.select(MAIN_CLASSIFICATION_SELECTOR);
         if (taxoTitles.size() == 0) {
             return "No classification";
         }
-        String taxoTitle = taxoTitles
-            .get(0)// ne contient qu'un seul titre
+        String taxoTitle = taxoTitles.get(0)// ne contient qu'un seul titre
             .childNode(0)// TextNode
             .toString();
 

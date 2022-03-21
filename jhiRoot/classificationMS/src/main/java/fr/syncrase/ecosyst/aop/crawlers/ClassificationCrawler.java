@@ -17,6 +17,6 @@ public class ClassificationCrawler implements ApplicationListener<ContextRefresh
 
     @Override
     public void onApplicationEvent(@NotNull ContextRefreshedEvent event) {
-        crawler.crawl();
+//        crawler.crawl();
     }
 }

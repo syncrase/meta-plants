@@ -1,7 +1,7 @@
 package fr.syncrase.ecosyst.aop.crawlers.service;
 
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.WikipediaCrawler;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper.WikipediaCrawler;
 import org.springframework.stereotype.Service;
 
 @Service

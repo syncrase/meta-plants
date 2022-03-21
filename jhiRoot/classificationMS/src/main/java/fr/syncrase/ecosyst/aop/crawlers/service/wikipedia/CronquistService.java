@@ -1,13 +1,10 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.*;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
 import fr.syncrase.ecosyst.repository.UrlRepository;
-import fr.syncrase.ecosyst.service.ClassificationNomQueryService;
-import fr.syncrase.ecosyst.service.CronquistRankQueryService;
-import fr.syncrase.ecosyst.service.UrlQueryService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +21,10 @@ public class CronquistService {
     private final Logger log = LoggerFactory.getLogger(CronquistService.class);
 
     private CronquistRankRepository cronquistRankRepository;
-    private CronquistRankQueryService cronquistRankQueryService;
     private ClassificationNomRepository classificationNomRepository;
-    private ClassificationNomQueryService classificationNomQueryService;
     private UrlRepository urlRepository;
-    private UrlQueryService urlQueryService;
-    private CronquistClassificationSynchronizer synchronizedClassification ;
+    private CronquistClassificationSynchronizer synchronizedClassification;
 
-    private ClassificationRepository classificationRepository;
 
     public CronquistService() {
     }
@@ -39,16 +32,6 @@ public class CronquistService {
     @Autowired
     public void setClassificationNomRepository(ClassificationNomRepository classificationNomRepository) {
         this.classificationNomRepository = classificationNomRepository;
-    }
-
-    @Autowired
-    public void setClassificationNomQueryService(ClassificationNomQueryService classificationNomQueryService) {
-        this.classificationNomQueryService = classificationNomQueryService;
-    }
-
-    @Autowired
-    public void setCronquistRankQueryService(CronquistRankQueryService cronquistRankQueryService) {
-        this.cronquistRankQueryService = cronquistRankQueryService;
     }
 
     @Autowired
@@ -61,14 +44,9 @@ public class CronquistService {
         this.urlRepository = urlRepository;
     }
 
-    @Autowired
-    public void setUrlQueryService(UrlQueryService urlQueryService) {
-        this.urlQueryService = urlQueryService;
-    }
 
     @Autowired
     public void setClassificationRepository(ClassificationRepository classificationRepository) {
-        this.classificationRepository = classificationRepository;
         synchronizedClassification = new CronquistClassificationSynchronizer(classificationRepository);
     }
 
@@ -90,30 +68,30 @@ public class CronquistService {
      *     <li>Les mêmes enfants</li>
      *     <li>Le même getRangSuperieur</li>
      * </ul>
+     *  @param cronquistClassification side effect
      *
-     * @param cronquistClassification side effect
-     * @param urlWiki                 url du wiki d'où a été extrait la classification
+     * @param urlWiki url du wiki d'où a été extrait la classification
+     * @return
      */
     @Transactional
-    public void saveCronquist(@NotNull CronquistClassificationBranch cronquistClassification, String urlWiki) {
+    public Collection<CronquistRank> saveCronquist(@NotNull CronquistClassificationBranch cronquistClassification, String urlWiki) {
 
         log.info("Traitement pré-enregistrement de la classification extraite de '" + urlWiki + "'");
-//        CronquistClassificationSynchronizer synchronizedClassification = null;
         try {
-//            synchronizedClassification = new CronquistClassificationSynchronizer(classificationRepository);
             synchronizedClassification.applyConsistency(cronquistClassification, urlWiki);
 
             log.info("Enregistrement de la classification");
             if (cronquistClassification.getClassification() != null) {
                 CronquistRankMapper mapper = new CronquistRankMapper();
-                save(mapper.getClassificationToSave(cronquistClassification.getClassification()));// TODO Use mapper atomic to dbObject and vice versa
+                return save(mapper.getClassificationToSave(cronquistClassification.getClassificationBranch()));// TODO Use mapper atomic to dbObject and vice versa
             }
-//            if (synchronizedClassification.getRangsASupprimer() != null) {
-//                removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
-//            }
+            //            if (synchronizedClassification.getRangsASupprimer() != null) {
+            //                removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
+            //            }
         } catch (ClassificationReconstructionException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private void removeObsoleteIntermediatesRanks(@NotNull Set<CronquistRank> rangsIntermediairesASupprimer) {
@@ -127,17 +105,15 @@ public class CronquistService {
      * Enregistre la classification du rang supérieur (Super règne) jusqu'au rang le plus profond
      *
      * @param flatClassification classification à enregistrer
+     * @return
      */
-    private void save(@NotNull Collection<CronquistRank> flatClassification) {
-        // Etant donné qu'un rang inférieur doit contenir le rang supérieur, l'enregistrement des classifications doit se faire en commençant par le rang supérieur
-//        int size = flatClassification.size() - 1;
-//        CronquistRank rank;
-//        for (int i = size; i >= 0; i--) {
+    private @NotNull Collection<CronquistRank> save(@NotNull Collection<CronquistRank> flatClassification) {
+        // L'enregistrement des classifications doit se faire en commençant par le rang supérieur
         for (CronquistRank rank : flatClassification) {
-//            rank = flatClassification.get(i);
             cronquistRankRepository.save(rank);
             classificationNomRepository.saveAll(rank.getNoms());
             urlRepository.saveAll(rank.getUrls());
         }
+        return flatClassification;
     }
 }

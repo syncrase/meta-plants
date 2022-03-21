@@ -4,6 +4,9 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classifica
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
+import java.util.TreeSet;
+
 public class AtomicClassificationNom {
     private Long id;
     private String nomFr;
@@ -18,21 +21,46 @@ public class AtomicClassificationNom {
     public AtomicClassificationNom() {
     }
 
+    /**
+     * Retourne un set vide de ClassificationNom dont la comparaison se fait sur le nomFr
+     *
+     * @return Tree set vide avec comparaison personnalisée
+     */
+    @NotNull
+    public static TreeSet<AtomicClassificationNom> getAtomicClassificationNomTreeSet() {
+        return new TreeSet<>(Comparator.comparing(AtomicClassificationNom::getNomFr, (nomFrExistant, nomFrAAjouter) -> {
+            if (nomFrExistant == null && nomFrAAjouter == null) {
+                return 0;
+            }
+            if (nomFrExistant == null) {
+                return 1;
+            }
+            if (nomFrAAjouter == null) {
+                return -1;
+            }
+            return nomFrExistant.compareTo(nomFrAAjouter);
+        }));
+    }
+
     public AtomicClassificationNom nomFr(String nomFr) {
         this.setNomFr(nomFr);
         return this;
-    }
-
-    public void setNomFr(String nomFr) {
-        this.nomFr = nomFr;
     }
 
     public String getNomFr() {
         return this.nomFr;
     }
 
+    public void setNomFr(String nomFr) {
+        this.nomFr = nomFr;
+    }
+
     public Long getId() {
         return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public AtomicClassificationNom id(Long id) {
@@ -40,21 +68,23 @@ public class AtomicClassificationNom {
         return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public AtomicClassificationNom nomLatin(String nomLatin) {
         this.setNomLatin(nomLatin);
         return this;
-    }
-
-    public void setNomLatin(String nomLatin) {
-        this.nomLatin = nomLatin;
     }
 
     public String getNomLatin() {
         return this.nomLatin;
     }
 
+    public void setNomLatin(String nomLatin) {
+        this.nomLatin = nomLatin;
+    }
+
+    public ClassificationNom newClassificationNom() {
+        return new ClassificationNom()
+            .id(this.id)
+            .nomFr(this.nomFr)
+            .nomLatin(this.nomLatin);
+    }
 }

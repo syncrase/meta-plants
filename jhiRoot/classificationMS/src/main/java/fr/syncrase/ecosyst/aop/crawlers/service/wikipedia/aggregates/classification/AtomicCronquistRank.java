@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
 import static fr.syncrase.ecosyst.domain.CronquistRank.DEFAULT_NAME_FOR_CONNECTOR_RANK;
 
 /**
@@ -43,6 +44,25 @@ public class AtomicCronquistRank {
     @Contract("_ -> new")
     public static @NotNull AtomicCronquistRank newRank(CronquistRank rang) {
         return new AtomicCronquistRank(rang);
+    }
+
+    /**
+     * Vérifie si tous les rangs sont intermédiaires
+     *
+     * @param ranks rangs dont on vérifie qu'ils sont tous intermédiaires
+     * @return true si le rang en question est un rang intermédiaire
+     */
+    public static boolean isRangsIntermediaires(AtomicCronquistRank @NotNull ... ranks) {
+        if (ranks.length == 0) {
+            return false;
+        }
+        Iterator<@NotNull AtomicCronquistRank> cronquistRankIterator = Arrays.stream(ranks).iterator();
+        while (cronquistRankIterator.hasNext()) {
+            if (!cronquistRankIterator.next().isRangDeLiaison()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Long getId() {
@@ -85,12 +105,6 @@ public class AtomicCronquistRank {
     }
 
     public void setUrls(Set<AtomicUrl> urls) {
-//        if (this.urls != null) {
-//            this.urls.forEach(i -> i.setCronquistRank(null));
-//        }
-//        if (urls != null) {
-//            urls.forEach(i -> i.setCronquistRank(this));
-//        }
         this.urls = urls;
     }
 
@@ -101,7 +115,6 @@ public class AtomicCronquistRank {
 
     public AtomicCronquistRank addUrls(AtomicUrl url) {
         this.urls.add(url);
-//        url.setCronquistRank(this);
         return this;
     }
 
@@ -125,10 +138,7 @@ public class AtomicCronquistRank {
     // prettier-ignore
     @Override
     public String toString() {
-        return "AtomicCronquistRank{" +
-            "id=" + getId() +
-            ", rank='" + getRank() + "'" +
-            "}";
+        return "AtomicCronquistRank{" + "id=" + getId() + ", rank='" + getRank() + "'" + "}";
     }
 
     /**
@@ -179,12 +189,9 @@ public class AtomicCronquistRank {
         if (this.isRangDeLiaison()) {
             this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
-        this.addNoms(
-            new AtomicClassificationNom()
-                .nomFr(nomFr.getNomFr())
-//                .cronquistRank(this)
-                .id(nomFr.getId())
-                    );
+        this.addNoms(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
+                         //                .cronquistRank(this)
+                         .id(nomFr.getId()));
     }
 
     /**
@@ -209,43 +216,7 @@ public class AtomicCronquistRank {
         }
     }
 
-    /**
-     * Retourne un set vide de ClassificationNom dont la comparaison se fait sur le nomFr
-     *
-     * @return Tree set vide avec comparaison personnalisée
-     */
-    @NotNull
-    private static TreeSet<AtomicClassificationNom> getAtomicClassificationNomTreeSet() {
-        return new TreeSet<>(Comparator.comparing(AtomicClassificationNom::getNomFr, (nomFrExistant, nomFrAAjouter) -> {
-            if (nomFrExistant == null && nomFrAAjouter == null) {
-                return 0;
-            }
-            if (nomFrExistant == null) {
-                return 1;
-            }
-            if (nomFrAAjouter == null) {
-                return -1;
-            }
-            return nomFrExistant.compareTo(nomFrAAjouter);
-        }));
-    }
-
-    /**
-     * Vérifie si tous les rangs sont intermédiaires
-     *
-     * @param ranks rangs dont on vérifie qu'ils sont tous intermédiaires
-     * @return true si le rang en question est un rang intermédiaire
-     */
-    public static boolean isRangsIntermediaires(AtomicCronquistRank @NotNull ...ranks) {
-        if (ranks.length == 0) {
-            return false;
-        }
-        Iterator<@NotNull AtomicCronquistRank> cronquistRankIterator = Arrays.stream(ranks).iterator();
-        while (cronquistRankIterator.hasNext()) {
-            if (!cronquistRankIterator.next().isRangDeLiaison()) {
-                return false;
-            }
-        }
-        return true;
+    public CronquistRank newRank() {
+        return new CronquistRank().id(this.id).rank(this.rank).urls(this.urls.stream().map(AtomicUrl::newUrl).collect(Collectors.toSet())).noms(this.noms.stream().map(AtomicClassificationNom::newClassificationNom).collect(Collectors.toSet()));
     }
 }

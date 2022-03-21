@@ -1,9 +1,5 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicUrl;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
@@ -69,7 +65,9 @@ public class ClassificationRepository {
         for (int i = cronquistRanks.size() - 1; i >= 0; i--) {
             cronquistRank = findExistingRank(cronquistRanks.get(i));
             if (cronquistRank != null) {
-                existingClassification = new CronquistClassificationBranch(cronquistRank);
+
+                existingClassification = findExistingClassification(cronquistRank);
+                assert existingClassification != null;
                 eagerLoadAllClassificationData(existingClassification);
                 break;// I got it!
             }
@@ -82,7 +80,7 @@ public class ClassificationRepository {
      * @return Le rang qui correspond. Null si le rang n'existe pas
      */
     @Nullable
-    public AtomicCronquistRank findExistingRank(AtomicCronquistRank cronquistRank) {
+    public AtomicCronquistRank findExistingRank(@NotNull AtomicCronquistRank cronquistRank) {
         if (cronquistRank.isRangDeLiaison() && cronquistRank.getId() == null) {
             return null;
         }
@@ -90,6 +88,23 @@ public class ClassificationRepository {
         // Pas de nom => rang inconnu en base
         if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null)) {
             return fetchExistingRank(cronquistRank);
+        }
+        return null;
+    }
+
+    /**
+     * @param cronquistRank Rang dont il faut vérifier la présence en base
+     * @return Le rang qui correspond. Null si le rang n'existe pas
+     */
+    @Nullable
+    public CronquistClassificationBranch findExistingClassification(@NotNull AtomicCronquistRank cronquistRank) throws ClassificationReconstructionException {
+        if (cronquistRank.isRangDeLiaison() && cronquistRank.getId() == null) {
+            return null;
+        }
+        updateNomsIds(cronquistRank);
+        // Pas de nom => rang inconnu en base
+        if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null)) {
+            return fetchExistingClassification(cronquistRank);
         }
         return null;
     }
@@ -166,7 +181,8 @@ public class ClassificationRepository {
         @NotNull AtomicCronquistRank scrappedRankFoundInDatabase
                                                           ) throws ClassificationReconstructionException {
 
-        CronquistClassificationBranch scrappedExistingClassification = new CronquistClassificationBranch(scrappedRankFoundInDatabase);
+        CronquistClassificationBranch scrappedExistingClassification = findExistingClassification(scrappedRankFoundInDatabase);
+        assert scrappedExistingClassification != null;
         CronquistTaxonomikRanks replacedRankName = scrappedRankFoundInDatabase.getRank();
 
         cronquistRankRepository.deleteById(existingClassification.getRang(replacedRankName.getRangInferieur()).getId());
@@ -197,7 +213,7 @@ public class ClassificationRepository {
 
             ClassificationNomCriteria classificationNomCriteria = new ClassificationNomCriteria();
             classificationNomCriteria.setNomFr(classifNomFilter);
-//            this.getCronquistRank
+            //            this.getCronquistRank
             List<ClassificationNom> classificationNoms = classificationNomQueryService.findByCriteria(classificationNomCriteria);
             if (classificationNoms.size() > 0) {// Soit inexistant, soit un unique résultat (unique constraint)
                 nom.setId(classificationNoms.get(0).getId());
@@ -207,6 +223,11 @@ public class ClassificationRepository {
 
     @Contract("_ -> new")
     private @NotNull AtomicCronquistRank fetchExistingRank(@NotNull AtomicCronquistRank cronquistRank) {
+        CronquistRank cronquistRank1 = getCronquistRank(cronquistRank);
+        return new AtomicCronquistRank(cronquistRank1);
+    }
+
+    private CronquistRank getCronquistRank(@NotNull AtomicCronquistRank cronquistRank) {
         LongFilter nomFilter = new LongFilter();
         nomFilter.setIn(cronquistRank.getNoms().stream().map(AtomicClassificationNom::getId).filter(Objects::nonNull).collect(Collectors.toList()));
 
@@ -217,7 +238,13 @@ public class ClassificationRepository {
         CronquistRankCriteria rankCrit = new CronquistRankCriteria();
         rankCrit.setNomsId(nomFilter);
         rankCrit.setRank(rankFilter);
-        return new AtomicCronquistRank(cronquistRankQueryService.findByCriteria(rankCrit).get(0));
+        return cronquistRankQueryService.findByCriteria(rankCrit).get(0);
+    }
+
+    @Contract("_ -> new")
+    private @NotNull CronquistClassificationBranch fetchExistingClassification(@NotNull AtomicCronquistRank cronquistRank) throws ClassificationReconstructionException {
+        CronquistRank cronquistRank1 = getCronquistRank(cronquistRank);
+        return new CronquistClassificationBranch(cronquistRank1);
     }
 
     @Contract("_ -> new")

@@ -1,61 +1,105 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
+import fr.syncrase.ecosyst.ClassificationMsApp;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper.WikipediaCrawler;
+import fr.syncrase.ecosyst.domain.ClassificationNom;
+import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
+import fr.syncrase.ecosyst.repository.CronquistRankRepository;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes = ClassificationMsApp.class)
-@SpringBootTest
-@Import(WikipediaCrawlerTestConfiguration.class)
-//@TestPropertySource(
-//    locations = "classpath:config/application-dev.yml")
-//@ContextConfiguration(classes = { CronquistService.class })
-class WikipediaCrawlerTest {
+@SpringBootTest(classes = ClassificationMsApp.class)
+public class ScrapAndInsertClassificationIntegrationTest {
 
     WikipediaCrawler wikipediaCrawler;
-
-    //        @SpyBean
-//    @MockBean  = new CronquistService()
     @Autowired
-//    @Spy
-//    @InjectMocks
+    private CronquistRankRepository cronquistRankRepository;
+    @Autowired
+    private ClassificationNomRepository classificationNomRepository;
+    @Autowired
     private CronquistService cronquistService;
 
-    WikipediaCrawlerTest() {
-        wikipediaCrawler = new WikipediaCrawler(cronquistService);
+    public ScrapAndInsertClassificationIntegrationTest() {
+        this.wikipediaCrawler = new WikipediaCrawler(cronquistService);
     }
 
     @Test
-    void enregistrementDUneClassificationDontTousLesRangsSontInconnus() {
-        // TODO étrange, la méthode crawlAllWikipedia semble être appelée => à cause de la classe ClassificationCrawler qui surcharge le chargement du contexte
-        Assertions.assertEquals(2, 2);
+    public void enregistrementDUneClassificationDontTousLesRangsSontInconnus() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Aldrovanda");
         wikis.forEach(wiki -> {
             CronquistClassificationBranch classification;
             try {
                 classification = wikipediaCrawler.scrapWiki(wiki);
-                cronquistService.saveCronquist(classification, wiki);
-                // TODO vérifier que c'est bien enregistré
+                Collection<CronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
+                cronquistRanks.forEach(cronquistRank -> assertNotNull(cronquistRank.getId()));
             } catch (IOException e) {
-//                    log.error("unable to scrap wiki : " + e.getMessage());
+                fail("unable to scrap wiki : " + e.getMessage());
             }
         });
     }
 
     @Test
-    void mergeDesBranchesSimples() {
-        Assertions.assertEquals(2, 2);
+    public void enregistrementDUneClassificationEntierementConnu() {
+        List<String> wikis = new ArrayList<>();
+        wikis.add("https://fr.wikipedia.org/wiki/Aldrovanda");
+        wikis.forEach(wiki -> {
+            CronquistClassificationBranch classification;
+            try {
+                classification = wikipediaCrawler.scrapWiki(wiki);
+                Collection<CronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
+                // Tous les rangs sont enregistrés
+                cronquistRanks.forEach(cronquistRank -> assertNotNull(cronquistRank.getId()));
+
+                // Tous les noms de rang sont uniques
+                List<AtomicClassificationNom> classificationNoms = new ArrayList<>();
+                for (CronquistRank rank : cronquistRanks) {
+                    classificationNoms.addAll(
+                        rank.getNoms().stream()
+                            .map(ClassificationNom::getNomFr)
+                            .filter(Objects::nonNull)
+                            .flatMap(nom -> classificationNomRepository.findAll(Example.of(new ClassificationNom().nomFr(nom))).stream())
+                            .map(AtomicClassificationNom::new)
+                            .collect(Collectors.toList())
+                                             );
+                }
+                TreeSet<AtomicClassificationNom> nomTreeSet = getAtomicClassificationNomTreeSet();
+                nomTreeSet.addAll(classificationNoms);
+                assertEquals(nomTreeSet.size(), classificationNoms.size());
+
+                // Il n'existe aucun rang de liaison sans enfant
+                // TODO ne pas parcourir la liste mais récupérer directement le dernier pour vérifier que c'est un rang significatif
+                for (CronquistRank cronquistRank : cronquistRanks) {
+                    AtomicCronquistRank atomicCronquistRank = AtomicCronquistRank.newRank(cronquistRank);
+                    if (atomicCronquistRank.isRangDeLiaison() && cronquistRank.getChildren().size() == 0) {
+                        fail("Ce rang de liaison ne possède pas de rang inférieur " + cronquistRank);
+                    }
+                }
+            } catch (IOException e) {
+                fail("unable to scrap wiki : " + e.getMessage());
+            }
+        });
+    }
+
+
+    @Test
+    public void mergeDesBranchesSimples() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
         wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
@@ -63,9 +107,7 @@ class WikipediaCrawlerTest {
     }
 
     @Test
-    void mergeDesBranchesAvecSynonymes() {
-        Assertions.assertEquals(2, 2);
-
+    public void mergeDesBranchesAvecSynonymes() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Corylopsis");// Synonymes Saxifragales
         wikis.add("https://fr.wikipedia.org/wiki/Distylium");// Synonymes Hamamelidales
@@ -73,8 +115,7 @@ class WikipediaCrawlerTest {
     }
 
     @Test
-    void lesNomsDeRangsIncoherentsNeSontPasPrisEnCompte() {
-        Assertions.assertEquals(2, 2);
+    public void lesNomsDeRangsIncoherentsNeSontPasPrisEnCompte() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Chironia");
         wikis.add("https://fr.wikipedia.org/wiki/Monodiella");
@@ -83,64 +124,57 @@ class WikipediaCrawlerTest {
     }
 
     @Test
-    void uneErreurEvidenteDansLaClassificationNEstPasPriseEnCompte() {
-        Assertions.assertEquals(2, 2);
+    public void uneErreurEvidenteDansLaClassificationNEstPasPriseEnCompte() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Monodiella");
-//         => Le genre monodiella ne possède qu'un seul nom et qu'une seule url
+        //         => Le genre monodiella ne possède qu'un seul nom et qu'une seule url
     }
 
     @Test
-    void transformationDUnRangIntermediaireEnRangTaxonomique() {
-        Assertions.assertEquals(2, 2);
+    public void transformationDUnRangIntermediaireEnRangTaxonomique() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Chironia");
         wikis.add("https://fr.wikipedia.org/wiki/Monodiella");
-//         => vérifier qu'il n'y a qu'un seul sous règne
+        //         => vérifier qu'il n'y a qu'un seul sous règne
     }
 
     @Test
-    void enregistrementDUnRangSynonymeAvecMerge() {
-        Assertions.assertEquals(2, 2);
+    public void enregistrementDUnRangSynonymeAvecMerge() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Oxera_neriifolia");
         wikis.add("https://fr.wikipedia.org/wiki/Hostaceae");
         wikis.add("https://fr.wikipedia.org/wiki/Selaginaceae");
-//         => vérifier la synonymie + les enfants ont bien été mergés
+        //         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
     @Test
-    void enregistrementDUnRangSynonymeAvecMerge2() {
-        Assertions.assertEquals(2, 2);
+    public void enregistrementDUnRangSynonymeAvecMerge2() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis");
         wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
         wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
-//         => vérifier la synonymie + les enfants ont bien été mergés
+        //         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
     @Test
-    void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs() {
-        Assertions.assertEquals(2, 2);
+    public void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te");
         wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
-//         => vérifier la synonymie + les enfants ont bien été mergés
+        //         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
     @Test
-    void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs2() {
-        Assertions.assertEquals(2, 2);
+    public void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs2() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Bridgesia_incisifolia");
         wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe");
         wikis.add("https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier");
-//         => vérifier la synonymie + les enfants ont bien été mergés
+        //         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
     @Test
-    void testAvecToutConfonduDansTousLesSens() {
-        Assertions.assertEquals(2, 2);
+    public void testAvecToutConfonduDansTousLesSens() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Acanthe");
         wikis.add("https://fr.wikipedia.org/wiki/Acanthe_%C3%A0_feuilles_molles");
@@ -248,11 +282,7 @@ class WikipediaCrawlerTest {
         wikis.add("https://fr.wikipedia.org/wiki/Thunbergia_mysorensis");
         wikis.add("https://fr.wikipedia.org/wiki/Whitfieldia");
         wikis.add("https://fr.wikipedia.org/wiki/Whitfieldia_elongata");
-//         => vérifier la synonymie + les enfants ont bien été mergés
+        //         => vérifier la synonymie + les enfants ont bien été mergés
     }
 
-//    @Test
-//    void scrapWiki() {
-//        Assertions.assertEquals(2, 2);
-//    }
 }

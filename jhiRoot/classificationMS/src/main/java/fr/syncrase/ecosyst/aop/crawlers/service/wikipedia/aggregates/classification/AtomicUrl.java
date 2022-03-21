@@ -45,4 +45,9 @@ public class AtomicUrl {
         return this;
     }
 
+    public Url newUrl() {
+        return new Url()
+            .url(this.url)
+            .id(this.id);
+    }
 }

@@ -1,6 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.ClassificationReconstructionException;
+import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.lang3.ArrayUtils;
@@ -20,7 +20,6 @@ public class CronquistClassificationBranch {
      * Liste de tous les rangs de la classification<br>
      * L'élément 0 est le rang le plus haut : le super règne
      */
-//    private List<AtomicCronquistRank> classificationCronquist;
     private LinkedMap<CronquistTaxonomikRanks, AtomicCronquistRank> classificationCronquistMap;
 
     /**
@@ -33,58 +32,45 @@ public class CronquistClassificationBranch {
     /**
      * Construit une classification à partir d'un rang
      */
-    public CronquistClassificationBranch(@NotNull AtomicCronquistRank existingRank) throws ClassificationReconstructionException {
+    public CronquistClassificationBranch(@NotNull CronquistRank cronquistRank) throws ClassificationReconstructionException {
         initEmptyClassification();
-        if (classificationCronquistMap.containsKey(existingRank.getRank())) {// Remove this: always true
-            CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
-            int indexDuRangDeBase = ArrayUtils.indexOf(rangsDisponibles, existingRank.getRank());
-            AtomicCronquistRank currentRank = existingRank;
-            // TODO utiliser un while
-            for (
-                int positionDansLaClassification = indexDuRangDeBase;
-                positionDansLaClassification >= 0 && currentRank != null;
-                positionDansLaClassification--, currentRank = getParent(currentRank)
-            ) {
-                if (!rangsDisponibles[positionDansLaClassification].equals(currentRank.getRank())) {
-                    log.error("Tentative d'assigner à un rang les valeurs d'un rang différent");
-                    throw new ClassificationReconstructionException();
-                }
-                classificationCronquistMap.put(rangsDisponibles[positionDansLaClassification], currentRank);// Problème de désynchro avec parent enfant
+        //        if (classificationCronquistMap.containsKey(cronquistRank.getRank())) {// Remove this: always true
+        CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
+        int indexDuRangDeBase = ArrayUtils.indexOf(rangsDisponibles, cronquistRank.getRank());
+        CronquistRank currentRank = cronquistRank;
+        // TODO utiliser un while
+        for (int positionDansLaClassification = indexDuRangDeBase;
+             positionDansLaClassification >= 0 && currentRank != null;
+             positionDansLaClassification--, currentRank = currentRank.getParent()
+        ) {
+            if (!rangsDisponibles[positionDansLaClassification].equals(currentRank.getRank())) {
+                log.error("Tentative d'assigner à un rang les valeurs d'un rang différent");
+                throw new ClassificationReconstructionException();
             }
+            classificationCronquistMap.put(rangsDisponibles[positionDansLaClassification], AtomicCronquistRank.newRank(currentRank));// Problème de désynchronisation avec parent enfant
         }
+        //        }
         this.clearTail();
     }
 
     @Nullable
     private AtomicCronquistRank getParent(@NotNull AtomicCronquistRank currentRank) throws ClassificationReconstructionException {
-//        currentRank = currentRank.getParent();
-//        AtomicCronquistRank parent = currentRank.getParent();
         boolean isSuperRegne = currentRank.getRank().equals(CronquistTaxonomikRanks.SUPERREGNE);
         if (isSuperRegne) {
             return null;
         }
-//        boolean hasParent = parent != null;
-//        boolean superRegneHasParent = isSuperRegne && hasParent;
-//        boolean rangIntermediaireHasNoParent = !isSuperRegne && !hasParent;
-//        if (superRegneHasParent) {
-//            log.error("Arrivé au bout des rangs à renseigner mais il en reste à traiter dans la classification reçu. Revoir les index!");
-//            throw new ClassificationReconstructionException();
-//        }
-//        if (rangIntermediaireHasNoParent) {
-//            log.error("Pas encore arrivé au bout des rangs à renseigner mais il n'y en a plus à traiter dans la classification reçu. Revoir les index!");
-//            throw new ClassificationReconstructionException();
-//        }
-//        return parent;
         return classificationCronquistMap.get(currentRank.getRank().getRangSuperieur());
     }
 
     private void initEmptyClassification() {
         classificationCronquistMap = new LinkedMap<>(34);
+        initDefaultValues();
+    }
+
+    private void initDefaultValues() {
         CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
         for (CronquistTaxonomikRanks hauteurDeRangEnCours : rangsDisponibles) {
-            classificationCronquistMap.put(
-                hauteurDeRangEnCours,
-                AtomicCronquistRank.getDefaultRank(hauteurDeRangEnCours));
+            classificationCronquistMap.put(hauteurDeRangEnCours, AtomicCronquistRank.getDefaultRank(hauteurDeRangEnCours));
         }
     }
 
@@ -94,13 +80,9 @@ public class CronquistClassificationBranch {
      */
     public void clearTail() {
         CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
-        for (
-            int positionDansLaClassification = rangsDisponibles.length - 1;
-            positionDansLaClassification >= 0;
-            positionDansLaClassification--
-        ) {
+        for (int positionDansLaClassification = rangsDisponibles.length - 1; positionDansLaClassification >= 0; positionDansLaClassification--) {
             CronquistTaxonomikRanks nomDuRangEnCours = rangsDisponibles[positionDansLaClassification];
-            boolean cestUnRangConnu = !classificationCronquistMap.get(nomDuRangEnCours).isRangDeLiaison();
+            boolean cestUnRangConnu = classificationCronquistMap.get(nomDuRangEnCours) != null && !classificationCronquistMap.get(nomDuRangEnCours).isRangDeLiaison();
             if (cestUnRangConnu) {
                 break;
             }
@@ -109,27 +91,16 @@ public class CronquistClassificationBranch {
     }
 
     private void removeTaxon(@NotNull CronquistTaxonomikRanks nomDuRangEnCours) {
-//        if (classificationCronquistMap.containsKey(nomDuRangEnCours.getRangSuperieur())) {
-//            classificationCronquistMap.get(nomDuRangEnCours.getRangSuperieur()).removeChildren(classificationCronquistMap.remove(nomDuRangEnCours));
-//        }
         classificationCronquistMap.remove(nomDuRangEnCours);
     }
 
     public AtomicCronquistRank getRang(CronquistTaxonomikRanks rang) {
         if (rang != null) {
-//            if (getSiblings(rang).size() > 1) {
-//                log.error("Le parent du rang désiré a plusieurs enfants. Erreur dans l'algorithme");
-//            }
             return classificationCronquistMap.get(rang);
         } else {
             return null;
         }
     }
-
-//    private Set<AtomicCronquistRank> getSiblings(@NotNull CronquistTaxonomikRanks rang) {
-//        AtomicCronquistRank parent = classificationCronquistMap.get(rang.getRangSuperieur());
-//        return parent != null ? parent.getChildren() : new HashSet<>();
-//    }
 
     public AtomicCronquistRank getRangDeBase() {
         return classificationCronquistMap.get(classificationCronquistMap.lastKey());
@@ -137,6 +108,10 @@ public class CronquistClassificationBranch {
 
     public Collection<AtomicCronquistRank> getClassification() {
         return classificationCronquistMap.values();
+    }
+
+    public LinkedMap<CronquistTaxonomikRanks, AtomicCronquistRank> getClassificationBranch() {
+        return classificationCronquistMap;
     }
 
     public void put(CronquistTaxonomikRanks currentRankName, AtomicCronquistRank currentRank) {
@@ -147,25 +122,14 @@ public class CronquistClassificationBranch {
         return classificationCronquistMap.size();
     }
 
-    /**
-     * Construit une liste descendante des éléments de la classification
-     *
-     * @return La classification de cronquist complète sous forme de liste. Les éléments null ne sont pas intégré à la liste
-     */
-//    public List<AtomicCronquistRank> getList() {
-//        return classificationCronquist;
-//    }
+    @Override
+    public String toString() {
+        return "CronquistClassificationBranch{" + "classificationCronquistMap=" + classificationCronquistMap + '}';
+    }
 
-    /**
-     * Construit une liste ascendante des éléments de la classification
-     *
-     * @return La classification de cronquist complète sous forme de liste
-     */
-//    public List<AtomicCronquistRank> getClassificationAscendante() {
-//        List<AtomicCronquistRank> list = new ArrayList<>();
-//        for (int i = classificationCronquist.size() - 1; i >= 0; i--) {
-//            list.add(classificationCronquist.get(i));
-//        }
-//        return list;
-//    }
+    public void inferAllRank() {
+        classificationCronquistMap.forEach((rankName, rank) -> {
+            rank.setRank(rankName);
+        });
+    }
 }

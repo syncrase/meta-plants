@@ -1,5 +1,6 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper;
 
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicUrl;
@@ -273,8 +274,9 @@ public class CronquistClassificationExtractor {
     String selectText(@NotNull Element item, String @NotNull ... cssQueries) {
         for (String cssQuery : cssQueries) {
             Optional<Element> el = item.select(cssQuery).stream().findFirst();
-            if (el.isPresent())
+            if (el.isPresent()) {
                 return el.map(Element::text).get();//.orElse("")
+            }
         }
         return "";
     }
