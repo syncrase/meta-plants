@@ -7,8 +7,10 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper.WikipediaCrawler;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,10 +102,46 @@ public class ScrapAndInsertClassificationIntegrationTest {
 
     @Test
     public void mergeDesBranchesSimples() {
-        List<String> wikis = new ArrayList<>();
-        wikis.add("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
+        try {
+            CronquistClassificationBranch classification;
+            // Les trois plantes suivantes appartiennent à la sous-classe des Rosidae, mais on ne le sais pas pour atalaya. On le découvre quand on enregistre Cossinia
+            String wiki = "https://fr.wikipedia.org/wiki/Arjona";
+            classification = wikipediaCrawler.scrapWiki(wiki);
+            Collection<CronquistRank> arjonaRanks = cronquistService.saveCronquist(classification, wiki);
+            LinkedMap<CronquistTaxonomikRanks, CronquistRank> arjonaClassification = new LinkedMap<>();
+            arjonaRanks.forEach(cronquistRank -> arjonaClassification.put(cronquistRank.getRank(), cronquistRank));
+
+            wiki = "https://fr.wikipedia.org/wiki/Atalaya_(genre)";
+            classification = wikipediaCrawler.scrapWiki(wiki);
+            Collection<CronquistRank> atalayaRanks = cronquistService.saveCronquist(classification, wiki);
+            LinkedMap<CronquistTaxonomikRanks, CronquistRank> atalayaClassification = new LinkedMap<>();
+            atalayaRanks.forEach(cronquistRank -> atalayaClassification.put(cronquistRank.getRank(), cronquistRank));
+            // Lors de cet ajout: le rang de liaison sous-règne prend le nom tracheobionta
+            // TODO De la classe au règne les deux classifications sont égales
+            assertEquals("Le sous-règne tracheobionta doit exister dans la classification de atalaya",
+                         atalayaClassification.get(CronquistTaxonomikRanks.SOUSREGNE).getId(),
+                         arjonaClassification.get(CronquistTaxonomikRanks.SOUSREGNE).getId()
+                        );
+
+            wiki = "https://fr.wikipedia.org/wiki/Cossinia";
+            classification = wikipediaCrawler.scrapWiki(wiki);
+            Collection<CronquistRank> cossiniaRanks = cronquistService.saveCronquist(classification, wiki);
+            // La sous-classe rosidae doit être présente dans la classification de atalaya
+            CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationBranchOfThisRank(atalayaClassification.get(atalayaClassification.lastKey()).getId());
+            Long rosidaeId = arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId();
+            Long sousClasseId = newAtalayaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
+            assertEquals("La sous-classe rosidae doit être présente dans la classification de atalaya",
+                         sousClasseId,
+                         rosidaeId
+                        );
+            // Rosidae doit posséder deux taxons de liaison vers Santatales et vers Sapindales
+            Set<AtomicCronquistRank> ranks = cronquistService.getTaxons(rosidaeId);
+            // L'ancien rang de liaison a été supprimé
+
+        } catch (IOException e) {
+            fail("unable to scrap wiki : " + e.getMessage());
+        }
+
     }
 
     @Test

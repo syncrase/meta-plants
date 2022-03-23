@@ -15,6 +15,8 @@ import fr.syncrase.ecosyst.service.criteria.UrlCriteria;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.jhipster.service.filter.LongFilter;
@@ -26,6 +28,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClassificationRepository {
+
+    private final Logger log = LoggerFactory.getLogger(ClassificationRepository.class);
 
     private ClassificationNomQueryService classificationNomQueryService;
     private CronquistRankQueryService cronquistRankQueryService;
@@ -73,23 +77,6 @@ public class ClassificationRepository {
             }
         }
         return existingClassification;
-    }
-
-    /**
-     * @param cronquistRank Rang dont il faut vérifier la présence en base
-     * @return Le rang qui correspond. Null si le rang n'existe pas
-     */
-    @Nullable
-    public AtomicCronquistRank findExistingRank(@NotNull AtomicCronquistRank cronquistRank) {
-        if (cronquistRank.isRangDeLiaison() && cronquistRank.getId() == null) {
-            return null;
-        }
-        updateNomsIds(cronquistRank);
-        // Pas de nom => rang inconnu en base
-        if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null)) {
-            return fetchExistingRank(cronquistRank);
-        }
-        return null;
     }
 
     /**
@@ -185,7 +172,7 @@ public class ClassificationRepository {
         assert scrappedExistingClassification != null;
         CronquistTaxonomikRanks replacedRankName = scrappedRankFoundInDatabase.getRank();
 
-        cronquistRankRepository.deleteById(existingClassification.getRang(replacedRankName.getRangInferieur()).getId());
+        //        cronquistRankRepository.deleteById(existingClassification.getRang(replacedRankName.getRangInferieur()).getId());
         // Sur le rang de liaison inférieur au rang de liaison à mettre à jour, corriger la version du parent
         updateParent(
             existingClassification.getRang(replacedRankName.getRangInferieur()),
@@ -197,6 +184,11 @@ public class ClassificationRepository {
             existingClassification.getRang(currentRankName).isRangDeLiaison() && currentRankName != null;
             currentRankName = currentRankName.getRangSuperieur()
         ) {
+            classificationNomRepository.deleteAllById(
+                existingClassification.getRang(currentRankName).getNoms().stream()
+                    .map(AtomicClassificationNom::getId)
+                    .collect(Collectors.toSet())
+                                                     );
             cronquistRankRepository.deleteById(existingClassification.getRang(currentRankName).getId());
             existingClassification.put(currentRankName, scrappedExistingClassification.getRang(currentRankName));
         }
@@ -221,40 +213,83 @@ public class ClassificationRepository {
         }
     }
 
-    @Contract("_ -> new")
-    private @NotNull AtomicCronquistRank fetchExistingRank(@NotNull AtomicCronquistRank cronquistRank) {
-        CronquistRank cronquistRank1 = getCronquistRank(cronquistRank);
-        return new AtomicCronquistRank(cronquistRank1);
-    }
-
-    private CronquistRank getCronquistRank(@NotNull AtomicCronquistRank cronquistRank) {
-        LongFilter nomFilter = new LongFilter();
-        nomFilter.setIn(cronquistRank.getNoms().stream().map(AtomicClassificationNom::getId).filter(Objects::nonNull).collect(Collectors.toList()));
-
-        // TODO à supprimer, les noms doivent suffirent
-        CronquistRankCriteria.CronquistTaxonomikRanksFilter rankFilter = new CronquistRankCriteria.CronquistTaxonomikRanksFilter();
-        rankFilter.setEquals(cronquistRank.getRank());
-
+    private @Nullable CronquistRank getCronquistRank(@NotNull AtomicCronquistRank cronquistRank) throws MoreThanOneResultException {
         CronquistRankCriteria rankCrit = new CronquistRankCriteria();
-        rankCrit.setNomsId(nomFilter);
-        rankCrit.setRank(rankFilter);
-        return cronquistRankQueryService.findByCriteria(rankCrit).get(0);
+
+        if (cronquistRank.getId() != null) {
+            LongFilter idFilter = new LongFilter();
+            idFilter.setEquals(cronquistRank.getId());
+            rankCrit.setId(idFilter);
+        }
+
+        if (!cronquistRank.getNoms().isEmpty()) {
+            LongFilter nomFilter = new LongFilter();
+            nomFilter.setIn(cronquistRank.getNoms().stream().map(AtomicClassificationNom::getId).filter(Objects::nonNull).collect(Collectors.toList()));
+            rankCrit.setNomsId(nomFilter);
+        }
+
+        if (cronquistRank.getRank() != null) {
+            CronquistRankCriteria.CronquistTaxonomikRanksFilter rankFilter = new CronquistRankCriteria.CronquistTaxonomikRanksFilter();
+            rankFilter.setEquals(cronquistRank.getRank());
+            rankCrit.setRank(rankFilter);
+        }
+
+        List<CronquistRank> rank = cronquistRankQueryService.findByCriteria(rankCrit);
+        switch (rank.size()) {
+            case 0:
+                return null;
+            case 1:
+                return rank.get(0);
+            default:
+                throw new MoreThanOneResultException("Provided criteria do not correspond to only one result : " + cronquistRank);
+        }
+    }
+
+    /**
+     * @param cronquistRank Rang dont il faut vérifier la présence en base
+     * @return Le rang qui correspond. Null si le rang n'existe pas
+     */
+    @Nullable
+    public AtomicCronquistRank findExistingRank(@NotNull AtomicCronquistRank cronquistRank) {
+        if (cronquistRank.isRangDeLiaison() && cronquistRank.getId() == null) {
+            return null;
+        }
+        updateNomsIds(cronquistRank);
+        // Pas de nom => rang inconnu en base
+        if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null)) {
+            return fetchExistingRank(cronquistRank);
+        }
+        return null;
     }
 
     @Contract("_ -> new")
-    private @NotNull CronquistClassificationBranch fetchExistingClassification(@NotNull AtomicCronquistRank cronquistRank) throws ClassificationReconstructionException {
-        CronquistRank cronquistRank1 = getCronquistRank(cronquistRank);
-        return new CronquistClassificationBranch(cronquistRank1);
+    private @Nullable AtomicCronquistRank fetchExistingRank(@NotNull AtomicCronquistRank cronquistRank) {
+        CronquistRank cronquistRank1 = null;
+        try {
+            cronquistRank1 = getCronquistRank(cronquistRank);
+            if (cronquistRank1 != null) {
+                return new AtomicCronquistRank(cronquistRank1);
+            }
+        } catch (MoreThanOneResultException e) {
+            log.trace(e.getMessage());
+        }
+        return null;
     }
 
     @Contract("_ -> new")
-    private @NotNull AtomicCronquistRank findRankById(@NotNull Long id) {
-        LongFilter rankIdFilter = new LongFilter();
-        rankIdFilter.setEquals(id);
-
-        CronquistRankCriteria rankCrit = new CronquistRankCriteria();
-        rankCrit.setId(rankIdFilter);
-        return new AtomicCronquistRank(cronquistRankQueryService.findByCriteria(rankCrit).get(0));
+    public @Nullable CronquistClassificationBranch fetchExistingClassification(@NotNull AtomicCronquistRank cronquistRank) {
+        CronquistRank cronquistRank1 = null;
+        try {
+            cronquistRank1 = getCronquistRank(cronquistRank);
+            if (cronquistRank1 != null) {
+                return new CronquistClassificationBranch(cronquistRank1);
+            }
+        } catch (MoreThanOneResultException e) {
+            log.trace(e.getMessage());
+        } catch (ClassificationReconstructionException e) {
+            log.trace("Impossible de reconstruire la classification de ce rang : " + cronquistRank);
+        }
+        return null;
     }
 
     private void eagerLoadAllClassificationData(@NotNull CronquistClassificationBranch classification) {

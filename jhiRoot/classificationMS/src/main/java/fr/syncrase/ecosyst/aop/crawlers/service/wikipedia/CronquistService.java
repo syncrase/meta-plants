@@ -24,6 +24,7 @@ public class CronquistService {
     private ClassificationNomRepository classificationNomRepository;
     private UrlRepository urlRepository;
     private CronquistClassificationSynchronizer synchronizedClassification;
+    private ClassificationRepository classificationRepository;
 
 
     public CronquistService() {
@@ -48,6 +49,7 @@ public class CronquistService {
     @Autowired
     public void setClassificationRepository(ClassificationRepository classificationRepository) {
         synchronizedClassification = new CronquistClassificationSynchronizer(classificationRepository);
+        this.classificationRepository = classificationRepository;
     }
 
     /**
@@ -115,5 +117,14 @@ public class CronquistService {
             urlRepository.saveAll(rank.getUrls());
         }
         return flatClassification;
+    }
+
+    public CronquistClassificationBranch getClassificationBranchOfThisRank(Long id) {
+        return classificationRepository.fetchExistingClassification(new AtomicCronquistRank().id(id));
+    }
+
+    public Set<AtomicCronquistRank> getTaxons(Long id) {
+        classificationRepository.getTaxons(new AtomicCronquistRank().id(id));
+        return null;
     }
 }
