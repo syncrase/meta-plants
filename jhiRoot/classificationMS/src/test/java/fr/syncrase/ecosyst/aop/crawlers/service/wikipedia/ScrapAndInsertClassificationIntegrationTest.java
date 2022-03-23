@@ -79,7 +79,7 @@ public class ScrapAndInsertClassificationIntegrationTest {
                             .flatMap(nom -> classificationNomRepository.findAll(Example.of(new ClassificationNom().nomFr(nom))).stream())
                             .map(AtomicClassificationNom::new)
                             .collect(Collectors.toList())
-                                             );
+                    );
                 }
                 TreeSet<AtomicClassificationNom> nomTreeSet = getAtomicClassificationNomTreeSet();
                 nomTreeSet.addAll(classificationNoms);
@@ -119,9 +119,9 @@ public class ScrapAndInsertClassificationIntegrationTest {
             // Lors de cet ajout: le rang de liaison sous-règne prend le nom tracheobionta
             // TODO De la classe au règne les deux classifications sont égales
             assertEquals("Le sous-règne tracheobionta doit exister dans la classification de atalaya",
-                         atalayaClassification.get(CronquistTaxonomikRanks.SOUSREGNE).getId(),
-                         arjonaClassification.get(CronquistTaxonomikRanks.SOUSREGNE).getId()
-                        );
+                atalayaClassification.get(CronquistTaxonomikRanks.SOUSREGNE).getId(),
+                arjonaClassification.get(CronquistTaxonomikRanks.SOUSREGNE).getId()
+            );
 
             wiki = "https://fr.wikipedia.org/wiki/Cossinia";
             classification = wikipediaCrawler.scrapWiki(wiki);
@@ -131,11 +131,16 @@ public class ScrapAndInsertClassificationIntegrationTest {
             Long rosidaeId = arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId();
             Long sousClasseId = newAtalayaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
             assertEquals("La sous-classe rosidae doit être présente dans la classification de atalaya",
-                         sousClasseId,
-                         rosidaeId
-                        );
-            // Rosidae doit posséder deux taxons de liaison vers Santatales et vers Sapindales
-            Set<AtomicCronquistRank> ranks = cronquistService.getTaxons(rosidaeId);
+                sousClasseId,
+                rosidaeId
+            );
+            //
+//            Set<AtomicCronquistRank> taxonsOfRosidae = cronquistService.getTaxons(rosidaeId);
+//            assertEquals(
+//                "Rosidae doit posséder deux taxons de liaison (vers Santatales et vers Sapindales)",
+//                2,
+//                taxonsOfRosidae.size()
+//            );
             // L'ancien rang de liaison a été supprimé
 
         } catch (IOException e) {

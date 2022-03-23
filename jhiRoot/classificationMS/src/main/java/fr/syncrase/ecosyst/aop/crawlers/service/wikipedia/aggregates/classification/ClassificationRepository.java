@@ -166,7 +166,7 @@ public class ClassificationRepository {
     public void mergeUnRangSignificatifDansUnRangDeLiaison(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull AtomicCronquistRank scrappedRankFoundInDatabase
-                                                          ) throws ClassificationReconstructionException {
+    ) throws ClassificationReconstructionException {
 
         CronquistClassificationBranch scrappedExistingClassification = findExistingClassification(scrappedRankFoundInDatabase);
         assert scrappedExistingClassification != null;
@@ -177,7 +177,7 @@ public class ClassificationRepository {
         updateParent(
             existingClassification.getRang(replacedRankName.getRangInferieur()),
             scrappedExistingClassification.getRang(replacedRankName)
-                    );
+        );
 
         for (
             CronquistTaxonomikRanks currentRankName = replacedRankName;
@@ -188,7 +188,7 @@ public class ClassificationRepository {
                 existingClassification.getRang(currentRankName).getNoms().stream()
                     .map(AtomicClassificationNom::getId)
                     .collect(Collectors.toSet())
-                                                     );
+            );
             cronquistRankRepository.deleteById(existingClassification.getRang(currentRankName).getId());
             existingClassification.put(currentRankName, scrappedExistingClassification.getRang(currentRankName));
         }
@@ -323,5 +323,20 @@ public class ClassificationRepository {
         cronquistRank.getUrls().addAll(urls);
     }
 
+    public Set<AtomicCronquistRank> getTaxons(AtomicCronquistRank cronquistRank) {
+        Set<AtomicCronquistRank> taxons = new HashSet<>();
+        try {
+            CronquistRank cronquistRank1 = getCronquistRank(cronquistRank);
+            if (cronquistRank1 != null) {
+                cronquistRank1.getChildren().forEach(cronquistRank2 -> {
+                    taxons.add(new AtomicCronquistRank(cronquistRank2));
+                });
+                return taxons;
+            }
+        } catch (MoreThanOneResultException e) {
+            log.trace(e.getMessage());
+        }
+        return null;
 
+    }
 }

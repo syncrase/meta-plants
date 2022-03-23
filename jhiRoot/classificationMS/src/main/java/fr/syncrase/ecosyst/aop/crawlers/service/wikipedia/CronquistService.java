@@ -124,7 +124,6 @@ public class CronquistService {
     }
 
     public Set<AtomicCronquistRank> getTaxons(Long id) {
-        classificationRepository.getTaxons(new AtomicCronquistRank().id(id));
-        return null;
+        return classificationRepository.getTaxons(new AtomicCronquistRank().id(id));
     }
 }
