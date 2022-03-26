@@ -91,7 +91,9 @@ public class CronquistService {
             //                removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
             //            }
         } catch (ClassificationReconstructionException e) {
-            e.printStackTrace();
+            log.error("Impossible de reconstruire la classification. " + e.getMessage());
+        } catch (UnknownRankId e) {
+            log.error("Impossible de récupérer le rang. " + e.getMessage());
         }
         return null;
     }
@@ -119,11 +121,13 @@ public class CronquistService {
         return flatClassification;
     }
 
+    @Transactional
     public CronquistClassificationBranch getClassificationBranchOfThisRank(Long id) {
         return classificationRepository.fetchExistingClassification(new AtomicCronquistRank().id(id));
     }
 
-    public Set<AtomicCronquistRank> getTaxons(Long id) {
+    @Transactional
+    public Set<AtomicCronquistRank> getTaxonsOf(Long id) {
         return classificationRepository.getTaxons(new AtomicCronquistRank().id(id));
     }
 }

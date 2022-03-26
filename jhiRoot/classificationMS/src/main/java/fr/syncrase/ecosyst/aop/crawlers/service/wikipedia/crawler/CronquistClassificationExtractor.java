@@ -1,10 +1,6 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationReconstructionException;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicUrl;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.*;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +30,7 @@ public class CronquistClassificationExtractor {
     public CronquistClassificationBranch getClassification(@NotNull Element mainTable) throws ClassificationReconstructionException {
         Elements elementsDeClassification = mainTable.select("tbody tr");
 
+        // TODO supprimer l'effet de bord sur cronquistClassification
         cronquistClassification = new CronquistClassificationBranch();
         for (Element classificationItem : elementsDeClassification) {
             setCronquistTaxonomyItemFromElement(classificationItem);
@@ -44,6 +41,7 @@ public class CronquistClassificationExtractor {
             rangTaxonMap.forEach(this::setCronquistTaxonomyItem);
         }
         cronquistClassification.clearTail();
+        cronquistClassification.inferAllRank();
         return cronquistClassification;
     }
 
@@ -70,9 +68,12 @@ public class CronquistClassificationExtractor {
      */
     @Contract(pure = true)
     private @Nullable String getItemKey(@NotNull String taxon, String classificationItemKey) {
-        if (taxon.endsWith("eae") && !Arrays.asList(new String[]{"Famille"}).contains(classificationItemKey) ||
-            taxon.endsWith("les") && !Arrays.asList(new String[]{"Ordre"}).contains(classificationItemKey)) {
-            log.error("Le taxon {} est signalé comme étant de rang {}. Erreur dans le wiki", taxon, classificationItemKey);
+        if (taxon.endsWith("les") && !Arrays.asList(new String[]{"Ordre"}).contains(classificationItemKey)) {
+            log.error("Le taxon {} est signalé comme étant de rang {}, seul un ordre possède ce suffixe. Erreur dans le wiki", taxon, classificationItemKey);
+            return null;
+        }
+        if (taxon.endsWith("eae") && !Arrays.asList(new String[]{"Famille"}).contains(classificationItemKey)) {
+            log.error("Le taxon {} est signalé comme étant de rang {}, seul une famille possède ce suffixe. Erreur dans le wiki", taxon, classificationItemKey);
             return null;
         }
         return classificationItemKey;
@@ -205,7 +206,6 @@ public class CronquistClassificationExtractor {
         }
     }
 
-
     private @NotNull Map<String, RangTaxonomique> extractionRangsTaxonomiquesInferieurs(@NotNull Element mainTable) {
         // Ajout du rang taxonomique le plus inférieur
         Elements siblings = mainTable.siblingElements();
@@ -235,8 +235,6 @@ public class CronquistClassificationExtractor {
                                   el.select("div.left").size() != 0 && el.select("div.left").get(0).childrenSize() == 0 || //https://fr.wikipedia.org/wiki/Cryosophila_williamsii
                                   el.select("hr").size() != 0 ||
                                   el.select("dl").size() != 0
-
-
                          );
 
         Map<String, RangTaxonomique> rangTaxonMap = new HashMap<>();

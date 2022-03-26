@@ -6,6 +6,7 @@ import fr.syncrase.ecosyst.domain.Url;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
+import fr.syncrase.ecosyst.repository.UrlRepository;
 import fr.syncrase.ecosyst.service.ClassificationNomQueryService;
 import fr.syncrase.ecosyst.service.CronquistRankQueryService;
 import fr.syncrase.ecosyst.service.UrlQueryService;
@@ -36,6 +37,12 @@ public class ClassificationRepository {
     private UrlQueryService urlQueryService;
     private CronquistRankRepository cronquistRankRepository;
     private ClassificationNomRepository classificationNomRepository;
+    private UrlRepository urlRepository;
+
+    @Autowired
+    public void setUrlRepository(UrlRepository urlRepository) {
+        this.urlRepository = urlRepository;
+    }
 
     @Autowired
     public void setClassificationNomRepository(ClassificationNomRepository classificationNomRepository) {
@@ -72,7 +79,7 @@ public class ClassificationRepository {
 
                 existingClassification = findExistingClassification(cronquistRank);
                 assert existingClassification != null;
-                eagerLoadAllClassificationData(existingClassification);
+                //                eagerLoadAllClassificationData(existingClassification);
                 break;// I got it!
             }
         }
@@ -103,47 +110,70 @@ public class ClassificationRepository {
      * et stocke-les ids des rangs intermédiaires qui ont été déconnectés pour pouvoir les supprimer
      *
      * @param existingClassification
-     * @param synonym
+     * @param synonymToInsert
      */
-    public void mergeDeuxRangsSignificatifs(@NotNull CronquistClassificationBranch existingClassification, @NotNull AtomicCronquistRank synonym) {
-        AtomicCronquistRank rangQuiRecupereLesTaxons = existingClassification.getRang(synonym.getRank());
+    public void mergeDeuxRangsSignificatifs(@NotNull CronquistClassificationBranch existingClassification, @NotNull AtomicCronquistRank synonymToInsert) throws UnknownRankId {
+        AtomicCronquistRank rangQuiRecupereLesTaxons = existingClassification.getRang(synonymToInsert.getRank());
 
-        Set<AtomicCronquistRank> taxons = findTaxons(synonym);
+        Set<AtomicCronquistRank> taxons = findTaxons(synonymToInsert);
         changeParentOfTheTaxons(taxons, rangQuiRecupereLesTaxons);
-        supprimeLiaisonAscendante(synonym);
+        changeAssociatedRankOfNames(rangQuiRecupereLesTaxons, synonymToInsert);
+        supprimeLiaisonAscendante(synonymToInsert);
+
+        //        synonymToInsert.getNoms().forEach(atomicClassificationNom -> atomicClassificationNom.set);
+
         // Ajout du nom synonyme
-        rangQuiRecupereLesTaxons.addAllNamesToCronquistRank(synonym.getNoms());
-        rangQuiRecupereLesTaxons.addAllUrlsToCronquistRank(synonym.getUrls());
+        rangQuiRecupereLesTaxons.addAllNamesToCronquistRank(synonymToInsert.getNoms());
+        rangQuiRecupereLesTaxons.addAllUrlsToCronquistRank(synonymToInsert.getUrls());
+    }
+
+    private void changeAssociatedRankOfNames(AtomicCronquistRank rangQuiRecupereLesNoms, AtomicCronquistRank rangSynonymeQuiDonneSesNoms) {
+        CronquistRank rangSynonymeASupprimer = cronquistRankRepository.findById(rangSynonymeQuiDonneSesNoms.getId()).get(); // TODO check get
+        CronquistRank parent = cronquistRankRepository.findById(rangQuiRecupereLesNoms.getId()).get();
+
+        rangSynonymeASupprimer.getNoms().forEach(classificationNom -> {
+            classificationNom.setCronquistRank(parent);
+            classificationNomRepository.save(classificationNom);
+        });
+        rangSynonymeASupprimer.getUrls().forEach(url -> {
+            url.setCronquistRank(parent);
+            urlRepository.save(url);
+        });
+        cronquistRankRepository.deleteById(rangSynonymeASupprimer.getId());
+
     }
 
     private void supprimeLiaisonAscendante(@NotNull AtomicCronquistRank synonym) {
         Optional<CronquistRank> baseDesRangsDeLiaisonASupprimer = cronquistRankRepository.findById(synonym.getId());
         baseDesRangsDeLiaisonASupprimer.ifPresent(rang -> {
             // Suppression des rangs de liaison ascendants qui deviennent inutiles par la fusion
-            AtomicCronquistRank atomicCronquistRank = AtomicCronquistRank.newRank(rang);
+            rang = rang.getParent();
             do {
-                classificationNomRepository.deleteAllById(atomicCronquistRank.getNoms().stream().map(AtomicClassificationNom::getId).collect(Collectors.toSet()));// TODO pas nécessaire, ce sont des rangs de liaison!
-                cronquistRankRepository.deleteById(atomicCronquistRank.getId());
-                atomicCronquistRank = AtomicCronquistRank.newRank(rang.getParent());
-            } while (atomicCronquistRank.isRangDeLiaison());
+                Set<Long> nomsIds = rang.getNoms().stream().map(ClassificationNom::getId).collect(Collectors.toSet());
+                classificationNomRepository.deleteAllById(nomsIds);
+                Set<Long> urlsIds = rang.getUrls().stream().map(Url::getId).collect(Collectors.toSet());
+                urlRepository.deleteAllById(urlsIds);
+                cronquistRankRepository.deleteById(rang.getId());
+                rang = rang.getParent();
+            } while (AtomicCronquistRank.newRank(rang.getParent()).isRangDeLiaison());// TODO ajouter méthode isRangDeLiaison pour les entités
         });
     }
 
-    private void changeParentOfTheTaxons(@NotNull Set<AtomicCronquistRank> taxons, @NotNull AtomicCronquistRank nouveauParent) {
-        taxons.forEach(taxon -> {
-            updateParent(taxon, nouveauParent);
-        });
-
+    private void changeParentOfTheTaxons(@NotNull Set<AtomicCronquistRank> taxons, @NotNull AtomicCronquistRank nouveauParent) throws UnknownRankId {
+        for (AtomicCronquistRank taxon : taxons) {
+            updateParentInDB(taxon, nouveauParent);
+        }
     }
 
-    private void updateParent(@NotNull AtomicCronquistRank taxon, @NotNull AtomicCronquistRank nouveauParent) {
+    private void updateParentInDB(@NotNull AtomicCronquistRank taxon, @NotNull AtomicCronquistRank nouveauParent) throws UnknownRankId {
         Optional<CronquistRank> cronquistRank = cronquistRankRepository.findById(taxon.getId());
-        cronquistRank.ifPresentOrElse(rank -> {
+        if (cronquistRank.isPresent()) {
+            CronquistRank rank = cronquistRank.get();
             rank.setParent(new CronquistRank().id(nouveauParent.getId()));
             cronquistRankRepository.save(rank);
-        }, () -> {
-            String todo = "le rank existe forcément. Quoi faire quand le repo ne me retourne rien?";
-        });
+        } else {
+            throw new UnknownRankId();
+        }
     }
 
     @Contract(pure = true)
@@ -166,7 +196,7 @@ public class ClassificationRepository {
     public void mergeUnRangSignificatifDansUnRangDeLiaison(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull AtomicCronquistRank scrappedRankFoundInDatabase
-    ) throws ClassificationReconstructionException {
+                                                          ) throws ClassificationReconstructionException, UnknownRankId {
 
         CronquistClassificationBranch scrappedExistingClassification = findExistingClassification(scrappedRankFoundInDatabase);
         assert scrappedExistingClassification != null;
@@ -174,10 +204,11 @@ public class ClassificationRepository {
 
         //        cronquistRankRepository.deleteById(existingClassification.getRang(replacedRankName.getRangInferieur()).getId());
         // Sur le rang de liaison inférieur au rang de liaison à mettre à jour, corriger la version du parent
-        updateParent(
+        updateParentInDB(
             existingClassification.getRang(replacedRankName.getRangInferieur()),
             scrappedExistingClassification.getRang(replacedRankName)
-        );
+                        );
+        //        existingClassification.put(replacedRankName, scrappedExistingClassification.getRang(replacedRankName));
 
         for (
             CronquistTaxonomikRanks currentRankName = replacedRankName;
@@ -188,7 +219,12 @@ public class ClassificationRepository {
                 existingClassification.getRang(currentRankName).getNoms().stream()
                     .map(AtomicClassificationNom::getId)
                     .collect(Collectors.toSet())
-            );
+                                                     );
+            urlRepository.deleteAllById(
+                existingClassification.getRang(currentRankName).getUrls().stream()
+                    .map(AtomicUrl::getId)
+                    .collect(Collectors.toSet())
+                                       );
             cronquistRankRepository.deleteById(existingClassification.getRang(currentRankName).getId());
             existingClassification.put(currentRankName, scrappedExistingClassification.getRang(currentRankName));
         }
@@ -233,7 +269,7 @@ public class ClassificationRepository {
             rankFilter.setEquals(cronquistRank.getRank());
             rankCrit.setRank(rankFilter);
         }
-
+        rankCrit.setDistinct(true);
         List<CronquistRank> rank = cronquistRankQueryService.findByCriteria(rankCrit);
         switch (rank.size()) {
             case 0:
@@ -308,7 +344,8 @@ public class ClassificationRepository {
 
         List<ClassificationNom> classificationNoms = classificationNomQueryService.findByCriteria(classificationNomCriteria);
         Set<AtomicClassificationNom> classificationNoms1 = classificationNoms.stream().map(AtomicClassificationNom::new).collect(Collectors.toSet());
-        cronquistRank.getNoms().addAll(classificationNoms1);
+        //        cronquistRank.getNoms().addAll(classificationNoms1);
+        //        cronquistRank.setNoms(classificationNoms1);
     }
 
     private void addAllUrls(@NotNull AtomicCronquistRank cronquistRank) {

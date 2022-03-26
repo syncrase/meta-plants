@@ -1,4 +1,4 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

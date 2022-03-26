@@ -1,4 +1,4 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.scraper;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler;
 
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
@@ -111,8 +111,6 @@ public class WikipediaCrawler {
                 scrapWikiList(urlWiki);
             } else {
                 CronquistClassificationBranch classification = scrapWiki(urlWiki);
-                // TODO ajouter dans une queue (reçue de l'extérieur)
-                //                scrappedClassificationStore.add(classification);
                 cronquistService.saveCronquist(classification, urlWiki);
             }
         }
@@ -249,7 +247,6 @@ public class WikipediaCrawler {
             log.error("Impossible d'extraire la classification de la page");
             e.printStackTrace();
         }
-
 
         log.info("Created Cronquist classification : " + cronquistClassification);
         return cronquistClassification;

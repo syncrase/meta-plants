@@ -138,7 +138,7 @@ public class AtomicCronquistRank {
     // prettier-ignore
     @Override
     public String toString() {
-        return "AtomicCronquistRank{" + "id=" + getId() + ", rank='" + getRank() + "'" + "}";
+        return "AtomicCronquistRank{" + "id=" + getId() + ", rank='" + getRank() + "'" + ", names='" + getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toList()) + "}";
     }
 
     /**

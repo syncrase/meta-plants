@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank.isRangsIntermediaires;
 
@@ -48,7 +49,7 @@ public class CronquistClassificationSynchronizer {
     private void makeItConsistent(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull CronquistClassificationBranch scrappedClassification
-                                 ) throws ClassificationReconstructionException {
+                                 ) throws ClassificationReconstructionException, UnknownRankId {
         Collection<AtomicCronquistRank> existingClassificationList = existingClassification.getClassification();
         if (existingClassificationList.size() == 0) {
             log.info("No existing entity in the database");
@@ -104,7 +105,7 @@ public class CronquistClassificationSynchronizer {
         CronquistTaxonomikRanks rankName,
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull CronquistClassificationBranch scrappedClassification
-                                      ) throws ClassificationReconstructionException {
+                                      ) throws ClassificationReconstructionException, UnknownRankId {
 
         AtomicCronquistRank existingRank;
         AtomicCronquistRank rankToInsert;
@@ -120,6 +121,7 @@ public class CronquistClassificationSynchronizer {
         boolean uniquementLeRangScrappeEstSignificatif = !rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
         if (uniquementLeRangScrappeEstSignificatif) {
             mergeUnRangSignificatifDansUnRangDeLiaison(existingClassification, rankToInsert);
+            scrappedClassification.put(rankName, existingClassification.getRang(rankName));
             return;
         }
 
@@ -140,7 +142,7 @@ public class CronquistClassificationSynchronizer {
     private void mergeUnRangSignificatifDansUnRangDeLiaison(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull AtomicCronquistRank rankToInsert
-                                                           ) throws ClassificationReconstructionException {
+                                                           ) throws ClassificationReconstructionException, UnknownRankId {
         AtomicCronquistRank existingRank = existingClassification.getRang(rankToInsert.getRank());
         @Nullable AtomicCronquistRank rankReplacingTheIntermediateRankList = classificationRepository.findExistingRank(rankToInsert);
         if (rankReplacingTheIntermediateRankList != null) {
@@ -164,9 +166,14 @@ public class CronquistClassificationSynchronizer {
     private void mergeDeuxRangsSignificatifs(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull AtomicCronquistRank rankToInsert
-                                            ) {
-        AtomicCronquistRank existingRank = existingClassification.getRang(rankToInsert.getRank());
-        if (!rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNoms())) {// TODO invert
+                                            ) throws UnknownRankId {
+        AtomicCronquistRank rankOfExistingClassificationBranch = existingClassification.getRang(rankToInsert.getRank());
+
+        if (rankToInsert.doTheRankHasOneOfTheseNames(rankOfExistingClassificationBranch.getNoms())) {
+            // Ils sont égaux
+            rankToInsert.setId(rankOfExistingClassificationBranch.getId());
+            synchronizeNames(rankOfExistingClassificationBranch, rankToInsert);
+        } else {
             // Ils sont différents
             // Si le rang que je cherche à insérer existe déjà
             @Nullable AtomicCronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
@@ -174,12 +181,8 @@ public class CronquistClassificationSynchronizer {
             if (scrappedRankAlreadyExists) {
                 classificationRepository.mergeDeuxRangsSignificatifs(existingClassification, synonym);
             }
-            rankToInsert.setId(existingRank.getId());
-            rankToInsert.addAllNamesToCronquistRank(existingRank.getNoms());// Ajout des synonymes
-        } else {
-            // Ils sont égaux
-            rankToInsert.setId(existingRank.getId());
-            synchronizeNames(existingRank, rankToInsert);
+            rankToInsert.setId(rankOfExistingClassificationBranch.getId());
+            rankToInsert.addAllNamesToCronquistRank(rankOfExistingClassificationBranch.getNoms());// Ajout des synonymes
         }
     }
 
@@ -190,25 +193,50 @@ public class CronquistClassificationSynchronizer {
      * @param rankToInsert nouveau rang à insérer
      */
     private void synchronizeNames(
-        @NotNull AtomicCronquistRank existingRank, AtomicCronquistRank rankToInsert
+        @NotNull AtomicCronquistRank existingRank,
+        AtomicCronquistRank rankToInsert
                                  ) {
-        for (AtomicClassificationNom existingClassificationNom : existingRank.getNoms()) {
-            for (AtomicClassificationNom toInsertClassificationNom : rankToInsert.getNoms()) {
-                // Ajoute l'id des noms existants
-                if (isRangsIntermediaires(existingRank, rankToInsert) || isRangsIntermediaires(existingRank) && !isRangsIntermediaires(rankToInsert) || existingClassificationNom.getNomFr().equals(toInsertClassificationNom.getNomFr())) {
-                    toInsertClassificationNom.setId(existingClassificationNom.getId());
-                }
+
+        // Les deux rangs sont sémantiquement les mêmes
+        // Si le nom à insérer existe => ajout de l'id au rang à insérer
+        existingRank.getNoms().forEach(existingNom -> {
+            boolean toInsertRankAlreadyExists = rankToInsert.getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains(existingNom.getNomFr());
+            if (toInsertRankAlreadyExists) {
+//                rankToInsert.getNoms().stream().filter(atomicClassificationNom1 -> atomicClassificationNom1.getNomFr().contentEquals(existingNom.getNomFr()))
+                rankToInsert.getNoms().forEach(toInsertNom -> {
+                    if(rankToInsert.isRangDeLiaison() || toInsertNom.getNomFr().contentEquals(existingNom.getNomFr())){
+                        toInsertNom.setId(existingNom.getId());
+                    }
+                });
+            } else {
+                rankToInsert.getNoms().add(existingNom);
             }
-            // Ajoute le nom existant s'il n'existe pas dans mes noms à insérer
-            if (!rankToInsert.hasThisName(existingClassificationNom.getNomFr())) {
-                rankToInsert.addNameToCronquistRank(existingClassificationNom);
-            }
-        }
+        });
+
+//        // Tous les noms existants qui n'existent pas dans le rang à insérer sont ajoutés au rang à insérer
+//        rankToInsert.getNoms().forEach(toInsertNom -> {
+//            boolean existingNameNotFoundInNamesToInsert = rankToInsert.getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains(existingNom.getNomFr());
+//        });
+//
+//        for (AtomicClassificationNom existingClassificationNom : existingRank.getNoms()) {
+//            for (AtomicClassificationNom toInsertClassificationNom : rankToInsert.getNoms()) {
+//                // Ajoute l'id des noms existants
+//                if (existingRank.isRangDeLiaison()
+//                    || existingClassificationNom.getNomFr().equals(toInsertClassificationNom.getNomFr())
+//                ) {
+//                    toInsertClassificationNom.setId(existingClassificationNom.getId());
+//                }
+//            }
+//            // Ajoute le nom existant s'il n'existe pas dans mes noms à insérer
+//            if (!rankToInsert.hasThisName(existingClassificationNom.getNomFr())) {
+//                rankToInsert.addNameToCronquistRank(existingClassificationNom);
+//            }
+//        }
     }
 
     public void applyConsistency(
         @NotNull CronquistClassificationBranch scrappedClassification, String urlWiki
-                                ) throws ClassificationReconstructionException {
+                                ) throws ClassificationReconstructionException, UnknownRankId {
 
         scrappedClassification.getRangDeBase().addUrls(AtomicUrl.newAtomicUrl(urlWiki));
         scrappedClassification.inferAllRank();

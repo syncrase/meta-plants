@@ -43,6 +43,7 @@ public class CronquistRankMapper {
             if (taxon != null) {
                 dBFriendlyClassification.get(rankName).setChildren(Collections.singleton(taxon));
             }
+            dBFriendlyClassification.get(rankName).getNoms().forEach(classificationNom -> classificationNom.setCronquistRank(dBFriendlyClassification.get(rankName)));
         });
 
         return dBFriendlyClassification.values();
