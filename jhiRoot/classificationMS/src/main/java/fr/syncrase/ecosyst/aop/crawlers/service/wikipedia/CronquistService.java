@@ -70,22 +70,22 @@ public class CronquistService {
      *     <li>Les mêmes enfants</li>
      *     <li>Le même getRangSuperieur</li>
      * </ul>
-     *  @param cronquistClassification side effect
+     *  @param scrapedClassification side effect
      *
      * @param urlWiki url du wiki d'où a été extrait la classification
      * @return
      */
     @Transactional
-    public Collection<CronquistRank> saveCronquist(@NotNull CronquistClassificationBranch cronquistClassification, String urlWiki) {
+    public Collection<CronquistRank> saveCronquist(@NotNull CronquistClassificationBranch scrapedClassification, String urlWiki) {
 
         log.info("Traitement pré-enregistrement de la classification extraite de '" + urlWiki + "'");
         try {
-            synchronizedClassification.applyConsistency(cronquistClassification, urlWiki);
+            synchronizedClassification.applyConsistency(scrapedClassification, urlWiki);
 
             log.info("Enregistrement de la classification");
-            if (cronquistClassification.getClassification() != null) {
+            if (scrapedClassification.getClassification() != null) {
                 CronquistRankMapper mapper = new CronquistRankMapper();
-                return save(mapper.getClassificationToSave(cronquistClassification.getClassificationBranch()));// TODO Use mapper atomic to dbObject and vice versa
+                return save(mapper.getClassificationToSave(scrapedClassification.getClassificationBranch()));// TODO Use mapper atomic to dbObject and vice versa
             }
             //            if (synchronizedClassification.getRangsASupprimer() != null) {
             //                removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
@@ -94,6 +94,8 @@ public class CronquistService {
             log.error("Impossible de reconstruire la classification. " + e.getMessage());
         } catch (UnknownRankId e) {
             log.error("Impossible de récupérer le rang. " + e.getMessage());
+        } catch (MoreThanOneResultException e) {
+            log.error("Impossible de récupérer un unique rang. " + e.getMessage());
         }
         return null;
     }

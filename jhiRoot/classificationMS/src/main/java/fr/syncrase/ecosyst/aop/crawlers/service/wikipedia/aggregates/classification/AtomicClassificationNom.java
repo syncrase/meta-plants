@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-public class AtomicClassificationNom {
+public class AtomicClassificationNom implements Cloneable {
     private Long id;
     private String nomFr;
     private String nomLatin;
@@ -86,5 +86,19 @@ public class AtomicClassificationNom {
             .id(this.id)
             .nomFr(this.nomFr)
             .nomLatin(this.nomLatin);
+    }
+
+    @Override
+    public AtomicClassificationNom clone() {
+        try {
+            AtomicClassificationNom clone = (AtomicClassificationNom) super.clone();
+
+            //                .id(this.id)
+            //                .nomFr(this.nomFr)
+            //                .nomLatin(this.nomLatin);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

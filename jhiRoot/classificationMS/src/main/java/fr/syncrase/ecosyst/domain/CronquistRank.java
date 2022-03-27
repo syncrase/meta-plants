@@ -181,16 +181,24 @@ public class CronquistRank implements Serializable {
         this.parent = cronquistRank;
     }
 
-    /*
-     *
-     *
-     *
-     *
-     * Les responsabilités de l'entité rang
-     *
-     *
-     *
-     *
-     */
+    @Override
+    public String toString() {
+        return "CronquistRank{" +
+            "id=" + id +
+            ", rank=" + rank +
+//            ", children=" + children +
+//            ", urls=" + urls +
+            ", noms=" + noms +
+//            ", parent=" + parent +
+            '}';
+    }
 
+    public void makeItConsistent() {
+        this.getNoms().forEach(nom -> {
+            nom.setCronquistRank(this);
+        });
+        this.getUrls().forEach(url -> {
+            url.setCronquistRank(this);
+        });
+    }
 }

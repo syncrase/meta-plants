@@ -3,7 +3,7 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classifica
 import fr.syncrase.ecosyst.domain.Url;
 import org.jetbrains.annotations.NotNull;
 
-public class AtomicUrl {
+public class AtomicUrl implements Cloneable {
     private String url;
     private Long id;
 
@@ -49,5 +49,18 @@ public class AtomicUrl {
         return new Url()
             .url(this.url)
             .id(this.id);
+    }
+
+    @Override
+    public AtomicUrl clone() {
+        try {
+            AtomicUrl clone = (AtomicUrl) super.clone();
+
+            //            .url(this.url)
+            //                .id(this.id);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

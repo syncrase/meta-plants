@@ -27,7 +27,7 @@
     <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
     <logger name="org.bson" level="WARN"/>
     <logger name="org.hibernate.validator" level="WARN"/>
-    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate" level="DEBUG"/>
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
     <logger name="org.postgresql.jdbc" level="WARN"/>
     <logger name="org.springframework" level="WARN"/>
@@ -45,7 +45,7 @@
     <logger name="com.tngtech.archunit.core.importer" level="ERROR"/>
 
     <root>
-        <level>WARN</level>
+        <level>INFO</level>
         <appender-ref ref="CONSOLE"/>
     </root>
 

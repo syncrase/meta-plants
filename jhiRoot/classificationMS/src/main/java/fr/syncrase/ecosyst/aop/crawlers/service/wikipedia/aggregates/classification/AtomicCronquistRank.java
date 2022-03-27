@@ -14,7 +14,7 @@ import static fr.syncrase.ecosyst.domain.CronquistRank.DEFAULT_NAME_FOR_CONNECTO
 /**
  * Un rang qui ne possède pas le rang parent ou les taxons
  */
-public class AtomicCronquistRank {
+public class AtomicCronquistRank implements Cloneable {
     private Long id;
     private CronquistTaxonomikRanks rank;
     private Set<AtomicUrl> urls = new HashSet<>();
@@ -90,13 +90,22 @@ public class AtomicCronquistRank {
         return noms;
     }
 
-    private AtomicCronquistRank rank(CronquistTaxonomikRanks rankName) {
-        this.setRank(rank);
-        return this;
+    private void setNoms(Set<AtomicClassificationNom> classificationNoms) {
+        this.noms = classificationNoms;
     }
 
     public AtomicCronquistRank addNoms(AtomicClassificationNom classificationNom) {
         this.noms.add(classificationNom);
+        return this;
+    }
+
+    public AtomicCronquistRank noms(Set<AtomicClassificationNom> classificationNoms) {
+        this.setNoms(classificationNoms);
+        return this;
+    }
+
+    private AtomicCronquistRank rank(CronquistTaxonomikRanks rankName) {
+        this.setRank(rank);
         return this;
     }
 
@@ -138,7 +147,10 @@ public class AtomicCronquistRank {
     // prettier-ignore
     @Override
     public String toString() {
-        return "AtomicCronquistRank{" + "id=" + getId() + ", rank='" + getRank() + "'" + ", names='" + getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toList()) + "}";
+        return "AtomicCronquistRank{" +
+            "id=" + getId() +
+            ", rank='" + getRank() + "'" +
+            ", names='" + getNoms().stream().map(n -> "{" + n.getId() + ":" + n.getNomFr() + "}").collect(Collectors.toList()) + "}";
     }
 
     /**
@@ -212,11 +224,29 @@ public class AtomicCronquistRank {
      */
     public void addAllUrlsToCronquistRank(@NotNull Set<AtomicUrl> urls) {
         for (AtomicUrl url : urls) {
-            this.addUrls(new AtomicUrl().url(url.getAtomicUrl()).id(url.getId()));
+            this.addUrls(new AtomicUrl().url(url.getAtomicUrl()).id(url.getId())); // TODO check si elle existe déjà
         }
     }
 
     public CronquistRank newRank() {
-        return new CronquistRank().id(this.id).rank(this.rank).urls(this.urls.stream().map(AtomicUrl::newUrl).collect(Collectors.toSet())).noms(this.noms.stream().map(AtomicClassificationNom::newClassificationNom).collect(Collectors.toSet()));
+        CronquistRank rank = new CronquistRank().id(this.id).rank(this.rank).urls(this.urls.stream().map(AtomicUrl::newUrl).collect(Collectors.toSet())).noms(this.noms.stream().map(AtomicClassificationNom::newClassificationNom).collect(Collectors.toSet()));
+        rank.makeItConsistent();
+        return rank;
+    }
+
+    @Override
+    public AtomicCronquistRank clone() {
+        try {
+            AtomicCronquistRank clone = (AtomicCronquistRank) super.clone();
+            clone
+                //            .id(this.id)
+                //                .rank(this.rank)
+                .urls(this.urls.stream().map(AtomicUrl::clone).collect(Collectors.toSet()))
+                .noms(this.noms.stream().map(AtomicClassificationNom::clone)
+                          .collect(Collectors.toSet()));
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

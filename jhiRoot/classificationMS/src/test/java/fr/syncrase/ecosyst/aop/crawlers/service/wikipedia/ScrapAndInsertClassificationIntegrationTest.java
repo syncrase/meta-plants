@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -69,80 +70,6 @@ public class ScrapAndInsertClassificationIntegrationTest {
     //        }
     //    }
 
-
-    @Test
-    public void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs() {
-        try {
-            CronquistClassificationBranch classification;
-            // Règne 	Plantae
-            //Sous-règne 	doit être ajouté > Tracheobionta
-            //Division 	doit être ajouté > Magnoliophyta
-            //Classe 	Equisetopsida (+Magnoliopsida)
-            //Sous-classe 	Magnoliidae (+Rosidae)
-            //Super-ordre 	Rosanae
-            //Ordre 	Sapindales
-            //Famille 	Aceraceae
-            //Genre 	Acer
-            String wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te";
-            classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<CronquistRank> erableCreteRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<CronquistTaxonomikRanks, CronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
-
-            // Règne 	Plantae
-            //Sous-règne 	Tracheobionta
-            //Division 	Magnoliophyta
-            //Classe 	Magnoliopsida (+Equisetopsida)
-            //Sous-classe 	Rosidae (+Magnoliidae)
-            //Super-ordre 	doit être ajouté > Rosanae
-            //Ordre 	Sapindales
-            //Famille 	Aceraceae
-            //Genre 	Acer
-            wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
-            classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<CronquistRank> erableMiyabeRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<CronquistTaxonomikRanks, CronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
-
-            // L'érable de miyabe
-            // - doit posséder le superordre Rosanae
-            // - doit posséder la sous-classe Magnoliidae en plus de Rosidae
-            // - doit posséder la classe Equisetopsida en plus de Magnoliopsida
-            Set<String> ordresDeErableMiyabe = utils.getNamesFromMapRank(erableMiyabeClassification, CronquistTaxonomikRanks.SUPERORDRE);
-            assertTrue("L'érable de Miyabe doit posséder le superordre Rosanae", ordresDeErableMiyabe.contains("Rosanae"));
-
-            Set<String> nomsDeSousClasseDeErableMiyabe = utils.getNamesFromMapRank(erableMiyabeClassification, CronquistTaxonomikRanks.SOUSCLASSE);
-            assertEquals("L'érable de Miyabe doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableMiyabe.size());
-            assertTrue("L'érable de Miyabe doit posséder la sous-classe synonyme Magnoliidae", nomsDeSousClasseDeErableMiyabe.containsAll(Set.of("Magnoliidae", "Rosidae")));
-
-            Set<String> nomsDeClasseDeErableMiyabe = utils.getNamesFromMapRank(erableMiyabeClassification, CronquistTaxonomikRanks.CLASSE);
-            assertEquals("L'érable de Miyabe doit contenir deux classes", 2, nomsDeClasseDeErableMiyabe.size());
-            assertTrue("L'érable de Miyabe doit posséder la classe synonyme Equisetopsida", nomsDeClasseDeErableMiyabe.containsAll(Set.of("Equisetopsida", "Magnoliopsida")));
-
-            // L'érable de Crête
-            // - doit posséder la sous-classe Rosidae en plus de Magnoliidae
-            // - doit posséder la classe Magnoliopsida en plus de Equisetopsida
-            // - doit posséder la division Magnoliophyta
-            // - doit posséder le sous-règne Tracheobionta
-            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationBranchOfThisRank(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
-
-            Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
-            assertEquals("L'érable de Crete doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableCrete.size());
-            assertTrue("L'érable de Crete doit posséder la sous-classes synonyme Rosidae", nomsDeSousClasseDeErableCrete.containsAll(Set.of("Rosidae", "Magnoliidae")));
-
-            Set<String> nomsDeClasseDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.CLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
-            assertEquals("L'érable de Crete doit contenir deux classes", 2, nomsDeClasseDeErableCrete.size());
-            assertTrue("L'érable de Crete doit posséder la classes synonyme Magnoliopsida", nomsDeClasseDeErableCrete.containsAll(Set.of("Magnoliopsida", "Equisetopsida")));
-
-            Set<String> nomsDEmbranchementDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.EMBRANCHEMENT).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
-            assertTrue("L'érable de Crete doit posséder l'embranchement Magnoliophyta", nomsDEmbranchementDeErableCrete.contains("Magnoliophyta"));
-
-            Set<String> nomsDeSousRegneDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.SOUSREGNE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
-            assertTrue("L'érable de Crete doit posséder le sous-règne Tracheobionta", nomsDeSousRegneDeErableCrete.contains("Tracheobionta"));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
 //    @Test
 //    public void enregistrementDUneClassificationAvecDeuxRangsSynonymesSuccessifs2() {
