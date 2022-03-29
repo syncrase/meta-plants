@@ -2,6 +2,7 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler;
 
 import fr.syncrase.ecosyst.ClassificationMsApp;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
@@ -31,14 +32,8 @@ public class CrawlerTest {
 
     WikipediaCrawler wikipediaCrawler;
 
-    @Autowired
-    private ClassificationNomRepository classificationNomRepository;
-
-    @Autowired
-    private CronquistService cronquistService;
-
     public CrawlerTest() {
-        this.wikipediaCrawler = new WikipediaCrawler(cronquistService);
+        this.wikipediaCrawler = new WikipediaCrawler(null);
     }
 
     @Test
@@ -47,15 +42,11 @@ public class CrawlerTest {
         CronquistClassificationBranch classification;
         try {
             String wiki = "https://fr.wikipedia.org/wiki/Monodiella";
-            //         => Le genre monodiella ne possède pas de genre
             classification = wikipediaCrawler.scrapWiki(wiki);
-            // TODO le save est inutile, je ne veux tester que le crawler
-//            Collection<CronquistRank> monodiellaRanks = cronquistService.saveCronquist(classification, wiki);
-//            LinkedMap<CronquistTaxonomikRanks, CronquistRank> monodiellaClassification = utils.transformToMapOfRanksByName(monodiellaRanks);
-//
-//            Set<String> nomsDuGenreMonodiella = utils.getNamesFromMapRank(monodiellaClassification, CronquistTaxonomikRanks.GENRE);
-//            assertEquals("Le genre monodiella ne doit contenir qu'un seul nom", 1, nomsDuGenreMonodiella.size());
-//            assertTrue("Le genre monodiella doit être 'Monodiella' pas 'Gentianaceae'", nomsDuGenreMonodiella.contains("Monodiella"));
+
+            Set<String> nomsDuGenreMonodiella = classification.getRang(CronquistTaxonomikRanks.GENRE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
+            assertEquals("Le genre monodiella ne doit contenir qu'un seul nom", 1, nomsDuGenreMonodiella.size());
+            assertTrue("Le genre monodiella doit être 'Monodiella' pas 'Gentianaceae'", nomsDuGenreMonodiella.contains("Monodiella"));
         } catch (IOException e) {
             e.printStackTrace();
         }
