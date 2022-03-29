@@ -13,18 +13,20 @@ import java.util.stream.Collectors;
 public class TestUtils {
 
 
-    @NotNull LinkedMap<CronquistTaxonomikRanks, CronquistRank> transformToMapOfRanksByName(@NotNull Collection<CronquistRank> corylopsisRanks) {
+    @NotNull
+    public LinkedMap<CronquistTaxonomikRanks, CronquistRank> transformToMapOfRanksByName(@NotNull Collection<CronquistRank> corylopsisRanks) {
         LinkedMap<CronquistTaxonomikRanks, CronquistRank> corylopsisClassification = new LinkedMap<>();
         corylopsisRanks.forEach(cronquistRank -> corylopsisClassification.put(cronquistRank.getRank(), cronquistRank));
         return corylopsisClassification;
     }
 
 
-    @NotNull Set<String> getNamesFromMapRank(
+    @NotNull
+    public Set<String> getNamesFromMapRank(
         @NotNull LinkedMap<CronquistTaxonomikRanks,
             CronquistRank> corylopsisClassification,
         CronquistTaxonomikRanks ordre
-                                            ) {
+                                          ) {
         return corylopsisClassification.get(ordre).getNoms().stream().map(ClassificationNom::getNomFr).collect(Collectors.toSet());
     }
 }
