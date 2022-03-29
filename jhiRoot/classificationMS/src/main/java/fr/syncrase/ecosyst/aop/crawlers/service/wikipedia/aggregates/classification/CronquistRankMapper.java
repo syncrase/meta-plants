@@ -1,8 +1,5 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicUrl;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
@@ -50,14 +47,23 @@ public class CronquistRankMapper {
     }
 
     private CronquistRank getCronquistRank(@NotNull AtomicCronquistRank atomicCronquistRank) {
-        return new CronquistRank().rank(atomicCronquistRank.getRank()).noms(atomicCronquistRank.getNoms().stream().map(this::getClassificationNom).collect(Collectors.toSet())).urls(atomicCronquistRank.getUrls().stream().map(this::getUrl).collect(Collectors.toSet())).id(atomicCronquistRank.getId());
+        return new CronquistRank()
+            .rank(atomicCronquistRank.getRank())
+            .noms(atomicCronquistRank.getNoms().stream().map(this::getClassificationNom).collect(Collectors.toSet()))
+            .urls(atomicCronquistRank.getUrls().stream().map(this::getUrl).collect(Collectors.toSet()))
+            .id(atomicCronquistRank.getId());
     }
 
     private Url getUrl(@NotNull AtomicUrl atomicUrl) {
-        return new Url().id(atomicUrl.getId()).url(atomicUrl.getAtomicUrl());
+        return new Url()
+            .id(atomicUrl.getId())
+            .url(atomicUrl.getAtomicUrl());
     }
 
     private ClassificationNom getClassificationNom(@NotNull AtomicClassificationNom atomicClassificationNom) {
-        return new ClassificationNom().nomFr(atomicClassificationNom.getNomFr()).nomLatin(atomicClassificationNom.getNomLatin()).id(atomicClassificationNom.getId());
+        return new ClassificationNom()
+            .nomFr(atomicClassificationNom.getNomFr())
+            .nomLatin(atomicClassificationNom.getNomLatin())
+            .id(atomicClassificationNom.getId());
     }
 }

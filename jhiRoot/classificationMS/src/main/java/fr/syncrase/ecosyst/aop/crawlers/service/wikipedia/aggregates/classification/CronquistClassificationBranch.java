@@ -34,7 +34,6 @@ public class CronquistClassificationBranch {
      */
     public CronquistClassificationBranch(@NotNull CronquistRank cronquistRank) throws ClassificationReconstructionException {
         initEmptyClassification();
-        //        if (classificationCronquistMap.containsKey(cronquistRank.getRank())) {// Remove this: always true
         CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
         int indexDuRangDeBase = ArrayUtils.indexOf(rangsDisponibles, cronquistRank.getRank());
         CronquistRank currentRank = cronquistRank;
@@ -49,7 +48,6 @@ public class CronquistClassificationBranch {
             }
             classificationCronquistMap.put(rangsDisponibles[positionDansLaClassification], AtomicCronquistRank.newRank(currentRank));// Problème de désynchronisation avec parent enfant
         }
-        //        }
         this.clearTail();
     }
 

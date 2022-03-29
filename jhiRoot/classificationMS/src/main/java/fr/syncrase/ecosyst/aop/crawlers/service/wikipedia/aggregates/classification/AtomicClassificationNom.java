@@ -91,12 +91,7 @@ public class AtomicClassificationNom implements Cloneable {
     @Override
     public AtomicClassificationNom clone() {
         try {
-            AtomicClassificationNom clone = (AtomicClassificationNom) super.clone();
-
-            //                .id(this.id)
-            //                .nomFr(this.nomFr)
-            //                .nomLatin(this.nomLatin);
-            return clone;
+            return (AtomicClassificationNom) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

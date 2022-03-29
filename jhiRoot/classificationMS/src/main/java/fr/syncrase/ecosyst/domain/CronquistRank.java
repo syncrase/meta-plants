@@ -8,7 +8,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A CronquistRank.
@@ -18,13 +19,13 @@ import java.util.*;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CronquistRank implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     /**
      * Deux rangs taxonomiques sont séparés par d'autres rangs dont on ne connait pas forcément le nom.<br>
      * Une valeur par défaut permet de lier ces deux rangs avec des rangs vides.<br>
      * Si ultérieurement ces rangs sont déterminés, les valeurs par défaut sont mises à jour
      */
     public static final String DEFAULT_NAME_FOR_CONNECTOR_RANK = null;
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -186,14 +187,14 @@ public class CronquistRank implements Serializable {
         return "CronquistRank{" +
             "id=" + id +
             ", rank=" + rank +
-//            ", children=" + children +
-//            ", urls=" + urls +
             ", noms=" + noms +
-//            ", parent=" + parent +
             '}';
     }
 
-    public void makeItConsistent() {
+    /**
+     * Relie les attributs de chaque rang au rang
+     */
+    public void makeConsistentAggregations() {
         this.getNoms().forEach(nom -> {
             nom.setCronquistRank(this);
         });

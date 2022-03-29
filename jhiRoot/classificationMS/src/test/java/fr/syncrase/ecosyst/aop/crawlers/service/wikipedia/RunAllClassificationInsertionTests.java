@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
     CrawlerTest.class,
     DoubleWaySynonymTest.class,
     RangDeLiaisonDevientSignificatifTest.class,
-    ScrapAndInsertClassificationIntegrationTest.class,
+//    ScrapAndInsertClassificationIntegrationTest.class,
 })
 public class RunAllClassificationInsertionTests {
 }

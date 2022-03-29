@@ -100,13 +100,6 @@ public class CronquistService {
         return null;
     }
 
-    private void removeObsoleteIntermediatesRanks(@NotNull Set<CronquistRank> rangsIntermediairesASupprimer) {
-        for (CronquistRank rankToRemove : rangsIntermediairesASupprimer) {
-            classificationNomRepository.deleteAll(rankToRemove.getNoms());
-            cronquistRankRepository.delete(rankToRemove);
-        }
-    }
-
     /**
      * Enregistre la classification du rang supérieur (Super règne) jusqu'au rang le plus profond
      *

@@ -55,9 +55,6 @@ public class AtomicUrl implements Cloneable {
     public AtomicUrl clone() {
         try {
             AtomicUrl clone = (AtomicUrl) super.clone();
-
-            //            .url(this.url)
-            //                .id(this.id);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

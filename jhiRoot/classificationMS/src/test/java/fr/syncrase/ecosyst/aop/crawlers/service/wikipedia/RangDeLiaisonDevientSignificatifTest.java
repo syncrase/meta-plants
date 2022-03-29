@@ -40,12 +40,12 @@ public class RangDeLiaisonDevientSignificatifTest {
     public void mergeDesBranchesSimples() {
         try {
             CronquistClassificationBranch classification;
-            // Les trois plantes suivantes appartiennent à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
             String wiki = "https://fr.wikipedia.org/wiki/Arjona";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> arjonaRanks = cronquistService.saveCronquist(classification, wiki);
             LinkedMap<CronquistTaxonomikRanks, CronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
 
+            // Les plantes suivantes appartiennent à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
             wiki = "https://fr.wikipedia.org/wiki/Atalaya_(genre)";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> atalayaRanks = cronquistService.saveCronquist(classification, wiki);

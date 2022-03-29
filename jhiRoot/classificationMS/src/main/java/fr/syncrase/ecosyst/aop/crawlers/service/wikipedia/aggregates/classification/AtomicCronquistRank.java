@@ -202,7 +202,6 @@ public class AtomicCronquistRank implements Cloneable {
             this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
         this.addNoms(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
-                         //                .cronquistRank(this)
                          .id(nomFr.getId()));
     }
 
@@ -229,8 +228,12 @@ public class AtomicCronquistRank implements Cloneable {
     }
 
     public CronquistRank newRank() {
-        CronquistRank rank = new CronquistRank().id(this.id).rank(this.rank).urls(this.urls.stream().map(AtomicUrl::newUrl).collect(Collectors.toSet())).noms(this.noms.stream().map(AtomicClassificationNom::newClassificationNom).collect(Collectors.toSet()));
-        rank.makeItConsistent();
+        CronquistRank rank = new CronquistRank()
+            .id(this.id)
+            .rank(this.rank)
+            .urls(this.urls.stream().map(AtomicUrl::newUrl).collect(Collectors.toSet()))
+            .noms(this.noms.stream().map(AtomicClassificationNom::newClassificationNom).collect(Collectors.toSet()));
+        rank.makeConsistentAggregations();
         return rank;
     }
 
@@ -239,8 +242,6 @@ public class AtomicCronquistRank implements Cloneable {
         try {
             AtomicCronquistRank clone = (AtomicCronquistRank) super.clone();
             clone
-                //            .id(this.id)
-                //                .rank(this.rank)
                 .urls(this.urls.stream().map(AtomicUrl::clone).collect(Collectors.toSet()))
                 .noms(this.noms.stream().map(AtomicClassificationNom::clone)
                           .collect(Collectors.toSet()));
@@ -248,5 +249,9 @@ public class AtomicCronquistRank implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public boolean isAnyNameHasAnId() {
+        return getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null);
     }
 }
