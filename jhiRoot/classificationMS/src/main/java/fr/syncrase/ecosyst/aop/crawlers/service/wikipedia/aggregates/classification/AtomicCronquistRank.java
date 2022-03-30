@@ -163,6 +163,15 @@ public class AtomicCronquistRank implements Cloneable {
     }
 
     /**
+     * Vérifie si le rang est un rang significatif
+     *
+     * @return true si le rang en question est un rang significatif
+     */
+    public boolean isRangSignificatif() {
+        return !this.isRangDeLiaison();
+    }
+
+    /**
      * Vérifie si le rang possède le nom passé en paramètre
      *
      * @param name nom que le rang a, ou n'a pas

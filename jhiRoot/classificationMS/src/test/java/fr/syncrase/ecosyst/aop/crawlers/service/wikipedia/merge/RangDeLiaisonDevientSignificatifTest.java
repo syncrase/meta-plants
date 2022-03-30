@@ -69,25 +69,27 @@ public class RangDeLiaisonDevientSignificatifTest {
 
             wiki = "https://fr.wikipedia.org/wiki/Cossinia";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            cronquistService.saveCronquist(classification, wiki);// TODO le test lancé tout seul plante en erreur transient
-
+            cronquistService.saveCronquist(classification, wiki);
+            // TODO test que les rang de liaison supprimés le sont bien
             Long atalayaId = atalayaClassification.get(atalayaClassification.lastKey()).getId();
             CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationBranchOfThisRank(atalayaId);
-            Long rosidaeId = arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId();
-            Long sousClasseId = newAtalayaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
+            Long arjonaId = arjonaClassification.get(arjonaClassification.lastKey()).getId();
+            CronquistClassificationBranch newArjonaClassification = cronquistService.getClassificationBranchOfThisRank(arjonaId);
+            Long arjonaSousClasse = newArjonaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
+            Long atalayaSousClasse = newAtalayaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
             assertEquals("La sous-classe rosidae doit avoir été ajoutée dans la classification d'atalaya",
-                         sousClasseId,
-                         rosidaeId
+                         atalayaSousClasse,
+                         arjonaSousClasse
                         );
-
-            Set<AtomicCronquistRank> taxonsOfRosidae = cronquistService.getTaxonsOf(rosidaeId);
+            assertEquals("La sous-classe rosidae ne possède qu'un seul nom (pas de nom de liaison superflue)", 1, newAtalayaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getNoms().size());
+            Set<AtomicCronquistRank> taxonsOfRosidae = cronquistService.getTaxonsOf(arjonaSousClasse);
             assertEquals(
                 "Rosidae doit posséder deux taxons de liaison (vers Santatales et vers Sapindales)",
                 2,
                 taxonsOfRosidae.size()
                         );
-//            CronquistClassificationBranch sousClasseBeforeMerge = cronquistService.getClassificationBranchOfThisRank(arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId());
-//            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", sousClasseBeforeMerge);
+            //            CronquistClassificationBranch sousClasseBeforeMerge = cronquistService.getClassificationBranchOfThisRank(arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId());
+            //            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", sousClasseBeforeMerge);
 
         } catch (IOException e) {
             fail("unable to scrap wiki : " + e.getMessage());

@@ -59,7 +59,7 @@ public class BasicInsertionTest {
     public void enregistrementDUneClassificationEntierementConnu() {
         List<String> wikis = new ArrayList<>();
         wikis.add("https://fr.wikipedia.org/wiki/Aldrovanda");
-        wikis.forEach(wiki -> {
+        for (String wiki : wikis) {
             CronquistClassificationBranch classification;
             try {
                 classification = wikipediaCrawler.scrapWiki(wiki);
@@ -94,7 +94,7 @@ public class BasicInsertionTest {
             } catch (IOException e) {
                 fail("unable to scrap wiki : " + e.getMessage());
             }
-        });
+        }
     }
 
 }

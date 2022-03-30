@@ -111,13 +111,13 @@ public class CronquistClassificationSynchronizer {
 
         boolean lesDeuxRangsSontSignificatifs = !rankToInsert.isRangDeLiaison() && !existingRank.isRangDeLiaison();
         if (lesDeuxRangsSontSignificatifs) {
-            mergeDeuxRangsSignificatifs(existingClassification, rankToInsert);
+            merge(existingClassification, rankToInsert);
             return;
         }
 
         boolean uniquementLeRangScrappeEstSignificatif = !rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
         if (uniquementLeRangScrappeEstSignificatif) {
-            mergeUnRangSignificatifDansUnRangDeLiaison(existingClassification, rankToInsert);
+            merge(existingClassification, rankToInsert);
             return;
         }
 
@@ -136,39 +136,6 @@ public class CronquistClassificationSynchronizer {
         }
     }
 
-    private void mergeUnRangSignificatifDansUnRangDeLiaison(
-        @NotNull CronquistClassificationBranch existingClassification,
-        @NotNull AtomicCronquistRank rankToInsert
-                                                           ) throws UnknownRankId, MoreThanOneResultException {
-        AtomicCronquistRank existingRank = existingClassification.getRang(rankToInsert.getRank());
-        @Nullable AtomicCronquistRank rankReplacingTheIntermediateRankList = classificationRepository.findExistingRank(rankToInsert);
-        boolean isRankExist = rankReplacingTheIntermediateRankList != null;
-        if (isRankExist) {
-            classificationRepository.merge(existingClassification, rankReplacingTheIntermediateRankList);
-        } else {
-            rankToInsert.setId(existingRank.getId());
-            mergeNomScrapeDansLeRangDeLiaisonExistant(existingRank, rankToInsert);
-        }
-    }
-
-    private void mergeNomScrapeDansLeRangDeLiaisonExistant(
-        @NotNull AtomicCronquistRank existingRank,
-        @NotNull AtomicCronquistRank rankToInsert
-                                                          ) {
-        IllegalArgumentException exception = new IllegalArgumentException("Tentative de merger les noms des deux rangs suivants :\n " +
-                                                                              "-> (DOIT ETRE UN RANG DE LIAISON) " + existingRank + "\n" +
-                                                                              " -> (NE DOIT AVOIR QU'UN NOM) " + rankToInsert);
-        AtomicClassificationNom nomDeLiaisonExistant = existingRank.getNoms().stream()
-            .filter(atomicClassificationNom -> atomicClassificationNom.getNomFr() == null)
-            .findFirst()
-            .orElseThrow(() -> exception);
-        if (existingRank.isRangDeLiaison() && rankToInsert.getNoms().size() == 1) {
-            rankToInsert.getNoms().forEach(atomicClassificationNom -> atomicClassificationNom.setId(nomDeLiaisonExistant.getId()));
-        } else {
-            throw exception;
-        }
-    }
-
     /**
      * Remplace la portion de classification existante pour qu'elle corresponde à la classification corrigée
      * depuis le rang de liaison existant jusqu'au rang significatif suivant
@@ -178,21 +145,20 @@ public class CronquistClassificationSynchronizer {
      * @param existingClassification
      * @param rankToInsert
      */
-    private void mergeDeuxRangsSignificatifs(
+    private void merge(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull AtomicCronquistRank rankToInsert
-                                            ) throws UnknownRankId, MoreThanOneResultException {
-        AtomicCronquistRank rankOfExistingClassificationBranch = existingClassification.getRang(rankToInsert.getRank());
-        boolean rankToInsertDoNotExist = !rankToInsert.doTheRankHasOneOfTheseNames(rankOfExistingClassificationBranch.getNoms());
-        if (rankToInsertDoNotExist) {
-            @Nullable AtomicCronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
-            boolean scrappedRankAlreadyExists = synonym != null;
-            if (scrappedRankAlreadyExists) {
-                classificationRepository.merge(existingClassification, synonym);
-            }
+                      ) throws UnknownRankId, MoreThanOneResultException {
+        AtomicCronquistRank existingRank = existingClassification.getRang(rankToInsert.getRank());
+        boolean leRangAInsererNEstPasDansLaClassificationExistante = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNoms());
+        @Nullable AtomicCronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
+
+        if ((leRangAInsererNEstPasDansLaClassificationExistante || existingRank.isRangDeLiaison()) && synonym != null) {
+            classificationRepository.merge(existingClassification, synonym);
         }
-        rankToInsert.setId(rankOfExistingClassificationBranch.getId());
-        synchronizeNames(rankOfExistingClassificationBranch, rankToInsert);
+
+        rankToInsert.setId(existingRank.getId());
+        synchronizeNames(existingRank, rankToInsert);
     }
 
     /**
@@ -205,35 +171,33 @@ public class CronquistClassificationSynchronizer {
         @NotNull AtomicCronquistRank existingRank,
         AtomicCronquistRank rankToInsert
                                  ) {
-        // Les deux rangs sont sémantiquement les mêmes
-        // Si le nom à insérer existe => ajout de l'id au rang à insérer
-        existingRank.getNoms().forEach(existingNom -> {
-            boolean leNomAInsererExisteDeja = rankToInsert.getNoms().stream()
+        for (AtomicClassificationNom existingNom : existingRank.getNoms()) {
+            boolean leNomSignificatifAInsererExisteDeja = rankToInsert.getNoms().stream()
                 .map(AtomicClassificationNom::getNomFr)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet())
                 .contains(existingNom.getNomFr());
-            //
-            if (leNomAInsererExisteDeja) {
+
+            if (leNomSignificatifAInsererExisteDeja) {
                 rankToInsert.getNoms().forEach(toInsertNom -> {
                     if (toInsertNom.getNomFr().contentEquals(existingNom.getNomFr())) {
                         toInsertNom.setId(existingNom.getId());
                     }
                 });
+                continue;
             }
 
-            boolean cestUnRangDeLiaison = rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
-            if (cestUnRangDeLiaison) {
+            if (existingRank.isRangDeLiaison()) {
                 rankToInsert.getNoms().forEach(toInsertNom -> {
                     toInsertNom.setId(existingNom.getId());
                 });
+                continue;
             }
 
-            if (!leNomAInsererExisteDeja && !cestUnRangDeLiaison) {
-                rankToInsert.getNoms().add(existingNom);
-            }
+            // C'est un rang de liaison dans lequel j'ajoute des noms significatifs
+            rankToInsert.addNoms(existingNom);
 
-        });
+        }
     }
 
     public void applyConsistency(

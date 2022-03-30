@@ -87,9 +87,6 @@ public class CronquistService {
                 CronquistRankMapper mapper = new CronquistRankMapper();
                 return save(mapper.getClassificationToSave(scrapedClassification.getClassificationBranch()));// TODO Use mapper atomic to dbObject and vice versa
             }
-            //            if (synchronizedClassification.getRangsASupprimer() != null) {
-            //                removeObsoleteIntermediatesRanks(synchronizedClassification.getRangsASupprimer());
-            //            }
         } catch (ClassificationReconstructionException e) {
             log.error("Impossible de reconstruire la classification. " + e.getMessage());
         } catch (UnknownRankId e) {

@@ -151,7 +151,7 @@ public class ClassificationRepository {
                 log.debug("Suppression du rang " + rang.getId());
                 cronquistRankRepository.deleteById(rang.getId());
                 rang = rang.getParent();
-            } while (AtomicCronquistRank.newRank(rang.getParent()).isRangDeLiaison());// TODO ajouter méthode isRangDeLiaison pour les entités
+            } while (AtomicCronquistRank.newRank(rang).isRangDeLiaison());// TODO ajouter méthode isRangDeLiaison pour les entités
         });
     }
 
@@ -181,7 +181,7 @@ public class ClassificationRepository {
         if (rangQuiSeraSupprime.isPresent()) {
             CronquistRank rank = rangQuiSeraSupprime.get();
             log.debug("Copie les informations du rang " + rangSource.getId() + " vers le rang " + rangCible.getId());
-
+            // TODO maintenant j'aoute dans des rangs de liaison, mais je ne les supprime pas. Il le faut! A voir avec les test, si ça se trouve il sont supprimé par hibernate
             rangCible.addAllNamesToCronquistRank(rangSource.getNoms());
             rangCible.addAllUrlsToCronquistRank(rangSource.getUrls());
             CronquistRank rangCibleAInserer = rangCible.newRank();
