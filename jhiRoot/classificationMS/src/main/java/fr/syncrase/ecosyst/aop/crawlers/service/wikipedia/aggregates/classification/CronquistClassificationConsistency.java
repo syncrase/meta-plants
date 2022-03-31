@@ -1,5 +1,12 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicUrl;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,27 +28,22 @@ import java.util.stream.Collectors;
  * </ul>
  */
 @Transactional
-public class CronquistClassificationSynchronizer {
+public class CronquistClassificationConsistency {
 
-    private final Logger log = LoggerFactory.getLogger(CronquistClassificationSynchronizer.class);
+    private final Logger log = LoggerFactory.getLogger(CronquistClassificationConsistency.class);
 
     private final ClassificationRepository classificationRepository;
 
-    public CronquistClassificationSynchronizer(ClassificationRepository classificationRepository) {
+    public CronquistClassificationConsistency(ClassificationRepository classificationRepository) {
         this.classificationRepository = classificationRepository;
     }
 
 
     /**
-     * Mis à jour des IDs des éléments de la première liste pour qu'ils pointent vers les éléments déjà enregistrés en base
-     * Compare chacun des rangs à enregistrer pour les comparer avec la base pour :
-     * <ul>
-     *     <li>mettre à jour les ids</li>
-     *     <li>merger les classification dans le cas où deux portions de classification distinctes se trouvent être les mêmes</li>
-     * </ul>
+     * Parcours la classification pour rendre l'existant cohérent avec le rang à insérer
      *
-     * @param existingClassification
-     * @param scrappedClassification
+     * @param existingClassification une branche de classification existante en base de données
+     * @param scrappedClassification classification scrappée devant être inséré en base de données
      */
     private void makeItConsistent(
         @NotNull CronquistClassificationBranch existingClassification,
@@ -137,13 +139,10 @@ public class CronquistClassificationSynchronizer {
     }
 
     /**
-     * Remplace la portion de classification existante pour qu'elle corresponde à la classification corrigée
-     * depuis le rang de liaison existant jusqu'au rang significatif suivant
-     * par cette même portion au-dessus du rang significatif récupéré
-     * et stocke-les ids des rangs de liaisons qui ont été déconnectés pour pouvoir les supprimer
+     * Met à jour la classification existante pour qu'elle corresponde puisse accueillir la classification scrappée
      *
-     * @param existingClassification
-     * @param rankToInsert
+     * @param existingClassification une branche de classification existante en base de données
+     * @param rankToInsert rang à insérer devant être intégrée à la classification existante
      */
     private void merge(
         @NotNull CronquistClassificationBranch existingClassification,
@@ -189,15 +188,12 @@ public class CronquistClassificationSynchronizer {
             }
 
             if (existingRank.isRangDeLiaison()) {
-                rankToInsert.getNoms().forEach(toInsertNom -> {
-                    toInsertNom.setId(existingNom.getId());
-                });
+                rankToInsert.getNoms().forEach(toInsertNom -> toInsertNom.setId(existingNom.getId()));
                 continue;
             }
 
             // C'est un rang de liaison dans lequel j'ajoute des noms significatifs
             rankToInsert.addNameToCronquistRank(existingNom);
-
         }
     }
 

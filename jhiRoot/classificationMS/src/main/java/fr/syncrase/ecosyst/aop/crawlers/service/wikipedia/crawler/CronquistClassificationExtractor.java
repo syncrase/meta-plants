@@ -1,6 +1,10 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler;
 
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.*;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicUrl;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

@@ -1,6 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationReconstructionException;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import org.jetbrains.annotations.NotNull;

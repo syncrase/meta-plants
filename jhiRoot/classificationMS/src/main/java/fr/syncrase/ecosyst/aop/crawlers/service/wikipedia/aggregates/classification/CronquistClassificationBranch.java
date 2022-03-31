@@ -1,5 +1,7 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
 import org.apache.commons.collections4.map.LinkedMap;
@@ -52,7 +54,7 @@ public class CronquistClassificationBranch {
     }
 
     @Nullable
-    private AtomicCronquistRank getParent(@NotNull AtomicCronquistRank currentRank) throws ClassificationReconstructionException {
+    private AtomicCronquistRank getParent(@NotNull AtomicCronquistRank currentRank) {
         boolean isSuperRegne = currentRank.getRank().equals(CronquistTaxonomikRanks.SUPERREGNE);
         if (isSuperRegne) {
             return null;
@@ -126,8 +128,6 @@ public class CronquistClassificationBranch {
     }
 
     public void inferAllRank() {
-        classificationCronquistMap.forEach((rankName, rank) -> {
-            rank.setRank(rankName);
-        });
+        classificationCronquistMap.forEach((rankName, rank) -> rank.setRank(rankName));
     }
 }

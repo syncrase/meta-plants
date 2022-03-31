@@ -1,4 +1,4 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities;
 
 
 import fr.syncrase.ecosyst.domain.ClassificationNom;

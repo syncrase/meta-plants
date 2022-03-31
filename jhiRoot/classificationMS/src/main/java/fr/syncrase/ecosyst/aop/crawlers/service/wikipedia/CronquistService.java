@@ -1,6 +1,12 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.*;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
@@ -23,7 +29,7 @@ public class CronquistService {
     private CronquistRankRepository cronquistRankRepository;
     private ClassificationNomRepository classificationNomRepository;
     private UrlRepository urlRepository;
-    private CronquistClassificationSynchronizer synchronizedClassification;
+    private CronquistClassificationConsistency synchronizedClassification;
     private ClassificationRepository classificationRepository;
 
 
@@ -48,7 +54,7 @@ public class CronquistService {
 
     @Autowired
     public void setClassificationRepository(ClassificationRepository classificationRepository) {
-        synchronizedClassification = new CronquistClassificationSynchronizer(classificationRepository);
+        synchronizedClassification = new CronquistClassificationConsistency(classificationRepository);
         this.classificationRepository = classificationRepository;
     }
 

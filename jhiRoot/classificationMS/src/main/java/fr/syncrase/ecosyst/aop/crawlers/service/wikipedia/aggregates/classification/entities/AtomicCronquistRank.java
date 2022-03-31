@@ -1,4 +1,4 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities;
 
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
 import static fr.syncrase.ecosyst.domain.CronquistRank.DEFAULT_NAME_FOR_CONNECTOR_RANK;
 
 /**

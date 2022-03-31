@@ -2,8 +2,8 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.insertion;
 
 import fr.syncrase.ecosyst.ClassificationMsApp;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)

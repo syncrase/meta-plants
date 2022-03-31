@@ -3,7 +3,7 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge;
 import fr.syncrase.ecosyst.ClassificationMsApp;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
 import fr.syncrase.ecosyst.domain.CronquistRank;
