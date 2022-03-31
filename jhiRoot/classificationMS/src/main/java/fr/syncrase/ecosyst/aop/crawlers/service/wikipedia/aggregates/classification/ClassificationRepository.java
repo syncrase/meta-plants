@@ -181,8 +181,6 @@ public class ClassificationRepository {
         if (rangQuiSeraSupprime.isPresent()) {
             CronquistRank rank = rangQuiSeraSupprime.get();
             log.debug("Copie les informations du rang " + rangSource.getId() + " vers le rang " + rangCible.getId());
-            // TODO maintenant j'aoute dans des rangs de liaison, mais je ne les supprime pas. Il le faut! A voir avec les test, si ça se trouve il sont supprimé par hibernate
-            //            rangCible.addAllNamesToCronquistRank(rangSource.getNoms());
             addNamesFromRankToRank(rangSource, rangCible);
             rangCible.addAllUrlsToCronquistRank(rangSource.getUrls());
             CronquistRank rangCibleAInserer = rangCible.newRank();
@@ -208,9 +206,6 @@ public class ClassificationRepository {
         @NotNull AtomicCronquistRank rangSource,
         @NotNull AtomicCronquistRank rangCible
                                        ) throws InconsistentRank {
-        // TODO si un rang de liaison existant est remplacé par un rang significatif existant => suppression du rang de liaison
-        // TODO pareil pour n'importe quel rang nom ?
-        // TODO sous entend que les noms sont existants => check id sinon juste add ?
         if (rangCible.isRangDeLiaison() && rangSource.isRangSignificatif()) {
             if (rangCible.getNoms().size() != 1) {
                 throw new InconsistentRank("Le rang de liaison ne doit pas posséder plus d'un nom " + rangCible);

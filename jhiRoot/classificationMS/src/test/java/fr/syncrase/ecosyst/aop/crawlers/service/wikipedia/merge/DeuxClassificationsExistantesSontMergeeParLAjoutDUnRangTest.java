@@ -3,7 +3,6 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge;
 import fr.syncrase.ecosyst.ClassificationMsApp;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
@@ -19,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -42,12 +40,26 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
     public void mergeDesBranchesSimples() {
         try {
             CronquistClassificationBranch classification;
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Rosidae
+            //Ordre 	Santalales
+            //Famille 	Santalaceae
+            //Genre Arjona
             String wiki = "https://fr.wikipedia.org/wiki/Arjona";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> arjonaRanks = cronquistService.saveCronquist(classification, wiki);
             LinkedMap<CronquistTaxonomikRanks, CronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
 
             // Les plantes suivantes appartiennent à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
+            // Règne 	Plantae
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Ordre 	Sapindales
+            //Famille 	Sapindaceae
+            //Genre Atalaya
             wiki = "https://fr.wikipedia.org/wiki/Atalaya_(genre)";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> atalayaRanks = cronquistService.saveCronquist(classification, wiki);
@@ -67,14 +79,22 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
                 }
             }
 
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Rosidae
+            //Ordre 	Sapindales
+            //Famille 	Sapindaceae
+            //Genre Cossinia
             wiki = "https://fr.wikipedia.org/wiki/Cossinia";
             classification = wikipediaCrawler.scrapWiki(wiki);
             cronquistService.saveCronquist(classification, wiki);
             // TODO test que les rang de liaison supprimés le sont bien
             Long atalayaId = atalayaClassification.get(atalayaClassification.lastKey()).getId();
-            CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationBranchOfThisRank(atalayaId);
+            CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationById(atalayaId);
             Long arjonaId = arjonaClassification.get(arjonaClassification.lastKey()).getId();
-            CronquistClassificationBranch newArjonaClassification = cronquistService.getClassificationBranchOfThisRank(arjonaId);
+            CronquistClassificationBranch newArjonaClassification = cronquistService.getClassificationById(arjonaId);
             Long arjonaSousClasse = newArjonaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
             Long atalayaSousClasse = newAtalayaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
             assertEquals("La sous-classe rosidae doit avoir été ajoutée dans la classification d'atalaya",
@@ -89,7 +109,7 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
                 2,
                 taxonsOfRosidae.size()
                         );
-            //            CronquistClassificationBranch sousClasseBeforeMerge = cronquistService.getClassificationBranchOfThisRank(arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId());
+            //            CronquistClassificationBranch sousClasseBeforeMerge = cronquistService.getClassificationById(arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId());
             //            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", sousClasseBeforeMerge);
 
 

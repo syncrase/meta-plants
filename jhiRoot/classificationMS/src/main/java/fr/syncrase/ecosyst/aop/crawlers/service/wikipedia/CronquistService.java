@@ -116,7 +116,7 @@ public class CronquistService {
     }
 
     @Transactional
-    public CronquistClassificationBranch getClassificationBranchOfThisRank(Long id) {
+    public CronquistClassificationBranch getClassificationById(Long id) {
         return classificationRepository.fetchExistingClassification(new AtomicCronquistRank().id(id));
     }
 

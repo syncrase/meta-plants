@@ -42,8 +42,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
         try {
             CronquistClassificationBranch classification;
             // Règne 	Plantae
-            //Sous-règne 	doit être ajouté > Tracheobionta
-            //Division 	doit être ajouté > Magnoliophyta
+            //Sous-règne 	doit être ajouté > Tracheobionta// TODO rang de liaison supprimé ?
+            //Division 	doit être ajouté > Magnoliophyta// TODO rang de liaison supprimé ?
             //Classe 	Equisetopsida (+Magnoliopsida)
             //Sous-classe 	Magnoliidae (+Rosidae)
             //Super-ordre 	Rosanae
@@ -60,7 +60,7 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Division 	Magnoliophyta
             //Classe 	Magnoliopsida (+Equisetopsida)
             //Sous-classe 	Rosidae (+Magnoliidae)
-            //Super-ordre 	doit être ajouté > Rosanae
+            //Super-ordre 	doit être ajouté > Rosanae// TODO rang de liaison supprimé ?
             //Ordre 	Sapindales
             //Famille 	Aceraceae
             //Genre 	Acer
@@ -89,7 +89,7 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             // - doit posséder la classe Magnoliopsida en plus de Equisetopsida
             // - doit posséder la division Magnoliophyta
             // - doit posséder le sous-règne Tracheobionta
-            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationBranchOfThisRank(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
+            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
 
             Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableCrete.size());

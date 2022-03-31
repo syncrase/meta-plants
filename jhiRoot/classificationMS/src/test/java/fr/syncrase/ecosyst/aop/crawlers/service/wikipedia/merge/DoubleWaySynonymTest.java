@@ -46,19 +46,43 @@ public class DoubleWaySynonymTest {
     public void enregistrementDUnRangSynonymeAvecMerge2() {
         try {
             CronquistClassificationBranch classification;
-            // Ordre Sapindales & Famille Sapindaceae & Genre Lepisanthes
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Rosidae
+            //Ordre 	Sapindales
+            //Famille 	Sapindaceae
+            //Genre 	Lepisanthes
+            //Espèce Lepisanthes senegalensis
             String wiki = "https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> sepisanthesSenegalensisRanks = cronquistService.saveCronquist(classification, wiki);
             LinkedMap<CronquistTaxonomikRanks, CronquistRank> sepisanthesSenegalensisClassification = utils.transformToMapOfRanksByName(sepisanthesSenegalensisRanks);
 
-            // Ordre Sapindales & Famille Aceraceae & Genre Acer
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Rosidae
+            //Ordre 	Sapindales
+            //Famille 	Aceraceae
+            //Genre 	Acer
+            //Espèce Acer Miyabei
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> erableMiyabeRanks = cronquistService.saveCronquist(classification, wiki);
             LinkedMap<CronquistTaxonomikRanks, CronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
-            // Ordre Sapindales & Famille Sapindaceae & Genre Acer
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Rosidae
+            //Ordre 	Sapindales
+            //Famille 	Sapindaceae
+            //Genre 	Acer
+            //Espèce Acer monspessulanum
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> erableMontpellierRanks = cronquistService.saveCronquist(classification, wiki);
@@ -66,13 +90,13 @@ public class DoubleWaySynonymTest {
 
             // puisque Aceraceae = Sapindaceae
             // ⇒ Lepisanthes_senegalensis doit posséder la famille synonyme Aceraceae
-            CronquistClassificationBranch classificationBranchOfChironia = cronquistService.getClassificationBranchOfThisRank(sepisanthesSenegalensisClassification.get(sepisanthesSenegalensisClassification.lastKey()).getId());
+            CronquistClassificationBranch classificationBranchOfChironia = cronquistService.getClassificationById(sepisanthesSenegalensisClassification.get(sepisanthesSenegalensisClassification.lastKey()).getId());
             Set<String> nomsDeFamilleDeSepisanthesSenegalensis = classificationBranchOfChironia.getRang(CronquistTaxonomikRanks.FAMILLE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("Lepisanthes_senegalensis doit contenir deux familles", 2, nomsDeFamilleDeSepisanthesSenegalensis.size());
             assertTrue("Lepisanthes_senegalensis doit posséder la famille synonyme Aceraceae", nomsDeFamilleDeSepisanthesSenegalensis.containsAll(Set.of("Aceraceae", "Sapindaceae")));
 
             // ⇒ L'érable de Miyabe doit posséder la famille synonyme Sapindaceae
-            CronquistClassificationBranch classificationBranchOfErableMiyabe = cronquistService.getClassificationBranchOfThisRank(erableMiyabeClassification.get(erableMiyabeClassification.lastKey()).getId());
+            CronquistClassificationBranch classificationBranchOfErableMiyabe = cronquistService.getClassificationById(erableMiyabeClassification.get(erableMiyabeClassification.lastKey()).getId());
             Set<String> nomsDeFamilleDeErableMiyabe = classificationBranchOfErableMiyabe.getRang(CronquistTaxonomikRanks.FAMILLE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Miyabe doit contenir deux familles", 2, nomsDeFamilleDeErableMiyabe.size());
             assertTrue("L'érable de Miyabe doit posséder la famille synonyme Aceraceae", nomsDeFamilleDeErableMiyabe.containsAll(Set.of("Aceraceae", "Sapindaceae")));

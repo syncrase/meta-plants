@@ -30,7 +30,6 @@ public class CronquistClassificationExtractor {
     public CronquistClassificationBranch getClassification(@NotNull Element mainTable) throws ClassificationReconstructionException {
         Elements elementsDeClassification = mainTable.select("tbody tr");
 
-        // TODO supprimer l'effet de bord sur cronquistClassification
         cronquistClassification = new CronquistClassificationBranch();
         for (Element classificationItem : elementsDeClassification) {
             setCronquistTaxonomyItemFromElement(classificationItem);

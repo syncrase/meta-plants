@@ -5,16 +5,12 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
-import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
-import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import org.apache.commons.collections4.map.LinkedMap;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -31,9 +27,6 @@ public class ScrapAndInsertClassificationIntegrationTest {
     WikipediaCrawler wikipediaCrawler;
 
     TestUtils utils = new TestUtils();
-
-    @Autowired
-    private ClassificationNomRepository classificationNomRepository;
 
     @Autowired
     private CronquistService cronquistService;
@@ -72,10 +65,10 @@ public class ScrapAndInsertClassificationIntegrationTest {
 
             wiki = "https://fr.wikipedia.org/wiki/Cossinia";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            cronquistService.saveCronquist(classification, wiki);// TODO le test lancé tout seul plante en erreur transient
+            cronquistService.saveCronquist(classification, wiki);
 
             Long atalayaId = atalayaClassification.get(atalayaClassification.lastKey()).getId();
-            CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationBranchOfThisRank(atalayaId);
+            CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationById(atalayaId);
             Long rosidaeId = arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId();
             Long sousClasseId = newAtalayaClassification.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getId();
             assertEquals("La sous-classe rosidae doit avoir été ajoutée dans la classification d'atalaya",
@@ -89,7 +82,7 @@ public class ScrapAndInsertClassificationIntegrationTest {
                 2,
                 taxonsOfRosidae.size()
                         );
-            //            CronquistClassificationBranch sousClasseBeforeMerge = cronquistService.getClassificationBranchOfThisRank(arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId());
+            //            CronquistClassificationBranch sousClasseBeforeMerge = cronquistService.getClassificationById(arjonaClassification.get(CronquistTaxonomikRanks.SOUSCLASSE).getId());
             //            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", sousClasseBeforeMerge);
 
         } catch (IOException e) {
@@ -150,7 +143,7 @@ public class ScrapAndInsertClassificationIntegrationTest {
             // - doit posséder la classe Magnoliopsida en plus de Equisetopsida
             // - doit posséder la division Magnoliophyta
             // - doit posséder le sous-règne Tracheobionta
-            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationBranchOfThisRank(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
+            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
 
             Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableCrete.size());

@@ -35,9 +35,6 @@ public class BasicSynonymAdditionTest {
     TestUtils utils = new TestUtils();
 
     @Autowired
-    private ClassificationNomRepository classificationNomRepository;
-
-    @Autowired
     private CronquistService cronquistService;
 
     public BasicSynonymAdditionTest() {
@@ -48,6 +45,14 @@ public class BasicSynonymAdditionTest {
     public void mergeDesBranchesAvecSynonymes() {
         CronquistClassificationBranch classification;
         try {
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Hamamelidae
+            //Ordre 	Saxifragales
+            //Famille 	Hamamelidaceae
+            //Genre Corylopsis
             String wiki = "https://fr.wikipedia.org/wiki/Corylopsis";// Synonymes ORDRE Saxifragales
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> corylopsisRanks = cronquistService.saveCronquist(classification, wiki);
@@ -56,6 +61,14 @@ public class BasicSynonymAdditionTest {
             assertEquals("Corylopsis ne doit contenir qu'un seul ordre", 1, corylopsisOrdreNames.size());
             assertTrue("L'ordre de corylopsis doit être Saxifragales", corylopsisOrdreNames.contains("Saxifragales"));
 
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Hamamelidae
+            //Ordre 	Hamamelidales
+            //Famille 	Hamamelidaceae
+            //Genre Distylium
             wiki = "https://fr.wikipedia.org/wiki/Distylium";// Synonymes ORDRE Hamamelidales
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> distyliumRanks = cronquistService.saveCronquist(classification, wiki);
@@ -64,6 +77,14 @@ public class BasicSynonymAdditionTest {
             assertEquals("Distylium ne doit contenir que deux ordres", 2, distyliumOrdres.size());
             assertTrue("L'ordre de distylium doit être Hamamelidales et Saxifragales", distyliumOrdres.containsAll(Set.of("Hamamelidales", "Saxifragales")));
 
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Sous-classe 	Hamamelidae
+            //Ordre 	Hamamelidales
+            //Famille 	Hamamelidaceae
+            //Genre Loropetalum
             wiki = "https://fr.wikipedia.org/wiki/Loropetalum";// Synonymes ORDRE Hamamelidales TODO vraiment nécessaire ? Mes synonymes sont déjà pris en compte
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> loropetalumRanks = cronquistService.saveCronquist(classification, wiki);
@@ -82,6 +103,14 @@ public class BasicSynonymAdditionTest {
         try {
             CronquistClassificationBranch classification;
             // Ordre Lamiales & Classe Magnoliopsida
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Magnoliopsida
+            //Ordre 	Lamiales
+            //Famille 	Verbenaceae
+            //Genre 	Oxera
+            //Espèce Oxera neriifolia
             String wiki = "https://fr.wikipedia.org/wiki/Oxera_neriifolia";
             classification = wikipediaCrawler.scrapWiki(wiki);
             //            Collection<CronquistRank> neriifoliaRanks =
@@ -95,6 +124,12 @@ public class BasicSynonymAdditionTest {
             //            LinkedMap<CronquistTaxonomikRanks, CronquistRank> hostaceaeClassification = transformToMapOfRanksByName(hostaceaeRanks);
 
             // Ordre Lamiales & Classe Equisetopsida
+            // Règne 	Plantae
+            //Sous-règne 	Tracheobionta
+            //Division 	Magnoliophyta
+            //Classe 	Equisetopsida
+            //Ordre 	Lamiales
+            //Famille Selaginaceae
             wiki = "https://fr.wikipedia.org/wiki/Selaginaceae";
             classification = wikipediaCrawler.scrapWiki(wiki);
             Collection<CronquistRank> selaginaceaeRanks = cronquistService.saveCronquist(classification, wiki);
@@ -106,7 +141,7 @@ public class BasicSynonymAdditionTest {
             assertTrue("Les classes de Selaginaceae doivent être Equisetopsida et Magnoliopsida", selaginaceaeClasses.containsAll(Set.of("Equisetopsida", "Magnoliopsida")));
             // Tester aussi hostaceae et oxera ?
 
-            //            CronquistClassificationBranch classificationBranchOfOxeraNeriifolia = cronquistService.getClassificationBranchOfThisRank(neriifoliaClassification.get(neriifoliaClassification.lastKey()).getId());
+            //            CronquistClassificationBranch classificationBranchOfOxeraNeriifolia = cronquistService.getClassificationById(neriifoliaClassification.get(neriifoliaClassification.lastKey()).getId());
             //            getNamesFromMapRank(classificationBranchOfOxeraNeriifolia, CronquistTaxonomikRanks.SOUSCLASSE);
             //            assertTrue(
             //                "Oxera neriifolia doit posséder la Sous-classe Magnoliidae",
@@ -117,7 +152,7 @@ public class BasicSynonymAdditionTest {
             //                classificationBranchOfOxeraNeriifolia.getRang(CronquistTaxonomikRanks.SUPERORDRE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains("Lilianae")
             //                      );
 
-            //            CronquistClassificationBranch classificationBranchOfSelaginaceae = cronquistService.getClassificationBranchOfThisRank(selaginaceaeClassification.get(selaginaceaeClassification.lastKey()).getId());
+            //            CronquistClassificationBranch classificationBranchOfSelaginaceae = cronquistService.getClassificationById(selaginaceaeClassification.get(selaginaceaeClassification.lastKey()).getId());
             //            assertTrue(
             //                "Selaginaceae doit posséder la Sous-classe Magnoliidae",
             //                classificationBranchOfSelaginaceae.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains("Magnoliidae")
