@@ -117,7 +117,7 @@ public class ClassificationRepository {
     public void merge(
         @NotNull CronquistClassificationBranch brancheCible,
         @NotNull AtomicCronquistRank scrappedRankFoundInDatabase
-                     ) throws UnknownRankId, MoreThanOneResultException {
+                     ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
 
         CronquistClassificationBranch brancheSource = findExistingClassification(scrappedRankFoundInDatabase);
         assert brancheSource != null;
@@ -176,13 +176,14 @@ public class ClassificationRepository {
     private @NotNull AtomicCronquistRank copyDataFromRankToRank(
         @NotNull AtomicCronquistRank rangSource,
         AtomicCronquistRank rangCible
-                                                               ) throws UnknownRankId {
+                                                               ) throws UnknownRankId, InconsistentRank {
         Optional<CronquistRank> rangQuiSeraSupprime = cronquistRankRepository.findById(rangSource.getId());
         if (rangQuiSeraSupprime.isPresent()) {
             CronquistRank rank = rangQuiSeraSupprime.get();
             log.debug("Copie les informations du rang " + rangSource.getId() + " vers le rang " + rangCible.getId());
             // TODO maintenant j'aoute dans des rangs de liaison, mais je ne les supprime pas. Il le faut! A voir avec les test, si ça se trouve il sont supprimé par hibernate
-            rangCible.addAllNamesToCronquistRank(rangSource.getNoms());
+            //            rangCible.addAllNamesToCronquistRank(rangSource.getNoms());
+            addNamesFromRankToRank(rangSource, rangCible);
             rangCible.addAllUrlsToCronquistRank(rangSource.getUrls());
             CronquistRank rangCibleAInserer = rangCible.newRank();
             CronquistRank save = cronquistRankRepository.save(rangCibleAInserer);
@@ -201,6 +202,24 @@ public class ClassificationRepository {
             throw new UnknownRankId();
         }
 
+    }
+
+    private void addNamesFromRankToRank(
+        @NotNull AtomicCronquistRank rangSource,
+        @NotNull AtomicCronquistRank rangCible
+                                       ) throws InconsistentRank {
+        // TODO si un rang de liaison existant est remplacé par un rang significatif existant => suppression du rang de liaison
+        // TODO pareil pour n'importe quel rang nom ?
+        // TODO sous entend que les noms sont existants => check id sinon juste add ?
+        if (rangCible.isRangDeLiaison() && rangSource.isRangSignificatif()) {
+            if (rangCible.getNoms().size() != 1) {
+                throw new InconsistentRank("Le rang de liaison ne doit pas posséder plus d'un nom " + rangCible);
+            }
+            classificationNomRepository.deleteAllById(
+                rangCible.getNoms().stream().map(AtomicClassificationNom::getId).collect(Collectors.toSet())
+                                                     );
+        }
+        rangCible.addAllNamesToCronquistRank(rangSource.getNoms());
     }
 
     private void updateNomsIds(@NotNull AtomicCronquistRank cronquistRank) {

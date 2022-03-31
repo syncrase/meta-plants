@@ -38,7 +38,7 @@ public class AtomicCronquistRank implements Cloneable {
      * @return
      */
     public static AtomicCronquistRank getDefaultRank(CronquistTaxonomikRanks rankName) {
-        return new AtomicCronquistRank().rank(rankName).addNoms(new AtomicClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK));
+        return new AtomicCronquistRank().rank(rankName).addNom(new AtomicClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK));
     }
 
     @Contract("_ -> new")
@@ -94,7 +94,7 @@ public class AtomicCronquistRank implements Cloneable {
         this.noms = classificationNoms;
     }
 
-    public AtomicCronquistRank addNoms(AtomicClassificationNom classificationNom) {
+    public AtomicCronquistRank addNom(AtomicClassificationNom classificationNom) {
         this.noms.add(classificationNom);
         return this;
     }
@@ -210,7 +210,7 @@ public class AtomicCronquistRank implements Cloneable {
         if (this.isRangDeLiaison()) {
             this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
-        this.addNoms(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
+        this.addNom(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
                          .id(nomFr.getId()));
     }
 

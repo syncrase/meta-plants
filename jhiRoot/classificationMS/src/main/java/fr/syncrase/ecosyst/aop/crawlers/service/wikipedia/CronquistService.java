@@ -93,6 +93,8 @@ public class CronquistService {
             log.error("Impossible de récupérer le rang. " + e.getMessage());
         } catch (MoreThanOneResultException e) {
             log.error("Impossible de récupérer un unique rang. " + e.getMessage());
+        } catch (InconsistentRank e) {
+            log.error("Impossible d'enregistrer le rang car une incohérence à été détectée. " + e.getMessage());
         }
         return null;
     }
@@ -121,5 +123,9 @@ public class CronquistService {
     @Transactional
     public Set<AtomicCronquistRank> getTaxonsOf(Long id) {
         return classificationRepository.getTaxons(new AtomicCronquistRank().id(id));
+    }
+
+    public CronquistClassificationBranch getClassificationByName(String chironia) {
+        return classificationRepository.fetchExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
     }
 }

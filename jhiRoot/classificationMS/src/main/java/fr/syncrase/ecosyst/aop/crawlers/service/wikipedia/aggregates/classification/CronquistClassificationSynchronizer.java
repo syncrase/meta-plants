@@ -46,7 +46,7 @@ public class CronquistClassificationSynchronizer {
     private void makeItConsistent(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull CronquistClassificationBranch scrappedClassification
-                                 ) throws UnknownRankId, MoreThanOneResultException {
+                                 ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
         Collection<AtomicCronquistRank> existingClassificationList = existingClassification.getClassification();
         if (existingClassificationList.size() == 0) {
             log.info("No existing entity in the database");
@@ -102,7 +102,7 @@ public class CronquistClassificationSynchronizer {
         CronquistTaxonomikRanks rankName,
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull CronquistClassificationBranch scrappedClassification
-                                      ) throws UnknownRankId, MoreThanOneResultException {
+                                      ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
 
         AtomicCronquistRank existingRank;
         AtomicCronquistRank rankToInsert;
@@ -148,7 +148,8 @@ public class CronquistClassificationSynchronizer {
     private void merge(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull AtomicCronquistRank rankToInsert
-                      ) throws UnknownRankId, MoreThanOneResultException {
+                      ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
+        // TODO quand je merge le rang significatif dans le rang de liaison je dois supprimer le nom de liaison du rang de liaison
         AtomicCronquistRank existingRank = existingClassification.getRang(rankToInsert.getRank());
         boolean leRangAInsererNEstPasDansLaClassificationExistante = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNoms());
         @Nullable AtomicCronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
@@ -195,14 +196,14 @@ public class CronquistClassificationSynchronizer {
             }
 
             // C'est un rang de liaison dans lequel j'ajoute des noms significatifs
-            rankToInsert.addNoms(existingNom);
+            rankToInsert.addNameToCronquistRank(existingNom);
 
         }
     }
 
     public void applyConsistency(
         @NotNull CronquistClassificationBranch scrappedClassification, String urlWiki
-                                ) throws ClassificationReconstructionException, UnknownRankId, MoreThanOneResultException {
+                                ) throws ClassificationReconstructionException, UnknownRankId, MoreThanOneResultException, InconsistentRank {
 
         scrappedClassification.getRangDeBase().addUrls(AtomicUrl.newAtomicUrl(urlWiki));
         scrappedClassification.inferAllRank();
