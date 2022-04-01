@@ -8,11 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import fr.syncrase.ecosyst.IntegrationTest;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
-import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
+import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
-import fr.syncrase.ecosyst.service.criteria.CronquistRankCriteria;
+
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -34,8 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class CronquistRankResourceIT {
 
-    private static final CronquistTaxonomikRanks DEFAULT_RANK = CronquistTaxonomikRanks.SUPERREGNE;
-    private static final CronquistTaxonomikRanks UPDATED_RANK = CronquistTaxonomikRanks.REGNE;
+    private static final RankName DEFAULT_RANK = RankName.SUPERREGNE;
+    private static final RankName UPDATED_RANK = RankName.REGNE;
 
     private static final String ENTITY_API_URL = "/api/cronquist-ranks";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";

@@ -3,11 +3,11 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge;
 import fr.syncrase.ecosyst.ClassificationMsApp;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
-import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
+import fr.syncrase.ecosyst.domain.IClassificationNom;
+import fr.syncrase.ecosyst.domain.ICronquistRank;
+import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ClassificationMsApp.class)
@@ -52,8 +53,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Genre 	Acer
             String wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<CronquistRank> erableCreteRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<CronquistTaxonomikRanks, CronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
+            Collection<ICronquistRank> erableCreteRanks = cronquistService.saveCronquist(classification, wiki);
+            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -66,21 +67,21 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Genre 	Acer
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<CronquistRank> erableMiyabeRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<CronquistTaxonomikRanks, CronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
+            Collection<ICronquistRank> erableMiyabeRanks = cronquistService.saveCronquist(classification, wiki);
+            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
             // L'érable de miyabe
             // - doit posséder le superordre Rosanae
             // - doit posséder la sous-classe Magnoliidae en plus de Rosidae
             // - doit posséder la classe Equisetopsida en plus de Magnoliopsida
-            Set<String> ordresDeErableMiyabe = utils.getNamesFromMapRank(erableMiyabeClassification, CronquistTaxonomikRanks.SUPERORDRE);
+            Set<String> ordresDeErableMiyabe = utils.getRankNames(erableMiyabeClassification, RankName.SUPERORDRE);
             assertTrue("L'érable de Miyabe doit posséder le superordre Rosanae", ordresDeErableMiyabe.contains("Rosanae"));
 
-            Set<String> nomsDeSousClasseDeErableMiyabe = utils.getNamesFromMapRank(erableMiyabeClassification, CronquistTaxonomikRanks.SOUSCLASSE);
+            Set<String> nomsDeSousClasseDeErableMiyabe = utils.getRankNames(erableMiyabeClassification, RankName.SOUSCLASSE);
             assertEquals("L'érable de Miyabe doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableMiyabe.size());
             assertTrue("L'érable de Miyabe doit posséder la sous-classe synonyme Magnoliidae", nomsDeSousClasseDeErableMiyabe.containsAll(Set.of("Magnoliidae", "Rosidae")));
 
-            Set<String> nomsDeClasseDeErableMiyabe = utils.getNamesFromMapRank(erableMiyabeClassification, CronquistTaxonomikRanks.CLASSE);
+            Set<String> nomsDeClasseDeErableMiyabe = utils.getRankNames(erableMiyabeClassification, RankName.CLASSE);
             assertEquals("L'érable de Miyabe doit contenir deux classes", 2, nomsDeClasseDeErableMiyabe.size());
             assertTrue("L'érable de Miyabe doit posséder la classe synonyme Equisetopsida", nomsDeClasseDeErableMiyabe.containsAll(Set.of("Equisetopsida", "Magnoliopsida")));
 
@@ -91,18 +92,18 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             // - doit posséder le sous-règne Tracheobionta
             CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
 
-            Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.SOUSCLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSCLASSE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableCrete.size());
             assertTrue("L'érable de Crete doit posséder la sous-classes synonyme Rosidae", nomsDeSousClasseDeErableCrete.containsAll(Set.of("Rosidae", "Magnoliidae")));
 
-            Set<String> nomsDeClasseDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.CLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.CLASSE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux classes", 2, nomsDeClasseDeErableCrete.size());
             assertTrue("L'érable de Crete doit posséder la classes synonyme Magnoliopsida", nomsDeClasseDeErableCrete.containsAll(Set.of("Magnoliopsida", "Equisetopsida")));
 
-            Set<String> nomsDEmbranchementDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.EMBRANCHEMENT).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDEmbranchementDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.EMBRANCHEMENT).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertTrue("L'érable de Crete doit posséder l'embranchement Magnoliophyta", nomsDEmbranchementDeErableCrete.contains("Magnoliophyta"));
 
-            Set<String> nomsDeSousRegneDeErableCrete = classificationBranchOfErableCrete.getRang(CronquistTaxonomikRanks.SOUSREGNE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeSousRegneDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSREGNE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertTrue("L'érable de Crete doit posséder le sous-règne Tracheobionta", nomsDeSousRegneDeErableCrete.contains("Tracheobionta"));
 
         } catch (IOException e) {

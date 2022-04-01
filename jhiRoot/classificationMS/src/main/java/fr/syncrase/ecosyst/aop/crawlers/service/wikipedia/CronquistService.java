@@ -1,6 +1,9 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.*;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationRepository;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationConsistency;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistRankMapper;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
@@ -8,6 +11,7 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
 import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
 import fr.syncrase.ecosyst.repository.UrlRepository;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CronquistService {
@@ -82,7 +87,7 @@ public class CronquistService {
      * @return
      */
     @Transactional
-    public Collection<CronquistRank> saveCronquist(@NotNull CronquistClassificationBranch scrapedClassification, String urlWiki) {
+    public Collection<ICronquistRank> saveCronquist(@NotNull CronquistClassificationBranch scrapedClassification, String urlWiki) {
 
         log.info("Traitement pré-enregistrement de la classification extraite de '" + urlWiki + "'");
         try {
@@ -111,14 +116,14 @@ public class CronquistService {
      * @param flatClassification classification à enregistrer
      * @return
      */
-    private @NotNull Collection<CronquistRank> save(@NotNull Collection<CronquistRank> flatClassification) {
+    private @NotNull Collection<ICronquistRank> save(@NotNull Collection<CronquistRank> flatClassification) {
         // L'enregistrement des classifications doit se faire en commençant par le rang supérieur
         for (CronquistRank rank : flatClassification) {
             cronquistRankRepository.save(rank);
             classificationNomRepository.saveAll(rank.getNoms());
             urlRepository.saveAll(rank.getUrls());
         }
-        return flatClassification;
+        return flatClassification.stream().map(AtomicCronquistRank::new).collect(Collectors.toSet());
     }
 
     @Transactional
@@ -127,7 +132,7 @@ public class CronquistService {
     }
 
     @Transactional
-    public Set<AtomicCronquistRank> getTaxonsOf(Long id) {
+    public Set<ICronquistRank> getTaxonsOf(Long id) {
         return classificationRepository.getTaxons(new AtomicCronquistRank().id(id));
     }
 

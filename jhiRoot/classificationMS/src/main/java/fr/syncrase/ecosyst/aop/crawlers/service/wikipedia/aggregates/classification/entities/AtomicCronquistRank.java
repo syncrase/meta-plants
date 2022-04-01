@@ -1,7 +1,10 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities;
 
 import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
+import fr.syncrase.ecosyst.domain.IClassificationNom;
+import fr.syncrase.ecosyst.domain.ICronquistRank;
+import fr.syncrase.ecosyst.domain.IUrl;
+import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,13 +17,13 @@ import static fr.syncrase.ecosyst.domain.CronquistRank.DEFAULT_NAME_FOR_CONNECTO
 /**
  * Un rang qui ne possède pas le rang parent ou les taxons
  */
-public class AtomicCronquistRank implements Cloneable {
+public class AtomicCronquistRank implements ICronquistRank {
     private Long id;
-    private CronquistTaxonomikRanks rank;
-    private Set<AtomicUrl> urls = new HashSet<>();
-    private Set<AtomicClassificationNom> noms = new HashSet<>();
+    private RankName rank;
+    private Set<IUrl> urls = new HashSet<>();
+    private Set<IClassificationNom> noms = new HashSet<>();
 
-    public AtomicCronquistRank(@NotNull CronquistRank cronquistRank) {
+    public AtomicCronquistRank(@NotNull ICronquistRank cronquistRank) {
         this.id = cronquistRank.getId();
         this.rank = cronquistRank.getRank();
         this.urls = cronquistRank.getUrls().stream().map(AtomicUrl::new).collect(Collectors.toSet());
@@ -31,18 +34,26 @@ public class AtomicCronquistRank implements Cloneable {
 
     }
 
+    public AtomicCronquistRank(@NotNull CronquistRank cronquistRank2) {
+        this.id = cronquistRank2.getId();
+        this.rank = cronquistRank2.getRank();
+        this.urls = cronquistRank2.getUrls().stream().map(AtomicUrl::new).collect(Collectors.toSet());
+        this.noms = cronquistRank2.getNoms().stream().map(AtomicClassificationNom::new).collect(Collectors.toSet());
+
+    }
+
     /**
      * Factory method For Default rank
      *
      * @param rankName
      * @return
      */
-    public static AtomicCronquistRank getDefaultRank(CronquistTaxonomikRanks rankName) {
+    public static ICronquistRank getDefaultRank(RankName rankName) {
         return new AtomicCronquistRank().rank(rankName).addNom(new AtomicClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK));
     }
 
     @Contract("_ -> new")
-    public static @NotNull AtomicCronquistRank newRank(CronquistRank rang) {
+    public static @NotNull ICronquistRank newRank(ICronquistRank rang) {
         return new AtomicCronquistRank(rang);
     }
 
@@ -52,11 +63,11 @@ public class AtomicCronquistRank implements Cloneable {
      * @param ranks rangs dont on vérifie qu'ils sont tous intermédiaires
      * @return true si le rang en question est un rang intermédiaire
      */
-    public static boolean isRangsIntermediaires(AtomicCronquistRank @NotNull ... ranks) {
+    public static boolean isRangsIntermediaires(ICronquistRank @NotNull ... ranks) {
         if (ranks.length == 0) {
             return false;
         }
-        Iterator<@NotNull AtomicCronquistRank> cronquistRankIterator = Arrays.stream(ranks).iterator();
+        Iterator<@NotNull ICronquistRank> cronquistRankIterator = Arrays.stream(ranks).iterator();
         while (cronquistRankIterator.hasNext()) {
             if (!cronquistRankIterator.next().isRangDeLiaison()) {
                 return false;
@@ -73,56 +84,67 @@ public class AtomicCronquistRank implements Cloneable {
         this.id = id;
     }
 
-    public AtomicCronquistRank id(Long id) {
+    public ICronquistRank id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public CronquistTaxonomikRanks getRank() {
+    public RankName getRank() {
         return rank;
     }
 
-    public void setRank(CronquistTaxonomikRanks rank) {
+    public void setRank(RankName rank) {
         this.rank = rank;
     }
 
-    public Set<AtomicClassificationNom> getNoms() {
+    public Set<IClassificationNom> getNoms() {
         return noms;
     }
 
-    private void setNoms(Set<AtomicClassificationNom> classificationNoms) {
+    private void setNoms(Set<IClassificationNom> classificationNoms) {
         this.noms = classificationNoms;
     }
 
-    public AtomicCronquistRank addNom(AtomicClassificationNom classificationNom) {
+    public ICronquistRank addNom(IClassificationNom classificationNom) {
         this.noms.add(classificationNom);
         return this;
     }
 
-    public AtomicCronquistRank noms(Set<AtomicClassificationNom> classificationNoms) {
+    @Override
+    public Set<ICronquistRank> getChildren() {
+        return null;
+    }
+
+    @Override
+    public ICronquistRank noms(Set<IClassificationNom> classificationNoms) {
         this.setNoms(classificationNoms);
         return this;
     }
 
-    private AtomicCronquistRank rank(CronquistTaxonomikRanks rankName) {
+//    @Override
+    private ICronquistRank rank(RankName rankName) {
         this.setRank(rank);
         return this;
     }
 
-    public Set<AtomicUrl> getUrls() {
+    @Override
+    public Set<IUrl> getUrls() {
         return this.urls;
     }
 
-    public void setUrls(Set<AtomicUrl> urls) {
+//    @Override
+    public void setUrls(Set<IUrl> urls) {
         this.urls = urls;
     }
 
-    public AtomicCronquistRank urls(Set<AtomicUrl> urls) {
+    @Override
+    public ICronquistRank urls(Set<IUrl> urls) {
         this.setUrls(urls);
         return this;
     }
 
-    public AtomicCronquistRank addUrls(AtomicUrl url) {
+    @Override
+    public ICronquistRank addUrl(IUrl url) {
         this.urls.add(url);
         return this;
     }
@@ -171,6 +193,7 @@ public class AtomicCronquistRank implements Cloneable {
         return !this.isRangDeLiaison();
     }
 
+
     /**
      * Vérifie si le rang possède le nom passé en paramètre
      *
@@ -178,7 +201,7 @@ public class AtomicCronquistRank implements Cloneable {
      * @return true si le rang possède le nom
      */
     public boolean hasThisName(String name) {
-        TreeSet<AtomicClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
+        TreeSet<IClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
         classificationNoms.addAll(this.getNoms());
         return classificationNoms.contains(new AtomicClassificationNom().nomFr(name));
     }
@@ -189,10 +212,11 @@ public class AtomicCronquistRank implements Cloneable {
      * @param names noms que le rang a, ou n'a pas
      * @return true si le rang possède le nom
      */
-    public boolean doTheRankHasOneOfTheseNames(Set<AtomicClassificationNom> names) {
-        TreeSet<AtomicClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
+    @Override
+    public boolean doTheRankHasOneOfTheseNames(Set<IClassificationNom> names) {
+        TreeSet<IClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
         classificationNoms.addAll(names);
-        for (AtomicClassificationNom classificationNom : this.getNoms()) {
+        for (IClassificationNom classificationNom : this.getNoms()) {
             if (classificationNoms.contains(classificationNom)) {
                 return true;
             }
@@ -206,12 +230,12 @@ public class AtomicCronquistRank implements Cloneable {
      *
      * @param nomFr nomFr à ajouter au rang
      */
-    public void addNameToCronquistRank(AtomicClassificationNom nomFr) {
+    public void addNameToCronquistRank(IClassificationNom nomFr) {
         if (this.isRangDeLiaison()) {
             this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
         this.addNom(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
-                         .id(nomFr.getId()));
+                        .id(nomFr.getId()));
     }
 
     /**
@@ -219,9 +243,10 @@ public class AtomicCronquistRank implements Cloneable {
      *
      * @param names set des noms à ajouter
      */
-    public void addAllNamesToCronquistRank(@NotNull Set<AtomicClassificationNom> names) {
-        for (AtomicClassificationNom classificationNom : names) {
-            addNameToCronquistRank(classificationNom);
+    @Override
+    public void addAllNamesToCronquistRank(@NotNull Set<IClassificationNom> names) {
+        for (IClassificationNom classificationNom : names) {
+            addNameToCronquistRank(classificationNom);// TODO default method ?
         }
     }
 
@@ -230,9 +255,10 @@ public class AtomicCronquistRank implements Cloneable {
      *
      * @param urls set des noms à ajouter
      */
-    public void addAllUrlsToCronquistRank(@NotNull Set<AtomicUrl> urls) {
-        for (AtomicUrl url : urls) {
-            this.addUrls(new AtomicUrl().url(url.getAtomicUrl()).id(url.getId())); // TODO check si elle existe déjà
+    @Override
+    public void addAllUrlsToCronquistRank(@NotNull Set<IUrl> urls) {
+        for (IUrl url : urls) {
+            this.addUrl(new AtomicUrl().url(url.getUrl()).id(url.getId())); // TODO check si elle existe déjà
         }
     }
 
@@ -240,19 +266,19 @@ public class AtomicCronquistRank implements Cloneable {
         CronquistRank rank = new CronquistRank()
             .id(this.id)
             .rank(this.rank)
-            .urls(this.urls.stream().map(AtomicUrl::newUrl).collect(Collectors.toSet()))
-            .noms(this.noms.stream().map(AtomicClassificationNom::newClassificationNom).collect(Collectors.toSet()));
+            .urls(this.urls.stream().map(UrlMapper::get).collect(Collectors.toSet()))
+            .noms(this.noms.stream().map(ClassificationNomMapper::get).collect(Collectors.toSet()));
         rank.makeConsistentAggregations();
         return rank;
     }
 
     @Override
-    public AtomicCronquistRank clone() {
+    public ICronquistRank clone() {
         try {
-            AtomicCronquistRank clone = (AtomicCronquistRank) super.clone();
+            ICronquistRank clone = (ICronquistRank) super.clone();
             clone
-                .urls(this.urls.stream().map(AtomicUrl::clone).collect(Collectors.toSet()))
-                .noms(this.noms.stream().map(AtomicClassificationNom::clone)
+                .urls(this.urls.stream().map(IUrl::clone).collect(Collectors.toSet()))// TODO le clone fonctionne ?
+                .noms(this.noms.stream().map(IClassificationNom::clone)
                           .collect(Collectors.toSet()));
             return clone;
         } catch (CloneNotSupportedException e) {
@@ -263,4 +289,10 @@ public class AtomicCronquistRank implements Cloneable {
     public boolean isAnyNameHasAnId() {
         return getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null);
     }
+
+    @Override
+    public ICronquistRank getParent() {
+        throw new UnsupportedOperationException("Un rang atomique n'a pas la connaissance de son parent. C'est la classification qui possède cette information");
+    }
+
 }

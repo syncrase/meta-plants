@@ -2,10 +2,9 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classifica
 
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
-import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
+import fr.syncrase.ecosyst.domain.ICronquistRank;
+import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.apache.commons.collections4.map.LinkedMap;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class CronquistClassificationBranch {
      * Liste de tous les rangs de la classification<br>
      * L'élément 0 est le rang le plus haut : le super règne
      */
-    private LinkedMap<CronquistTaxonomikRanks, AtomicCronquistRank> classificationCronquistMap;
+    private LinkedMap<RankName, ICronquistRank> classificationCronquistMap;
 
     /**
      * Construit une classification vierge
@@ -34,28 +33,19 @@ public class CronquistClassificationBranch {
     /**
      * Construit une classification à partir d'un rang
      */
-    public CronquistClassificationBranch(@NotNull CronquistRank cronquistRank) throws ClassificationReconstructionException {
+    public CronquistClassificationBranch(@NotNull ICronquistRank cronquistRank) throws ClassificationReconstructionException {
         initEmptyClassification();
-        CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
-        int indexDuRangDeBase = ArrayUtils.indexOf(rangsDisponibles, cronquistRank.getRank());
-        CronquistRank currentRank = cronquistRank;
-        // TODO utiliser un while
-        for (int positionDansLaClassification = indexDuRangDeBase;
-             positionDansLaClassification >= 0 && currentRank != null;
-             positionDansLaClassification--, currentRank = currentRank.getParent()
-        ) {
-            if (!rangsDisponibles[positionDansLaClassification].equals(currentRank.getRank())) {
-                log.error("Tentative d'assigner à un rang les valeurs d'un rang différent");
-                throw new ClassificationReconstructionException();
-            }
-            classificationCronquistMap.put(rangsDisponibles[positionDansLaClassification], AtomicCronquistRank.newRank(currentRank));// Problème de désynchronisation avec parent enfant
+        ICronquistRank currentRank = cronquistRank;
+        while (currentRank != null) {
+            classificationCronquistMap.put(currentRank.getRank(), AtomicCronquistRank.newRank(currentRank));
+            currentRank = currentRank.getParent();
         }
         this.clearTail();
     }
 
     @Nullable
-    private AtomicCronquistRank getParent(@NotNull AtomicCronquistRank currentRank) {
-        boolean isSuperRegne = currentRank.getRank().equals(CronquistTaxonomikRanks.SUPERREGNE);
+    private ICronquistRank getParent(@NotNull ICronquistRank currentRank) {
+        boolean isSuperRegne = currentRank.getRank().equals(RankName.SUPERREGNE);
         if (isSuperRegne) {
             return null;
         }
@@ -68,8 +58,8 @@ public class CronquistClassificationBranch {
     }
 
     private void initDefaultValues() {
-        CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
-        for (CronquistTaxonomikRanks hauteurDeRangEnCours : rangsDisponibles) {
+        RankName[] rangsDisponibles = RankName.values();
+        for (RankName hauteurDeRangEnCours : rangsDisponibles) {
             classificationCronquistMap.put(hauteurDeRangEnCours, AtomicCronquistRank.getDefaultRank(hauteurDeRangEnCours));
         }
     }
@@ -79,9 +69,9 @@ public class CronquistClassificationBranch {
      * Cette méthode nettoie les rangs liaison inférieurs au dernier rang de la classification
      */
     public void clearTail() {
-        CronquistTaxonomikRanks[] rangsDisponibles = CronquistTaxonomikRanks.values();
+        RankName[] rangsDisponibles = RankName.values();
         for (int positionDansLaClassification = rangsDisponibles.length - 1; positionDansLaClassification >= 0; positionDansLaClassification--) {
-            CronquistTaxonomikRanks nomDuRangEnCours = rangsDisponibles[positionDansLaClassification];
+            RankName nomDuRangEnCours = rangsDisponibles[positionDansLaClassification];
             boolean cestUnRangConnu = classificationCronquistMap.get(nomDuRangEnCours) != null && !classificationCronquistMap.get(nomDuRangEnCours).isRangDeLiaison();
             if (cestUnRangConnu) {
                 break;
@@ -90,11 +80,11 @@ public class CronquistClassificationBranch {
         }
     }
 
-    private void removeTaxon(@NotNull CronquistTaxonomikRanks nomDuRangEnCours) {
+    private void removeTaxon(@NotNull RankName nomDuRangEnCours) {
         classificationCronquistMap.remove(nomDuRangEnCours);
     }
 
-    public AtomicCronquistRank getRang(CronquistTaxonomikRanks rang) {
+    public ICronquistRank getRang(RankName rang) {
         if (rang != null) {
             return classificationCronquistMap.get(rang);
         } else {
@@ -102,19 +92,19 @@ public class CronquistClassificationBranch {
         }
     }
 
-    public AtomicCronquistRank getRangDeBase() {
+    public ICronquistRank getRangDeBase() {
         return classificationCronquistMap.get(classificationCronquistMap.lastKey());
     }
 
-    public Collection<AtomicCronquistRank> getClassification() {
+    public Collection<ICronquistRank> getClassification() {
         return classificationCronquistMap.values();
     }
 
-    public LinkedMap<CronquistTaxonomikRanks, AtomicCronquistRank> getClassificationBranch() {
+    public LinkedMap<RankName, ICronquistRank> getClassificationBranch() {
         return classificationCronquistMap;
     }
 
-    public void put(CronquistTaxonomikRanks currentRankName, AtomicCronquistRank currentRank) {
+    public void put(RankName currentRankName, ICronquistRank currentRank) {
         classificationCronquistMap.put(currentRankName, currentRank);
     }
 

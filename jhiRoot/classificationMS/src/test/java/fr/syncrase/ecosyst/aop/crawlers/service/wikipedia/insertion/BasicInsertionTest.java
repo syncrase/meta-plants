@@ -2,12 +2,13 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.insertion;
 
 import fr.syncrase.ecosyst.ClassificationMsApp;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
-import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.domain.IClassificationNom;
+import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +48,7 @@ public class BasicInsertionTest {
             CronquistClassificationBranch classification;
             try {
                 classification = wikipediaCrawler.scrapWiki(wiki);
-                Collection<CronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
+                Collection<ICronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
                 cronquistRanks.forEach(cronquistRank -> assertNotNull(cronquistRank.getId()));
             } catch (IOException e) {
                 fail("unable to scrap wiki : " + e.getMessage());
@@ -63,30 +64,30 @@ public class BasicInsertionTest {
             CronquistClassificationBranch classification;
             try {
                 classification = wikipediaCrawler.scrapWiki(wiki);
-                Collection<CronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
+                Collection<ICronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
                 // Tous les rangs sont enregistrés
                 cronquistRanks.forEach(cronquistRank -> assertNotNull(cronquistRank.getId()));
 
                 // Tous les noms de rang sont uniques
                 List<AtomicClassificationNom> classificationNoms = new ArrayList<>();
-                for (CronquistRank rank : cronquistRanks) {
+                for (ICronquistRank rank : cronquistRanks) {
                     classificationNoms.addAll(
                         rank.getNoms().stream()
-                            .map(ClassificationNom::getNomFr)
+                            .map(IClassificationNom::getNomFr)
                             .filter(Objects::nonNull)
                             .flatMap(nom -> classificationNomRepository.findAll(Example.of(new ClassificationNom().nomFr(nom))).stream())
                             .map(AtomicClassificationNom::new)
                             .collect(Collectors.toList())
                                              );
                 }
-                TreeSet<AtomicClassificationNom> nomTreeSet = getAtomicClassificationNomTreeSet();
+                TreeSet<IClassificationNom> nomTreeSet = getAtomicClassificationNomTreeSet();
                 nomTreeSet.addAll(classificationNoms);
                 assertEquals(nomTreeSet.size(), classificationNoms.size());
 
                 // Il n'existe aucun rang de liaison sans enfant
                 // TODO ne pas parcourir la liste mais récupérer directement le dernier pour vérifier que c'est un rang significatif
-                for (CronquistRank cronquistRank : cronquistRanks) {
-                    AtomicCronquistRank atomicCronquistRank = AtomicCronquistRank.newRank(cronquistRank);
+                for (ICronquistRank cronquistRank : cronquistRanks) {
+                    ICronquistRank atomicCronquistRank = AtomicCronquistRank.newRank(cronquistRank);
                     if (atomicCronquistRank.isRangDeLiaison() && cronquistRank.getChildren().size() == 0) {
                         fail("Ce rang de liaison ne possède pas de rang inférieur " + cronquistRank);
                     }

@@ -1,7 +1,7 @@
 package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
+import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -34,7 +34,7 @@ public class CronquistRank implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "rank", nullable = false)
-    private CronquistTaxonomikRanks rank;
+    private RankName rank;
     @OneToMany(mappedBy = "parent")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = {"children", "urls", "noms", "getRangSuperieur"}, allowSetters = true)
@@ -66,15 +66,15 @@ public class CronquistRank implements Serializable {
         return this;
     }
 
-    public CronquistTaxonomikRanks getRank() {
+    public RankName getRank() {
         return this.rank;
     }
 
-    public void setRank(CronquistTaxonomikRanks rank) {
+    public void setRank(RankName rank) {
         this.rank = rank;
     }
 
-    public CronquistRank rank(CronquistTaxonomikRanks rank) {
+    public CronquistRank rank(RankName rank) {
         this.setRank(rank);
         return this;
     }

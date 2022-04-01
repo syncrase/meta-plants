@@ -1,11 +1,12 @@
 package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * A ClassificationNom.
@@ -31,8 +32,18 @@ public class ClassificationNom implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = { "children", "urls", "noms", "getRangSuperieur" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"children", "urls", "noms", "getRangSuperieur"}, allowSetters = true)
     private CronquistRank cronquistRank;
+
+    public ClassificationNom(Long id, String nomFr, String nomLatin) {
+        this.id = id;
+        this.nomFr = nomFr;
+        this.nomLatin = nomLatin;
+    }
+
+    public ClassificationNom() {
+
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -40,17 +51,21 @@ public class ClassificationNom implements Serializable {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public ClassificationNom id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNomFr() {
         return this.nomFr;
+    }
+
+    public void setNomFr(String nomFr) {
+        this.nomFr = nomFr;
     }
 
     public ClassificationNom nomFr(String nomFr) {
@@ -58,21 +73,17 @@ public class ClassificationNom implements Serializable {
         return this;
     }
 
-    public void setNomFr(String nomFr) {
-        this.nomFr = nomFr;
-    }
-
     public String getNomLatin() {
         return this.nomLatin;
+    }
+
+    public void setNomLatin(String nomLatin) {
+        this.nomLatin = nomLatin;
     }
 
     public ClassificationNom nomLatin(String nomLatin) {
         this.setNomLatin(nomLatin);
         return this;
-    }
-
-    public void setNomLatin(String nomLatin) {
-        this.nomLatin = nomLatin;
     }
 
     public CronquistRank getCronquistRank() {

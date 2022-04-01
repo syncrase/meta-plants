@@ -1,12 +1,11 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicUrl;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.*;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
+import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
-import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
+import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,9 +23,9 @@ public class CronquistRankMapper {
      * @return L'objet pouvant être enregistré en base construit à partir de la map d'objets atomiques
      */
     public Collection<CronquistRank> getClassificationToSave(
-        @NotNull LinkedMap<CronquistTaxonomikRanks, AtomicCronquistRank> classification
+        @NotNull LinkedMap<RankName, ICronquistRank> classification
                                                             ) {
-        LinkedMap<CronquistTaxonomikRanks, CronquistRank> dBFriendlyClassification = new LinkedMap<>();
+        LinkedMap<RankName, CronquistRank> dBFriendlyClassification = new LinkedMap<>();
 
         classification.forEach((rankName, rank) -> {
             rank.setRank(rankName);
@@ -52,15 +51,15 @@ public class CronquistRankMapper {
     private CronquistRank getCronquistRank(@NotNull AtomicCronquistRank atomicCronquistRank) {
         return new CronquistRank()
             .rank(atomicCronquistRank.getRank())
-            .noms(atomicCronquistRank.getNoms().stream().map(this::getClassificationNom).collect(Collectors.toSet()))
-            .urls(atomicCronquistRank.getUrls().stream().map(this::getUrl).collect(Collectors.toSet()))
+            .noms(atomicCronquistRank.getNoms().stream().map(ClassificationNomMapper::get).collect(Collectors.toSet()))
+            .urls(atomicCronquistRank.getUrls().stream().map(UrlMapper::get).collect(Collectors.toSet()))
             .id(atomicCronquistRank.getId());
     }
 
     private Url getUrl(@NotNull AtomicUrl atomicUrl) {
         return new Url()
             .id(atomicUrl.getId())
-            .url(atomicUrl.getAtomicUrl());
+            .url(atomicUrl.getUrl());
     }
 
     private ClassificationNom getClassificationNom(@NotNull AtomicClassificationNom atomicClassificationNom) {

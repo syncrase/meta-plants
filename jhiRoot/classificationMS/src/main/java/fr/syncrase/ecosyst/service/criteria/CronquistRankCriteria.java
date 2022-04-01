@@ -1,16 +1,12 @@
 package fr.syncrase.ecosyst.service.criteria;
 
-import fr.syncrase.ecosyst.domain.enumeration.CronquistTaxonomikRanks;
+import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import java.io.Serializable;
 import java.util.Objects;
+
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
-import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
-import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Criteria class for the {@link fr.syncrase.ecosyst.domain.CronquistRank} entity. This class is used
@@ -24,9 +20,9 @@ import tech.jhipster.service.filter.StringFilter;
 public class CronquistRankCriteria implements Serializable, Criteria {
 
     /**
-     * Class for filtering CronquistTaxonomikRanks
+     * Class for filtering RankName
      */
-    public static class CronquistTaxonomikRanksFilter extends Filter<CronquistTaxonomikRanks> {
+    public static class CronquistTaxonomikRanksFilter extends Filter<RankName> {
 
         public CronquistTaxonomikRanksFilter() {}
 

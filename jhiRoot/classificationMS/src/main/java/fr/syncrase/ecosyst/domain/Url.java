@@ -1,11 +1,12 @@
 package fr.syncrase.ecosyst.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * A Url.
@@ -28,8 +29,17 @@ public class Url implements Serializable {
     private String url;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "children", "urls", "noms", "getRangSuperieur" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"children", "urls", "noms", "getRangSuperieur"}, allowSetters = true)
     private CronquistRank cronquistRank;
+
+    public Url(String url, Long id) {
+        this.url = url;
+        this.id = id;
+    }
+
+    public Url() {
+
+    }
 
     public static Url newUrl(String urlWiki) {
         return new Url().url(urlWiki);
@@ -41,26 +51,26 @@ public class Url implements Serializable {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Url id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUrl() {
         return this.url;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public Url url(String url) {
         this.setUrl(url);
         return this;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public CronquistRank getCronquistRank() {

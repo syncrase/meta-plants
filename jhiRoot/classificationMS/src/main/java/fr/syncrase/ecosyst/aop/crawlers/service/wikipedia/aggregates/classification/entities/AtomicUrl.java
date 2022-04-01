@@ -1,11 +1,17 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities;
 
+import fr.syncrase.ecosyst.domain.IUrl;
 import fr.syncrase.ecosyst.domain.Url;
 import org.jetbrains.annotations.NotNull;
 
-public class AtomicUrl implements Cloneable {
+public class AtomicUrl implements IUrl {
     private String url;
     private Long id;
+
+    public AtomicUrl(@NotNull IUrl url) {
+        this.id = url.getId();
+        this.url = url.getUrl();
+    }
 
     public AtomicUrl(@NotNull Url url) {
         this.id = url.getId();
@@ -32,7 +38,7 @@ public class AtomicUrl implements Cloneable {
         return this;
     }
 
-    public String getAtomicUrl() {
+    public String getUrl() {
         return this.url;
     }
 

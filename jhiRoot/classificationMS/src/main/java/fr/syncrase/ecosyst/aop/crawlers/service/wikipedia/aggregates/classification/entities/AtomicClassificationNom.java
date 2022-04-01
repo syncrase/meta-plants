@@ -2,15 +2,22 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classifica
 
 
 import fr.syncrase.ecosyst.domain.ClassificationNom;
+import fr.syncrase.ecosyst.domain.IClassificationNom;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.TreeSet;
 
-public class AtomicClassificationNom implements Cloneable {
+public class AtomicClassificationNom implements IClassificationNom {
     private Long id;
     private String nomFr;
     private String nomLatin;
+
+    public AtomicClassificationNom(@NotNull IClassificationNom classificationNom) {
+        this.id = classificationNom.getId();
+        this.nomFr = classificationNom.getNomFr();
+        this.nomLatin = classificationNom.getNomLatin();
+    }
 
     public AtomicClassificationNom(@NotNull ClassificationNom classificationNom) {
         this.id = classificationNom.getId();
@@ -27,8 +34,9 @@ public class AtomicClassificationNom implements Cloneable {
      * @return Tree set vide avec comparaison personnalisée
      */
     @NotNull
-    public static TreeSet<AtomicClassificationNom> getAtomicClassificationNomTreeSet() {
-        return new TreeSet<>(Comparator.comparing(AtomicClassificationNom::getNomFr, (nomFrExistant, nomFrAAjouter) -> {
+    public static TreeSet<IClassificationNom> getAtomicClassificationNomTreeSet() {
+        // TODO déplacer cette méthode
+        return new TreeSet<>(Comparator.comparing(IClassificationNom::getNomFr, (nomFrExistant, nomFrAAjouter) -> {
             if (nomFrExistant == null && nomFrAAjouter == null) {
                 return 0;
             }
