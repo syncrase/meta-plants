@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -50,8 +49,8 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
             //Genre Arjona
             String wiki = "https://fr.wikipedia.org/wiki/Arjona";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> arjonaRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
+            LinkedMap<RankName, ICronquistRank> arjonaClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
 
             // La plante suivante appartient à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
             // Règne 	Plantae
@@ -62,8 +61,8 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
             //Genre Atalaya
             wiki = "https://fr.wikipedia.org/wiki/Atalaya_(genre)";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> atalayaRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> atalayaClassification = utils.transformToMapOfRanksByName(atalayaRanks);
+            LinkedMap<RankName, ICronquistRank> atalayaClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> atalayaClassification = utils.transformToMapOfRanksByName(atalayaRanks);
             // Lors de cet ajout : le rang de liaison sous-règne prend le nom tracheobionta
             assertEquals("Le sous-règne tracheobionta doit avoir été ajoutée dans la classification de atalaya",
                          atalayaClassification.get(RankName.SOUSREGNE).getId(),

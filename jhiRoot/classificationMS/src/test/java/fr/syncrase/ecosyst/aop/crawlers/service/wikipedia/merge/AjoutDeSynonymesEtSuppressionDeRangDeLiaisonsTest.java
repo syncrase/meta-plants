@@ -53,8 +53,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Genre 	Acer
             String wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> erableCreteRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
+            LinkedMap<RankName, ICronquistRank> erableCreteClassification = cronquistService.saveCronquist(classification, wiki);
+//            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -67,8 +67,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Genre 	Acer
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> erableMiyabeRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
+            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
+//            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
             // L'érable de miyabe
             // - doit posséder le superordre Rosanae

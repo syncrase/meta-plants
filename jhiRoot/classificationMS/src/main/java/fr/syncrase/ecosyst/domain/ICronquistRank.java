@@ -1,6 +1,5 @@
 package fr.syncrase.ecosyst.domain;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicUrl;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
 
 import java.util.Set;
@@ -49,4 +48,10 @@ public interface ICronquistRank extends Cloneable {
     void addNameToCronquistRank(IClassificationNom existingNom);
 
     ICronquistRank addUrl(IUrl url);
+
+    void removeNames();
+
+    void removeUrls();
+
+    void removeTaxons();
 }

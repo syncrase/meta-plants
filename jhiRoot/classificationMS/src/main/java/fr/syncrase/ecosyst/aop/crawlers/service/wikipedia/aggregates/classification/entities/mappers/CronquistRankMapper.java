@@ -1,15 +1,18 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.*;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicUrl;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers.ClassificationNomMapper;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers.UrlMapper;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -22,12 +25,12 @@ public class CronquistRankMapper {
      * @param classification map d'objets atomiques
      * @return L'objet pouvant être enregistré en base construit à partir de la map d'objets atomiques
      */
-    public Collection<CronquistRank> getClassificationToSave(
-        @NotNull LinkedMap<RankName, ICronquistRank> classification
-                                                            ) {
+    public LinkedMap<RankName, CronquistRank> getClassificationToSave(
+        @NotNull CronquistClassificationBranch classification
+                                                                     ) {
         LinkedMap<RankName, CronquistRank> dBFriendlyClassification = new LinkedMap<>();
 
-        classification.forEach((rankName, rank) -> {
+        classification.getClassificationBranch().forEach((rankName, rank) -> {
             rank.setRank(rankName);
             CronquistRank cronquistRank = rank.newRank();
             dBFriendlyClassification.put(rankName, cronquistRank);
@@ -45,7 +48,7 @@ public class CronquistRankMapper {
             dBFriendlyClassification.get(rankName).getNoms().forEach(classificationNom -> classificationNom.setCronquistRank(dBFriendlyClassification.get(rankName)));
         });
 
-        return dBFriendlyClassification.values();
+        return dBFriendlyClassification;
     }
 
     private CronquistRank getCronquistRank(@NotNull AtomicCronquistRank atomicCronquistRank) {

@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,14 +40,14 @@ public class ScrapAndInsertClassificationIntegrationTest {
             CronquistClassificationBranch classification;
             String wiki = "https://fr.wikipedia.org/wiki/Arjona";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> arjonaRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
+            LinkedMap<RankName, ICronquistRank> arjonaClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
 
             // Les plantes suivantes appartiennent à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
             wiki = "https://fr.wikipedia.org/wiki/Atalaya_(genre)";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> atalayaRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> atalayaClassification = utils.transformToMapOfRanksByName(atalayaRanks);
+            LinkedMap<RankName, ICronquistRank> atalayaClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> atalayaClassification = utils.transformToMapOfRanksByName(atalayaRanks);
             // Lors de cet ajout : le rang de liaison sous-règne prend le nom tracheobionta
             assertEquals("Le sous-règne tracheobionta doit avoir été ajoutée dans la classification de atalaya",
                          atalayaClassification.get(RankName.SOUSREGNE).getId(),
@@ -107,8 +106,8 @@ public class ScrapAndInsertClassificationIntegrationTest {
             //Genre 	Acer
             String wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> erableCreteRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
+            LinkedMap<RankName, ICronquistRank> erableCreteClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -121,8 +120,8 @@ public class ScrapAndInsertClassificationIntegrationTest {
             //Genre 	Acer
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> erableMiyabeRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
+            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
             // L'érable de miyabe
             // - doit posséder le superordre Rosanae

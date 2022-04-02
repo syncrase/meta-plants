@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -50,8 +49,8 @@ public class BasicSynonymAdditionTest {
             //Genre Corylopsis
             String wiki = "https://fr.wikipedia.org/wiki/Corylopsis";// Synonymes ORDRE Saxifragales
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> corylopsisRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> corylopsisClassification = utils.transformToMapOfRanksByName(corylopsisRanks);
+            LinkedMap<RankName, ICronquistRank> corylopsisClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> corylopsisClassification = utils.transformToMapOfRanksByName(corylopsisRanks);
             Set<String> corylopsisOrdreNames = utils.getRankNames(corylopsisClassification, RankName.ORDRE);
             assertEquals("Corylopsis ne doit contenir qu'un seul ordre", 1, corylopsisOrdreNames.size());
             assertTrue("L'ordre de corylopsis doit être Saxifragales", corylopsisOrdreNames.contains("Saxifragales"));
@@ -66,8 +65,8 @@ public class BasicSynonymAdditionTest {
             //Genre Distylium
             wiki = "https://fr.wikipedia.org/wiki/Distylium";// Synonymes ORDRE Hamamelidales
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> distyliumRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> distyliumClassification = utils.transformToMapOfRanksByName(distyliumRanks);
+            LinkedMap<RankName, ICronquistRank> distyliumClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> distyliumClassification = utils.transformToMapOfRanksByName(distyliumRanks);
             Set<String> names = Set.of("Hamamelidales",
                                        "Saxifragales");
             utils.checkThatRankContainsOnlyTheseNames(
@@ -86,8 +85,8 @@ public class BasicSynonymAdditionTest {
             //Genre Loropetalum
             wiki = "https://fr.wikipedia.org/wiki/Loropetalum";// Synonymes ORDRE Hamamelidales TODO vraiment nécessaire ? Mes synonymes sont déjà pris en compte
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> loropetalumRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> loropetalumClassification = utils.transformToMapOfRanksByName(loropetalumRanks);
+            LinkedMap<RankName, ICronquistRank> loropetalumClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> loropetalumClassification = utils.transformToMapOfRanksByName(loropetalumRanks);
             names = Set.of("Hamamelidales",
                            "Saxifragales");
             utils.checkThatRankContainsOnlyTheseNames(
@@ -114,8 +113,8 @@ public class BasicSynonymAdditionTest {
             //Espèce Oxera neriifolia
             String wiki = "https://fr.wikipedia.org/wiki/Oxera_neriifolia";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> neriifoliaRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> neriifoliaClassification = utils.transformToMapOfRanksByName(neriifoliaRanks);
+            LinkedMap<RankName, ICronquistRank> neriifoliaClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> neriifoliaClassification = utils.transformToMapOfRanksByName(neriifoliaRanks);
 
             // Ordre Asparagales
             //            wiki = "https://fr.wikipedia.org/wiki/Hostaceae";
@@ -131,8 +130,8 @@ public class BasicSynonymAdditionTest {
             //Famille Selaginaceae
             wiki = "https://fr.wikipedia.org/wiki/Selaginaceae";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> selaginaceaeRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> selaginaceaeClassification = utils.transformToMapOfRanksByName(selaginaceaeRanks);
+            LinkedMap<RankName, ICronquistRank> selaginaceaeClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> selaginaceaeClassification = utils.transformToMapOfRanksByName(selaginaceaeRanks);
 
             Set<String> names = Set.of("Magnoliopsida",
                                        "Equisetopsida");

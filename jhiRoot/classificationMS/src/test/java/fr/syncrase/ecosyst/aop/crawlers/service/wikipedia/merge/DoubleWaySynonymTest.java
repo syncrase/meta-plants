@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,9 +30,6 @@ public class DoubleWaySynonymTest {
     WikipediaCrawler wikipediaCrawler;
 
     TestUtils utils = new TestUtils();
-
-    @Autowired
-    private ClassificationNomRepository classificationNomRepository;
 
     @Autowired
     private CronquistService cronquistService;
@@ -52,13 +48,13 @@ public class DoubleWaySynonymTest {
             //Classe 	Magnoliopsida
             //Sous-classe 	Rosidae
             //Ordre 	Sapindales
-            //Famille 	Sapindaceae
+            //Famille 	Sapindaceae (+Aceraceae)
             //Genre 	Lepisanthes
             //Espèce Lepisanthes senegalensis
             String wiki = "https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> sepisanthesSenegalensisRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> sepisanthesSenegalensisClassification = utils.transformToMapOfRanksByName(sepisanthesSenegalensisRanks);
+            LinkedMap<RankName, ICronquistRank> sepisanthesSenegalensisClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> sepisanthesSenegalensisClassification = utils.transformToMapOfRanksByName(sepisanthesSenegalensisRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -66,13 +62,13 @@ public class DoubleWaySynonymTest {
             //Classe 	Magnoliopsida
             //Sous-classe 	Rosidae
             //Ordre 	Sapindales
-            //Famille 	Aceraceae
+            //Famille 	Aceraceae (+Sapindaceae)
             //Genre 	Acer
             //Espèce Acer Miyabei
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> erableMiyabeRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
+            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -80,13 +76,13 @@ public class DoubleWaySynonymTest {
             //Classe 	Magnoliopsida
             //Sous-classe 	Rosidae
             //Ordre 	Sapindales
-            //Famille 	Sapindaceae
+            //Famille 	Sapindaceae (+Aceraceae)
             //Genre 	Acer
             //Espèce Acer monspessulanum
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> erableMontpellierRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> erableMontpellierClassification = utils.transformToMapOfRanksByName(erableMontpellierRanks);
+            LinkedMap<RankName, ICronquistRank> erableMontpellierClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> erableMontpellierClassification = utils.transformToMapOfRanksByName(erableMontpellierRanks);
 
             // puisque Aceraceae = Sapindaceae
             // ⇒ Lepisanthes_senegalensis doit posséder la famille synonyme Aceraceae

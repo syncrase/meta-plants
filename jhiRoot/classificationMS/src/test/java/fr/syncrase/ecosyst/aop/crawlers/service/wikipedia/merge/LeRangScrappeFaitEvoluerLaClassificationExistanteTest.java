@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,8 +45,8 @@ public class LeRangScrappeFaitEvoluerLaClassificationExistanteTest {
             //Genre Chironia
             String wiki = "https://fr.wikipedia.org/wiki/Chironia";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> chironiaRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> chironiaClassification = utils.transformToMapOfRanksByName(chironiaRanks);
+            LinkedMap<RankName, ICronquistRank> chironiaClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> chironiaClassification = utils.transformToMapOfRanksByName(chironiaRanks);
 
             //Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -58,8 +57,8 @@ public class LeRangScrappeFaitEvoluerLaClassificationExistanteTest {
             //Genre Monodiella
             wiki = "https://fr.wikipedia.org/wiki/Monodiella";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            Collection<ICronquistRank> monodiellaRanks = cronquistService.saveCronquist(classification, wiki);
-            LinkedMap<RankName, ICronquistRank> monodiellaClassification = utils.transformToMapOfRanksByName(monodiellaRanks);
+            LinkedMap<RankName, ICronquistRank> monodiellaClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> monodiellaClassification = utils.transformToMapOfRanksByName(monodiellaRanks);
 
             CronquistClassificationBranch classificationBranchOfChironia = cronquistService.getClassificationById(chironiaClassification.get(chironiaClassification.lastKey()).getId());
             assertEquals("Le sous règne Tracheobionta doit avoir été ajouté a chironia",

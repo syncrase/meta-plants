@@ -1,6 +1,7 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.wrapper.CronquistRankWrapper;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
@@ -93,7 +94,7 @@ public class ClassificationRepository {
         }
 
         cronquistRank = cronquistRank.clone();
-        updateNomsIds(cronquistRank);
+        updateNomsIds(cronquistRank);// TODO récupère encore les noms
         if (cronquistRank.getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null)) {
             return fetchExistingClassification(cronquistRank);
         }
@@ -104,7 +105,7 @@ public class ClassificationRepository {
     public @Nullable CronquistClassificationBranch fetchExistingClassification(@NotNull ICronquistRank cronquistRank) {
         ICronquistRank cronquistRank1;
         try {
-            cronquistRank1 = queryForCronquistRank(cronquistRank);
+            cronquistRank1 = queryForCronquistRank(cronquistRank);// TODO récupère encore le rang
             if (cronquistRank1 != null) {
                 return new CronquistClassificationBranch(cronquistRank1);
             }
@@ -116,12 +117,12 @@ public class ClassificationRepository {
         return null;
     }
 
-    public Set<ICronquistRank> getTaxons(ICronquistRank cronquistRank) {
+    public Set<ICronquistRank> getTaxons(ICronquistRank parentRank) {
         Set<ICronquistRank> taxons = new HashSet<>();
         try {
-            ICronquistRank cronquistRank1 = queryForCronquistRank(cronquistRank);
-            if (cronquistRank1 != null) {
-                cronquistRank1.getChildren().forEach(cronquistRank2 -> taxons.add(new AtomicCronquistRank(cronquistRank2)));
+            ICronquistRank existingParent = queryForCronquistRank(parentRank);
+            if (existingParent != null) {
+                existingParent.getChildren().forEach(taxon -> taxons.add(new CronquistRankWrapper(taxon)));
                 return taxons;
             }
         } catch (MoreThanOneResultException e) {
@@ -140,7 +141,7 @@ public class ClassificationRepository {
         @NotNull CronquistClassificationBranch brancheCible,
         @NotNull ICronquistRank scrappedRankFoundInDatabase
                      ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
-
+// TODO move the merge logic into another class : ClassificationMerger
         CronquistClassificationBranch brancheSource = findExistingClassification(scrappedRankFoundInDatabase);
         assert brancheSource != null;
         RankName replacedRankName = scrappedRankFoundInDatabase.getRank();
@@ -185,29 +186,32 @@ public class ClassificationRepository {
         CronquistRankCriteria rankCrit = new CronquistRankCriteria();
         rankCrit.setId(rankIdFilter);
 
-        return cronquistRankQueryService.findByCriteria(rankCrit).get(0).getChildren().stream().map(AtomicCronquistRank::new).collect(Collectors.toSet());
+        return cronquistRankQueryService.findByCriteria(rankCrit).get(0).getChildren().stream().map(CronquistRankWrapper::new).collect(Collectors.toSet());
     }
 
     private void supprimeLiaisonAscendante(@NotNull ICronquistRank rangAPartirDuquelLAscendanceEstSupprimee) {
         Optional<CronquistRank> baseDesRangsASupprimer = cronquistRankRepository.findById(rangAPartirDuquelLAscendanceEstSupprimee.getId());
         baseDesRangsASupprimer.ifPresent(rang -> {
+            ICronquistRank wrapper = new CronquistRankWrapper(rang);
             do {
-                Set<Long> nomsIds = rang.getNoms().stream().map(ClassificationNom::getId).collect(Collectors.toSet());
+                Set<Long> nomsIds = wrapper.getNoms().stream().map(IClassificationNom::getId).collect(Collectors.toSet());
                 log.debug("Suppression des noms " + nomsIds);
                 classificationNomRepository.deleteAllById(nomsIds);
-                Set<Long> urlsIds = rang.getUrls().stream().map(Url::getId).collect(Collectors.toSet());
+                Set<Long> urlsIds = wrapper.getUrls().stream().map(IUrl::getId).collect(Collectors.toSet());
                 log.debug("Suppression des urls " + urlsIds);
                 urlRepository.deleteAllById(urlsIds);
-                log.debug("Suppression du rang " + rang.getId());
-                cronquistRankRepository.deleteById(rang.getId());
-                rang = rang.getParent();
-            } while (AtomicCronquistRank.newRank((ICronquistRank) rang).isRangDeLiaison());
+                log.debug("Suppression du wrapper " + wrapper.getId());
+                cronquistRankRepository.deleteById(wrapper.getId());
+                wrapper = new CronquistRankWrapper(wrapper.getParent());
+            } while (wrapper.isRangDeLiaison());
         });
     }
 
     private void switchAncestry(ICronquistRank rangSource, ICronquistRank rangCible) throws MoreThanOneResultException {
+        // rangCible est déjà synchronisé avec la DB, TODO ne pas fetch de nouveau ?
         ICronquistRank newParent = queryForCronquistRank(rangCible);
 
+        // Tous les taxons changent de parent
         Set<ICronquistRank> taxons = findTaxons(rangSource);
         Set<CronquistRank> taxonsWithNewParent = taxons.stream().map(atomicCronquistRank -> {
             CronquistRank cronquistRank = atomicCronquistRank.newRank();
@@ -217,36 +221,43 @@ public class ClassificationRepository {
         }).collect(Collectors.toSet());
         cronquistRankRepository.saveAll(taxonsWithNewParent);
 
-        ICronquistRank aSupprimer = queryForCronquistRank(new AtomicCronquistRank().id(rangSource.getId()));
+        // Le parent perd tous ses taxons
+        ICronquistRank aSupprimer = queryForCronquistRank(new AtomicCronquistRank().id(rangSource.getId()));// TODO pas nécessaire de fetch, je l'ai déjà
         assert aSupprimer != null;
-        aSupprimer.getChildren().removeIf(cronquistRank -> true);
-        cronquistRankRepository.saveAll(taxonsWithNewParent);
+        aSupprimer.removeTaxons();
+        cronquistRankRepository.save(aSupprimer.newRank());
 
     }
 
+    @Contract("_, _ -> new")
     private @NotNull ICronquistRank copyDataFromRankToRank(
         @NotNull ICronquistRank rangSource,
-        ICronquistRank rangCible
+        @NotNull ICronquistRank rangCible
                                                           ) throws UnknownRankId, InconsistentRank {
-        Optional<CronquistRank> rangQuiSeraSupprime = cronquistRankRepository.findById(rangSource.getId());
-        if (rangQuiSeraSupprime.isPresent()) {
-            CronquistRank rank = rangQuiSeraSupprime.get();
-            log.debug("Copie les informations du rang " + rangSource.getId() + " vers le rang " + rangCible.getId());
-            addNamesFromRankToRank(rangSource, rangCible);
-            rangCible.addAllUrlsToCronquistRank(rangSource.getUrls());
-            CronquistRank rangCibleAInserer = rangCible.newRank();
-            CronquistRank save = cronquistRankRepository.save(rangCibleAInserer);
+        Optional<CronquistRank> rangQuiSeraSupprimeOptional = cronquistRankRepository.findById(rangSource.getId());
+        Optional<CronquistRank> rangQuiRecupereLesInfosOptional = cronquistRankRepository.findById(rangCible.getId());
+        if (rangQuiSeraSupprimeOptional.isPresent() && rangQuiRecupereLesInfosOptional.isPresent()) {
+            ICronquistRank rangQuiSeraSupprime = new CronquistRankWrapper(rangQuiSeraSupprimeOptional.get());
+            ICronquistRank rangQuiRecupereLesInfos = new CronquistRankWrapper(rangQuiRecupereLesInfosOptional.get());
+            log.debug("Copie les informations du rang " + rangQuiSeraSupprime.getId() + " vers le rang " + rangQuiRecupereLesInfos.getId());
+            addNamesFromRankToRank(rangQuiSeraSupprime, rangQuiRecupereLesInfos);
+            rangQuiRecupereLesInfos.addAllUrlsToCronquistRank(rangQuiSeraSupprime.getUrls());
+            // Enregistrement du rang avec les nouveaux noms
+            CronquistRankWrapper rangCibleAInserer = new CronquistRankWrapper(cronquistRankRepository.save(rangQuiRecupereLesInfos.newRank()));
 
-            rangCibleAInserer.getNoms().forEach(classificationNom -> classificationNom.setCronquistRank(save));
-            classificationNomRepository.saveAll(rangCibleAInserer.getNoms());
+            // Enregistrement des noms avec le nouveau rang
+            rangCibleAInserer.newNames().forEach(classificationNom -> classificationNom.setCronquistRank(rangCibleAInserer.newRank()));
+            classificationNomRepository.saveAll(rangCibleAInserer.newNames());
 
-            rangCibleAInserer.getUrls().forEach(url -> url.setCronquistRank(save));
-            urlRepository.saveAll(rangCibleAInserer.getUrls());
+            // Enregistrement des urls avec le nouveau rang
+            rangCibleAInserer.newUrls().forEach(url -> url.setCronquistRank(rangCibleAInserer.newRank()));
+            urlRepository.saveAll(rangCibleAInserer.newUrls());
 
-            rank.getNoms().removeIf(classificationNom -> true);
-            rank.getUrls().removeIf(classificationNom -> true);
-            cronquistRankRepository.save(rank);
-            return AtomicCronquistRank.newRank(new CronquistRankWrapper((save)));
+            // Suppression des noms et des urls de l'ancien rang
+            rangQuiSeraSupprime.removeNames();
+            rangQuiSeraSupprime.removeUrls();
+            cronquistRankRepository.save(rangQuiSeraSupprime.newRank());
+            return new CronquistRankWrapper(rangCibleAInserer.newRank());
         } else {
             throw new UnknownRankId();
         }
@@ -266,6 +277,7 @@ public class ClassificationRepository {
                                                      );
         }
         rangCible.addAllNamesToCronquistRank(rangSource.getNoms());
+//        rangCible.getNoms().forEach(iClassificationNom -> iClassificationNom.set);
     }
 
     private void updateNomsIds(@NotNull ICronquistRank cronquistRank) {
@@ -326,7 +338,8 @@ public class ClassificationRepository {
         try {
             cronquistRank1 = queryForCronquistRank(cronquistRank);
             if (cronquistRank1 != null) {
-                return new AtomicCronquistRank(cronquistRank1);
+                //                return new AtomicCronquistRank(cronquistRank1);
+                return cronquistRank1;
             }
         } catch (MoreThanOneResultException e) {
             log.debug(e.getMessage());

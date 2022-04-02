@@ -1,6 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicUrl;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicUrl;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
@@ -154,9 +154,9 @@ public class CronquistClassificationConsistency {
         @Nullable ICronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
 
         if ((leRangAInsererNEstPasDansLaClassificationExistante || existingRank.isRangDeLiaison()) && synonym != null) {
-            classificationRepository.merge(existingClassification, synonym);
+            classificationRepository.merge(existingClassification, synonym);// TODO supprimer les side-effects, utiliser un retour
         }
-
+        existingRank = existingClassification.getRang(rankToInsert.getRank());
         rankToInsert.setId(existingRank.getId());
         synchronizeNames(existingRank, rankToInsert);
     }

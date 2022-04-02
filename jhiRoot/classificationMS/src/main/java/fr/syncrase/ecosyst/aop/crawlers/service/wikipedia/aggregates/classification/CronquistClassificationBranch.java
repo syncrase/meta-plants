@@ -1,6 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicCronquistRank;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-
+// TODO extends AbstractLinkedMap<RankName, ICronquistRank>
 public class CronquistClassificationBranch {
 
     private final Logger log = LoggerFactory.getLogger(CronquistClassificationBranch.class);
@@ -104,8 +104,9 @@ public class CronquistClassificationBranch {
         return classificationCronquistMap;
     }
 
-    public void put(RankName currentRankName, ICronquistRank currentRank) {
+    public ICronquistRank put(RankName currentRankName, ICronquistRank currentRank) {
         classificationCronquistMap.put(currentRankName, currentRank);
+        return currentRank;
     }
 
     public int ranksCount() {

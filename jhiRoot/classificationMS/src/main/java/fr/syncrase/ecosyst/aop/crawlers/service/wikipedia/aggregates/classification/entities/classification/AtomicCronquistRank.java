@@ -1,5 +1,7 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification;
 
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers.ClassificationNomMapper;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers.UrlMapper;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.IClassificationNom;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
@@ -11,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
+import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
 import static fr.syncrase.ecosyst.domain.CronquistRank.DEFAULT_NAME_FOR_CONNECTOR_RANK;
 
 /**
@@ -121,7 +123,7 @@ public class AtomicCronquistRank implements ICronquistRank {
         return this;
     }
 
-//    @Override
+    //    @Override
     private ICronquistRank rank(RankName rankName) {
         this.setRank(rank);
         return this;
@@ -132,7 +134,7 @@ public class AtomicCronquistRank implements ICronquistRank {
         return this.urls;
     }
 
-//    @Override
+    //    @Override
     public void setUrls(Set<IUrl> urls) {
         this.urls = urls;
     }
@@ -147,6 +149,21 @@ public class AtomicCronquistRank implements ICronquistRank {
     public ICronquistRank addUrl(IUrl url) {
         this.urls.add(url);
         return this;
+    }
+
+    @Override
+    public void removeNames() {
+        this.noms.clear();// TODO default method
+    }
+
+    @Override
+    public void removeUrls() {
+        this.urls.clear();// TODO default method
+    }
+
+    @Override
+    public void removeTaxons() {
+        throw new UnsupportedOperationException("Un rang atomique n'a pas la connaissance de ses taxons. C'est la classification qui possède cette information");
     }
 
     @Override
