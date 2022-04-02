@@ -1,9 +1,12 @@
-package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
+package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.consistency;
 
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationRepository;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationReader;
 import fr.syncrase.ecosyst.domain.IClassificationNom;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
@@ -11,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -26,15 +28,16 @@ import java.util.stream.Collectors;
  *     <li>garanti la synchronisation des IDs</li>
  * </ul>
  */
-@Transactional
 public class CronquistClassificationConsistency {
 
     private final Logger log = LoggerFactory.getLogger(CronquistClassificationConsistency.class);
 
     private final ClassificationRepository classificationRepository;
+    private final ClassificationReader classificationReader;
 
-    public CronquistClassificationConsistency(ClassificationRepository classificationRepository) {
+    public CronquistClassificationConsistency(ClassificationRepository classificationRepository, ClassificationReader classificationReader) {
         this.classificationRepository = classificationRepository;
+        this.classificationReader = classificationReader;
     }
 
 
@@ -158,7 +161,7 @@ public class CronquistClassificationConsistency {
         // TODO quand je merge le rang significatif dans le rang de liaison je dois supprimer le nom de liaison du rang de liaison
         ICronquistRank existingRank = existingClassification.getRang(rankToInsert.getRankName());
         boolean leRangAInsererNEstPasDansLaClassificationExistante = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNoms());
-        @Nullable ICronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
+        @Nullable ICronquistRank synonym = classificationReader.findExistingRank(rankToInsert);
 
         ICronquistRank consistentRank = existingRank;
         if ((leRangAInsererNEstPasDansLaClassificationExistante || existingRank.isRangDeLiaison()) && synonym != null) {
@@ -212,7 +215,7 @@ public class CronquistClassificationConsistency {
         @NotNull CronquistClassificationBranch scrappedClassification
                                                                              ) throws ClassificationReconstructionException, UnknownRankId, MoreThanOneResultException, InconsistentRank {
         scrappedClassification.inferAllRank();
-        CronquistClassificationBranch existingClassification = this.classificationRepository.findExistingPartOfThisClassification(scrappedClassification);
+        CronquistClassificationBranch existingClassification = classificationReader.findExistingPartOfThisClassification(scrappedClassification);
         if (existingClassification != null) {
             return makeItConsistent(existingClassification, scrappedClassification);
         }

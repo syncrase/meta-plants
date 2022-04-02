@@ -1,8 +1,7 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationRepository;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationConsistency;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.consistency.CronquistClassificationConsistency;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicUrl;
@@ -10,13 +9,13 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationRepository;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationReader;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
-import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
-import fr.syncrase.ecosyst.repository.CronquistRankRepository;
-import fr.syncrase.ecosyst.repository.UrlRepository;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,40 +23,31 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 @Service
-public class CronquistService {
+public class CronquistService implements InitializingBean {
 
     private final Logger log = LoggerFactory.getLogger(CronquistService.class);
-
-    private CronquistRankRepository cronquistRankRepository;
-    private ClassificationNomRepository classificationNomRepository;
-    private UrlRepository urlRepository;
     private CronquistClassificationConsistency cronquistClassificationConsistency;
     private ClassificationRepository classificationRepository;
+
+    private ClassificationReader classificationReader;
 
 
     public CronquistService() {
     }
 
     @Autowired
-    public void setClassificationNomRepository(ClassificationNomRepository classificationNomRepository) {
-        this.classificationNomRepository = classificationNomRepository;
-    }
-
-    @Autowired
-    public void setCronquistRankRepository(CronquistRankRepository cronquistRankRepository) {
-        this.cronquistRankRepository = cronquistRankRepository;
-    }
-
-    @Autowired
-    public void setUrlRepository(UrlRepository urlRepository) {
-        this.urlRepository = urlRepository;
-    }
-
-
-    @Autowired
     public void setClassificationRepository(ClassificationRepository classificationRepository) {
-        cronquistClassificationConsistency = new CronquistClassificationConsistency(classificationRepository);
         this.classificationRepository = classificationRepository;
+    }
+
+    @Autowired
+    public void setCronquistRankReader(ClassificationReader classificationReader) {
+        this.classificationReader = classificationReader;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        cronquistClassificationConsistency = new CronquistClassificationConsistency(classificationRepository, classificationReader);
     }
 
     /**
@@ -81,7 +71,7 @@ public class CronquistService {
      *  @param scrapedClassification side effect
      *
      * @param urlWiki url du wiki d'où a été extrait la classification
-     * @return
+     * @return La branche de classification enregistrée
      */
     @Transactional
     public CronquistClassificationBranch saveCronquist(@NotNull CronquistClassificationBranch scrapedClassification, String urlWiki) {
@@ -108,7 +98,7 @@ public class CronquistService {
     @Transactional
     public CronquistClassificationBranch getClassificationById(Long id) {
         try {
-            return classificationRepository.findExistingClassification(new AtomicCronquistRank().id(id));
+            return classificationReader.findExistingClassification(new AtomicCronquistRank().id(id));
         } catch (ClassificationReconstructionException e) {
             log.error("Impossible de reconstruire la classification à partir du rang obtenu");
         } catch (MoreThanOneResultException e) {
@@ -119,12 +109,12 @@ public class CronquistService {
 
     @Transactional
     public Set<ICronquistRank> getTaxonsOf(Long id) {
-        return classificationRepository.getTaxons(new AtomicCronquistRank().id(id));
+        return classificationReader.getTaxons(new AtomicCronquistRank().id(id));
     }
 
     public CronquistClassificationBranch getClassificationByName(String chironia) {
         try {
-            return classificationRepository.findExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
+            return classificationReader.findExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
         } catch (ClassificationReconstructionException e) {
             log.error("Impossible de reconstruire la classification à partir du rang obtenu");
         } catch (MoreThanOneResultException e) {
