@@ -38,6 +38,11 @@ public class ClassificationNomWrapper implements IClassificationNom {
         throw new UnsupportedOperationException("Le clone du nom wrapper n'a pas été prévu");
     }
 
+    @Override
+    public ClassificationNom getClassificationNom() {
+        return this.classificationNom;
+    }
+
     public void setCronquistRank(CronquistRank save) {
         this.classificationNom.setCronquistRank(save);
     }

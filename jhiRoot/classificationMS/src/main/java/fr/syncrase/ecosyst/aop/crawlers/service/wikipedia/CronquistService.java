@@ -1,21 +1,19 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.*;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.ClassificationRepository;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationConsistency;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicCronquistRank;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers.CronquistRankMapper;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.wrapper.CronquistRankWrapper;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicUrl;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
-import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
-import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
 import fr.syncrase.ecosyst.repository.UrlRepository;
-import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,7 @@ public class CronquistService {
     private CronquistRankRepository cronquistRankRepository;
     private ClassificationNomRepository classificationNomRepository;
     private UrlRepository urlRepository;
-    private CronquistClassificationConsistency synchronizedClassification;
+    private CronquistClassificationConsistency cronquistClassificationConsistency;
     private ClassificationRepository classificationRepository;
 
 
@@ -58,7 +56,7 @@ public class CronquistService {
 
     @Autowired
     public void setClassificationRepository(ClassificationRepository classificationRepository) {
-        synchronizedClassification = new CronquistClassificationConsistency(classificationRepository);
+        cronquistClassificationConsistency = new CronquistClassificationConsistency(classificationRepository);
         this.classificationRepository = classificationRepository;
     }
 
@@ -86,17 +84,15 @@ public class CronquistService {
      * @return
      */
     @Transactional
-    public LinkedMap<RankName, ICronquistRank> saveCronquist(@NotNull CronquistClassificationBranch scrapedClassification, String urlWiki) {
+    public CronquistClassificationBranch saveCronquist(@NotNull CronquistClassificationBranch scrapedClassification, String urlWiki) {
 
         log.info("Traitement pré-enregistrement de la classification extraite de '" + urlWiki + "'");
         try {
-            synchronizedClassification.applyConsistency(scrapedClassification, urlWiki);// TODO pas de side-effects, utiliser un retour
+            scrapedClassification.getRangDeBase().addUrl(AtomicUrl.newAtomicUrl(urlWiki));
+            CronquistClassificationBranch consistentClassification = cronquistClassificationConsistency.getConsistentClassification(scrapedClassification);
 
             log.info("Enregistrement de la classification");
-            if (scrapedClassification.getClassification() != null) {
-                CronquistRankMapper mapper = new CronquistRankMapper();
-                return save(mapper.getClassificationToSave(scrapedClassification));// TODO Use mapper atomic to dbObject and vice versa
-            }
+            return classificationRepository.save(consistentClassification);
         } catch (ClassificationReconstructionException e) {
             log.error("Impossible de reconstruire la classification. " + e.getMessage());
         } catch (UnknownRankId e) {
@@ -109,32 +105,16 @@ public class CronquistService {
         return null;
     }
 
-    /**
-     * Enregistre la classification du rang supérieur (Super règne) jusqu'au rang le plus profond
-     *
-     * @param flatClassification classification à enregistrer
-     * @return
-     */
-    private @NotNull LinkedMap<RankName, ICronquistRank> save(LinkedMap<RankName, CronquistRank> flatClassification) {// TODO ne plus utiliser de collection telles qu'elles, utiliser la classificationBranch
-        // L'enregistrement des classifications doit se faire en commençant par le rang supérieur
-        RankName[] rankNames = RankName.values();
-        LinkedMap<RankName, ICronquistRank> savedClassification = new LinkedMap<>();
-        for (RankName rankName : rankNames) {
-            CronquistRank rank = flatClassification.get(rankName);
-            if (rank == null) {
-                break;
-            }
-            cronquistRankRepository.save(rank);
-            classificationNomRepository.saveAll(rank.getNoms());
-            urlRepository.saveAll(rank.getUrls());
-            savedClassification.put(rankName, new CronquistRankWrapper(rank));
-        }
-        return savedClassification;
-    }
-
     @Transactional
     public CronquistClassificationBranch getClassificationById(Long id) {
-        return classificationRepository.fetchExistingClassification(new AtomicCronquistRank().id(id));
+        try {
+            return classificationRepository.findExistingClassification(new AtomicCronquistRank().id(id));
+        } catch (ClassificationReconstructionException e) {
+            log.error("Impossible de reconstruire la classification à partir du rang obtenu");
+        } catch (MoreThanOneResultException e) {
+            log.error("Impossible de récupérer un unique rang à partir des informations procurées");
+        }
+        return null;
     }
 
     @Transactional
@@ -143,6 +123,13 @@ public class CronquistService {
     }
 
     public CronquistClassificationBranch getClassificationByName(String chironia) {
-        return classificationRepository.fetchExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
+        try {
+            return classificationRepository.findExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
+        } catch (ClassificationReconstructionException e) {
+            log.error("Impossible de reconstruire la classification à partir du rang obtenu");
+        } catch (MoreThanOneResultException e) {
+            log.error("Impossible de récupérer un unique rang à partir des informations procurées");
+        }
+        return null;
     }
 }

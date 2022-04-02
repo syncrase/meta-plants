@@ -11,11 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Map;
 
 // TODO extends AbstractLinkedMap<RankName, ICronquistRank>
-public class CronquistClassificationBranch {
-
-    private final Logger log = LoggerFactory.getLogger(CronquistClassificationBranch.class);
+public class CronquistClassificationBranch implements Cloneable {
 
     /**
      * Liste de tous les rangs de la classification<br>
@@ -37,7 +36,7 @@ public class CronquistClassificationBranch {
         initEmptyClassification();
         ICronquistRank currentRank = cronquistRank;
         while (currentRank != null) {
-            classificationCronquistMap.put(currentRank.getRank(), AtomicCronquistRank.newRank(currentRank));
+            classificationCronquistMap.put(currentRank.getRankName(), AtomicCronquistRank.newRank(currentRank));
             currentRank = currentRank.getParent();
         }
         this.clearTail();
@@ -45,11 +44,11 @@ public class CronquistClassificationBranch {
 
     @Nullable
     private ICronquistRank getParent(@NotNull ICronquistRank currentRank) {
-        boolean isSuperRegne = currentRank.getRank().equals(RankName.SUPERREGNE);
+        boolean isSuperRegne = currentRank.getRankName().equals(RankName.SUPERREGNE);
         if (isSuperRegne) {
             return null;
         }
-        return classificationCronquistMap.get(currentRank.getRank().getRangSuperieur());
+        return classificationCronquistMap.get(currentRank.getRankName().getRangSuperieur());
     }
 
     private void initEmptyClassification() {
@@ -119,6 +118,21 @@ public class CronquistClassificationBranch {
     }
 
     public void inferAllRank() {
-        classificationCronquistMap.forEach((rankName, rank) -> rank.setRank(rankName));
+        classificationCronquistMap.forEach((rankName, rank) -> rank.setRankName(rankName));
+    }
+
+    @Override
+    public CronquistClassificationBranch clone() {
+        try {
+            CronquistClassificationBranch clone = (CronquistClassificationBranch) super.clone();
+            for (Map.Entry<RankName, ICronquistRank> entry : this.classificationCronquistMap.entrySet()) {
+                RankName rankName = entry.getKey();
+                ICronquistRank iCronquistRank = entry.getValue().clone();
+                clone.put(rankName, iCronquistRank);
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

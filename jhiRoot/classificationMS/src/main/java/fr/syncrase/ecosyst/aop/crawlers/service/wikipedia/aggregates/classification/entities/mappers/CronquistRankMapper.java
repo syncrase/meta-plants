@@ -4,8 +4,6 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicUrl;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers.ClassificationNomMapper;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.mappers.UrlMapper;
 import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
 import fr.syncrase.ecosyst.domain.Url;
@@ -31,8 +29,8 @@ public class CronquistRankMapper {
         LinkedMap<RankName, CronquistRank> dBFriendlyClassification = new LinkedMap<>();
 
         classification.getClassificationBranch().forEach((rankName, rank) -> {
-            rank.setRank(rankName);
-            CronquistRank cronquistRank = rank.newRank();
+            rank.setRankName(rankName);
+            CronquistRank cronquistRank = rank.getCronquistRank();
             dBFriendlyClassification.put(rankName, cronquistRank);
         });
 
@@ -53,7 +51,7 @@ public class CronquistRankMapper {
 
     private CronquistRank getCronquistRank(@NotNull AtomicCronquistRank atomicCronquistRank) {
         return new CronquistRank()
-            .rank(atomicCronquistRank.getRank())
+            .rank(atomicCronquistRank.getRankName())
             .noms(atomicCronquistRank.getNoms().stream().map(ClassificationNomMapper::get).collect(Collectors.toSet()))
             .urls(atomicCronquistRank.getUrls().stream().map(UrlMapper::get).collect(Collectors.toSet()))
             .id(atomicCronquistRank.getId());

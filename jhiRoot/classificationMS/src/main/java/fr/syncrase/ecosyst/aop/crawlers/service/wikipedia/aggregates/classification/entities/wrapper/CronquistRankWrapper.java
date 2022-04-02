@@ -29,21 +29,21 @@ public class CronquistRankWrapper implements ICronquistRank {
     }
 
     public CronquistRankWrapper(@NotNull ICronquistRank rank) {
-        this.cronquistRank = rank.newRank();
+        this.cronquistRank = rank.getCronquistRank();
     }
 
     @Override
-    public CronquistRank newRank() {
+    public CronquistRank getCronquistRank() {
         return this.cronquistRank;
     }
 
     @Override
-    public RankName getRank() {
+    public RankName getRankName() {
         return this.cronquistRank.getRank();
     }
 
     @Override
-    public void setRank(RankName rankName) {
+    public void setRankName(RankName rankName) {
         this.cronquistRank.setRank(rankName);
     }
 
@@ -94,6 +94,15 @@ public class CronquistRankWrapper implements ICronquistRank {
     @Override
     public Set<IClassificationNom> getNoms() {
         return this.cronquistRank.getNoms().stream().map(ClassificationNomWrapper::new).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void setNoms(@NotNull Set<IClassificationNom> classificationNoms) {
+        this.cronquistRank.setNoms(
+            classificationNoms.stream()
+                .map(IClassificationNom::getClassificationNom)
+                .collect(Collectors.toSet())
+                                  );
     }
 
     @Override

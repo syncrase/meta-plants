@@ -7,7 +7,6 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
-import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
             //Genre Arjona
             String wiki = "https://fr.wikipedia.org/wiki/Arjona";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> arjonaClassification = cronquistService.saveCronquist(classification, wiki);
+            CronquistClassificationBranch arjonaClassification = cronquistService.saveCronquist(classification, wiki);
             //            LinkedMap<RankName, ICronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
 
             // La plante suivante appartient à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
@@ -61,16 +60,16 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
             //Genre Atalaya
             wiki = "https://fr.wikipedia.org/wiki/Atalaya_(genre)";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> atalayaClassification = cronquistService.saveCronquist(classification, wiki);
+            CronquistClassificationBranch atalayaClassification = cronquistService.saveCronquist(classification, wiki);
             //            LinkedMap<RankName, ICronquistRank> atalayaClassification = utils.transformToMapOfRanksByName(atalayaRanks);
             // Lors de cet ajout : le rang de liaison sous-règne prend le nom tracheobionta
             assertEquals("Le sous-règne tracheobionta doit avoir été ajoutée dans la classification de atalaya",
-                         atalayaClassification.get(RankName.SOUSREGNE).getId(),
-                         arjonaClassification.get(RankName.SOUSREGNE).getId()
+                         atalayaClassification.getRang(RankName.SOUSREGNE).getId(),
+                         arjonaClassification.getRang(RankName.SOUSREGNE).getId()
                         );
 
-            CronquistClassificationBranch neriifoliaPartialClassification = cronquistService.getClassificationById(atalayaClassification.get(RankName.CLASSE).getId());
-            CronquistClassificationBranch selaginaceaePartialClassification = cronquistService.getClassificationById(arjonaClassification.get(RankName.CLASSE).getId());
+            CronquistClassificationBranch neriifoliaPartialClassification = cronquistService.getClassificationById(atalayaClassification.getRang(RankName.CLASSE).getId());
+            CronquistClassificationBranch selaginaceaePartialClassification = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.CLASSE).getId());
             utils.assertThatClassificationsAreTheSame(neriifoliaPartialClassification, selaginaceaePartialClassification);
 
             // Règne 	Plantae
@@ -85,9 +84,9 @@ public class DeuxClassificationsExistantesSontMergeeParLAjoutDUnRangTest {
             classification = wikipediaCrawler.scrapWiki(wiki);
             cronquistService.saveCronquist(classification, wiki);
             // TODO test que les rang de liaison supprimés le sont bien
-            Long atalayaId = atalayaClassification.get(atalayaClassification.lastKey()).getId();
+            Long atalayaId = atalayaClassification.getRangDeBase().getId();
             CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationById(atalayaId);
-            Long arjonaId = arjonaClassification.get(arjonaClassification.lastKey()).getId();
+            Long arjonaId = arjonaClassification.getRangDeBase().getId();
             CronquistClassificationBranch newArjonaClassification = cronquistService.getClassificationById(arjonaId);
             Long arjonaSousClasse = newArjonaClassification.getRang(RankName.SOUSCLASSE).getId();
             Long atalayaSousClasse = newAtalayaClassification.getRang(RankName.SOUSCLASSE).getId();

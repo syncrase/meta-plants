@@ -27,7 +27,7 @@ public class AtomicCronquistRank implements ICronquistRank {
 
     public AtomicCronquistRank(@NotNull ICronquistRank cronquistRank) {
         this.id = cronquistRank.getId();
-        this.rank = cronquistRank.getRank();
+        this.rank = cronquistRank.getRankName();
         this.urls = cronquistRank.getUrls().stream().map(AtomicUrl::new).collect(Collectors.toSet());
         this.noms = cronquistRank.getNoms().stream().map(AtomicClassificationNom::new).collect(Collectors.toSet());
     }
@@ -47,8 +47,8 @@ public class AtomicCronquistRank implements ICronquistRank {
     /**
      * Factory method For Default rank
      *
-     * @param rankName
-     * @return
+     * @param rankName Le rang que l'on souhaite créer
+     * @return Un rang par défaut
      */
     public static ICronquistRank getDefaultRank(RankName rankName) {
         return new AtomicCronquistRank().rank(rankName).addNom(new AtomicClassificationNom().nomFr(DEFAULT_NAME_FOR_CONNECTOR_RANK));
@@ -91,11 +91,11 @@ public class AtomicCronquistRank implements ICronquistRank {
         return this;
     }
 
-    public RankName getRank() {
+    public RankName getRankName() {
         return rank;
     }
 
-    public void setRank(RankName rank) {
+    public void setRankName(RankName rank) {
         this.rank = rank;
     }
 
@@ -103,7 +103,8 @@ public class AtomicCronquistRank implements ICronquistRank {
         return noms;
     }
 
-    private void setNoms(Set<IClassificationNom> classificationNoms) {
+    @Override
+    public void setNoms(Set<IClassificationNom> classificationNoms) {
         this.noms = classificationNoms;
     }
 
@@ -125,7 +126,7 @@ public class AtomicCronquistRank implements ICronquistRank {
 
     //    @Override
     private ICronquistRank rank(RankName rankName) {
-        this.setRank(rank);
+        this.setRankName(rank);
         return this;
     }
 
@@ -188,7 +189,7 @@ public class AtomicCronquistRank implements ICronquistRank {
     public String toString() {
         return "AtomicCronquistRank{" +
             "id=" + getId() +
-            ", rank='" + getRank() + "'" +
+            ", rank='" + getRankName() + "'" +
             ", names='" + getNoms().stream().map(n -> "{" + n.getId() + ":" + n.getNomFr() + "}").collect(Collectors.toList()) + "}";
     }
 
@@ -248,7 +249,7 @@ public class AtomicCronquistRank implements ICronquistRank {
      * @param nomFr nomFr à ajouter au rang
      */
     public void addNameToCronquistRank(IClassificationNom nomFr) {
-        if (this.isRangDeLiaison()) {
+        if (this.isRangDeLiaison() && (nomFr.getNomFr() == null || nomFr.getNomLatin() == null)) {
             this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
         this.addNom(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
@@ -279,7 +280,7 @@ public class AtomicCronquistRank implements ICronquistRank {
         }
     }
 
-    public CronquistRank newRank() {
+    public CronquistRank getCronquistRank() {
         CronquistRank rank = new CronquistRank()
             .id(this.id)
             .rank(this.rank)

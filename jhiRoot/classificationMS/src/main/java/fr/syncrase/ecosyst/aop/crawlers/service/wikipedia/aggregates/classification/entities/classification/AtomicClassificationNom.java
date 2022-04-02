@@ -89,19 +89,21 @@ public class AtomicClassificationNom implements IClassificationNom {
         this.nomLatin = nomLatin;
     }
 
-    public ClassificationNom newClassificationNom() {
+    @Override
+    public AtomicClassificationNom clone() {
+        try {
+            AtomicClassificationNom clone = (AtomicClassificationNom) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public ClassificationNom getClassificationNom() {
         return new ClassificationNom()
             .id(this.id)
             .nomFr(this.nomFr)
             .nomLatin(this.nomLatin);
-    }
-
-    @Override
-    public AtomicClassificationNom clone() {
-        try {
-            return (AtomicClassificationNom) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }

@@ -6,9 +6,7 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
 import fr.syncrase.ecosyst.domain.IClassificationNom;
-import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
-import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,8 +50,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Genre 	Acer
             String wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> erableCreteClassification = cronquistService.saveCronquist(classification, wiki);
-//            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
+            CronquistClassificationBranch erableCreteClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -67,8 +64,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Genre 	Acer
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
-//            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
+            CronquistClassificationBranch erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
+            //            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
             // L'érable de miyabe
             // - doit posséder le superordre Rosanae
@@ -90,7 +87,7 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             // - doit posséder la classe Magnoliopsida en plus de Equisetopsida
             // - doit posséder la division Magnoliophyta
             // - doit posséder le sous-règne Tracheobionta
-            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
+            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.getRangDeBase().getId());
 
             Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSCLASSE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableCrete.size());

@@ -10,7 +10,6 @@ import fr.syncrase.ecosyst.domain.IClassificationNom;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
-import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,38 +43,50 @@ public class BasicInsertionTest {
 
     @Test
     public void enregistrementDUneClassificationDontTousLesRangsSontInconnus() {
-        //        List<String> wikis = new ArrayList<>();
-        //        wikis.add("https://fr.wikipedia.org/wiki/Aldrovanda");
+        // Règne 	Plantae
+        //Sous-règne 	Tracheobionta
+        //Division 	Magnoliophyta
+        //Classe 	Magnoliopsida
+        //Sous-classe 	Dilleniidae
+        //Ordre 	Nepenthales
+        //Famille 	Droseraceae
+        //Genre Aldrovanda
         String wiki = "https://fr.wikipedia.org/wiki/Aldrovanda";
-        //        wikis.forEach(wiki -> {
         CronquistClassificationBranch classification;
         try {
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
-            cronquistRanks.forEach((rankName, cronquistRank) -> assertNotNull(cronquistRank.getId()));
+            CronquistClassificationBranch cronquistRanks = cronquistService.saveCronquist(classification, wiki);
+            cronquistRanks.getClassificationBranch().forEach((rankName, cronquistRank) -> assertNotNull(cronquistRank.getId()));
         } catch (IOException e) {
             fail("unable to scrap wiki : " + e.getMessage());
         }
-        //        });
     }
 
     @Test
     public void enregistrementDUneClassificationEntierementConnu() {
+        // Règne 	Plantae
+        //Sous-règne 	Tracheobionta
+        //Division 	Magnoliophyta
+        //Classe 	Magnoliopsida
+        //Sous-classe 	Dilleniidae
+        //Ordre 	Nepenthales
+        //Famille 	Droseraceae
+        //Genre Aldrovanda
         String wiki = "https://fr.wikipedia.org/wiki/Aldrovanda";
         CronquistClassificationBranch classification;
         try {
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> cronquistRanks = cronquistService.saveCronquist(classification, wiki);
+            CronquistClassificationBranch cronquistRanks = cronquistService.saveCronquist(classification, wiki);
             // Tous les rangs sont enregistrés
-            cronquistRanks.forEach((rankName, cronquistRank) -> assertNotNull(cronquistRank.getId()));
+            cronquistRanks.getClassificationBranch().forEach((rankName, cronquistRank) -> assertNotNull(cronquistRank.getId()));
 
             // Tous les noms de rang sont uniques
             assertThatEachSignificantNameIsUnique(cronquistRanks);
 
             // Il n'existe aucun rang de liaison sans enfant
             // TODO ne pas parcourir la liste mais récupérer directement le dernier pour vérifier que c'est un rang significatif
-            for (Map.Entry<RankName, ICronquistRank> cronquistRank : cronquistRanks.entrySet()) {
-//                ICronquistRank atomicCronquistRank = AtomicCronquistRank.newRank(cronquistRank.getValue());
+            for (Map.Entry<RankName, ICronquistRank> cronquistRank : cronquistRanks.getClassificationBranch().entrySet()) {
+                //                ICronquistRank atomicCronquistRank = AtomicCronquistRank.getCronquistRank(cronquistRank.getValue());
                 ICronquistRank atomicCronquistRank = cronquistRank.getValue();
                 if (atomicCronquistRank.isRangDeLiaison() && atomicCronquistRank.getChildren().size() == 0) {
                     fail("Ce rang de liaison ne possède pas de rang inférieur " + cronquistRank);
@@ -86,9 +97,9 @@ public class BasicInsertionTest {
         }
     }
 
-    private void assertThatEachSignificantNameIsUnique(@NotNull LinkedMap<RankName, ICronquistRank> cronquistRanks) {
+    private void assertThatEachSignificantNameIsUnique(@NotNull CronquistClassificationBranch cronquistRanks) {
         List<AtomicClassificationNom> classificationNoms = new ArrayList<>();
-        for (Map.Entry<RankName, ICronquistRank> rank : cronquistRanks.entrySet()) {
+        for (Map.Entry<RankName, ICronquistRank> rank : cronquistRanks.getClassificationBranch().entrySet()) {
             classificationNoms.addAll(
                 rank.getValue().getNoms().stream()
                     .map(IClassificationNom::getNomFr)

@@ -6,7 +6,6 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawl
 import fr.syncrase.ecosyst.domain.IClassificationNom;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
-import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +39,23 @@ public class ScrapAndInsertClassificationIntegrationTest {
             CronquistClassificationBranch classification;
             String wiki = "https://fr.wikipedia.org/wiki/Arjona";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> arjonaClassification = cronquistService.saveCronquist(classification, wiki);
+            CronquistClassificationBranch arjonaClassification = cronquistService.saveCronquist(classification, wiki);
             //            LinkedMap<RankName, ICronquistRank> arjonaClassification = utils.transformToMapOfRanksByName(arjonaRanks);
 
             // Les plantes suivantes appartiennent à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
             wiki = "https://fr.wikipedia.org/wiki/Atalaya_(genre)";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> atalayaClassification = cronquistService.saveCronquist(classification, wiki);
+            CronquistClassificationBranch atalayaClassification = cronquistService.saveCronquist(classification, wiki);
             //            LinkedMap<RankName, ICronquistRank> atalayaClassification = utils.transformToMapOfRanksByName(atalayaRanks);
             // Lors de cet ajout : le rang de liaison sous-règne prend le nom tracheobionta
             assertEquals("Le sous-règne tracheobionta doit avoir été ajoutée dans la classification de atalaya",
-                         atalayaClassification.get(RankName.SOUSREGNE).getId(),
-                         arjonaClassification.get(RankName.SOUSREGNE).getId()
+                         atalayaClassification.getRang(RankName.SOUSREGNE).getId(),
+                         arjonaClassification.getRang(RankName.SOUSREGNE).getId()
                         );
             for (RankName rank : RankName.values()) {
                 assertEquals("De la classe au règne les deux classifications doivent être égales",
-                             atalayaClassification.get(rank).getId(),
-                             arjonaClassification.get(rank).getId()
+                             atalayaClassification.getRang(rank).getId(),
+                             arjonaClassification.getRang(rank).getId()
                             );
                 if (rank.ordinal() >= RankName.CLASSE.ordinal()) {
                     break;
@@ -67,9 +66,9 @@ public class ScrapAndInsertClassificationIntegrationTest {
             classification = wikipediaCrawler.scrapWiki(wiki);
             cronquistService.saveCronquist(classification, wiki);
 
-            Long atalayaId = atalayaClassification.get(atalayaClassification.lastKey()).getId();
+            Long atalayaId = atalayaClassification.getRangDeBase().getId();
             CronquistClassificationBranch newAtalayaClassification = cronquistService.getClassificationById(atalayaId);
-            Long rosidaeId = arjonaClassification.get(RankName.SOUSCLASSE).getId();
+            Long rosidaeId = arjonaClassification.getRang(RankName.SOUSCLASSE).getId();
             Long sousClasseId = newAtalayaClassification.getRang(RankName.SOUSCLASSE).getId();
             assertEquals("La sous-classe rosidae doit avoir été ajoutée dans la classification d'atalaya",
                          sousClasseId,
@@ -106,7 +105,7 @@ public class ScrapAndInsertClassificationIntegrationTest {
             //Genre 	Acer
             String wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> erableCreteClassification = cronquistService.saveCronquist(classification, wiki);
+            CronquistClassificationBranch erableCreteClassification = cronquistService.saveCronquist(classification, wiki);
             //            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
 
             // Règne 	Plantae
@@ -120,7 +119,7 @@ public class ScrapAndInsertClassificationIntegrationTest {
             //Genre 	Acer
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
-            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
+            CronquistClassificationBranch erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
             //            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
             // L'érable de miyabe
@@ -143,7 +142,7 @@ public class ScrapAndInsertClassificationIntegrationTest {
             // - doit posséder la classe Magnoliopsida en plus de Equisetopsida
             // - doit posséder la division Magnoliophyta
             // - doit posséder le sous-règne Tracheobionta
-            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.get(erableCreteClassification.lastKey()).getId());
+            CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.getRangDeBase().getId());
 
             Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSCLASSE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableCrete.size());

@@ -1,6 +1,5 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicUrl;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.ClassificationReconstructionException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
@@ -44,25 +43,34 @@ public class CronquistClassificationConsistency {
      *
      * @param existingClassification une branche de classification existante en base de données
      * @param scrappedClassification classification scrappée devant être inséré en base de données
+     * @return Une nouvelle ClassificationBranch construite à partir de la classification scrapé puis rendue cohérente avec les données déjà existantes en base
      */
-    private void makeItConsistent(
+    private @NotNull CronquistClassificationBranch makeItConsistent(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull CronquistClassificationBranch scrappedClassification
-                                 ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
+                                                                   ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank, ClassificationReconstructionException {
         Collection<ICronquistRank> existingClassificationList = existingClassification.getClassification();
         if (existingClassificationList.size() == 0) {
             log.info("No existing entity in the database");
-            return;
+            return scrappedClassification;
         }
+        CronquistClassificationBranch consistentClassification = scrappedClassification.clone();
         // Parcours des éléments pour ajouter les IDs des éléments connus
         RankName[] rangsDisponibles = RankName.values();
-        for (int positionDansLaClassification = existingClassification.ranksCount() - 1; positionDansLaClassification >= 0; positionDansLaClassification--) {
-            ICronquistRank existingClassificationRang = existingClassification.getRang(rangsDisponibles[positionDansLaClassification]);
+        int positionDansLaClassification = existingClassification.ranksCount() - 1;
+        while (positionDansLaClassification >= 0) {
+            RankName currentRankName = rangsDisponibles[positionDansLaClassification];
+            ICronquistRank existingClassificationRang = existingClassification.getRang(currentRankName);
             if (existingClassificationRang == null) {
+                positionDansLaClassification--;
                 continue;
             }
-            manageRankConsistency(rangsDisponibles[positionDansLaClassification], existingClassification, scrappedClassification);
+            ICronquistRank consistentRank = manageRankConsistency(currentRankName, existingClassification, scrappedClassification);
+            consistentClassification.put(currentRankName, consistentRank);
+            positionDansLaClassification--;
         }
+        consistentClassification.clearTail();
+        return consistentClassification;
     }
 
     /**
@@ -99,12 +107,14 @@ public class CronquistClassificationConsistency {
      *      </tr>
      *   </tbody>
      * </table>
+     *
+     * @return Le rang qui est cohérent avec les données de classification déjà enregistrées
      */
-    private void manageRankConsistency(
+    private @NotNull ICronquistRank manageRankConsistency(
         RankName rankName,
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull CronquistClassificationBranch scrappedClassification
-                                      ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
+                                                         ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank, ClassificationReconstructionException {
 
         ICronquistRank existingRank;
         ICronquistRank rankToInsert;
@@ -112,15 +122,9 @@ public class CronquistClassificationConsistency {
         rankToInsert = scrappedClassification.getRang(rankName);
 
         boolean lesDeuxRangsSontSignificatifs = !rankToInsert.isRangDeLiaison() && !existingRank.isRangDeLiaison();
-        if (lesDeuxRangsSontSignificatifs) {
-            merge(existingClassification, rankToInsert);
-            return;
-        }
-
         boolean uniquementLeRangScrappeEstSignificatif = !rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
-        if (uniquementLeRangScrappeEstSignificatif) {
-            merge(existingClassification, rankToInsert);
-            return;
+        if (lesDeuxRangsSontSignificatifs || uniquementLeRangScrappeEstSignificatif) {
+            return merge(existingClassification, rankToInsert);
         }
 
         boolean uniquementLeRangExistantEstSignificatif = rankToInsert.isRangDeLiaison() && !existingRank.isRangDeLiaison();
@@ -128,14 +132,16 @@ public class CronquistClassificationConsistency {
             rankToInsert.setId(existingRank.getId());
             rankToInsert.addAllNamesToCronquistRank(existingRank.getNoms());
             rankToInsert.addAllUrlsToCronquistRank(existingRank.getUrls());// TODO add test : vérifier que les adresses ne sont pas supprimées
-            return;
+            return rankToInsert;
         }
 
         boolean lesDeuxRangsSontDeLiaison = rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
         if (lesDeuxRangsSontDeLiaison) {
             rankToInsert.setId(existingRank.getId());
+            //            rankToInsert.addAllNamesToCronquistRank();
             synchronizeNames(existingRank, rankToInsert);
         }
+        return rankToInsert;
     }
 
     /**
@@ -143,22 +149,24 @@ public class CronquistClassificationConsistency {
      *
      * @param existingClassification une branche de classification existante en base de données
      * @param rankToInsert           rang à insérer devant être intégrée à la classification existante
+     * @return Le rang qui résulte du merge
      */
-    private void merge(
+    private @NotNull ICronquistRank merge(
         @NotNull CronquistClassificationBranch existingClassification,
         @NotNull ICronquistRank rankToInsert
-                      ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank {
+                                         ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank, ClassificationReconstructionException {
         // TODO quand je merge le rang significatif dans le rang de liaison je dois supprimer le nom de liaison du rang de liaison
-        ICronquistRank existingRank = existingClassification.getRang(rankToInsert.getRank());
+        ICronquistRank existingRank = existingClassification.getRang(rankToInsert.getRankName());
         boolean leRangAInsererNEstPasDansLaClassificationExistante = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNoms());
         @Nullable ICronquistRank synonym = classificationRepository.findExistingRank(rankToInsert);
 
+        ICronquistRank consistentRank = existingRank;
         if ((leRangAInsererNEstPasDansLaClassificationExistante || existingRank.isRangDeLiaison()) && synonym != null) {
-            classificationRepository.merge(existingClassification, synonym);// TODO supprimer les side-effects, utiliser un retour
+            consistentRank = classificationRepository.merge(existingClassification, synonym);// TODO supprimer les side-effects, utiliser un retour
         }
-        existingRank = existingClassification.getRang(rankToInsert.getRank());
-        rankToInsert.setId(existingRank.getId());
-        synchronizeNames(existingRank, rankToInsert);
+        rankToInsert.setId(consistentRank.getId());
+        synchronizeNames(consistentRank, rankToInsert);
+        return rankToInsert;
     }
 
     /**
@@ -171,6 +179,9 @@ public class CronquistClassificationConsistency {
         @NotNull ICronquistRank existingRank,
         @NotNull ICronquistRank rankToInsert
                                  ) {
+        int size = rankToInsert.getNoms().size();
+        assert size == 1;
+
         for (IClassificationNom existingNom : existingRank.getNoms()) {
             boolean leNomSignificatifAInsererExisteDeja = rankToInsert.getNoms().stream()
                 .map(IClassificationNom::getNomFr)
@@ -197,19 +208,15 @@ public class CronquistClassificationConsistency {
         }
     }
 
-    public void applyConsistency(
-        @NotNull CronquistClassificationBranch scrappedClassification,
-        @NotNull String urlWiki
-                                ) throws ClassificationReconstructionException, UnknownRankId, MoreThanOneResultException, InconsistentRank {
-
-        scrappedClassification.getRangDeBase().addUrl(AtomicUrl.newAtomicUrl(urlWiki));
+    public @NotNull CronquistClassificationBranch getConsistentClassification(
+        @NotNull CronquistClassificationBranch scrappedClassification
+                                                                             ) throws ClassificationReconstructionException, UnknownRankId, MoreThanOneResultException, InconsistentRank {
         scrappedClassification.inferAllRank();
-
         CronquistClassificationBranch existingClassification = this.classificationRepository.findExistingPartOfThisClassification(scrappedClassification);
-
         if (existingClassification != null) {
-            makeItConsistent(existingClassification, scrappedClassification);
+            return makeItConsistent(existingClassification, scrappedClassification);
         }
+        return scrappedClassification;
     }
 
     //    private void synchronizeUrl(@NotNull List<CronquistRank> existingClassificationList, int offset, int i) {

@@ -22,18 +22,17 @@ public class TestUtils {
     @NotNull
     public LinkedMap<RankName, ICronquistRank> transformToMapOfRanksByName(@NotNull Collection<ICronquistRank> corylopsisRanks) {
         LinkedMap<RankName, ICronquistRank> corylopsisClassification = new LinkedMap<>();
-        corylopsisRanks.forEach(cronquistRank -> corylopsisClassification.put(cronquistRank.getRank(), cronquistRank));
+        corylopsisRanks.forEach(cronquistRank -> corylopsisClassification.put(cronquistRank.getRankName(), cronquistRank));
         return corylopsisClassification;
     }
 
 
     @NotNull
     public Set<String> getRankNames(
-        @NotNull LinkedMap<RankName,
-            ICronquistRank> corylopsisClassification,
+        CronquistClassificationBranch corylopsisClassification,
         RankName ordre
                                    ) {
-        return corylopsisClassification.get(ordre).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+        return corylopsisClassification.getRang(ordre).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
     }
 
     /**
@@ -52,9 +51,9 @@ public class TestUtils {
         @NotNull CronquistClassificationBranch neriifoliaClassification,
         @NotNull CronquistClassificationBranch selaginaceaeClassification
                                                    ) {
-        assert neriifoliaClassification.getRangDeBase().getRank().equals(selaginaceaeClassification.getRangDeBase().getRank());
+        assert neriifoliaClassification.getRangDeBase().getRankName().equals(selaginaceaeClassification.getRangDeBase().getRankName());
 
-        @NotNull RankName lowestRank = neriifoliaClassification.getRangDeBase().getRank();
+        @NotNull RankName lowestRank = neriifoliaClassification.getRangDeBase().getRankName();
         for (RankName rank = RankName.SUPERREGNE; Objects.requireNonNull(rank).isHighestRankOf(lowestRank); rank = rank.getRangInferieur()) {
             isTheSameRank(neriifoliaClassification.getRang(rank), selaginaceaeClassification.getRang(rank));
         }
@@ -62,7 +61,7 @@ public class TestUtils {
 
     private void isTheSameRank(@NotNull ICronquistRank rang, @NotNull ICronquistRank rang1) {
         assertEquals("Les Ids doivent être les mêmes", rang.getId(), rang1.getId());
-        assertEquals("Les deux rang doivent être au même endroit de la classification", rang.getRank(), rang1.getRank());
+        assertEquals("Les deux rang doivent être au même endroit de la classification", rang.getRankName(), rang1.getRankName());
         assertTrue("Tous les noms doivent être en commun",
                    rang.getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet())
                        .containsAll(
@@ -81,12 +80,12 @@ public class TestUtils {
 
 
     public void checkThatRankContainsOnlyTheseNames(
-        @NotNull LinkedMap<RankName, ICronquistRank> selaginaceaeClassification,
+        CronquistClassificationBranch selaginaceaeClassification,
         RankName rang,
         @NotNull Set<String> names
                                                    ) {
         String nomDeLaPlanteDeBase = String.join(", ",
-                                                 getRankNames(selaginaceaeClassification, selaginaceaeClassification.lastKey())
+                                                 getRankNames(selaginaceaeClassification, selaginaceaeClassification.getRangDeBase().getRankName())
                                                 );
         String neDoitContenirQueNNomsDeRangs = "%s ne doit contenir que %n ordres";
         String doitPossederLesNomsDeRang = "L'ordre de %s doit posséder les noms {%s} mais possède les noms {%s}";

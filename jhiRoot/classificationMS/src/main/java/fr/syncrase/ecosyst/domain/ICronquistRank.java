@@ -7,11 +7,11 @@ import java.util.Set;
 public interface ICronquistRank extends Cloneable {
 
 
-    CronquistRank newRank();
+    CronquistRank getCronquistRank();
 
-    RankName getRank();
+    RankName getRankName();
 
-    void setRank(RankName rankName);
+    void setRankName(RankName rankName);
 
     Long getId();
 
@@ -24,6 +24,8 @@ public interface ICronquistRank extends Cloneable {
     Set<IUrl> getUrls();
 
     ICronquistRank urls(Set<IUrl> urls);
+
+    void setNoms(Set<IClassificationNom> classificationNoms);
 
     ICronquistRank addNom(IClassificationNom nomFr);
 

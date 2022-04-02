@@ -10,4 +10,6 @@ public interface IClassificationNom extends Cloneable {
     String getNomLatin();
 
     public IClassificationNom clone();
+
+    ClassificationNom getClassificationNom();
 }
