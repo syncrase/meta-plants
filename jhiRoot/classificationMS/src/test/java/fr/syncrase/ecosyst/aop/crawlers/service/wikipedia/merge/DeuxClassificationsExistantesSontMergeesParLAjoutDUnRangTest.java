@@ -51,8 +51,10 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
 
             // La plante suivante appartient à la sous-classe des Rosidae, mais on ne le sait pas pour atalaya. On le découvre quand on enregistre Cossinia
             // Règne 	Plantae
+            //Sous-règne 	(+Tracheobionta déduit du précédent)
             //Division 	Magnoliophyta
             //Classe 	Magnoliopsida
+            //Sous-classe 	(+Rosidae déduis du suivant)
             //Ordre 	Sapindales
             //Famille 	Sapindaceae
             //Genre Atalaya
@@ -80,7 +82,6 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
             wiki = "https://fr.wikipedia.org/wiki/Cossinia";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch cossiniaClassification = cronquistService.saveCronquist(classification, wiki);
-            // TODO test que les rang de liaison supprimés le sont bien
 
             utils.checkThatEachRankOwnsAsManyUrlAsNames(cossiniaClassification);
 
@@ -104,6 +105,7 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
                 taxonsOfRosidae.size()
                         );
 
+            // TODO tester ça
 //            CronquistClassificationBranch arjonaClassificationAfterInserts = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.SOUSCLASSE).getId());
 //            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", arjonaClassificationAfterInserts);
 

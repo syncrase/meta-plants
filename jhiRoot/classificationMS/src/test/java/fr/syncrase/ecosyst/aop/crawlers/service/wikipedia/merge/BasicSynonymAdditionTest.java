@@ -109,7 +109,6 @@ public class BasicSynonymAdditionTest {
             String wiki = "https://fr.wikipedia.org/wiki/Oxera_neriifolia";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch neriifoliaClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> neriifoliaClassification = utils.transformToMapOfRanksByName(neriifoliaRanks);
 
             // Ordre Asparagales
             //            wiki = "https://fr.wikipedia.org/wiki/Hostaceae";

@@ -9,8 +9,8 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationRepository;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationReader;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationRepository;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -117,6 +117,15 @@ public class CronquistService implements InitializingBean {
             return classificationReader.findExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
         } catch (ClassificationReconstructionException e) {
             log.error("Impossible de reconstruire la classification à partir du rang obtenu");
+        } catch (MoreThanOneResultException e) {
+            log.error("Impossible de récupérer un unique rang à partir des informations procurées");
+        }
+        return null;
+    }
+
+    public ICronquistRank getRankById(Long id) {
+        try {
+            return classificationReader.findExistingRank(new AtomicCronquistRank().id(id));
         } catch (MoreThanOneResultException e) {
             log.error("Impossible de récupérer un unique rang à partir des informations procurées");
         }

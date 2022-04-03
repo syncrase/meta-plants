@@ -7,6 +7,7 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classificat
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
 import fr.syncrase.ecosyst.domain.IClassificationNom;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ClassificationMsApp.class)
@@ -40,8 +42,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
         try {
             CronquistClassificationBranch classification;
             // Règne 	Plantae
-            //Sous-règne 	doit être ajouté > Tracheobionta// TODO rang de liaison supprimé ?
-            //Division 	doit être ajouté > Magnoliophyta// TODO rang de liaison supprimé ?
+            //Sous-règne 	doit être ajouté > Tracheobionta
+            //Division 	doit être ajouté > Magnoliophyta
             //Classe 	Equisetopsida (+Magnoliopsida)
             //Sous-classe 	Magnoliidae (+Rosidae)
             //Super-ordre 	Rosanae
@@ -57,7 +59,7 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             //Division 	Magnoliophyta
             //Classe 	Magnoliopsida (+Equisetopsida)
             //Sous-classe 	Rosidae (+Magnoliidae)
-            //Super-ordre 	doit être ajouté > Rosanae// TODO rang de liaison supprimé ?
+            //Super-ordre 	doit être ajouté > Rosanae
             //Ordre 	Sapindales
             //Famille 	Aceraceae
             //Genre 	Acer
@@ -108,4 +110,5 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
         }
 
     }
+
 }

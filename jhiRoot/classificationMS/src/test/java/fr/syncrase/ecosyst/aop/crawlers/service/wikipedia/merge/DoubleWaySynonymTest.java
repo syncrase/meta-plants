@@ -14,11 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ClassificationMsApp.class)
@@ -45,13 +46,14 @@ public class DoubleWaySynonymTest {
             //Classe 	Magnoliopsida
             //Sous-classe 	Rosidae
             //Ordre 	Sapindales
-            //Famille 	Sapindaceae (+Aceraceae)
+            //Famille 	Sapindaceae (+Aceraceae déduit, car l'ajout du 3ᵉ (avec genre Acer) permet de savoir que ce rang est le même)
             //Genre 	Lepisanthes
             //Espèce Lepisanthes senegalensis
             String wiki = "https://fr.wikipedia.org/wiki/Lepisanthes_senegalensis";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch sepisanthesSenegalensisClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> sepisanthesSenegalensisClassification = utils.transformToMapOfRanksByName(sepisanthesSenegalensisRanks);
+
+            Set<Long> idsDesRangsDeLiaisonQuiDoiventDisparaitrent = utils.getRanksId(sepisanthesSenegalensisClassification, RankName.SOUSORDRE, RankName.FAMILLE);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -59,13 +61,12 @@ public class DoubleWaySynonymTest {
             //Classe 	Magnoliopsida
             //Sous-classe 	Rosidae
             //Ordre 	Sapindales
-            //Famille 	Aceraceae (+Sapindaceae)
+            //Famille 	Aceraceae (+Sapindaceae déduit du suivant)
             //Genre 	Acer
             //Espèce Acer Miyabei
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -73,13 +74,16 @@ public class DoubleWaySynonymTest {
             //Classe 	Magnoliopsida
             //Sous-classe 	Rosidae
             //Ordre 	Sapindales
-            //Famille 	Sapindaceae (+Aceraceae)
+            //Famille 	Sapindaceae (+Aceraceae déduit du précédent)
             //Genre 	Acer
             //Espèce Acer monspessulanum
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Montpellier";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch erableMontpellierClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> erableMontpellierClassification = utils.transformToMapOfRanksByName(erableMontpellierRanks);
+
+            idsDesRangsDeLiaisonQuiDoiventDisparaitrent.forEach(id -> {
+                assertNull("Le rang de liaison doit avoir été supprimé", cronquistService.getRankById(id));
+            });
 
             // puisque Aceraceae = Sapindaceae
             // ⇒ Lepisanthes_senegalensis doit posséder la famille synonyme Aceraceae
@@ -98,6 +102,13 @@ public class DoubleWaySynonymTest {
             Set<String> nomsDeFamilleDeErableMontpellier = utils.getRankNames(erableMontpellierClassification, RankName.FAMILLE);
             assertEquals("L'érable de Montpellier doit contenir deux familles", 2, nomsDeFamilleDeErableMontpellier.size());
             assertTrue("L'érable de Montpellier doit posséder la famille synonyme Aceraceae", nomsDeFamilleDeErableMontpellier.containsAll(Set.of("Aceraceae", "Sapindaceae")));
+
+            CronquistClassificationBranch neriifoliaPartialClassification = cronquistService.getClassificationById(erableMontpellierClassification.getRang(RankName.GENRE).getId());
+            CronquistClassificationBranch selaginaceaePartialClassification = cronquistService.getClassificationById(erableMiyabeClassification.getRang(RankName.GENRE).getId());
+            utils.assertThatClassificationsAreTheSame(neriifoliaPartialClassification, selaginaceaePartialClassification);
+
+            CronquistClassificationBranch sepisanthesSenegalensisPartialClassification = cronquistService.getClassificationById(erableMiyabeClassification.getRang(RankName.FAMILLE).getId());
+            utils.assertThatClassificationsAreTheSame(sepisanthesSenegalensisPartialClassification, selaginaceaePartialClassification, RankName.ORDRE, RankName.FAMILLE);
 
         } catch (IOException e) {
             e.printStackTrace();

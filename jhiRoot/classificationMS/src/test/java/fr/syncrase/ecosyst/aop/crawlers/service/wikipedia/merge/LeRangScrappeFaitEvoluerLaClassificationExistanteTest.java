@@ -33,6 +33,7 @@ public class LeRangScrappeFaitEvoluerLaClassificationExistanteTest {
         CronquistClassificationBranch classification;
         try {
             // Règne 	Plantae
+            //Sous-règne 	(+Tracheobionta déduis du suivant)
             //Division 	Magnoliophyta
             //Classe 	Magnoliopsida
             //Ordre 	Gentianales
@@ -41,7 +42,6 @@ public class LeRangScrappeFaitEvoluerLaClassificationExistanteTest {
             String wiki = "https://fr.wikipedia.org/wiki/Chironia";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch chironiaClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> chironiaClassification = utils.transformToMapOfRanksByName(chironiaRanks);
 
             //Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -53,7 +53,6 @@ public class LeRangScrappeFaitEvoluerLaClassificationExistanteTest {
             wiki = "https://fr.wikipedia.org/wiki/Monodiella";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch monodiellaClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> monodiellaClassification = utils.transformToMapOfRanksByName(monodiellaRanks);
 
             CronquistClassificationBranch classificationBranchOfChironia = cronquistService.getClassificationById(chironiaClassification.getRangDeBase().getId());
             assertEquals("Le sous règne Tracheobionta doit avoir été ajouté a chironia",

@@ -77,4 +77,8 @@ public enum RankName {
     public boolean isHighestRankOf(@NotNull RankName lowestRank) {
         return this.ordinal() < lowestRank.ordinal();
     }
+
+    public boolean isHighestRankOrEqualOf(@NotNull RankName lowestRank) {
+        return this.ordinal() <= lowestRank.ordinal();
+    }
 }

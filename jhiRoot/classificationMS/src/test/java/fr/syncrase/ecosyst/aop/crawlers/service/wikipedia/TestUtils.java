@@ -8,10 +8,7 @@ import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -45,22 +42,32 @@ public class TestUtils {
      * </ul>
      * La comparaison est du rang de base jusqu'au super-règne
      *
-     * @param neriifoliaClassification   classification à comparer
-     * @param selaginaceaeClassification classification à comparer
+     * @param classification1 classification à comparer
+     * @param classification2 classification à comparer
      */
     public void assertThatClassificationsAreTheSame(
-        @NotNull CronquistClassificationBranch neriifoliaClassification,
-        @NotNull CronquistClassificationBranch selaginaceaeClassification
+        @NotNull CronquistClassificationBranch classification1,
+        @NotNull CronquistClassificationBranch classification2
                                                    ) {
-        assert neriifoliaClassification.getRangDeBase().getRankName().equals(selaginaceaeClassification.getRangDeBase().getRankName());
+        assert classification1.getRangDeBase().getRankName().equals(classification2.getRangDeBase().getRankName());
+        @NotNull RankName lowestRank = classification1.getRangDeBase().getRankName();
 
-        @NotNull RankName lowestRank = neriifoliaClassification.getRangDeBase().getRankName();
-        for (RankName rank = RankName.SUPERREGNE; Objects.requireNonNull(rank).isHighestRankOf(lowestRank); rank = rank.getRangInferieur()) {
-            isTheSameRank(neriifoliaClassification.getRang(rank), selaginaceaeClassification.getRang(rank));
+        assertThatClassificationsAreTheSame(classification1, classification2, RankName.SUPERREGNE, lowestRank);
+    }
+
+    public void assertThatClassificationsAreTheSame(
+        @NotNull CronquistClassificationBranch neriifoliaClassification,
+        @NotNull CronquistClassificationBranch selaginaceaeClassification,
+        @NotNull RankName highestRank,
+        @NotNull RankName lowestRank
+                                                   ) {
+
+        for (RankName rank = highestRank; Objects.requireNonNull(rank).isHighestRankOf(lowestRank); rank = rank.getRangInferieur()) {
+            assertThatIsTheSameRank(neriifoliaClassification.getRang(rank), selaginaceaeClassification.getRang(rank));
         }
     }
 
-    private void isTheSameRank(@NotNull ICronquistRank rang, @NotNull ICronquistRank rang1) {
+    private void assertThatIsTheSameRank(@NotNull ICronquistRank rang, @NotNull ICronquistRank rang1) {
         assertEquals("Les Ids doivent être les mêmes", rang.getId(), rang1.getId());
         assertEquals("Les deux rang doivent être au même endroit de la classification", rang.getRankName(), rang1.getRankName());
         assertTrue("Tous les noms doivent être en commun",
@@ -127,5 +134,17 @@ public class TestUtils {
                 assertEquals("Un rang de liaison ne doit posséder qu'un seul nom", 1, cronquistRank.getNoms().size());
             }
         }
+    }
+
+    public Set<Long> getRanksId(
+        CronquistClassificationBranch classification,
+                                @NotNull RankName highestRank,
+                                @NotNull RankName lowestRank
+                               ) {
+        Set<Long> idsDesRangsDeLiaisonQuiDoiventDisparaitrent = new HashSet<>();
+        for (RankName rank = highestRank; Objects.requireNonNull(rank).isHighestRankOrEqualOf(lowestRank); rank = rank.getRangInferieur()) {
+            idsDesRangsDeLiaisonQuiDoiventDisparaitrent.add(classification.getRang(rank).getId());
+        }
+        return idsDesRangsDeLiaisonQuiDoiventDisparaitrent;
     }
 }
