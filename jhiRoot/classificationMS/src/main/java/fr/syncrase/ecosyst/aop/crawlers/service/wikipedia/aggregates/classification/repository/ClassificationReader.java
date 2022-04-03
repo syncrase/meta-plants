@@ -64,7 +64,7 @@ public class ClassificationReader {
         try {
             ICronquistRank existingParent = queryForCronquistRank(parentRank);
             if (existingParent != null) {
-                existingParent.getChildren().forEach(taxon -> taxons.add(new CronquistRankWrapper(taxon)));
+                existingParent.getTaxons().forEach(taxon -> taxons.add(new CronquistRankWrapper(taxon)));
                 return taxons;
             }
         } catch (MoreThanOneResultException e) {

@@ -6,54 +6,80 @@ import java.util.Set;
 
 public interface ICronquistRank extends Cloneable {
 
-
+    /**
+     * CronquistRank factory
+     *
+     * @return
+     */
     CronquistRank getCronquistRank();
 
+    /*
+    All about ranks names
+     */
     RankName getRankName();
 
     void setRankName(RankName rankName);
 
+    ICronquistRank rank(RankName rankName);
+
+    /*
+    All about IDs
+     */
     Long getId();
 
     void setId(Long id);
 
-    boolean isRangDeLiaison();
+    /*
+    All about Urls
+     */
+    Set<IUrl> getIUrls();
 
-    Set<IClassificationNom> getNoms();
-
-    Set<IUrl> getUrls();
+    void setUrls(Set<IUrl> urls);
 
     ICronquistRank urls(Set<IUrl> urls);
+
+    void addAllUrlsToCronquistRank(Set<IUrl> urls);
+
+    ICronquistRank addUrl(IUrl url);
+
+    void removeUrls();
+
+    /*
+    All about Names
+     */
+    Set<IClassificationNom> getNoms();
 
     void setNoms(Set<IClassificationNom> classificationNoms);
 
     ICronquistRank addNom(IClassificationNom nomFr);
 
-    ICronquistRank noms(Set<IClassificationNom> noms);
-
-    Set<ICronquistRank> getChildren();
-
-    boolean isRangSignificatif();
+    void addNameToCronquistRank(IClassificationNom existingNom);// TODO supprimer cette méthode. Doublon avec addNom
 
     void addAllNamesToCronquistRank(Set<IClassificationNom> noms);
 
-    boolean isAnyNameHasAnId();
-
-    ICronquistRank getParent();
-
-    void addAllUrlsToCronquistRank(Set<IUrl> urls);
-
-    public ICronquistRank clone();
-
     boolean doTheRankHasOneOfTheseNames(Set<IClassificationNom> noms);
 
-    void addNameToCronquistRank(IClassificationNom existingNom);
-
-    ICronquistRank addUrl(IUrl url);
+    ICronquistRank noms(Set<IClassificationNom> noms);
 
     void removeNames();
 
-    void removeUrls();
+    boolean isRangSignificatif();
+
+    boolean isRangDeLiaison();
+
+    boolean isAnyNameHasAnId();
+
+    /*
+    All about the position in the classification (if allowed)
+     */
+    Set<ICronquistRank> getTaxons();
+
+    ICronquistRank getParent();
 
     void removeTaxons();
+
+    /*
+    java Utils
+     */
+    public ICronquistRank clone();
 }

@@ -70,7 +70,7 @@ public class ClassificationRepository {
         @NotNull CronquistClassificationBranch brancheCible,
         @NotNull ICronquistRank scrappedRankFoundInDatabase
                                ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank, ClassificationReconstructionException {
-        log.info(String.format("Merge %s into %s", scrappedRankFoundInDatabase.getId(), brancheCible.getRangDeBase().getId()));
+        log.info(String.format("Merge %s into %s", scrappedRankFoundInDatabase.getId(), brancheCible.getRang(scrappedRankFoundInDatabase.getRankName()).getId()));
         CronquistClassificationBranch brancheSource = classificationReader.findExistingClassification(scrappedRankFoundInDatabase);
         assert brancheSource != null;
 

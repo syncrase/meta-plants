@@ -126,50 +126,32 @@ public class BasicSynonymAdditionTest {
             wiki = "https://fr.wikipedia.org/wiki/Selaginaceae";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch selaginaceaeClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> selaginaceaeClassification = utils.transformToMapOfRanksByName(selaginaceaeRanks);
 
             Set<String> names = Set.of("Magnoliopsida",
                                        "Equisetopsida");
+
+            // Vérifie que le nom existant a été ajouté au nom scrapé
             utils.checkThatRankContainsOnlyTheseNames(
                 selaginaceaeClassification,
                 RankName.CLASSE,
                 names
                                                      );
 
-            //            CronquistClassificationBranch neriifoliaNewClassification = cronquistService.getClassificationById(neriifoliaClassification.get(RankName.ORDRE).getId());
-            //            utils.checkThatRankContainsOnlyTheseNames(
-            //                neriifoliaNewClassification,// TODO Mettre des interface autour des objets
-            //                RankName.CLASSE,
-            //                names
-            //                                                     );
+            // Vérifie que le nom scrapé a été ajouté au nom existant
+            CronquistClassificationBranch neriifoliaNewClassification = cronquistService.getClassificationById(neriifoliaClassification.getRang(RankName.ORDRE).getId());
+            utils.checkThatRankContainsOnlyTheseNames(
+                neriifoliaNewClassification,
+                RankName.CLASSE,
+                names
+                                                     );
+
+            utils.checkThatEachRankOwnsAsManyUrlAsNames(neriifoliaNewClassification);
 
             CronquistClassificationBranch neriifoliaPartialClassification = cronquistService.getClassificationById(neriifoliaClassification.getRang(RankName.ORDRE).getId());
             CronquistClassificationBranch selaginaceaePartialClassification = cronquistService.getClassificationById(selaginaceaeClassification.getRang(RankName.ORDRE).getId());
 
             utils.assertThatClassificationsAreTheSame(neriifoliaPartialClassification, selaginaceaePartialClassification);
 
-            //            CronquistClassificationBranch classificationBranchOfOxeraNeriifolia = cronquistService.getClassificationById(neriifoliaClassification.get(neriifoliaClassification.lastKey()).getId());
-            //            getRankNames(classificationBranchOfOxeraNeriifolia, RankName.SOUSCLASSE);
-            //            assertTrue(
-            //                "Oxera neriifolia doit posséder la Sous-classe Magnoliidae",
-            //                classificationBranchOfOxeraNeriifolia.getRang(RankName.SOUSCLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains("Magnoliidae")
-            //                      );
-            //            assertTrue(
-            //                "Oxera neriifolia doit posséder le Super-ordre Lilianae",
-            //                classificationBranchOfOxeraNeriifolia.getRang(RankName.SUPERORDRE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains("Lilianae")
-            //                      );
-
-            //            CronquistClassificationBranch classificationBranchOfSelaginaceae = cronquistService.getClassificationById(selaginaceaeClassification.get(selaginaceaeClassification.lastKey()).getId());
-            //            assertTrue(
-            //                "Selaginaceae doit posséder la Sous-classe Magnoliidae",
-            //                classificationBranchOfSelaginaceae.getRang(RankName.SOUSCLASSE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains("Magnoliidae")
-            //                      );
-            //            assertTrue(
-            //                "Selaginaceae doit posséder la Sous-classe Magnoliidae et le Super-ordre Lilianae",
-            //                classificationBranchOfSelaginaceae.getRang(RankName.SUPERORDRE).getNoms().stream().map(AtomicClassificationNom::getNomFr).collect(Collectors.toSet()).contains("Lilianae")
-            //                      );
-
-            //         => vérifier la synonymie + les enfants ont bien été mergés
         } catch (IOException e) {
             e.printStackTrace();
         }

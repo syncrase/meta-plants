@@ -43,7 +43,7 @@ public enum RankName {
     FORME("Forme"),
     SOUSFORME("SousForme");
 
-    private static RankName[] allRanks = values();
+    private static final RankName[] allRanks = values();
     private final String value;
 
     RankName(String value) {

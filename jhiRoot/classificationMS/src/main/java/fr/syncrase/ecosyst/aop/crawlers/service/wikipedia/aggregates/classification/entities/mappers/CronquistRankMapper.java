@@ -53,7 +53,7 @@ public class CronquistRankMapper {
         return new CronquistRank()
             .rank(atomicCronquistRank.getRankName())
             .noms(atomicCronquistRank.getNoms().stream().map(ClassificationNomMapper::get).collect(Collectors.toSet()))
-            .urls(atomicCronquistRank.getUrls().stream().map(UrlMapper::get).collect(Collectors.toSet()))
+            .urls(atomicCronquistRank.getIUrls().stream().map(UrlMapper::get).collect(Collectors.toSet()))
             .id(atomicCronquistRank.getId());
     }
 

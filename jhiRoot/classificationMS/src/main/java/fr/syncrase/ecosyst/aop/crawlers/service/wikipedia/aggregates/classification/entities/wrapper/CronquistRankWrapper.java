@@ -48,6 +48,12 @@ public class CronquistRankWrapper implements ICronquistRank {
     }
 
     @Override
+    public ICronquistRank rank(RankName rankName) {
+        setRankName(rankName);
+        return this;
+    }
+
+    @Override
     public Long getId() {
         return this.cronquistRank.getId();
     }
@@ -58,8 +64,13 @@ public class CronquistRankWrapper implements ICronquistRank {
     }
 
     @Override
-    public Set<IUrl> getUrls() {
+    public Set<IUrl> getIUrls() {
         return this.cronquistRank.getUrls().stream().map(AtomicUrl::new).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void setUrls(Set<IUrl> urls) {
+
     }
 
     @Override
@@ -106,7 +117,7 @@ public class CronquistRankWrapper implements ICronquistRank {
     }
 
     @Override
-    public Set<ICronquistRank> getChildren() {
+    public Set<ICronquistRank> getTaxons() {
         return this.cronquistRank.getChildren().stream().map(AtomicCronquistRank::new).collect(Collectors.toSet());
     }
 
@@ -152,7 +163,12 @@ public class CronquistRankWrapper implements ICronquistRank {
 
     @Override
     public ICronquistRank clone() {
-        return new AtomicCronquistRank(this.cronquistRank).clone();
+        try {
+            ICronquistRank clone = (ICronquistRank) super.clone();
+            return new CronquistRankWrapper(clone);
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     @Override
@@ -190,7 +206,7 @@ public class CronquistRankWrapper implements ICronquistRank {
 
     @Override
     public void removeUrls() {
-        this.cronquistRank.getUrls().clear();// TODO default method
+        this.cronquistRank.getUrls().clear();
     }
 
     @Override
@@ -198,7 +214,7 @@ public class CronquistRankWrapper implements ICronquistRank {
         this.cronquistRank.getChildren().clear();
     }
 
-    public Set<Url> newUrls() {
+    public Set<Url> getUrls() {
         return this.cronquistRank.getUrls();
-    }// TODO default method
+    }
 }

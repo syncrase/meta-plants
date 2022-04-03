@@ -2,6 +2,7 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.insertion;
 
 import fr.syncrase.ecosyst.ClassificationMsApp;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
@@ -30,6 +31,9 @@ import static org.junit.Assert.*;
 public class BasicInsertionTest {
 
     WikipediaCrawler wikipediaCrawler;
+
+    TestUtils utils = new TestUtils();
+
 
     @Autowired
     private ClassificationNomRepository classificationNomRepository;
@@ -83,15 +87,9 @@ public class BasicInsertionTest {
             // Tous les noms de rang sont uniques
             assertThatEachSignificantNameIsUnique(cronquistRanks);
 
-            // Il n'existe aucun rang de liaison sans enfant
-            // TODO ne pas parcourir la liste mais récupérer directement le dernier pour vérifier que c'est un rang significatif
-            for (Map.Entry<RankName, ICronquistRank> cronquistRank : cronquistRanks.getClassificationBranch().entrySet()) {
-                //                ICronquistRank atomicCronquistRank = AtomicCronquistRank.getCronquistRank(cronquistRank.getValue());
-                ICronquistRank atomicCronquistRank = cronquistRank.getValue();
-                if (atomicCronquistRank.isRangDeLiaison() && atomicCronquistRank.getChildren().size() == 0) {
-                    fail("Ce rang de liaison ne possède pas de rang inférieur " + cronquistRank);
-                }
-            }
+            assertTrue("Le rang le plus bas doit être un rang significatif", cronquistRanks.getRangDeBase().isRangSignificatif());
+
+            utils.assertThatEachLinkNameHasOnlyOneName(cronquistRanks);
         } catch (IOException e) {
             fail("unable to scrap wiki : " + e.getMessage());
         }

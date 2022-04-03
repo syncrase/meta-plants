@@ -17,6 +17,7 @@ import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.clas
 import static fr.syncrase.ecosyst.domain.CronquistRank.DEFAULT_NAME_FOR_CONNECTOR_RANK;
 
 /**
+ * TODO renommer en ScrappedCronquistRank ?
  * Un rang qui ne possède pas le rang parent ou les taxons
  */
 public class AtomicCronquistRank implements ICronquistRank {
@@ -28,7 +29,7 @@ public class AtomicCronquistRank implements ICronquistRank {
     public AtomicCronquistRank(@NotNull ICronquistRank cronquistRank) {
         this.id = cronquistRank.getId();
         this.rank = cronquistRank.getRankName();
-        this.urls = cronquistRank.getUrls().stream().map(AtomicUrl::new).collect(Collectors.toSet());
+        this.urls = cronquistRank.getIUrls().stream().map(AtomicUrl::new).collect(Collectors.toSet());
         this.noms = cronquistRank.getNoms().stream().map(AtomicClassificationNom::new).collect(Collectors.toSet());
     }
 
@@ -114,7 +115,7 @@ public class AtomicCronquistRank implements ICronquistRank {
     }
 
     @Override
-    public Set<ICronquistRank> getChildren() {
+    public Set<ICronquistRank> getTaxons() {
         return null;
     }
 
@@ -124,18 +125,18 @@ public class AtomicCronquistRank implements ICronquistRank {
         return this;
     }
 
-    //    @Override
-    private ICronquistRank rank(RankName rankName) {
-        this.setRankName(rank);
+    @Override
+    public ICronquistRank rank(RankName rankName) {
+        this.setRankName(rankName);
         return this;
     }
 
     @Override
-    public Set<IUrl> getUrls() {
+    public Set<IUrl> getIUrls() {
         return this.urls;
     }
 
-    //    @Override
+    @Override
     public void setUrls(Set<IUrl> urls) {
         this.urls = urls;
     }
@@ -152,14 +153,26 @@ public class AtomicCronquistRank implements ICronquistRank {
         return this;
     }
 
+    /**
+     * Ajoute toutes les urls au rang
+     *
+     * @param urls set des noms à ajouter
+     */
     @Override
-    public void removeNames() {
-        this.noms.clear();// TODO default method
+    public void addAllUrlsToCronquistRank(@NotNull Set<IUrl> urls) {
+        for (IUrl url : urls) {
+            this.addUrl(new AtomicUrl().url(url.getUrl()).id(url.getId()));// TODO l'instanciation est vraiment nécessaire ?
+        }
     }
 
     @Override
     public void removeUrls() {
-        this.urls.clear();// TODO default method
+        this.urls.clear();
+    }
+
+    @Override
+    public void removeNames() {
+        this.noms.clear();
     }
 
     @Override
@@ -253,7 +266,7 @@ public class AtomicCronquistRank implements ICronquistRank {
             this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
         this.addNom(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
-                        .id(nomFr.getId()));
+                        .id(nomFr.getId()));// TODO l'instanciation est vraiment nécessaire ?
     }
 
     /**
@@ -264,19 +277,7 @@ public class AtomicCronquistRank implements ICronquistRank {
     @Override
     public void addAllNamesToCronquistRank(@NotNull Set<IClassificationNom> names) {
         for (IClassificationNom classificationNom : names) {
-            addNameToCronquistRank(classificationNom);// TODO default method ?
-        }
-    }
-
-    /**
-     * Ajoute toutes les urls au rang
-     *
-     * @param urls set des noms à ajouter
-     */
-    @Override
-    public void addAllUrlsToCronquistRank(@NotNull Set<IUrl> urls) {
-        for (IUrl url : urls) {
-            this.addUrl(new AtomicUrl().url(url.getUrl()).id(url.getId())); // TODO check si elle existe déjà
+            addNameToCronquistRank(classificationNom);
         }
     }
 
@@ -295,7 +296,7 @@ public class AtomicCronquistRank implements ICronquistRank {
         try {
             ICronquistRank clone = (ICronquistRank) super.clone();
             clone
-                .urls(this.urls.stream().map(IUrl::clone).collect(Collectors.toSet()))// TODO le clone fonctionne ?
+                .urls(this.urls.stream().map(IUrl::clone).collect(Collectors.toSet()))
                 .noms(this.noms.stream().map(IClassificationNom::clone)
                           .collect(Collectors.toSet()));
             return clone;

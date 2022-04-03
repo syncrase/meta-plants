@@ -25,14 +25,17 @@ public class AtomicUrl implements IUrl {
         return new AtomicUrl().url(urlWiki);
     }
 
+    @Override
     public Long getId() {
         return this.id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
 
+    @Override
     public AtomicUrl id(Long id) {
         this.setId(id);
         return this;

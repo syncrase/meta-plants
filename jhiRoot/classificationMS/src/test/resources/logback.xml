@@ -27,7 +27,7 @@
     <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
     <logger name="org.bson" level="WARN"/>
     <logger name="org.hibernate.validator" level="WARN"/>
-    <logger name="org.hibernate" level="DEBUG"/>
+    <logger name="org.hibernate" level="WARN"/>
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
     <logger name="org.postgresql.jdbc" level="WARN"/>
     <logger name="org.springframework" level="WARN"/>
@@ -43,6 +43,10 @@
     <logger name="sun.net.www" level="INFO"/>
     <logger name="sun.rmi.transport" level="WARN"/>
     <logger name="com.tngtech.archunit.core.importer" level="ERROR"/>
+
+    <logger name="jdk.event.security" level="ERROR"/>
+    <logger name="com.hazelcast" level="ERROR"/>
+    <logger name="io.github.resilience4j.utils.RxJava2OnClasspathCondition" level="ERROR"/>
 
     <root>
         <level>INFO</level>

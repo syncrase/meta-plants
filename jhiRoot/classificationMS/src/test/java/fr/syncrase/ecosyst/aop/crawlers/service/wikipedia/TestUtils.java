@@ -9,6 +9,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -70,12 +71,12 @@ public class TestUtils {
                   );
         assertEquals("Les deux rangs doivent avoir le même nombre de noms", rang.getNoms().size(), rang1.getNoms().size());
         assertTrue("Toutes les urls doivent être en commun",
-                   rang.getUrls().stream().map(IUrl::getUrl).collect(Collectors.toSet())
+                   rang.getIUrls().stream().map(IUrl::getUrl).collect(Collectors.toSet())
                        .containsAll(
-                           rang1.getUrls().stream().map(IUrl::getUrl).collect(Collectors.toSet())
+                           rang1.getIUrls().stream().map(IUrl::getUrl).collect(Collectors.toSet())
                                    )
                   );
-        assertEquals("Les deux rangs doivent avoir le même nombre d'urls", rang.getUrls().size(), rang1.getUrls().size());
+        assertEquals("Les deux rangs doivent avoir le même nombre d'urls", rang.getIUrls().size(), rang1.getIUrls().size());
     }
 
 
@@ -107,4 +108,24 @@ public class TestUtils {
                   );
     }
 
+    public void checkThatEachRankOwnsAsManyUrlAsNames(@NotNull CronquistClassificationBranch classification) {
+        ICronquistRank cronquistRank;
+        for (Map.Entry<RankName, ICronquistRank> rankEntry : classification.getClassificationBranch().entrySet()) {
+            cronquistRank = rankEntry.getValue();
+            if (cronquistRank.isRangSignificatif()) {
+                assertEquals("Un rang significatif doit posséder autant de noms que d'urls", cronquistRank.getNoms().size(), cronquistRank.getIUrls().size());
+            }
+        }
+
+    }
+
+    public void assertThatEachLinkNameHasOnlyOneName(@NotNull CronquistClassificationBranch classification) {
+        ICronquistRank cronquistRank;
+        for (Map.Entry<RankName, ICronquistRank> rankEntry : classification.getClassificationBranch().entrySet()) {
+            cronquistRank = rankEntry.getValue();
+            if (cronquistRank.isRangDeLiaison()) {
+                assertEquals("Un rang de liaison ne doit posséder qu'un seul nom", 1, cronquistRank.getNoms().size());
+            }
+        }
+    }
 }

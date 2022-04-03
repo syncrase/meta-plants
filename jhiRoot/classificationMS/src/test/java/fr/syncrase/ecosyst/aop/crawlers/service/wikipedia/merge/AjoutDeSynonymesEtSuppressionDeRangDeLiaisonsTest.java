@@ -51,7 +51,6 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             String wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Cr%C3%A8te";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch erableCreteClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> erableCreteClassification = utils.transformToMapOfRanksByName(erableCreteRanks);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -65,7 +64,8 @@ public class AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest {
             wiki = "https://fr.wikipedia.org/wiki/%C3%89rable_de_Miyabe";
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch erableMiyabeClassification = cronquistService.saveCronquist(classification, wiki);
-            //            LinkedMap<RankName, ICronquistRank> erableMiyabeClassification = utils.transformToMapOfRanksByName(erableMiyabeRanks);
+
+            utils.assertThatEachLinkNameHasOnlyOneName(erableMiyabeClassification);
 
             // L'érable de miyabe
             // - doit posséder le superordre Rosanae
