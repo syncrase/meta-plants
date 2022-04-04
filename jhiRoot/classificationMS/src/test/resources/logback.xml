@@ -4,7 +4,7 @@
 <configuration scan="true">
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <logger name="fr.syncrase.ecosyst" level="INFO"/>
+    <logger name="fr.syncrase.ecosyst" level="TRACE"/>
 
     <logger name="tech.jhipster" level="WARN"/>
 

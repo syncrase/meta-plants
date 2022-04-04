@@ -69,11 +69,6 @@ public class CronquistRankWrapper implements ICronquistRank {
     }
 
     @Override
-    public void setUrls(Set<IUrl> urls) {
-
-    }
-
-    @Override
     public ICronquistRank urls(@NotNull Set<IUrl> urls) {
         this.cronquistRank.setUrls(urls.stream().map(UrlMapper::get).collect(Collectors.toSet()));
         return this;
@@ -98,12 +93,19 @@ public class CronquistRankWrapper implements ICronquistRank {
         return this;
     }
 
-    public Set<ClassificationNom> newNames() {// TODO rename to getClassificationNoms
+    public Set<ClassificationNom> getNoms() {// TODO rename to getClassificationNoms
         return this.cronquistRank.getNoms();
     }
 
     @Override
-    public Set<IClassificationNom> getNoms() {
+    public String toString() {
+        return "CronquistRankWrapper{" +
+            "cronquistRank=" + cronquistRank +
+            '}';
+    }
+
+    @Override
+    public Set<IClassificationNom> getNomsWrappers() {
         return this.cronquistRank.getNoms().stream().map(ClassificationNomWrapper::new).collect(Collectors.toSet());
     }
 
@@ -114,6 +116,16 @@ public class CronquistRankWrapper implements ICronquistRank {
                 .map(IClassificationNom::getClassificationNom)
                 .collect(Collectors.toSet())
                                   );
+    }
+
+    @Override
+    public void removeAllNames(Set<Long> ranksIdToDelete) {
+        this.cronquistRank.getNoms().removeIf(classificationNom -> ranksIdToDelete.contains(classificationNom.getId()));
+    }
+
+    @Override
+    public void removeAllNames() {
+        this.cronquistRank.getNoms().clear();
     }
 
     @Override
@@ -139,7 +151,7 @@ public class CronquistRankWrapper implements ICronquistRank {
      */
     public boolean hasThisName(String name) {// TODO default method
         TreeSet<IClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
-        classificationNoms.addAll(this.getNoms());
+        classificationNoms.addAll(this.getNomsWrappers());
         return classificationNoms.contains(new AtomicClassificationNom().nomFr(name));
     }
 
@@ -152,7 +164,7 @@ public class CronquistRankWrapper implements ICronquistRank {
 
     @Override
     public boolean isAnyNameHasAnId() {
-        return getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null);// TODO default final ?
+        return getNomsWrappers().stream().anyMatch(classificationNom -> classificationNom.getId() != null);// TODO default final ?
     }
 
     @Override
@@ -165,6 +177,11 @@ public class CronquistRankWrapper implements ICronquistRank {
     public ICronquistRank clone() {
         try {
             ICronquistRank clone = (ICronquistRank) super.clone();
+            clone
+                .urls(this.getIUrls().stream().map(IUrl::clone).collect(Collectors.toSet()))
+                .noms(this.getNomsWrappers().stream().map(IClassificationNom::clone)
+                          .collect(Collectors.toSet()));
+
             return new CronquistRankWrapper(clone);
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
@@ -175,7 +192,7 @@ public class CronquistRankWrapper implements ICronquistRank {
     public boolean doTheRankHasOneOfTheseNames(Set<IClassificationNom> noms) {
         TreeSet<IClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
         classificationNoms.addAll(noms);
-        for (IClassificationNom classificationNom : this.getNoms()) {
+        for (IClassificationNom classificationNom : this.getNomsWrappers()) {
             if (classificationNoms.contains(classificationNom)) {
                 return true;
             }
@@ -187,7 +204,7 @@ public class CronquistRankWrapper implements ICronquistRank {
     public void addNameToCronquistRank(IClassificationNom nom) {
         // TODO default method ?
         if (this.isRangDeLiaison()) {
-            this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
+            this.getNomsWrappers().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
         this.addNom(new AtomicClassificationNom().nomFr(nom.getNomFr())
                         .id(nom.getId()));
@@ -197,11 +214,6 @@ public class CronquistRankWrapper implements ICronquistRank {
     public ICronquistRank addUrl(IUrl newAtomicUrl) {
         this.cronquistRank.getUrls().add(UrlMapper.get(newAtomicUrl));
         return this;
-    }
-
-    @Override
-    public void removeNames() {
-        this.cronquistRank.getNoms().clear();
     }
 
     @Override
@@ -216,5 +228,10 @@ public class CronquistRankWrapper implements ICronquistRank {
 
     public Set<Url> getUrls() {
         return this.cronquistRank.getUrls();
+    }
+
+    @Override
+    public void setUrls(Set<IUrl> urls) {
+
     }
 }

@@ -34,8 +34,12 @@ public class ClassificationNomWrapper implements IClassificationNom {
 
     @Override
     public ClassificationNomWrapper clone() {
-        //        return new ClassificationNomWrapper(this.classificationNom);
-        throw new UnsupportedOperationException("Le clone du nom wrapper n'a pas été prévu");
+        try {
+            ClassificationNomWrapper clone = (ClassificationNomWrapper) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     @Override

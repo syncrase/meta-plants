@@ -1,29 +1,23 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.consistency;
 
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicCronquistRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.wrapper.CronquistRankWrapper;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.InconsistentRank;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.MoreThanOneResultException;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.exceptions.UnknownRankId;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.repository.ClassificationReader;
+import fr.syncrase.ecosyst.domain.ClassificationNom;
 import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.domain.IClassificationNom;
 import fr.syncrase.ecosyst.domain.ICronquistRank;
-import fr.syncrase.ecosyst.domain.IUrl;
+import fr.syncrase.ecosyst.domain.Url;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
 import fr.syncrase.ecosyst.repository.CronquistRankRepository;
 import fr.syncrase.ecosyst.repository.UrlRepository;
-import fr.syncrase.ecosyst.service.CronquistRankQueryService;
-import fr.syncrase.ecosyst.service.criteria.CronquistRankCriteria;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.jhipster.service.filter.LongFilter;
 
 import java.util.Optional;
 import java.util.Set;
@@ -34,21 +28,9 @@ public class ClassificationMerger {
 
     private final Logger log = LoggerFactory.getLogger(ClassificationMerger.class);
 
-    private CronquistRankQueryService cronquistRankQueryService;
     private CronquistRankRepository cronquistRankRepository;
     private ClassificationNomRepository classificationNomRepository;
     private UrlRepository urlRepository;
-    private ClassificationReader cronquistRankDomainRepository;
-
-    @Autowired
-    public void setCronquistRankDomainRepository(ClassificationReader cronquistRankDomainRepository) {
-        this.cronquistRankDomainRepository = cronquistRankDomainRepository;
-    }
-
-    @Autowired
-    public void setCronquistRankQueryService(CronquistRankQueryService cronquistRankQueryService) {
-        this.cronquistRankQueryService = cronquistRankQueryService;
-    }
 
     @Autowired
     public void setCronquistRankRepository(CronquistRankRepository cronquistRankRepository) {
@@ -71,162 +53,117 @@ public class ClassificationMerger {
         @NotNull RankName rankWhereTheMergeIsApplied
                                ) throws UnknownRankId, InconsistentRank, MoreThanOneResultException {
 
-        ICronquistRank rankWithNewNames = copyDataFromRankToRank(
-            brancheSource.getRang(rankWhereTheMergeIsApplied),
-            brancheCible.getRang(rankWhereTheMergeIsApplied)
-                                                                );
-
-        ICronquistRank rankWithAllHisNewTaxons = switchAncestry(
-            brancheSource.getRang(rankWhereTheMergeIsApplied),
-            rankWithNewNames
-                                                               );
-        brancheCible.put(rankWhereTheMergeIsApplied, rankWithAllHisNewTaxons);
-
-        supprimeLiaisonAscendante(brancheSource.getRang(rankWhereTheMergeIsApplied));
-
-        return brancheCible.getRang(rankWhereTheMergeIsApplied);
-    }
-
-    private void supprimeLiaisonAscendante(@NotNull ICronquistRank rangAPartirDuquelLAscendanceEstSupprimee) {
-        Optional<CronquistRank> baseDesRangsASupprimer = cronquistRankRepository.findById(rangAPartirDuquelLAscendanceEstSupprimee.getId());
-        baseDesRangsASupprimer.ifPresent(rang -> {
-            ICronquistRank wrapper = new CronquistRankWrapper(rang);
-            do {
-                Set<Long> nomsIds = wrapper.getNoms().stream().map(IClassificationNom::getId).collect(Collectors.toSet());
-                log.debug("Suppression des noms " + nomsIds);
-                classificationNomRepository.deleteAllById(nomsIds);
-                Set<Long> urlsIds = wrapper.getIUrls().stream().map(IUrl::getId).collect(Collectors.toSet());
-                log.debug("Suppression des urls " + urlsIds);
-                urlRepository.deleteAllById(urlsIds);
-                log.debug("Suppression du wrapper " + wrapper.getId());
-                cronquistRankRepository.deleteById(wrapper.getId());
-                wrapper = new CronquistRankWrapper(wrapper.getParent());
-            } while (wrapper.isRangDeLiaison());
-        });
-    }
-
-    /**
-     * Associe tous les noms du rangSource au rangCible
-     * Associe toutes les urls du rangSource au rangCible
-     * Les modifications sont effectives à l'exécution de la méthode
-     *
-     * @param rangSource Rang qui est dépossédé de ses noms et urls
-     * @param rangCible  Rang qui récupère les noms et urls
-     * @return Le rang cible avec ses nouveaux noms et urls
-     * @throws UnknownRankId    Quand l'un des rangs passés en paramètre ne permet pas de récupérer un rang existant
-     * @throws InconsistentRank Quand un rang de liaison possède plusieurs noms
-     */
-    @Contract("_, _ -> new")
-    private @NotNull ICronquistRank copyDataFromRankToRank(
-        @NotNull ICronquistRank rangSource,
-        @NotNull ICronquistRank rangCible
-                                                          ) throws UnknownRankId, InconsistentRank {
-        Optional<CronquistRank> rangQuiSeraSupprimeOptional = cronquistRankRepository.findById(rangSource.getId());
-        Optional<CronquistRank> rangQuiRecupereLesInfosOptional = cronquistRankRepository.findById(rangCible.getId());
+        Optional<CronquistRank> rangQuiSeraSupprimeOptional = cronquistRankRepository.findById(brancheSource.getRang(rankWhereTheMergeIsApplied).getId());
+        Optional<CronquistRank> rangQuiRecupereLesInfosOptional = cronquistRankRepository.findById(brancheCible.getRang(rankWhereTheMergeIsApplied).getId());
         if (rangQuiSeraSupprimeOptional.isPresent() && rangQuiRecupereLesInfosOptional.isPresent()) {
-            ICronquistRank rangQuiSeraSupprime = new CronquistRankWrapper(rangQuiSeraSupprimeOptional.get());
-            ICronquistRank rangQuiRecupereLesInfos = new CronquistRankWrapper(rangQuiRecupereLesInfosOptional.get());
-            log.info("Copie les informations du rang " + rangQuiSeraSupprime.getId() + " vers le rang " + rangQuiRecupereLesInfos.getId());
+            CronquistRank rangQuiSeraSupprime = rangQuiSeraSupprimeOptional.get();
+            CronquistRank rangQuiRecupereLesInfos = rangQuiRecupereLesInfosOptional.get();
 
-            rangQuiRecupereLesInfos = addNamesFromRankToRank(rangQuiSeraSupprime, rangQuiRecupereLesInfos);
-            rangQuiRecupereLesInfos.addAllUrlsToCronquistRank(rangQuiSeraSupprime.getIUrls());// TODO même chose qu'avec les noms, mais d'abord implémenter le test qui plante
+            MergeContainer mergeContainer = new MergeContainer(rangQuiSeraSupprime, rangQuiRecupereLesInfos);
 
-            // Enregistrement du rang avec les nouveaux noms
-            CronquistRankWrapper rangCibleAInserer = new CronquistRankWrapper(cronquistRankRepository.save(rangQuiRecupereLesInfos.getCronquistRank()));
+            copyDataFromRankToRank(mergeContainer);
+            switchAncestry(mergeContainer);
 
-            // Enregistrement des noms avec le nouveau rang
-            rangCibleAInserer.newNames().forEach(classificationNom -> classificationNom.setCronquistRank(rangCibleAInserer.getCronquistRank()));
-            classificationNomRepository.saveAll(rangCibleAInserer.newNames());
+            supprimeLiaisonAscendante(mergeContainer.getRangQuiSeraSupprime());
 
-            // Enregistrement des urls avec le nouveau rang
-            rangCibleAInserer.getUrls().forEach(url -> url.setCronquistRank(rangCibleAInserer.getCronquistRank()));
-            urlRepository.saveAll(rangCibleAInserer.getUrls());
+            return new CronquistRankWrapper(mergeContainer.getRangQuiRecupereLesInfos());
 
-            // Suppression des noms et des urls de l'ancien rang
-            rangQuiSeraSupprime.removeNames();
-            rangQuiSeraSupprime.removeUrls();
-            cronquistRankRepository.save(rangQuiSeraSupprime.getCronquistRank());
-            return new CronquistRankWrapper(rangCibleAInserer.getCronquistRank());
         } else {
             throw new UnknownRankId();
         }
-
     }
 
-    /**
-     *
-     * Les taxons du rangSource changent de parents.
-     * Les changements sont effectifs après l'exécution de la méthode
-     *
-     * @param rangSource Rang qui perd tous ses taxons
-     * @param rangCible  Rang qui récupère tous les taxons
-     * @return Le rangCible mis à jour synchronisé avec la base de données
-     * @throws MoreThanOneResultException Si l'un des rangs ne permet pas de récupérer un unique résultat en base de données
-     *
-     */
-    @Contract("_, _ -> new")
-    private @NotNull ICronquistRank switchAncestry(
-        ICronquistRank rangSource,
-        @NotNull ICronquistRank rangCible
-                                                  ) throws MoreThanOneResultException {
-        ICronquistRank newParent = rangCible.clone();
-        assert newParent != null;
+    private void supprimeLiaisonAscendante(@NotNull CronquistRank rangAPartirDuquelLAscendanceEstSupprimee) {
+        do {
+            log.debug("Suppression du rang " + rangAPartirDuquelLAscendanceEstSupprimee);
+            Set<Long> nomsIds = rangAPartirDuquelLAscendanceEstSupprimee.getNoms().stream().map(ClassificationNom::getId).collect(Collectors.toSet());
+            log.debug("Suppression des noms " + nomsIds);
+            classificationNomRepository.deleteAllById(nomsIds);
+            Set<Long> urlsIds = rangAPartirDuquelLAscendanceEstSupprimee.getUrls().stream().map(Url::getId).collect(Collectors.toSet());
+            log.debug("Suppression des urls " + urlsIds);
+            urlRepository.deleteAllById(urlsIds);
+            log.debug("Suppression du rangAPartirDuquelLAscendanceEstSupprimee " + rangAPartirDuquelLAscendanceEstSupprimee.getId());
+            cronquistRankRepository.deleteById(rangAPartirDuquelLAscendanceEstSupprimee.getId());
+            rangAPartirDuquelLAscendanceEstSupprimee = rangAPartirDuquelLAscendanceEstSupprimee.getParent();
+        } while (CronquistRankUtils.isRangDeLiaison(rangAPartirDuquelLAscendanceEstSupprimee));
+    }
 
+    private void copyDataFromRankToRank(
+        @NotNull MergeContainer mergeContainer
+                                       ) throws InconsistentRank {
+        addNamesFromRankToRank(mergeContainer);
+        addUrlsFromRankToRank(mergeContainer);
+    }
+
+    private void switchAncestry(
+        @NotNull MergeContainer mergeContainer
+                               ) {
+        CronquistRank newParent = mergeContainer.getRangQuiRecupereLesInfos();
+        CronquistRank rangSource = mergeContainer.getRangQuiSeraSupprime();
+        log.debug(String.format("Change l'ascendance des taxons du rang %s", rangSource.getId()));
         // Tous les taxons changent de parent
         // → enregistrement des taxons avec le nouveau parent
-        Set<ICronquistRank> taxons = findTaxons(rangSource);
-        setParentToAllTaxons(newParent, taxons);
+        Set<CronquistRank> taxons = rangSource.getChildren();
+        Set<CronquistRank> taxonsWithNewParent = CronquistRankUtils.setParentToAllTaxons(newParent, taxons);
+        cronquistRankRepository.saveAll(taxonsWithNewParent);
 
         // Enregistrement de l'ancien parent sans ses taxons
-        removeAllTaxons(rangSource);
-
-        return new CronquistRankWrapper(cronquistRankRepository.save(newParent.getCronquistRank()));
+        rangSource.getChildren().clear();
+        cronquistRankRepository.save(rangSource);
+        cronquistRankRepository.save(newParent);
     }
 
-    private void removeAllTaxons(@NotNull ICronquistRank rangSource) throws MoreThanOneResultException {
-        ICronquistRank aSupprimer = cronquistRankDomainRepository.queryForCronquistRank(new AtomicCronquistRank().id(rangSource.getId()));
-        assert aSupprimer != null;
-        aSupprimer.removeTaxons();
-        cronquistRankRepository.save(aSupprimer.getCronquistRank());
-    }
+    private void addNamesFromRankToRank(
+        @NotNull MergeContainer mergeContainer
+                                       ) throws InconsistentRank {
+        CronquistRank rangCible = mergeContainer.getRangQuiRecupereLesInfos();
+        CronquistRank rangSource = mergeContainer.getRangQuiSeraSupprime();
 
-    private void setParentToAllTaxons(ICronquistRank newParent, @NotNull Set<ICronquistRank> taxons) {
-        Set<CronquistRank> taxonsWithNewParent = taxons.stream().map(taxon -> {
-            CronquistRank cronquistRank = taxon.getCronquistRank();
-            cronquistRank.setParent(newParent.getCronquistRank());
-            newParent.getCronquistRank().addChildren(cronquistRank);
-            return cronquistRank;
-        }).collect(Collectors.toSet());
-        cronquistRankRepository.saveAll(taxonsWithNewParent);
-    }
-
-    @Contract(pure = true)
-    private Set<ICronquistRank> findTaxons(@NotNull ICronquistRank rank) {
-        LongFilter rankIdFilter = new LongFilter();
-        rankIdFilter.setEquals(rank.getId());
-
-        CronquistRankCriteria rankCrit = new CronquistRankCriteria();
-        rankCrit.setId(rankIdFilter);
-
-        return cronquistRankQueryService.findByCriteria(rankCrit).get(0).getChildren().stream().map(CronquistRankWrapper::new).collect(Collectors.toSet());
-    }
-
-    private @NotNull ICronquistRank addNamesFromRankToRank(
-        @NotNull ICronquistRank rangSource,
-        @NotNull ICronquistRank rangCible
-                                                          ) throws InconsistentRank {
-        rangCible = rangCible.clone();
-        if (rangCible.isRangDeLiaison() && rangSource.isRangSignificatif()) {
+        if (CronquistRankUtils.isRangDeLiaison(rangCible) && CronquistRankUtils.isRangSignificatif(rangSource)) {
             if (rangCible.getNoms().size() != 1) {
                 throw new InconsistentRank("Le rang de liaison ne doit pas posséder plus d'un nom " + rangCible);
             }
-            Set<Long> ranksIdToDelete = rangCible.getNoms().stream().map(IClassificationNom::getId).collect(Collectors.toSet());
+            Set<Long> ranksIdToDelete = rangCible.getNoms().stream().map(ClassificationNom::getId).collect(Collectors.toSet());
+            log.debug(String.format("Suppression du nom %s appartenant au rang %s", ranksIdToDelete, rangCible.getId()));
             classificationNomRepository.deleteAllById(
                 ranksIdToDelete
                                                      );
-            rangCible.getNoms().removeIf(iClassificationNom -> ranksIdToDelete.contains(iClassificationNom.getId()));
+            CronquistRankUtils.removeAllNames(rangCible, ranksIdToDelete);
         }
-        rangCible.addAllNamesToCronquistRank(rangSource.getNoms());
-        return rangCible;
+        log.debug(String.format("Ajout des noms %s au rang %s", CronquistRankUtils.getNomsIds(rangSource), rangCible.getId()));
+        CronquistRankUtils.addNoms(rangCible, rangSource.getNoms());
+        rangSource.getNoms().clear();
+    }
+
+    private void addUrlsFromRankToRank(
+        @NotNull MergeContainer mergeContainer
+                                      ) {
+        CronquistRank rangCible = mergeContainer.getRangQuiRecupereLesInfos();
+        CronquistRank rangSource = mergeContainer.getRangQuiSeraSupprime();
+
+        CronquistRankUtils.addUrls(rangCible, rangSource.getUrls());
+        rangSource.getUrls().clear();
+    }
+
+    /**
+     * Utilisé pour faire transiter les deux rangs à merger d'une méthode à l'autre.
+     * SIDE-EFFECT
+     */
+    private static class MergeContainer {
+        private final CronquistRank rangQuiSeraSupprime;
+        private final CronquistRank rangQuiRecupereLesInfos;
+
+        public MergeContainer(CronquistRank rangQuiSeraSupprime, CronquistRank rangQuiRecupereLesInfos) {
+            this.rangQuiSeraSupprime = rangQuiSeraSupprime;
+            this.rangQuiRecupereLesInfos = rangQuiRecupereLesInfos;
+        }
+
+        public CronquistRank getRangQuiSeraSupprime() {
+            return rangQuiSeraSupprime;
+        }
+
+        public CronquistRank getRangQuiRecupereLesInfos() {
+            return rangQuiRecupereLesInfos;
+        }
     }
 }

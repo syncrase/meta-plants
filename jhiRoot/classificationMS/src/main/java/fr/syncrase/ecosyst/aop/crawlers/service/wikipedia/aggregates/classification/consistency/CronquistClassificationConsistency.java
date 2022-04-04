@@ -134,7 +134,7 @@ public class CronquistClassificationConsistency {
         boolean uniquementLeRangExistantEstSignificatif = rankToInsert.isRangDeLiaison() && !existingRank.isRangDeLiaison();
         if (uniquementLeRangExistantEstSignificatif) {
             rankToInsert.setId(existingRank.getId());
-            rankToInsert.addAllNamesToCronquistRank(existingRank.getNoms());
+            rankToInsert.addAllNamesToCronquistRank(existingRank.getNomsWrappers());
             rankToInsert.addAllUrlsToCronquistRank(existingRank.getIUrls());// TODO add test : vérifier que les adresses ne sont pas supprimées
             return rankToInsert;
         }
@@ -142,7 +142,6 @@ public class CronquistClassificationConsistency {
         boolean lesDeuxRangsSontDeLiaison = rankToInsert.isRangDeLiaison() && existingRank.isRangDeLiaison();
         if (lesDeuxRangsSontDeLiaison) {
             rankToInsert.setId(existingRank.getId());
-            //            rankToInsert.addAllNamesToCronquistRank();
             rankToInsert = synchronizeNames(existingRank, rankToInsert);
             rankToInsert = synchronizeUrl(existingRank, rankToInsert);
         }
@@ -162,7 +161,7 @@ public class CronquistClassificationConsistency {
                                          ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank, ClassificationReconstructionException {
         // TODO quand je merge le rang significatif dans le rang de liaison je dois supprimer le nom de liaison du rang de liaison
         ICronquistRank existingRank = existingClassification.getRang(rankToInsert.getRankName());
-        boolean leRangAInsererNEstPasDansLaClassificationExistante = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNoms());
+        boolean leRangAInsererNEstPasDansLaClassificationExistante = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNomsWrappers());
         @Nullable ICronquistRank synonym = classificationReader.findExistingRank(rankToInsert);
 
         ICronquistRank consistentRank = existingRank;
@@ -186,18 +185,18 @@ public class CronquistClassificationConsistency {
         @NotNull ICronquistRank existingRank,
         @NotNull ICronquistRank rankToInsert
                                            ) {
-        assert rankToInsert.getNoms().size() == 1;
+        assert rankToInsert.getNomsWrappers().size() == 1;
         ICronquistRank rankWithConsistentNames = rankToInsert.clone();
 
-        for (IClassificationNom existingNom : existingRank.getNoms()) {
-            boolean leNomSignificatifAInsererExisteDeja = rankWithConsistentNames.getNoms().stream()
+        for (IClassificationNom existingNom : existingRank.getNomsWrappers()) {
+            boolean leNomSignificatifAInsererExisteDeja = rankWithConsistentNames.getNomsWrappers().stream()
                 .map(IClassificationNom::getNomFr)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet())
                 .contains(existingNom.getNomFr());
 
             if (leNomSignificatifAInsererExisteDeja) {
-                rankWithConsistentNames.getNoms().forEach(toInsertNom -> {
+                rankWithConsistentNames.getNomsWrappers().forEach(toInsertNom -> {
                     if (toInsertNom.getNomFr().contentEquals(existingNom.getNomFr())) {
                         toInsertNom.setId(existingNom.getId());
                     }
@@ -206,7 +205,7 @@ public class CronquistClassificationConsistency {
             }
 
             if (existingRank.isRangDeLiaison()) {
-                rankWithConsistentNames.getNoms().forEach(toInsertNom -> toInsertNom.setId(existingNom.getId()));
+                rankWithConsistentNames.getNomsWrappers().forEach(toInsertNom -> toInsertNom.setId(existingNom.getId()));
                 continue;
             }
 

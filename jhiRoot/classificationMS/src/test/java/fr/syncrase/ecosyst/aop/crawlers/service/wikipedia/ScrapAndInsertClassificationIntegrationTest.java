@@ -144,18 +144,18 @@ public class ScrapAndInsertClassificationIntegrationTest {
             // - doit posséder le sous-règne Tracheobionta
             CronquistClassificationBranch classificationBranchOfErableCrete = cronquistService.getClassificationById(erableCreteClassification.getRangDeBase().getId());
 
-            Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSCLASSE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeSousClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSCLASSE).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux sous-classes", 2, nomsDeSousClasseDeErableCrete.size());
             assertTrue("L'érable de Crete doit posséder la sous-classes synonyme Rosidae", nomsDeSousClasseDeErableCrete.containsAll(Set.of("Rosidae", "Magnoliidae")));
 
-            Set<String> nomsDeClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.CLASSE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeClasseDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.CLASSE).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Crete doit contenir deux classes", 2, nomsDeClasseDeErableCrete.size());
             assertTrue("L'érable de Crete doit posséder la classes synonyme Magnoliopsida", nomsDeClasseDeErableCrete.containsAll(Set.of("Magnoliopsida", "Equisetopsida")));
 
-            Set<String> nomsDEmbranchementDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.EMBRANCHEMENT).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDEmbranchementDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.EMBRANCHEMENT).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertTrue("L'érable de Crete doit posséder l'embranchement Magnoliophyta", nomsDEmbranchementDeErableCrete.contains("Magnoliophyta"));
 
-            Set<String> nomsDeSousRegneDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSREGNE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeSousRegneDeErableCrete = classificationBranchOfErableCrete.getRang(RankName.SOUSREGNE).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertTrue("L'érable de Crete doit posséder le sous-règne Tracheobionta", nomsDeSousRegneDeErableCrete.contains("Tracheobionta"));
 
         } catch (IOException e) {

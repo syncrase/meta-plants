@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,7 +51,7 @@ public class DoubleWaySynonymTest {
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch sepisanthesSenegalensisClassification = cronquistService.saveCronquist(classification, wiki);
 
-            Set<Long> idsDesRangsDeLiaisonQuiDoiventDisparaitrent = utils.getRanksId(sepisanthesSenegalensisClassification, RankName.SOUSORDRE, RankName.FAMILLE);
+            Set<Long> idsDesRangsDeLiaisonQuiDoiventDisparaitre = utils.getRanksId(sepisanthesSenegalensisClassification, RankName.SOUSORDRE, RankName.FAMILLE);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta
@@ -81,20 +79,18 @@ public class DoubleWaySynonymTest {
             classification = wikipediaCrawler.scrapWiki(wiki);
             CronquistClassificationBranch erableMontpellierClassification = cronquistService.saveCronquist(classification, wiki);
 
-            idsDesRangsDeLiaisonQuiDoiventDisparaitrent.forEach(id -> {
-                assertNull("Le rang de liaison doit avoir été supprimé", cronquistService.getRankById(id));
-            });
+            idsDesRangsDeLiaisonQuiDoiventDisparaitre.forEach(id -> assertNull("Le rang de liaison doit avoir été supprimé", cronquistService.getRankById(id)));
 
             // puisque Aceraceae = Sapindaceae
             // ⇒ Lepisanthes_senegalensis doit posséder la famille synonyme Aceraceae
             CronquistClassificationBranch classificationBranchOfChironia = cronquistService.getClassificationById(sepisanthesSenegalensisClassification.getRangDeBase().getId());
-            Set<String> nomsDeFamilleDeSepisanthesSenegalensis = classificationBranchOfChironia.getRang(RankName.FAMILLE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeFamilleDeSepisanthesSenegalensis = classificationBranchOfChironia.getRang(RankName.FAMILLE).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("Lepisanthes_senegalensis doit contenir deux familles", 2, nomsDeFamilleDeSepisanthesSenegalensis.size());
             assertTrue("Lepisanthes_senegalensis doit posséder la famille synonyme Aceraceae", nomsDeFamilleDeSepisanthesSenegalensis.containsAll(Set.of("Aceraceae", "Sapindaceae")));
 
             // ⇒ L'érable de Miyabe doit posséder la famille synonyme Sapindaceae
             CronquistClassificationBranch classificationBranchOfErableMiyabe = cronquistService.getClassificationById(erableMiyabeClassification.getRangDeBase().getId());
-            Set<String> nomsDeFamilleDeErableMiyabe = classificationBranchOfErableMiyabe.getRang(RankName.FAMILLE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDeFamilleDeErableMiyabe = classificationBranchOfErableMiyabe.getRang(RankName.FAMILLE).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("L'érable de Miyabe doit contenir deux familles", 2, nomsDeFamilleDeErableMiyabe.size());
             assertTrue("L'érable de Miyabe doit posséder la famille synonyme Aceraceae", nomsDeFamilleDeErableMiyabe.containsAll(Set.of("Aceraceae", "Sapindaceae")));
 

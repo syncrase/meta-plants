@@ -8,6 +8,7 @@ import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawl
 import fr.syncrase.ecosyst.domain.ICronquistRank;
 import fr.syncrase.ecosyst.domain.enumeration.RankName;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ClassificationMsApp.class)
@@ -31,6 +33,11 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
 
     public DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest() {
         this.wikipediaCrawler = new WikipediaCrawler(cronquistService);
+    }
+
+    @BeforeAll
+    static void init() {
+
     }
 
     @Test
@@ -96,7 +103,7 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
                          atalayaSousClasse,
                          arjonaSousClasse
                         );
-            assertEquals("La sous-classe rosidae ne possède qu'un seul nom (pas de nom de liaison superflue)", 1, newAtalayaClassification.getRang(RankName.SOUSCLASSE).getNoms().size());
+            assertEquals("La sous-classe rosidae ne doit posséder qu'un seul nom (pas de nom de liaison superflue)", 1, newAtalayaClassification.getRang(RankName.SOUSCLASSE).getNomsWrappers().size());
 
             Set<ICronquistRank> taxonsOfRosidae = cronquistService.getTaxonsOf(arjonaSousClasse);
             assertEquals(
@@ -106,8 +113,8 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
                         );
 
             // TODO tester ça
-//            CronquistClassificationBranch arjonaClassificationAfterInserts = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.SOUSCLASSE).getId());
-//            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", arjonaClassificationAfterInserts);
+            //            CronquistClassificationBranch arjonaClassificationAfterInserts = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.SOUSCLASSE).getId());
+            //            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", arjonaClassificationAfterInserts);
 
 
         } catch (IOException e) {

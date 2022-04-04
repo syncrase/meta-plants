@@ -47,7 +47,7 @@ public interface ICronquistRank extends Cloneable {
     /*
     All about Names
      */
-    Set<IClassificationNom> getNoms();
+    Set<IClassificationNom> getNomsWrappers();
 
     void setNoms(Set<IClassificationNom> classificationNoms);
 
@@ -61,7 +61,7 @@ public interface ICronquistRank extends Cloneable {
 
     ICronquistRank noms(Set<IClassificationNom> noms);
 
-    void removeNames();
+    void removeAllNames();
 
     boolean isRangSignificatif();
 
@@ -82,4 +82,6 @@ public interface ICronquistRank extends Cloneable {
     java Utils
      */
     public ICronquistRank clone();
+
+    void removeAllNames(Set<Long> ranksIdToDelete);
 }

@@ -2,9 +2,7 @@ package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.CrawlerTest;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.insertion.BasicInsertionTest;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge.AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge.BasicSynonymAdditionTest;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge.DoubleWaySynonymTest;
+import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -14,7 +12,9 @@ import org.junit.runners.Suite;
     BasicSynonymAdditionTest.class,
     CrawlerTest.class,
     DoubleWaySynonymTest.class,
-    AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest.class,
+    LeRangScrappeFaitEvoluerLaClassificationExistanteTest.class,
+    DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest.class,
+    AjoutDeSynonymesEtSuppressionDeRangDeLiaisonsTest.class,// DOIT suivre le précédent, car modifie les données et fait planter un test TODO removeAllDataAfterEachTest
     //    ScrapAndInsertClassificationIntegrationTest.class,
 })
 public class RunAllClassificationInsertionTests {

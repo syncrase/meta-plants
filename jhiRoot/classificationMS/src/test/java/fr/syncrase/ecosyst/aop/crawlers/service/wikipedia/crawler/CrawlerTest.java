@@ -34,7 +34,7 @@ public class CrawlerTest {
             String wiki = "https://fr.wikipedia.org/wiki/Monodiella";
             classification = wikipediaCrawler.scrapWiki(wiki);
 
-            Set<String> nomsDuGenreMonodiella = classification.getRang(RankName.GENRE).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+            Set<String> nomsDuGenreMonodiella = classification.getRang(RankName.GENRE).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
             assertEquals("Le genre monodiella ne doit contenir qu'un seul nom", 1, nomsDuGenreMonodiella.size());
             assertTrue("Le genre monodiella doit être 'Monodiella' pas 'Gentianaceae'", nomsDuGenreMonodiella.contains("Monodiella"));
         } catch (IOException e) {

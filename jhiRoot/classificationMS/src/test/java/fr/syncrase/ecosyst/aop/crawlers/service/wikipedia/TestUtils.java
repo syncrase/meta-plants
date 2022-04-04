@@ -30,7 +30,7 @@ public class TestUtils {
         CronquistClassificationBranch corylopsisClassification,
         RankName ordre
                                    ) {
-        return corylopsisClassification.getRang(ordre).getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
+        return corylopsisClassification.getRang(ordre).getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet());
     }
 
     /**
@@ -71,12 +71,12 @@ public class TestUtils {
         assertEquals("Les Ids doivent être les mêmes", rang.getId(), rang1.getId());
         assertEquals("Les deux rang doivent être au même endroit de la classification", rang.getRankName(), rang1.getRankName());
         assertTrue("Tous les noms doivent être en commun",
-                   rang.getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet())
+                   rang.getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet())
                        .containsAll(
-                           rang1.getNoms().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet())
+                           rang1.getNomsWrappers().stream().map(IClassificationNom::getNomFr).collect(Collectors.toSet())
                                    )
                   );
-        assertEquals("Les deux rangs doivent avoir le même nombre de noms", rang.getNoms().size(), rang1.getNoms().size());
+        assertEquals("Les deux rangs doivent avoir le même nombre de noms", rang.getNomsWrappers().size(), rang1.getNomsWrappers().size());
         assertTrue("Toutes les urls doivent être en commun",
                    rang.getIUrls().stream().map(IUrl::getUrl).collect(Collectors.toSet())
                        .containsAll(
@@ -120,7 +120,7 @@ public class TestUtils {
         for (Map.Entry<RankName, ICronquistRank> rankEntry : classification.getClassificationBranch().entrySet()) {
             cronquistRank = rankEntry.getValue();
             if (cronquistRank.isRangSignificatif()) {
-                assertEquals("Un rang significatif doit posséder autant de noms que d'urls", cronquistRank.getNoms().size(), cronquistRank.getIUrls().size());
+                assertEquals("Un rang significatif doit posséder autant de noms que d'urls", cronquistRank.getNomsWrappers().size(), cronquistRank.getIUrls().size());
             }
         }
 
@@ -131,7 +131,7 @@ public class TestUtils {
         for (Map.Entry<RankName, ICronquistRank> rankEntry : classification.getClassificationBranch().entrySet()) {
             cronquistRank = rankEntry.getValue();
             if (cronquistRank.isRangDeLiaison()) {
-                assertEquals("Un rang de liaison ne doit posséder qu'un seul nom", 1, cronquistRank.getNoms().size());
+                assertEquals("Un rang de liaison ne doit posséder qu'un seul nom", 1, cronquistRank.getNomsWrappers().size());
             }
         }
     }

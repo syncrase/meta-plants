@@ -99,7 +99,7 @@ public class BasicInsertionTest {
         List<AtomicClassificationNom> classificationNoms = new ArrayList<>();
         for (Map.Entry<RankName, ICronquistRank> rank : cronquistRanks.getClassificationBranch().entrySet()) {
             classificationNoms.addAll(
-                rank.getValue().getNoms().stream()
+                rank.getValue().getNomsWrappers().stream()
                     .map(IClassificationNom::getNomFr)
                     .filter(Objects::nonNull)
                     .flatMap(nom -> classificationNomRepository.findAll(Example.of(new ClassificationNom().nomFr(nom))).stream())

@@ -46,7 +46,7 @@ public class CronquistService implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         cronquistClassificationConsistency = new CronquistClassificationConsistency(classificationRepository, classificationReader);
     }
 
@@ -107,11 +107,6 @@ public class CronquistService implements InitializingBean {
         return null;
     }
 
-    @Transactional
-    public Set<ICronquistRank> getTaxonsOf(Long id) {
-        return classificationReader.getTaxons(new AtomicCronquistRank().id(id));
-    }
-
     public CronquistClassificationBranch getClassificationByName(String chironia) {
         try {
             return classificationReader.findExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
@@ -121,6 +116,11 @@ public class CronquistService implements InitializingBean {
             log.error("Impossible de récupérer un unique rang à partir des informations procurées");
         }
         return null;
+    }
+
+    @Transactional
+    public Set<ICronquistRank> getTaxonsOf(Long id) {
+        return classificationReader.getTaxons(new AtomicCronquistRank().id(id));
     }
 
     public ICronquistRank getRankById(Long id) {

@@ -30,7 +30,7 @@ public class AtomicCronquistRank implements ICronquistRank {
         this.id = cronquistRank.getId();
         this.rank = cronquistRank.getRankName();
         this.urls = cronquistRank.getIUrls().stream().map(AtomicUrl::new).collect(Collectors.toSet());
-        this.noms = cronquistRank.getNoms().stream().map(AtomicClassificationNom::new).collect(Collectors.toSet());
+        this.noms = cronquistRank.getNomsWrappers().stream().map(AtomicClassificationNom::new).collect(Collectors.toSet());
     }
 
     public AtomicCronquistRank() {
@@ -100,7 +100,7 @@ public class AtomicCronquistRank implements ICronquistRank {
         this.rank = rank;
     }
 
-    public Set<IClassificationNom> getNoms() {
+    public Set<IClassificationNom> getNomsWrappers() {
         return noms;
     }
 
@@ -171,7 +171,7 @@ public class AtomicCronquistRank implements ICronquistRank {
     }
 
     @Override
-    public void removeNames() {
+    public void removeAllNames() {
         this.noms.clear();
     }
 
@@ -203,7 +203,7 @@ public class AtomicCronquistRank implements ICronquistRank {
         return "AtomicCronquistRank{" +
             "id=" + getId() +
             ", rank='" + getRankName() + "'" +
-            ", names='" + getNoms().stream().map(n -> "{" + n.getId() + ":" + n.getNomFr() + "}").collect(Collectors.toList()) + "}";
+            ", names='" + getNomsWrappers().stream().map(n -> "{" + n.getId() + ":" + n.getNomFr() + "}").collect(Collectors.toList()) + "}";
     }
 
     /**
@@ -233,7 +233,7 @@ public class AtomicCronquistRank implements ICronquistRank {
      */
     public boolean hasThisName(String name) {
         TreeSet<IClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
-        classificationNoms.addAll(this.getNoms());
+        classificationNoms.addAll(this.getNomsWrappers());
         return classificationNoms.contains(new AtomicClassificationNom().nomFr(name));
     }
 
@@ -247,7 +247,7 @@ public class AtomicCronquistRank implements ICronquistRank {
     public boolean doTheRankHasOneOfTheseNames(Set<IClassificationNom> names) {
         TreeSet<IClassificationNom> classificationNoms = getAtomicClassificationNomTreeSet();
         classificationNoms.addAll(names);
-        for (IClassificationNom classificationNom : this.getNoms()) {
+        for (IClassificationNom classificationNom : this.getNomsWrappers()) {
             if (classificationNoms.contains(classificationNom)) {
                 return true;
             }
@@ -263,7 +263,7 @@ public class AtomicCronquistRank implements ICronquistRank {
      */
     public void addNameToCronquistRank(IClassificationNom nomFr) {
         if (this.isRangDeLiaison() && (nomFr.getNomFr() == null || nomFr.getNomLatin() == null)) {
-            this.getNoms().removeIf(classificationNom -> classificationNom.getNomFr() == null);
+            this.getNomsWrappers().removeIf(classificationNom -> classificationNom.getNomFr() == null);
         }
         this.addNom(new AtomicClassificationNom().nomFr(nomFr.getNomFr())
                         .id(nomFr.getId()));// TODO l'instanciation est vraiment nécessaire ?
@@ -305,8 +305,13 @@ public class AtomicCronquistRank implements ICronquistRank {
         }
     }
 
+    @Override
+    public void removeAllNames(Set<Long> ranksIdToDelete) {
+        this.noms.removeIf(classificationNom -> ranksIdToDelete.contains(classificationNom.getId()));
+    }
+
     public boolean isAnyNameHasAnId() {
-        return getNoms().stream().anyMatch(classificationNom -> classificationNom.getId() != null);
+        return getNomsWrappers().stream().anyMatch(classificationNom -> classificationNom.getId() != null);
     }
 
     @Override

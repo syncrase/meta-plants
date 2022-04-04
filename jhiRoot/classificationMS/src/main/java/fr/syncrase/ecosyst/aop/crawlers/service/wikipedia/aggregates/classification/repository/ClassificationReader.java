@@ -110,7 +110,7 @@ public class ClassificationReader {
             rankCrit.setId(idFilter);
         }
 
-        if (!cronquistRank.getNoms().isEmpty()) {
+        if (!cronquistRank.getNomsWrappers().isEmpty()) {
             Set<IClassificationNom> noms = findExistingNames(cronquistRank);
             LongFilter nomFilter = new LongFilter();
             nomFilter.setIn(noms.stream().map(IClassificationNom::getId).filter(Objects::nonNull).collect(Collectors.toList()));
@@ -139,7 +139,7 @@ public class ClassificationReader {
 
     private @NotNull Set<IClassificationNom> findExistingNames(@NotNull ICronquistRank cronquistRank) {
         Set<IClassificationNom> noms = new HashSet<>();
-        Iterator<IClassificationNom> nomIterator = cronquistRank.getNoms().iterator();
+        Iterator<IClassificationNom> nomIterator = cronquistRank.getNomsWrappers().iterator();
         IClassificationNom nom;
         while (nomIterator.hasNext()) {
             nom = nomIterator.next();
