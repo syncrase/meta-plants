@@ -6,10 +6,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fr.syncrase.ecosyst.IntegrationTest;
-import fr.syncrase.ecosyst.domain.ClassificationNom;
-import fr.syncrase.ecosyst.domain.CronquistRank;
-import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
-import fr.syncrase.ecosyst.service.criteria.ClassificationNomCriteria;
+import fr.syncrase.ecosyst.domain.classification.entities.database.ClassificationNom;
+import fr.syncrase.ecosyst.domain.classification.entities.database.CronquistRank;
+import fr.syncrase.ecosyst.repository.database.ClassificationNomRepository;
+
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;

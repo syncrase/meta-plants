@@ -1,6 +1,6 @@
 package fr.syncrase.ecosyst.aop.crawlers;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.ClassificationCrawlerService;
+import fr.syncrase.ecosyst.service.crawler.ClassificationCrawlerService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -17,6 +17,6 @@ public class ClassificationCrawler implements ApplicationListener<ContextRefresh
 
     @Override
     public void onApplicationEvent(@NotNull ContextRefreshedEvent event) {
-        //        crawler.crawl();
+        crawler.crawlAllWikipedia();
     }
 }

@@ -1,9 +1,10 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler;
 
 import fr.syncrase.ecosyst.ClassificationMsApp;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
-import fr.syncrase.ecosyst.domain.IClassificationNom;
-import fr.syncrase.ecosyst.domain.enumeration.RankName;
+import fr.syncrase.ecosyst.domain.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.domain.classification.entities.IClassificationNom;
+import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
+import fr.syncrase.ecosyst.domain.crawler.wikipedia.WikipediaCrawler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,12 +1,12 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.merge;
 
 import fr.syncrase.ecosyst.ClassificationMsApp;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
+import fr.syncrase.ecosyst.service.classification.CronquistService;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
-import fr.syncrase.ecosyst.domain.ICronquistRank;
-import fr.syncrase.ecosyst.domain.enumeration.RankName;
+import fr.syncrase.ecosyst.domain.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.domain.crawler.wikipedia.WikipediaCrawler;
+import fr.syncrase.ecosyst.domain.classification.entities.ICronquistRank;
+import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
@@ -17,8 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ClassificationMsApp.class)
@@ -112,10 +111,8 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
                 taxonsOfRosidae.size()
                         );
 
-            // TODO tester ça
-            //            CronquistClassificationBranch arjonaClassificationAfterInserts = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.SOUSCLASSE).getId());
-            //            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", arjonaClassificationAfterInserts);
-
+            CronquistClassificationBranch arjonaClassificationAfterInserts = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.SOUSCLASSE).getId());
+            assertNull("La sous-classe d'arjona doit avoir été supprimée car mergée avec le rang de liaison d'Atalaya", arjonaClassificationAfterInserts);
 
         } catch (IOException e) {
             fail("unable to scrap wiki : " + e.getMessage());

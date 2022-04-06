@@ -1,10 +1,10 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia;
 
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
-import fr.syncrase.ecosyst.domain.IClassificationNom;
-import fr.syncrase.ecosyst.domain.ICronquistRank;
-import fr.syncrase.ecosyst.domain.IUrl;
-import fr.syncrase.ecosyst.domain.enumeration.RankName;
+import fr.syncrase.ecosyst.domain.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.domain.classification.entities.IClassificationNom;
+import fr.syncrase.ecosyst.domain.classification.entities.ICronquistRank;
+import fr.syncrase.ecosyst.domain.classification.entities.IUrl;
+import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 

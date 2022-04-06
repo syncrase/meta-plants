@@ -1,6 +1,7 @@
 package fr.syncrase.ecosyst.service.criteria;
 
-import fr.syncrase.ecosyst.domain.enumeration.RankName;
+import fr.syncrase.ecosyst.domain.classification.entities.database.CronquistRank;
+import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -9,7 +10,7 @@ import tech.jhipster.service.filter.Filter;
 import tech.jhipster.service.filter.LongFilter;
 
 /**
- * Criteria class for the {@link fr.syncrase.ecosyst.domain.CronquistRank} entity. This class is used
+ * Criteria class for the {@link CronquistRank} entity. This class is used
  * in {@link fr.syncrase.ecosyst.web.rest.CronquistRankResource} to receive all the possible filtering options from
  * the Http GET request parameters.
  * For example the following could be a valid request:

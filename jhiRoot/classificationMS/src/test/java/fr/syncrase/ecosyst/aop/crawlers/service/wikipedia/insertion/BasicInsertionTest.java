@@ -1,16 +1,16 @@
 package fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.insertion;
 
 import fr.syncrase.ecosyst.ClassificationMsApp;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.CronquistService;
+import fr.syncrase.ecosyst.service.classification.CronquistService;
 import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.TestUtils;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.CronquistClassificationBranch;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom;
-import fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.crawler.WikipediaCrawler;
-import fr.syncrase.ecosyst.domain.ClassificationNom;
-import fr.syncrase.ecosyst.domain.IClassificationNom;
-import fr.syncrase.ecosyst.domain.ICronquistRank;
-import fr.syncrase.ecosyst.domain.enumeration.RankName;
-import fr.syncrase.ecosyst.repository.ClassificationNomRepository;
+import fr.syncrase.ecosyst.domain.classification.CronquistClassificationBranch;
+import fr.syncrase.ecosyst.domain.classification.entities.atomic.AtomicClassificationNom;
+import fr.syncrase.ecosyst.domain.crawler.wikipedia.WikipediaCrawler;
+import fr.syncrase.ecosyst.domain.classification.entities.database.ClassificationNom;
+import fr.syncrase.ecosyst.domain.classification.entities.IClassificationNom;
+import fr.syncrase.ecosyst.domain.classification.entities.ICronquistRank;
+import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
+import fr.syncrase.ecosyst.repository.database.ClassificationNomRepository;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.syncrase.ecosyst.aop.crawlers.service.wikipedia.aggregates.classification.entities.classification.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
+import static fr.syncrase.ecosyst.domain.classification.entities.atomic.AtomicClassificationNom.getAtomicClassificationNomTreeSet;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)

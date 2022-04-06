@@ -2,17 +2,15 @@ package fr.syncrase.ecosyst.service.criteria;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import fr.syncrase.ecosyst.domain.classification.entities.database.ClassificationNom;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
-import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
 
 /**
- * Criteria class for the {@link fr.syncrase.ecosyst.domain.ClassificationNom} entity. This class is used
+ * Criteria class for the {@link ClassificationNom} entity. This class is used
  * in {@link fr.syncrase.ecosyst.web.rest.ClassificationNomResource} to receive all the possible filtering options from
  * the Http GET request parameters.
  * For example the following could be a valid request:

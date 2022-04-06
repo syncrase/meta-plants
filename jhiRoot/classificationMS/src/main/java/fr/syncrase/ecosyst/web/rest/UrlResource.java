@@ -1,9 +1,9 @@
 package fr.syncrase.ecosyst.web.rest;
 
-import fr.syncrase.ecosyst.domain.Url;
-import fr.syncrase.ecosyst.repository.UrlRepository;
-import fr.syncrase.ecosyst.service.UrlQueryService;
-import fr.syncrase.ecosyst.service.UrlService;
+import fr.syncrase.ecosyst.domain.classification.entities.database.Url;
+import fr.syncrase.ecosyst.repository.database.UrlRepository;
+import fr.syncrase.ecosyst.service.database.UrlQueryService;
+import fr.syncrase.ecosyst.service.database.UrlService;
 import fr.syncrase.ecosyst.service.criteria.UrlCriteria;
 import fr.syncrase.ecosyst.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -28,7 +27,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link fr.syncrase.ecosyst.domain.Url}.
+ * REST controller for managing {@link Url}.
  */
 @RestController
 @RequestMapping("/api")
