@@ -21,22 +21,18 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class WikipediaCrawler {
 
     public static final String LIST_INDICATOR_IN_URL = "Cat%C3%A9gorie";
-    public static final String HREF = "href";
-    public static final String LIST_SELECTOR_2 = "div.mw-category-group ul li a[href]";
-    public static final String LIST_SELECTOR_1 = "div.CategoryTreeItem a[href]";
-    public static final String CLASSIFICATION_SELECTOR = "div.infobox_v3.large.taxobox_v3.plante.bordered";
-    public static final String MAIN_CLASSIFICATION_SELECTOR = "table.taxobox_classification caption a";
     private final Logger log = LoggerFactory.getLogger(WikipediaCrawler.class);
 
     private final CronquistService cronquistService;
+    WikipediaHtmlExtractor wikipediaHtmlExtractor;
 
     public WikipediaCrawler(CronquistService cronquistService) {
         this.cronquistService = cronquistService;
+        wikipediaHtmlExtractor = new WikipediaHtmlExtractor();
     }
 
     public void crawlAllWikipedia() {
@@ -48,18 +44,9 @@ public class WikipediaCrawler {
     }
 
     public void findWiki() {
-//        try {
         CronquistClassificationBranch lilianae = cronquistService.getClassificationByName("Lilianae");
         Set<ICronquistRank> taxonsOfLiliane = cronquistService.getTaxonsOf(lilianae.getRangDeBase().getId());
         findRangDeBase(taxonsOfLiliane);
-//        if (rangDeBase != null) {
-//            log.info("Le wiki qui fourni le super-ordre Lilianae est : " + rangDeBase.getRangDeBase().getIUrls().stream().map(IUrl::getUrl).collect(Collectors.toList()));
-//        } else {
-//            log.info("Impossible de trouver un wiki qui possède l'info que je cherche");
-//        }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private void findRangDeBase(@NotNull Set<ICronquistRank> taxonsOfLiliane) {
@@ -71,7 +58,7 @@ public class WikipediaCrawler {
                     try {
                         CronquistClassificationBranch classification = scrapWiki(iUrl.getUrl());
                         if (classification.getRang(RankName.SUPERORDRE).doTheRankHasOneOfTheseNames(Set.of(new AtomicClassificationNom().nomFr("Lilianae")))) {
-//                            return classification;
+                            //                            return classification;
                             log.info("Le wiki qui fourni le super-ordre Lilianae est : " + iUrl.getUrl());
                         }
                     } catch (IOException e) {
@@ -87,7 +74,7 @@ public class WikipediaCrawler {
     public void testCrawlAllWikipedia() {
         //            scrapWikiList(Wikipedia.scrappingBaseUrl);
         List<String> wikis = new ArrayList<>();
-//        wikis.add("https://fr.wikipedia.org/wiki/Arjona");
+        //        wikis.add("https://fr.wikipedia.org/wiki/Arjona");
         //        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
         //        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");
         wikis.add("https://fr.wikipedia.org/wiki/Helanthium_bolivianum");
@@ -101,9 +88,6 @@ public class WikipediaCrawler {
                 log.error("unable to scrap wiki : " + e.getMessage());
             }
         });
-
-
-
 
             /*
             TEST
@@ -142,21 +126,14 @@ public class WikipediaCrawler {
     public void scrapWikiList(String urlWikiListe) throws IOException {
         log.info("Get list from : " + urlWikiListe);
         Document doc = Jsoup.connect(urlWikiListe).get();
-        Elements wikiList = doc.select(LIST_SELECTOR_1);
-        if (wikiList.size() > 0) {
-            log.info(wikiList.size() + " éléments de liste récupérées");
-        }
-        // Si 0 alors c'est peut-être un autre html/css qui est utilisé
-        if (wikiList.size() == 0) {
-            wikiList = doc.select(LIST_SELECTOR_2);
-            log.info(wikiList.size() + " éléments de liste récupérées avec l'autre CSS");
-        }
+
+        Elements wikiList = wikipediaHtmlExtractor.extractList(doc);
         if (wikiList.size() == 0) {
             log.error("Échec de récupération des éléments de liste de la page " + urlWikiListe);
         }
 
         for (Element listItem : wikiList) {
-            urlWikiListe = listItem.attr(HREF);
+            urlWikiListe = wikipediaHtmlExtractor.extractUrlAttr(listItem);
             // Si l'url contient "Catégorie" alors la page contient une liste
             String urlWiki = Wikipedia.getValidUrl(urlWikiListe);
             if (urlWikiListe.contains(LIST_INDICATOR_IN_URL)) {
@@ -173,9 +150,10 @@ public class WikipediaCrawler {
     public CronquistClassificationBranch scrapWiki(String urlWiki) throws IOException {
         try {
             log.info("Get classification from : " + urlWiki);
-            Elements encadreTaxonomique = Jsoup.connect(urlWiki).get().select(CLASSIFICATION_SELECTOR);
+            Elements encadreTaxonomique = wikipediaHtmlExtractor.extractEncadreDeClassification(urlWiki);
 
-            return extractPremiereClassification(encadreTaxonomique);
+            CronquistClassificationBranch cronquistClassificationBranch = extractPremiereClassification(encadreTaxonomique);
+            return cronquistClassificationBranch;
         } catch (SocketTimeoutException e) {
             log.error("La page Wikipedia ne répond pas {}\n. Vérifier la connexion internet!", urlWiki);
         } catch (IOException e) {
@@ -188,14 +166,13 @@ public class WikipediaCrawler {
         // TODO Contient plusieurs classifications, en général Cronquist et APGN
         // TODO dans l'état actuel des choses, je ne garde que la PREMIERE section !
 
-        switch (getTypeOfMainClassification(encadreTaxonomique)) {
+        switch (wikipediaHtmlExtractor.extractTypeOfMainClassification(encadreTaxonomique)) {
             case "APG III":
                 log.info("APG III to be implemented");
                 break;
             case "Cronquist":
-                return extractionCronquist(encadreTaxonomique);
-            //                cronquistService.saveCronquist(extractionCronquist(encadreTaxonomique), urlWiki);
-            //                break;
+                CronquistClassificationBranch cronquistClassificationBranch = extractionCronquist(encadreTaxonomique);
+                return cronquistClassificationBranch;
             case "No classification":
                 log.info("No classification table found in this page");
                 break;
@@ -206,40 +183,6 @@ public class WikipediaCrawler {
                 log.warn("Classification's type cannot be determined");
         }
         return null;
-    }
-
-    private @NotNull String getTypeOfMainClassification(@NotNull Elements encadreTaxonomique) {
-
-        Elements taxoTitles = encadreTaxonomique.select(MAIN_CLASSIFICATION_SELECTOR);
-        if (taxoTitles.size() == 0) {
-            return "No classification";
-        }
-        String taxoTitle = taxoTitles.get(0)// ne contient qu'un seul titre
-            .childNode(0)// TextNode
-            .toString();
-
-        // Récupère le nom de l'encadré : ['Classification', 'Classification APG III (2009)']
-        if (taxoTitle.contains("APG III")) {
-            return "APG III";
-        }
-        if (taxoTitle.contains("Cronquist")) {
-            Elements small = encadreTaxonomique.select("small");
-            if (small.stream().anyMatch(el -> el.toString().contains("Taxon inexistant"))) {
-                return "No Cronquist";
-            }
-            return "Cronquist";
-        }
-
-        // Récupère les clés de classification de la première table
-        Elements tables = encadreTaxonomique.select("table.taxobox_classification");
-        Element mainTable = tables.get(0);
-        Elements taxoKeys = mainTable.select("tbody tr th a");
-        for (Element classificationKeys : taxoKeys) {
-            if (classificationKeys.text().contains("Clade")) {
-                return "APG III";
-            }
-        }
-        return "Cronquist";
     }
 
 /*
@@ -290,13 +233,12 @@ public class WikipediaCrawler {
     }*/
 
     private CronquistClassificationBranch extractionCronquist(@NotNull Elements encadreTaxonomique) {
-        Elements tables = encadreTaxonomique.select("table.taxobox_classification");
-        Element mainTable = tables.get(0);
+        Element mainTable = wikipediaHtmlExtractor.extractMainTableOfClassificationFrame(encadreTaxonomique);
 
-        CronquistClassificationExtractor cronquistClassificationExtractor = new CronquistClassificationExtractor();
+        CronquistClassificationBuilder cronquistClassificationBuilder = new CronquistClassificationBuilder();
         CronquistClassificationBranch cronquistClassification = null;
         try {
-            cronquistClassification = cronquistClassificationExtractor.getClassification(mainTable);
+            cronquistClassification = cronquistClassificationBuilder.getClassification(mainTable);
         } catch (ClassificationReconstructionException e) {
             log.error("Impossible d'extraire la classification de la page");
             e.printStackTrace();

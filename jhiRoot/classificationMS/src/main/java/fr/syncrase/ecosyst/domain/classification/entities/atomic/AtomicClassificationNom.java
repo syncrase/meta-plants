@@ -3,8 +3,10 @@ package fr.syncrase.ecosyst.domain.classification.entities.atomic;
 
 import fr.syncrase.ecosyst.domain.classification.entities.IClassificationNom;
 import fr.syncrase.ecosyst.domain.classification.entities.database.ClassificationNom;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
 
