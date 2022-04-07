@@ -74,8 +74,8 @@ public class DeuxClassificationsExistantesSontMergeesParLAjoutDUnRangTest {
                         );
 
             CronquistClassificationBranch neriifoliaPartialClassification = cronquistService.getClassificationById(atalayaClassification.getRang(RankName.CLASSE).getId());
-            CronquistClassificationBranch selaginaceaePartialClassification = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.CLASSE).getId());
-            utils.assertThatClassificationsAreTheSame(neriifoliaPartialClassification, selaginaceaePartialClassification);
+            CronquistClassificationBranch arjonaPartialClassification = cronquistService.getClassificationById(arjonaClassification.getRang(RankName.CLASSE).getId());
+            utils.assertThatClassificationsAreTheSame(neriifoliaPartialClassification, arjonaPartialClassification);
 
             // Règne 	Plantae
             //Sous-règne 	Tracheobionta

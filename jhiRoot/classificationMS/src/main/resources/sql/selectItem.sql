@@ -3,7 +3,7 @@ with recursive tr(from_id, to_id, level, rank, nom) as (
     select cronRank.id, cronRank.parent_id, 1, cronRank.rank, cn.nom_fr as level
     from cronquist_rank cronRank
              inner join classification_nom cn on cronRank.id = cn.cronquist_rank_id
-    where cn.nom_fr = 'Lilianae'
+    where cn.nom_fr = 'Hostaceae'
     union all
     select cronRank.id, cronRank.parent_id, tr.level + 1, cronRank.rank, cn.nom_fr
     from cronquist_rank cronRank
@@ -31,10 +31,19 @@ where cr.id in (select cronquist_rank_id
                 where counts.count > 1);
 
 
--- Afficher les enfants d'un rang
-select child_name.nom_fr
+-- Afficher les taxons d'un rang
+select child_name.id, child_name.nom_fr, child_rank.id
 from cronquist_rank parent_rank
          inner join classification_nom parent_name on parent_rank.id = parent_name.cronquist_rank_id
          inner join cronquist_rank child_rank on child_rank.parent_id = parent_rank.id
          inner join classification_nom child_name on child_rank.id = child_name.cronquist_rank_id
-where parent_name.nom_fr = 'Equisetopsida';
+-- where parent_name.nom_fr = 'Lilianae';
+where parent_name.id = 175244;
+
+
+-- Affiche un rang cronquist_rank.id, cn.nom_fr, u.url
+select cr.id, cn.nom_fr, u.url from classification_nom cn
+    inner join cronquist_rank cr on cn.cronquist_rank_id = cr.id
+    inner join url u on cr.id = u.cronquist_rank_id
+where cn.nom_fr = 'Agavaceae'
+-- where cn.id = 174057

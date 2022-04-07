@@ -2,6 +2,10 @@ package fr.syncrase.ecosyst.domain.crawler.wikipedia;
 
 import fr.syncrase.ecosyst.domain.classification.CronquistClassificationBranch;
 import fr.syncrase.ecosyst.domain.classification.consistency.ClassificationReconstructionException;
+import fr.syncrase.ecosyst.domain.classification.entities.ICronquistRank;
+import fr.syncrase.ecosyst.domain.classification.entities.IUrl;
+import fr.syncrase.ecosyst.domain.classification.entities.atomic.AtomicClassificationNom;
+import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
 import fr.syncrase.ecosyst.service.classification.CronquistService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +20,8 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WikipediaCrawler {
 
@@ -41,12 +47,50 @@ public class WikipediaCrawler {
         }
     }
 
+    public void findWiki() {
+//        try {
+        CronquistClassificationBranch lilianae = cronquistService.getClassificationByName("Lilianae");
+        Set<ICronquistRank> taxonsOfLiliane = cronquistService.getTaxonsOf(lilianae.getRangDeBase().getId());
+        findRangDeBase(taxonsOfLiliane);
+//        if (rangDeBase != null) {
+//            log.info("Le wiki qui fourni le super-ordre Lilianae est : " + rangDeBase.getRangDeBase().getIUrls().stream().map(IUrl::getUrl).collect(Collectors.toList()));
+//        } else {
+//            log.info("Impossible de trouver un wiki qui possède l'info que je cherche");
+//        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private void findRangDeBase(@NotNull Set<ICronquistRank> taxonsOfLiliane) {
+        for (ICronquistRank iCronquistRank : taxonsOfLiliane) {
+            Set<ICronquistRank> taxons = cronquistService.getTaxonsOf(iCronquistRank.getId());
+            if (taxons.size() == 0) {
+                // Ce rang n'a plus de taxons, je scrappe le wiki pour regarder le super-ordre s'il vaut Lilianae
+                for (IUrl iUrl : iCronquistRank.getIUrls()) {
+                    try {
+                        CronquistClassificationBranch classification = scrapWiki(iUrl.getUrl());
+                        if (classification.getRang(RankName.SUPERORDRE).doTheRankHasOneOfTheseNames(Set.of(new AtomicClassificationNom().nomFr("Lilianae")))) {
+//                            return classification;
+                            log.info("Le wiki qui fourni le super-ordre Lilianae est : " + iUrl.getUrl());
+                        }
+                    } catch (IOException e) {
+                        log.error("Impossible de scrapper la page " + iUrl.getUrl());
+                    }
+                }
+            } else {
+                findRangDeBase(taxons);
+            }
+        }
+    }
+
     public void testCrawlAllWikipedia() {
         //            scrapWikiList(Wikipedia.scrappingBaseUrl);
         List<String> wikis = new ArrayList<>();
-        wikis.add("https://fr.wikipedia.org/wiki/Arjona");// Rosidae// : merge branch
-        //        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");// : merge branch
-        //        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");// : merge branch
+//        wikis.add("https://fr.wikipedia.org/wiki/Arjona");
+        //        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
+        //        wikis.add("https://fr.wikipedia.org/wiki/Cossinia");
+        wikis.add("https://fr.wikipedia.org/wiki/Helanthium_bolivianum");
 
         wikis.forEach(wiki -> {
             CronquistClassificationBranch classification;

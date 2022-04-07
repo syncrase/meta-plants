@@ -107,6 +107,7 @@ public class CronquistService implements InitializingBean {
         return null;
     }
 
+    @Transactional
     public CronquistClassificationBranch getClassificationByName(String chironia) {
         try {
             return classificationReader.findExistingClassification(new AtomicCronquistRank().addNom(new AtomicClassificationNom().nomFr(chironia)));
