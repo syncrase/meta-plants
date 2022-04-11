@@ -22,19 +22,19 @@ public class CronquistClassificationBuilder {
     WikipediaHtmlExtractor wikipediaHtmlExtractor;
 
     /**
-     * Extract classification from the wikipedia classification table
+     * Extract extractClassification from the wikipedia extractClassification table
      *
-     * @param mainTable classification table
-     * @return The generated classification object
+     * @param mainTable extractClassification table
+     * @return The generated extractClassification object
      */
-    public CronquistClassificationBranch getClassification(@NotNull Element mainTable) throws ClassificationReconstructionException {
+    public CronquistClassificationBranch getClassification(@NotNull Element mainTable) throws ClassificationReconstructionException, UnableToScrapClassification {
 
         cronquistClassification = new CronquistClassificationBranch();
         wikipediaHtmlExtractor = new WikipediaHtmlExtractor();
         Elements elementsDeClassification = wikipediaHtmlExtractor.extractClassificationElements(mainTable);
 
         for (Element classificationItem : elementsDeClassification) {
-            setCronquistTaxonomyItemFromElement(classificationItem);
+            setCronquistTaxonomyItemFromElement(classificationItem);// TODO remove side effect
         }
 
         Map<String, ScrapedRank> rangTaxonMap = wikipediaHtmlExtractor.extractionRangsTaxonomiquesInferieurs(mainTable);

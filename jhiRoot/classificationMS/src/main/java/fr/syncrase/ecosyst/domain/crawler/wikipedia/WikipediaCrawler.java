@@ -7,6 +7,7 @@ import fr.syncrase.ecosyst.domain.classification.entities.IUrl;
 import fr.syncrase.ecosyst.domain.classification.entities.atomic.AtomicClassificationNom;
 import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
 import fr.syncrase.ecosyst.service.classification.CronquistService;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class WikipediaCrawler {
@@ -37,7 +39,7 @@ public class WikipediaCrawler {
 
     public void crawlAllWikipedia() {
         try {
-            scrapWikiList(Wikipedia.scrappingBaseUrl);
+            scrapAndSaveWikiList(Wikipedia.scrappingBaseUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,16 +51,21 @@ public class WikipediaCrawler {
         findRangDeBase(taxonsOfLiliane);
     }
 
+    /**
+     * Méthode de test pour looger tous les rangs de base possédant le superordre Lilianae
+     *
+     * @param taxonsOfLiliane
+     */
     private void findRangDeBase(@NotNull Set<ICronquistRank> taxonsOfLiliane) {
         for (ICronquistRank iCronquistRank : taxonsOfLiliane) {
             Set<ICronquistRank> taxons = cronquistService.getTaxonsOf(iCronquistRank.getId());
             if (taxons.size() == 0) {
-                // Ce rang n'a plus de taxons, je scrappe le wiki pour regarder le super-ordre s'il vaut Lilianae
+                // Ce rang n'a plus de taxons, je scrappe le wiki pour regarder le superordre s'il vaut Lilianae
                 for (IUrl iUrl : iCronquistRank.getIUrls()) {
                     try {
-                        CronquistClassificationBranch classification = scrapWiki(iUrl.getUrl());
+                        CronquistClassificationBranch classification = extractClassificationFromWiki(iUrl.getUrl());
                         if (classification.getRang(RankName.SUPERORDRE).doTheRankHasOneOfTheseNames(Set.of(new AtomicClassificationNom().nomFr("Lilianae")))) {
-                            //                            return classification;
+                            //                            return extractClassification;
                             log.info("Le wiki qui fourni le super-ordre Lilianae est : " + iUrl.getUrl());
                         }
                     } catch (IOException e) {
@@ -72,7 +79,7 @@ public class WikipediaCrawler {
     }
 
     public void testCrawlAllWikipedia() {
-        //            scrapWikiList(Wikipedia.scrappingBaseUrl);
+        //            scrapAndSaveWikiList(Wikipedia.scrappingBaseUrl);
         List<String> wikis = new ArrayList<>();
         //        wikis.add("https://fr.wikipedia.org/wiki/Arjona");
         //        wikis.add("https://fr.wikipedia.org/wiki/Atalaya_(genre)");
@@ -82,7 +89,7 @@ public class WikipediaCrawler {
         wikis.forEach(wiki -> {
             CronquistClassificationBranch classification;
             try {
-                classification = scrapWiki(wiki);
+                classification = extractClassificationFromWiki(wiki);
                 cronquistService.saveCronquist(classification, wiki);
             } catch (IOException e) {
                 log.error("unable to scrap wiki : " + e.getMessage());
@@ -92,12 +99,12 @@ public class WikipediaCrawler {
             /*
             TEST
             - Deux enregistrements d'un même n'enregistre qu'un seul rang
-            - Enregistrement d'une espèce partageant un même rang avec une autre classification => la classification se rattache à l'existant, le rang en commun possède un enfant supplémentaire
+            - Enregistrement d'une espèce partageant un même rang avec une autre extractClassification => la extractClassification se rattache à l'existant, le rang en commun possède un enfant supplémentaire
              */
         // https://fr.wikipedia.org/wiki/Ptychospermatinae rang inférieur
         // https://fr.wikipedia.org/wiki/Forsythia_%C3%97intermedia rang inférieur
         // https://fr.wikipedia.org/wiki/Ch%C3%A8vrefeuille rang inférieur
-        // TODO ajouter la classification des insectes
+        // TODO ajouter la extractClassification des insectes
         // https://fr.wikipedia.org/wiki/Altise_des_tubercules Autre format pour la table de taxonomie des insectes
 
         // TODO ajouter le scrapping des formats des pages suivantes
@@ -120,10 +127,10 @@ public class WikipediaCrawler {
         // https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Cercidiphyllaceae
         //
         //
-        log.info("All classification from Wikipedia had been scrapped");
+        log.info("All extractClassification from Wikipedia had been scrapped");
     }
 
-    public void scrapWikiList(String urlWikiListe) throws IOException {
+    public void scrapAndSaveWikiList(String urlWikiListe) throws IOException {
         log.info("Get list from : " + urlWikiListe);
         Document doc = Jsoup.connect(urlWikiListe).get();
 
@@ -137,19 +144,92 @@ public class WikipediaCrawler {
             // Si l'url contient "Catégorie" alors la page contient une liste
             String urlWiki = Wikipedia.getValidUrl(urlWikiListe);
             if (urlWikiListe.contains(LIST_INDICATOR_IN_URL)) {
-                scrapWikiList(urlWiki);
+                scrapAndSaveWikiList(urlWiki);
             } else {
-                CronquistClassificationBranch classification = scrapWiki(urlWiki);
-                if (classification != null) {
-                    cronquistService.saveCronquist(classification, urlWiki);
-                }
+                CronquistClassificationBranch classification = extractClassification(urlWiki);
+                // TODO ne pas enregistrer ici, comment faire ?
+                cronquistService.saveCronquist(classification, urlWiki);
             }
         }
     }
 
-    public CronquistClassificationBranch scrapWiki(String urlWiki) throws IOException {
+    public CronquistClassificationBranch extractClassification(String urlWiki) throws IOException {
+        CronquistClassificationBranch extractedClassification = extractClassificationFromWiki(urlWiki);
+        extractedClassification = checkAllRanksLevel(extractedClassification);
+        return extractedClassification;
+    }
+
+    private @NotNull CronquistClassificationBranch checkAllRanksLevel(CronquistClassificationBranch extractedClassification) throws IOException {
+        CronquistClassificationBranch classificationWithDoubleCheckedRanks = new CronquistClassificationBranch();
+        if (extractedClassification != null) {
+            LinkedMap<RankName, ICronquistRank> classificationBranch = doubleCheckEachRank(extractedClassification, classificationWithDoubleCheckedRanks);
+            // TODO A voir si je garde l'assignation ici ou si je la passe dans la méthode. WARN si j'écrase un rang scrappé non vérifié avec un rang validé
+            for (Map.Entry<RankName, ICronquistRank> validatedCronquistRankEntry : classificationWithDoubleCheckedRanks.getClassificationBranch().entrySet()) {
+                ICronquistRank rankEntryValue = validatedCronquistRankEntry.getValue();
+                if (rankEntryValue.isRangSignificatif()) {
+                    classificationBranch.put(validatedCronquistRankEntry.getKey(), rankEntryValue);
+                }
+            }
+
+        }
+        return classificationWithDoubleCheckedRanks;
+    }
+
+    @NotNull
+    private LinkedMap<RankName, ICronquistRank> doubleCheckEachRank(
+        @NotNull CronquistClassificationBranch extractedClassification,
+        CronquistClassificationBranch classificationWithDoubleCheckedRanks
+    ) throws IOException {
+        // TODO ici vérifier que les rangs correspondent bien aux bons niveaux de extractClassification
+            /*
+            Algo parcours tous les rangs et garde dans une liste tous les rangs qui ont été vérifiés ainsi que ceux qui ne sont pas cronquist (ils seront noms synonymes)
+            Reconstruit une branche à partir de tous ces rangs validés (nouveau constructeur de CronquistClassificationBranch)
+             */
+        // Pour chacun des rangs : scrap la page wiki référencée pour vérifier le niveau du rang
+        LinkedMap<RankName, ICronquistRank> classificationBranch = extractedClassification.getClassificationBranch();
+        for (Map.Entry<RankName, ICronquistRank> scrappedRankEntry : classificationBranch.entrySet()) {
+            // TODO si je l'ai en base de données => la vérification est déjà faite => query DB?
+            ICronquistRank scrappedRank = scrappedRankEntry.getValue();
+            Set<IUrl> urls = scrappedRank.getIUrls();
+            // S'il possède une url
+            if (urls.size() > 0) {
+                for (IUrl url : urls) {
+                    // erreur possible : 2 urls pour un même qui donnent un rang différent ?
+                    // scrap la page pour vérifier le rang de base
+                    CronquistClassificationBranch classificationJustForCheckLevels = extractClassificationFromWiki(url.getUrl());
+                    // Si le rang ne correspond pas → le mettre à jour dans la classification
+                    if (classificationJustForCheckLevels == null) {
+                        /*
+                        null si
+                        - ce n'est pas un rang de la classification de cronquist
+                        - la page wiki n'existe pas
+                         */
+                        // classificationBranch.put(scrappedRankEntry.getKey(), AtomicCronquistRank.getDefaultRank(scrappedRankEntry.getKey()));
+                        continue;
+                    }
+                    RankName trueRankLevelOfTheScrapedRank = classificationJustForCheckLevels.getRangDeBase().getRankName();
+                    boolean leRangScrappeSAvereNePasEtreDuBonNiveau = !trueRankLevelOfTheScrapedRank.equals(scrappedRank.getRankName());
+                    if (leRangScrappeSAvereNePasEtreDuBonNiveau) {
+                        classificationWithDoubleCheckedRanks.put(trueRankLevelOfTheScrapedRank, scrappedRank);
+                        continue;
+                    }
+                    boolean leRangDeVerificationNePossedePasLeNomScrappeInitiale = !classificationJustForCheckLevels.getRangDeBase().doTheRankHasOneOfTheseNames(classificationBranch.get(trueRankLevelOfTheScrapedRank).getNomsWrappers());
+                    if (leRangDeVerificationNePossedePasLeNomScrappeInitiale) {
+                        // TODO Pour un même niveau : Le nom scrappé est différent du nom quand on le vérifie => merger l'ensemble des noms ?
+                        // Exemple Magnoliophyta et angiosperme
+                        // TODO n'ajouter que les noms inexistants
+                        classificationBranch.get(trueRankLevelOfTheScrapedRank).addAllNamesToCronquistRank(classificationJustForCheckLevels.getRangDeBase().getNomsWrappers());
+                    }
+                }
+            }
+        }
+        classificationWithDoubleCheckedRanks.clearTail();
+        return classificationBranch;
+    }
+
+    public @Nullable CronquistClassificationBranch extractClassificationFromWiki(String urlWiki) throws IOException {
         try {
-            log.info("Get classification from : " + urlWiki);
+            log.info("Get extractClassification from : " + urlWiki);
             Elements encadreTaxonomique = wikipediaHtmlExtractor.extractEncadreDeClassification(urlWiki);
 
             CronquistClassificationBranch cronquistClassificationBranch = extractPremiereClassification(encadreTaxonomique);
@@ -173,7 +253,7 @@ public class WikipediaCrawler {
             case "Cronquist":
                 CronquistClassificationBranch cronquistClassificationBranch = extractionCronquist(encadreTaxonomique);
                 return cronquistClassificationBranch;
-            case "No classification":
+            case "No extractClassification":
                 log.info("No classification table found in this page");
                 break;
             case "No Cronquist":
@@ -187,7 +267,7 @@ public class WikipediaCrawler {
 
 /*
     private APGIII extractionApg3(@NotNull Elements encadreTaxonomique) {
-        log.info("Extract APGIII classification");
+        log.info("Extract APGIII extractClassification");
         Elements elementsDeClassification = encadreTaxonomique.select("tbody tr");
         APGIII apgiii = new APGIII();
         for (Element classificationItem : elementsDeClassification) {
@@ -228,10 +308,21 @@ public class WikipediaCrawler {
                     log.warn("\t" + classificationItemKey + " ne correspond pas à du APGIII");
             }
         }
-        log.info("(TO BE COMPLETED) Created APG III classification APGIII : " + apgiii);
+        log.info("(TO BE COMPLETED) Created APG III extractClassification APGIII : " + apgiii);
         return apgiii;
     }*/
 
+    /**
+     * Récupère la extractClassification contenue dans l'encadré de extractClassification.
+     * Vérifications préliminaires :
+     * <ul>
+     *     <li>Les noms dont le suffixe ne correspond pas au niveau de extractClassification ne sont pas intégrés à la extractClassification.</li>
+     *     <li>Chacun des rangs subi une vérification pour s'assurer que le niveau de extractClassification est le bon</li>
+     * </ul>
+     *
+     * @param encadreTaxonomique Elements HTML qui contiennent l'encadré de classification
+     * @return La classification extraite ayant subi les vérifications préliminaires
+     */
     private CronquistClassificationBranch extractionCronquist(@NotNull Elements encadreTaxonomique) {
         Element mainTable = wikipediaHtmlExtractor.extractMainTableOfClassificationFrame(encadreTaxonomique);
 
@@ -239,12 +330,15 @@ public class WikipediaCrawler {
         CronquistClassificationBranch cronquistClassification = null;
         try {
             cronquistClassification = cronquistClassificationBuilder.getClassification(mainTable);
+
         } catch (ClassificationReconstructionException e) {
-            log.error("Impossible d'extraire la classification de la page");
+            log.error("Impossible d'extraire la extractClassification de la page");
             e.printStackTrace();
+        } catch (UnableToScrapClassification e) {
+            log.error(e.getMessage());
         }
 
-        log.info("Created Cronquist classification : " + cronquistClassification);
+        log.info("Created Cronquist extractClassification : " + cronquistClassification);
         return cronquistClassification;
     }
 
