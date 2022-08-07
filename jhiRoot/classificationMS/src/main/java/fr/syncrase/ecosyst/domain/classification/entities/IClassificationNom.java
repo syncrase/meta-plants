@@ -14,4 +14,6 @@ public interface IClassificationNom extends Cloneable {
     public IClassificationNom clone();
 
     ClassificationNom getClassificationNom();
+
+    IClassificationNom nomFr(String nom);
 }

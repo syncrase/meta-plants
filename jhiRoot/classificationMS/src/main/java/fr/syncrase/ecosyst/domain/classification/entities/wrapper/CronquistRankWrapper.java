@@ -14,6 +14,7 @@ import fr.syncrase.ecosyst.domain.classification.entities.mappers.UrlMapper;
 import fr.syncrase.ecosyst.domain.classification.enumeration.RankName;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -202,6 +203,15 @@ public class CronquistRankWrapper implements ICronquistRank {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean doTheRankHasOneOfTheseNames(String @NotNull ... noms) {
+        Set<IClassificationNom> nomSet = new HashSet<>();// TODO default class ?
+        for (String nom : noms) {
+            nomSet.add(new ClassificationNomWrapper().nomFr(nom));
+        }
+        return doTheRankHasOneOfTheseNames(nomSet);
     }
 
     @Override

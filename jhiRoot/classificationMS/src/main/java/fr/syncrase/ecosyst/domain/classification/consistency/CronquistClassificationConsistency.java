@@ -159,11 +159,11 @@ public class CronquistClassificationConsistency {
                                          ) throws UnknownRankId, MoreThanOneResultException, InconsistentRank, ClassificationReconstructionException {
         // TODO quand je merge le rang significatif dans le rang de liaison je dois supprimer le nom de liaison du rang de liaison
         ICronquistRank existingRank = existingClassification.getRang(rankToInsert.getRankName());
-        boolean leRangAInsererNEstPasDansLaClassificationExistante = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNomsWrappers());
+        boolean leRangExistantNePortePasLeNomDuRangScrape = existingRank.isRangSignificatif() && !rankToInsert.doTheRankHasOneOfTheseNames(existingRank.getNomsWrappers());
         @Nullable ICronquistRank synonym = classificationReader.findExistingRank(rankToInsert);
 
         ICronquistRank consistentRank = existingRank;
-        if ((leRangAInsererNEstPasDansLaClassificationExistante || existingRank.isRangDeLiaison()) && synonym != null) {
+        if ((leRangExistantNePortePasLeNomDuRangScrape || existingRank.isRangDeLiaison()) && synonym != null) {
             consistentRank = classificationRepository.merge(existingClassification, synonym);
         }
         rankToInsert.setId(consistentRank.getId());

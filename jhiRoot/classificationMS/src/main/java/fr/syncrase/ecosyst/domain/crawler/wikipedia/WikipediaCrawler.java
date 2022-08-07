@@ -52,7 +52,7 @@ public class WikipediaCrawler {
     }
 
     /**
-     * Méthode de test pour looger tous les rangs de base possédant le superordre Lilianae
+     * Méthode de test pour logger tous les rangs de base possédant le superordre Lilianae
      *
      * @param taxonsOfLiliane
      */
@@ -146,23 +146,23 @@ public class WikipediaCrawler {
             if (urlWikiListe.contains(LIST_INDICATOR_IN_URL)) {
                 scrapAndSaveWikiList(urlWiki);
             } else {
-                CronquistClassificationBranch classification = extractClassification(urlWiki);
+                CronquistClassificationBranch classification = scrapWiki(urlWiki);
                 // TODO ne pas enregistrer ici, comment faire ?
                 cronquistService.saveCronquist(classification, urlWiki);
             }
         }
     }
 
-    public CronquistClassificationBranch extractClassification(String urlWiki) throws IOException {
+    public CronquistClassificationBranch scrapWiki(String urlWiki) throws IOException {
         CronquistClassificationBranch extractedClassification = extractClassificationFromWiki(urlWiki);
-        extractedClassification = checkAllRanksLevel(extractedClassification);
+//        extractedClassification = checkAllRanksLevel(extractedClassification);
         return extractedClassification;
     }
 
     private @NotNull CronquistClassificationBranch checkAllRanksLevel(CronquistClassificationBranch extractedClassification) throws IOException {
         CronquistClassificationBranch classificationWithDoubleCheckedRanks = new CronquistClassificationBranch();
         if (extractedClassification != null) {
-            LinkedMap<RankName, ICronquistRank> classificationBranch = doubleCheckEachRank(extractedClassification, classificationWithDoubleCheckedRanks);
+            CronquistClassificationBranch classificationBranch = doubleCheckEachRank(extractedClassification, classificationWithDoubleCheckedRanks);
             // TODO A voir si je garde l'assignation ici ou si je la passe dans la méthode. WARN si j'écrase un rang scrappé non vérifié avec un rang validé
             for (Map.Entry<RankName, ICronquistRank> validatedCronquistRankEntry : classificationWithDoubleCheckedRanks.getClassificationBranch().entrySet()) {
                 ICronquistRank rankEntryValue = validatedCronquistRankEntry.getValue();
@@ -175,8 +175,7 @@ public class WikipediaCrawler {
         return classificationWithDoubleCheckedRanks;
     }
 
-    @NotNull
-    private LinkedMap<RankName, ICronquistRank> doubleCheckEachRank(
+    private CronquistClassificationBranch doubleCheckEachRank(
         @NotNull CronquistClassificationBranch extractedClassification,
         CronquistClassificationBranch classificationWithDoubleCheckedRanks
     ) throws IOException {
@@ -189,8 +188,8 @@ public class WikipediaCrawler {
         LinkedMap<RankName, ICronquistRank> classificationBranch = extractedClassification.getClassificationBranch();
         for (Map.Entry<RankName, ICronquistRank> scrappedRankEntry : classificationBranch.entrySet()) {
             // TODO si je l'ai en base de données => la vérification est déjà faite => query DB?
-            ICronquistRank scrappedRank = scrappedRankEntry.getValue();
-            Set<IUrl> urls = scrappedRank.getIUrls();
+            ICronquistRank initiallyScrappedRank = scrappedRankEntry.getValue();
+            Set<IUrl> urls = initiallyScrappedRank.getIUrls();
             // S'il possède une url
             if (urls.size() > 0) {
                 for (IUrl url : urls) {
@@ -207,24 +206,24 @@ public class WikipediaCrawler {
                         // classificationBranch.put(scrappedRankEntry.getKey(), AtomicCronquistRank.getDefaultRank(scrappedRankEntry.getKey()));
                         continue;
                     }
-                    RankName trueRankLevelOfTheScrapedRank = classificationJustForCheckLevels.getRangDeBase().getRankName();
-                    boolean leRangScrappeSAvereNePasEtreDuBonNiveau = !trueRankLevelOfTheScrapedRank.equals(scrappedRank.getRankName());
+                    RankName scrapedRankName = classificationJustForCheckLevels.getRangDeBase().getRankName();
+                    boolean leRangScrappeSAvereNePasEtreDuBonNiveau = !scrapedRankName.equals(initiallyScrappedRank.getRankName());
                     if (leRangScrappeSAvereNePasEtreDuBonNiveau) {
-                        classificationWithDoubleCheckedRanks.put(trueRankLevelOfTheScrapedRank, scrappedRank);
+                        classificationWithDoubleCheckedRanks.put(scrapedRankName, initiallyScrappedRank);
                         continue;
                     }
-                    boolean leRangDeVerificationNePossedePasLeNomScrappeInitiale = !classificationJustForCheckLevels.getRangDeBase().doTheRankHasOneOfTheseNames(classificationBranch.get(trueRankLevelOfTheScrapedRank).getNomsWrappers());
+                    boolean leRangDeVerificationNePossedePasLeNomScrappeInitiale = !classificationJustForCheckLevels.getRangDeBase().doTheRankHasOneOfTheseNames(classificationBranch.get(scrapedRankName).getNomsWrappers());
                     if (leRangDeVerificationNePossedePasLeNomScrappeInitiale) {
                         // TODO Pour un même niveau : Le nom scrappé est différent du nom quand on le vérifie => merger l'ensemble des noms ?
                         // Exemple Magnoliophyta et angiosperme
                         // TODO n'ajouter que les noms inexistants
-                        classificationBranch.get(trueRankLevelOfTheScrapedRank).addAllNamesToCronquistRank(classificationJustForCheckLevels.getRangDeBase().getNomsWrappers());
+                        classificationWithDoubleCheckedRanks.getRang(scrapedRankName).addAllNamesToCronquistRank(classificationJustForCheckLevels.getRangDeBase().getNomsWrappers());
                     }
                 }
             }
         }
-        classificationWithDoubleCheckedRanks.clearTail();
-        return classificationBranch;
+        //        classificationWithDoubleCheckedRanks.clearTail();
+        return classificationWithDoubleCheckedRanks;
     }
 
     public @Nullable CronquistClassificationBranch extractClassificationFromWiki(String urlWiki) throws IOException {

@@ -254,6 +254,15 @@ public class AtomicCronquistRank implements ICronquistRank {
         return false;
     }
 
+    @Override
+    public boolean doTheRankHasOneOfTheseNames(String @NotNull ... noms) {
+        Set<IClassificationNom> nomSet = new HashSet<>();
+        for (String nom : noms) {
+            nomSet.add(new AtomicClassificationNom().nomFr(nom));
+        }
+        return doTheRankHasOneOfTheseNames(nomSet);
+    }
+
     /**
      * Remplace le nom du rang intermédiaire par le nom connu ou ajoute le nom au set si c'est un rang taxonomique.<br>
      * Pour l'instant, ne gère que les nomsFr TODO gérer en plus le nom latin

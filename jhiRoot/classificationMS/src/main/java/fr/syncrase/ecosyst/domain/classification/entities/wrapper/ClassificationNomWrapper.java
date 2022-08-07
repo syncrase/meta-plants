@@ -6,10 +6,14 @@ import fr.syncrase.ecosyst.domain.classification.entities.database.CronquistRank
 
 public class ClassificationNomWrapper implements IClassificationNom {
 
-    private final ClassificationNom classificationNom;
+    private ClassificationNom classificationNom;
 
     public ClassificationNomWrapper(ClassificationNom classificationNom) {
         this.classificationNom = classificationNom;
+    }
+
+    public ClassificationNomWrapper() {
+
     }
 
     @Override
@@ -45,6 +49,12 @@ public class ClassificationNomWrapper implements IClassificationNom {
     @Override
     public ClassificationNom getClassificationNom() {
         return this.classificationNom;
+    }
+
+    @Override
+    public IClassificationNom nomFr(String nom) {
+        this.classificationNom.setNomFr(nom);
+        return this;
     }
 
     public void setCronquistRank(CronquistRank save) {

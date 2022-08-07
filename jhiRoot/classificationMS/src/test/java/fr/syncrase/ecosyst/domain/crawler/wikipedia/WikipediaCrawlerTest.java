@@ -45,7 +45,7 @@ class WikipediaCrawlerTest {
     }
 
     @Test
-    void extractClassificationFromWiki() {
+    void extractAngiospermeFromWiki() {
         try {
             CronquistClassificationBranch cronquistClassificationBranch = wikipediaCrawler.extractClassificationFromWiki("https://fr.wikipedia.org/wiki/Angiosperme");
             assertNotNull(cronquistClassificationBranch, "La classification ne doit pas être nulle");
@@ -58,4 +58,27 @@ class WikipediaCrawlerTest {
         }
         assertTrue(true, "true == true");
     }
+
+    @Test
+    void extractCorylopsisFromWiki() {
+        try {
+            CronquistClassificationBranch cronquistClassificationBranch = wikipediaCrawler.scrapWiki("https://fr.wikipedia.org/wiki/Corylopsis");
+            assertNotNull(cronquistClassificationBranch, "La classification ne doit pas être nulle");
+            assertTrue(cronquistClassificationBranch.getRang(RankName.REGNE).doTheRankHasOneOfTheseNames("Plantae"));
+            assertTrue(cronquistClassificationBranch.getRang(RankName.SOUSREGNE).doTheRankHasOneOfTheseNames("Tracheophyta","Tracheobionta"));
+            assertTrue(cronquistClassificationBranch.getRang(RankName.EMBRANCHEMENT).doTheRankHasOneOfTheseNames("Magnoliophyta"));
+            assertTrue(cronquistClassificationBranch.getRang(RankName.CLASSE).doTheRankHasOneOfTheseNames("Magnoliopsida"));
+            assertTrue(cronquistClassificationBranch.getRang(RankName.SOUSCLASSE).doTheRankHasOneOfTheseNames("Hamamelidae"));
+            assertTrue(cronquistClassificationBranch.getRang(RankName.ORDRE).doTheRankHasOneOfTheseNames("Saxifragales"));// N'appartiens pas à Cronquist mais je garde
+            assertTrue(cronquistClassificationBranch.getRang(RankName.FAMILLE).doTheRankHasOneOfTheseNames("Hamamelidaceae"));
+            assertTrue(cronquistClassificationBranch.getRang(RankName.GENRE).doTheRankHasOneOfTheseNames("Corylopsis"));
+            assertEquals(cronquistClassificationBranch.getRangDeBase().getRankName(), RankName.GENRE, "Le rang de base du rang Corylopsis doit être un genre");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assertTrue(true, "true == true");
+    }
+
+    // TODO https://fr.wikipedia.org/wiki/Tracheophyta
+
 }

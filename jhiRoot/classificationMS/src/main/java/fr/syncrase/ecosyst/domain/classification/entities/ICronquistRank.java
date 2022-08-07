@@ -60,6 +60,8 @@ public interface ICronquistRank extends Cloneable {
 
     boolean doTheRankHasOneOfTheseNames(Set<IClassificationNom> noms);
 
+    boolean doTheRankHasOneOfTheseNames(String... noms);
+
     ICronquistRank noms(Set<IClassificationNom> noms);
 
     void removeAllNames();
